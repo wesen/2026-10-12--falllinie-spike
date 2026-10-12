@@ -1,0 +1,18 @@
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const root=path.resolve(__dirname,'..');
+const html=fs.readFileSync(path.join(root,'fixtures/falllinie.html'),'utf8');
+const cpu=html.slice(html.indexOf('const TAU ='),html.indexOf('// WebGL 2 renderer:'));
+const ctx=vm.createContext({});vm.runInContext(cpu,ctx,{timeout:1000});
+const mb=html.slice(html.indexOf('class MB {'),html.indexOf('function upload('));
+vm.runInContext(mb+'\nfunction upload(m){return m;}\n'+html.slice(html.indexOf('const UCOLS ='),html.indexOf('// terrain is built a few rows')) ,ctx,{timeout:1000});
+const data=vm.runInContext(`(()=>{SEED=42; const hashes=[0,1,0xffffffff,0x80000000,0x12345678].map(n=>[n,hashInt(n)]);const r=rng(12345);const random=Array.from({length:12},()=>r());const P=[],O=[];for(let j=-1;j<=ROWS+1;j++){const row=terrainRow(0,j);P.push(row[0]);O.push(row[1]);}const m=finishTerrain(P,O);return {hashes,random,mesh:{vertices:m.n,indices:m.i.length,samples:[0,53,106,107,7020,m.n-1].map(i=>({i,v:m.v.slice(i*11,i*11+11)}))}};})()`,ctx,{timeout:5000});
+fs.writeFileSync(path.join(root,'fixtures/mesh-and-rng.json'),JSON.stringify(data,null,2)+'\n');
+const golden=JSON.parse(fs.readFileSync(path.join(root,'fixtures/terrain-samples.json')));
+let out='// Generated from frozen original JavaScript, not from the C++ port.\n#pragma once\n#include <cstdint>\nstruct Golden {uint32_t seed;double x,z,h,nx,ny,nz,lip,stripe,rel,u;};\ninline const Golden golden[] = {\n';
+for(const c of golden.cases)out+=`{${c.seed},${c.x},${c.z},${c.height},${c.normal.join(',')},${c.paint.lip},${c.paint.stripe},${c.paint.rel},${c.paint.u}},\n`;
+out+='};\ninline const uint32_t hashes[][2]={'+data.hashes.map(x=>'{'+x.map(n=>n+'U').join(',')+'}').join(',')+'};\n';
+out+='inline const double random_values[]={'+data.random.join(',')+'};\n';
+out+='struct MeshGolden {int index;float v[11];};\ninline const MeshGolden mesh_golden[]={\n';
+for(const s of data.mesh.samples)out+='{'+s.i+',{'+s.v.map(x=>Number(x).toPrecision(16)).join(',')+'}},\n';
+out+='};\n';fs.writeFileSync(path.join(root,'tests/golden.hpp'),out);
+console.log('Generated 90 CPU cases, 5 hashes, 12 RNG values, 6 mesh vertex/normal cases; mesh '+data.mesh.vertices+'/'+data.mesh.indices);

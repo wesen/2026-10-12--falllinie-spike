@@ -1,0 +1,2 @@
+190733b5da086eace99ae2d41b7f78543502e63f3da99b866f2c9cad50523f46  target-libs/libGLESv2.so.2
+cdb633e6b5831b2753da31dd7da3c1ecbf6dac76ee0ae6dffa9a27057300c9e8  target-libs/libSDL2-2.0.so.0

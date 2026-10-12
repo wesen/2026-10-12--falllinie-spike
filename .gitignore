@@ -1,0 +1,3 @@
+build*/
+target-libs/
+__pycache__/

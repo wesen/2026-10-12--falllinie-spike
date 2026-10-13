@@ -1,0 +1,17 @@
+{
+  "production_modified": false,
+  "difference": "vinyl contribution .22 -> 0; generation/filter/RNG retained",
+  "listening_order": "15s reference, 1s silence, 15s no-vinyl; both offline",
+  "renders": [
+    {
+      "variant": "source",
+      "source_sha256": "c625b9892ebe754e5435e1f27dc756e98d953071f3ab91924b0544ba2ee5b5a2",
+      "wav_sha256": "b7e9ec292d8c6f96781ec420506854e094e7fe340577995c4a5018758b81830b"
+    },
+    {
+      "variant": "without-vinyl",
+      "source_sha256": "fb7ace8e3268d064456a6b1bf6761d9a67dae2821a383c7d29df6b05f370d284",
+      "wav_sha256": "79d1b0355e852c1dce786a0f80f6c182216f8ea4ac3fd886d4373a3dfb0d00d3"
+    }
+  ]
+}

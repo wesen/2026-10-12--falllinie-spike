@@ -8,13 +8,14 @@ void Renderer::update_player(Game& game,double dt){
  hud_status_=game.bail_time>0?"BAIL - RECOVERING":game.airborne?"AIR: LEFT/RIGHT SPIN, UP/DOWN FLIP; RELEASE TO COMPLETE":"RIDE: UP TUCK, DOWN BRAKE; LAST LANDING +"+std::to_string(game.last_points);
  stream_ms_=0;auto stream_start=std::chrono::steady_clock::now();
  int cell=int(std::floor(game.position.z/CELL));
- if(cell!=patch_first_+1){
-  patch_first_=cell-1;patch_count_=4;CpuMesh mesh;
-  for(int c=patch_first_;c<patch_first_+patch_count_;++c){auto part=build_terrain(game.terrain,c);uint32_t offset=uint32_t(mesh.vertices.size());mesh.vertices.insert(mesh.vertices.end(),part.vertices.begin(),part.vertices.end());for(auto i:part.indices)mesh.indices.push_back(offset+i);}
-  vertices_=mesh.vertices.size();indices_=mesh.indices.size();glBindVertexArray(vao_);glBindBuffer(GL_ARRAY_BUFFER,vbo_);glBufferData(GL_ARRAY_BUFFER,mesh.vertices.size()*sizeof(Vertex),mesh.vertices.data(),GL_STATIC_DRAW);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,ibo_);glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh.indices.size()*4,mesh.indices.data(),GL_STATIC_DRAW);
-  stream_ms_=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-stream_start).count();
-  std::cout<<"terrain patch "<<patch_first_<<".."<<patch_first_+3<<'\n';
- }
+ bool streamed=false;
+ patch_first_=cell-1;
+ if(terrain_job_ && (terrain_job_->cell()<cell-1 || terrain_job_->cell()>cell+3))terrain_job_.reset();
+ if(!terrain_job_)for(int wanted:{cell,cell-1,cell+1,cell+2,cell+3})if(!cell_meshes_.count(wanted)){terrain_job_=std::make_unique<TerrainJob>(game.terrain,wanted);break;}
+ if(terrain_job_){streamed=true;if(terrain_job_->step(1.0)){int ready=terrain_job_->cell();auto mesh=terrain_job_->take();cell_meshes_.emplace(ready,upload_cell(mesh));terrain_job_.reset();std::cout<<"cell ready "<<ready<<'\n';}}
+ for(auto it=cell_meshes_.begin();it!=cell_meshes_.end();){bool reset_cell=it->first>=-1 && it->first<=2;if(!reset_cell && (it->first<cell-1 || it->first>cell+3)){delete_cell(it->second);it=cell_meshes_.erase(it);streamed=true;}else ++it;}
+ vertices_=indices_=0;for(int visible=patch_first_;visible<patch_first_+patch_count_;++visible){auto found=cell_meshes_.find(visible);if(found!=cell_meshes_.end()){vertices_+=found->second.vertices;indices_+=size_t(found->second.indices);}}
+ if(streamed)stream_ms_=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-stream_start).count();
  Vec3 f{std::sin(game.yaw),0,std::cos(game.yaw)};
  Vec3 x=qrot(game.orientation,{1,0,0}),y=qrot(game.orientation,{0,1,0}),z=qrot(game.orientation,{0,0,1});
  double pose=clamp(game.crouch,0,1)*2;int a=std::min(1,int(pose));double mix=pose-a;std::vector<Vertex> vertices=rider_poses_[a];
@@ -22,7 +23,7 @@ void Renderer::update_player(Game& game,double dt){
  Vec3 low{1e9,1e9,1e9},high{-1e9,-1e9,-1e9};
  for(const auto& group:rider_groups_)if(group[2]==23)for(uint32_t k=0;k<group[1];++k){const auto& v=vertices[rider_triangles_[group[0]+k]];low={std::min(low.x,double(v.px)),std::min(low.y,double(v.py)),std::min(low.z,double(v.pz))};high={std::max(high.x,double(v.px)),std::max(high.y,double(v.py)),std::max(high.z,double(v.pz))};}
  first_person_eye_=(low+high)*.5+y*.025;first_person_forward_=x;first_person_up_=y;
- glBindVertexArray(rider_vao_);glBindBuffer(GL_ARRAY_BUFFER,rider_vbo_);glBufferData(GL_ARRAY_BUFFER,vertices.size()*sizeof(Vertex),vertices.data(),GL_STREAM_DRAW);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,rider_ibo_);glBufferData(GL_ELEMENT_ARRAY_BUFFER,rider_triangles_.size()*4,rider_triangles_.data(),GL_STREAM_DRAW);rider_indices_=GLsizei(rider_triangles_.size());
+ glBindVertexArray(rider_vao_);glBindBuffer(GL_ARRAY_BUFFER,rider_vbo_);glBufferData(GL_ARRAY_BUFFER,vertices.size()*sizeof(Vertex),vertices.data(),GL_STREAM_DRAW);rider_indices_=GLsizei(rider_triangles_.size());
  // Source camera direction blending, offsets, damped spring and speed-dependent FOV.
  double speed=length(game.velocity);Vec3 want=speed>2.5?norm({game.velocity.x,0,game.velocity.z}):f;
  want=norm(want*.7+Vec3{0,0,1}*.3);camera_direction_=norm(camera_direction_+(want-camera_direction_)*(1-std::exp(-dt*(game.airborne?1.2:2.4))));

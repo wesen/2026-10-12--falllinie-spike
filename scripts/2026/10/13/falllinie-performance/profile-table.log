@@ -1,0 +1,96 @@
+Could not open module param file '/sys/module/bifrost_kbase/parameters/large_page_conf'
+arm_release_ver: g29p1-12eac0, rk_so_ver: 5
+GL_VERSION=OpenGL ES 3.2 v1.g29p1-12eac0.d6e9c0f8499d70cc285f3f0ca2ede780
+GL_RENDERER=Mali-G52
+GL_VENDOR=ARM
+GLSL=OpenGL ES GLSL ES 3.20
+joystick=retrogame_joypad
+program original scene linked
+sky hash=stable wrapped integer lattice
+depth sampler=explicit highp portability override
+program original print linked
+program presentation diagnostic linked
+program native HUD using source font linked
+glyph atlas loaded
+terrain vertices=44619 indices=263304 build_ms=56.0678 targets=512x384 FBOs complete
+GPU queries disabled for unperturbed CPU timing
+PLAY: stick/dpad steer, UP tuck, DOWN brake, hold/release A or SPACE to jump; START/R restart; SELECT+START exits
+terrain patch -1..2
+ride z=4 speed=6 airborne=0 charge=0 score=0
+placement=[
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  }
+]
+
+FPS=38.2944 frame_interval_ms=18.3507
+ride z=14.8156 speed=10.4774 airborne=0 charge=0 score=0
+FPS=49.221 frame_interval_ms=19.2356
+ride z=26.986 speed=13.5094 airborne=0 charge=1 score=0
+FPS=48.9731 frame_interval_ms=21.2384
+ride z=39.8855 speed=18.2293 airborne=1 charge=0 score=0
+LAND spin=180 flip=0 points=220 score=220
+FPS=48.1874 frame_interval_ms=22.0626
+FPS=49.9979 frame_interval_ms=21.0427
+ride z=50.2328 speed=12.278 airborne=1 charge=0 score=220
+LAND spin=180 flip=0 points=230 score=450
+FPS=49.226 frame_interval_ms=17.7936
+ride z=58.5714 speed=14.794 airborne=0 charge=0 score=450
+FPS=51.4428 frame_interval_ms=20.4223
+ride z=67.2978 speed=16.2041 airborne=0 charge=0.87037 score=450
+FPS=51.8537 frame_interval_ms=20.4605
+LAND spin=180 flip=0 points=155 score=605
+ride z=81.1859 speed=10.0784 airborne=0 charge=0 score=605
+FPS=51.1223 frame_interval_ms=19.3467
+ride z=92.1707 speed=13.2524 airborne=0 charge=0 score=605
+FPS=50.3854 frame_interval_ms=19.7142
+ride z=97.9361 speed=13.7522 airborne=0 charge=0 score=605
+FPS=48.644 frame_interval_ms=23.0079
+FPS=51.2576 frame_interval_ms=14.9228
+ride z=101.143 speed=6.48749 airborne=1 charge=0.111111 score=605
+LAND spin=180 flip=0 points=155 score=760
+FPS=49.8732 frame_interval_ms=22.6419
+ride z=102.527 speed=4.40467 airborne=1 charge=0 score=760
+LAND spin=180 flip=0 points=155 score=915
+FPS=47.9954 frame_interval_ms=21.9413
+ride z=104.232 speed=3.14795 airborne=0 charge=0 score=915
+FPS=47.6732 frame_interval_ms=20.4317
+ride z=108.948 speed=6.09501 airborne=0 charge=0 score=915
+terrain patch 0..3
+FPS=44.7094 frame_interval_ms=125.205
+FPS=48.4501 frame_interval_ms=18.5618
+ride z=119.061 speed=10.6545 airborne=0 charge=0.351852 score=915
+frames=877 measured=817 frame_p50_ms=19.9694 frame_p95_ms=22.7113 frame_p99_ms=25.1998 peak_rss_kib=85112 GL_error=0

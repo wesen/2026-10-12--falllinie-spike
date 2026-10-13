@@ -141,3 +141,69 @@ Three older processes were still rendering. Background shell launches inherited 
 - `--profile /tmp/frames.csv` enables CPU logs; add `--gpu-profile` for sampled EXT elapsed queries.
 - Warmup exclusion is 60 frames. Stream time is a subset of player time; do not sum them twice.
 - Raw performance evidence and reusable analysis/sampling scripts are under `scripts/2026/10/13/falllinie-performance/`; initial graphics captures remain under `evidence/`.
+
+## Step 3: Remove large streaming stalls and establish a paced 60 FPS mode
+
+Continuing the performance requests quoted in Step 2, I tested small changes against the isolated baseline. Precomputing the same 170 sky-hash values preserved the static print image exactly. Batching the native HUD into three draw calls reduced top submission CPU time substantially, but did not by itself fix overall throughput. Disabling vsync merely moved waits into submission, so the root cause was not simply a swap-interval setting.
+
+A lower-resolution control established substantial pixel-work sensitivity: 384×288 per view produced 68.06 FPS unpaced versus about 49.6 FPS at 512×384. I then replaced synchronous four-cell rebuilds with cooperative row generation and individual GPU cell buffers. A 60 FPS paced 384×288 run sustained 60.00 FPS, with p95 interval 16.80 ms and no previous hundred-millisecond cell hitch. Four intervals still exceeded 18.33 ms; this is not a claim of perfect scanout delivery.
+
+### Prompt Context
+- User prompts: see Step 2 verbatim requests.
+- Assistant interpretation: attribute bottlenecks through controlled measurements, fix evidenced stalls, and preserve source geometry/print semantics.
+- Inferred user intent: stable physical gameplay, not a misleading average-FPS claim.
+- Earlier code checkpoint: `a7cee69` — profiling, graceful signal handling and single-instance ownership.
+
+### What I did
+- CPU-generated the identical integer hash table and uploaded `uSkySamples[170]` once. Kept source shader assets unchanged.
+- Replaced per-character uniforms/draws with bounded glyph quads, one VBO upload and three color batches; retained source font, positions and alpha/paper colors.
+- Ran CPU-clock perf sampling: 1K samples, zero lost samples; libmali paths appeared prominently, with native player update only 1.70% of sampled CPU time. Unsymbolized Mali addresses are not attributed to named driver functions.
+- Added diagnostic `--no-vsync` and explicit `--fps N` pacing, with pacing wait separately logged.
+- Added `TerrainJob` row slices, initial four resident GPU cells and one-cell lookahead; generation receives about 1 ms per frame rather than reconstructing all four cells at a boundary.
+- Draw only the four visible cells; evict out-of-range cells while retaining initial cells -1..2 for same-seed restart. At most nine GPU cells are retained during forward progress. Changed static rider indices to a single upload.
+- Updated the port's default launch mode to 384×288 per view, no EGL-vsync throttle and 60 FPS absolute-deadline pacing. Native executable still defaults to 512×384 for graphics comparison; launch arguments can override resolution/pacing.
+
+### Why
+- Hidden instances accounted for the severe 14 FPS result, but isolated 512×384 rendering still exceeded the 60 Hz production budget.
+- CPU draw batching alone did not improve enough because driver/GPU/backbuffer throughput still limited production.
+- Cooperative generation and per-cell uploads avoid repeated work and bulk uploads at every cell crossing.
+
+### What worked
+- `sky-table-pixel-difference.txt` reports `0`: static print pixels match the preceding highp integer-hash version exactly.
+- `profile-second-instance.log`: `fatal: another Falllinie instance is running, or the instance lock is unavailable`.
+- New sliced terrain test compares every vertex byte and index against the synchronous result. Existing 268 terrain cases, five hash cases, 12 RNG values and six mesh samples pass; host max height error 0, min normal dot 1.
+- 25-second paced run: 1496 frames, 1436 measured after warmup; 59.99995 FPS; interval p50 16.66660 ms, p95 16.79785 ms, p99 17.31642 ms, max 19.51303 ms.
+- Streaming-work p99 1.08993 ms, max 2.14224 ms, versus prior 85.92 ms rebuild.
+- GL error 0; cells 3, 4 and 5 completed during the run, including an actual cell transition.
+
+### What didn't work
+- HUD batching reduced top submit p50 from 6.62 to 2.69 ms but total production remained about 49.4 FPS. Swap waits increased; CPU time saved does not necessarily translate into throughput.
+- Unpaced 512×384 remained 49.63 FPS, disproving the simple hypothesis that vsync alone was responsible.
+- Two exact-text edits missed their expected location (HUD member and terrain file offset); no partial replacement occurred. Read the current declarations and applied corrected edits.
+
+### What I learned
+- Rendering resolution is a meaningful performance control on this device. 384×288 is an explicit quality/performance tradeoff, not an unnoticed source-appearance change.
+- GPU elapsed queries describe instrumented scopes, not active-cycle utilization; do not add top/bottom values as if all tiler/compositor work were nonoverlapping.
+
+### What was tricky to build
+- Incremental row sampling preserves the source's extra neighbor rows, column order, normals, paint attributes and 110.4 m extent.
+- GPU resources remain main-thread owned. The lower view shares resident cells and does not generate its own terrain.
+- Absolute-deadline pacing recovers small lateness without an unbounded catch-up loop and resets after a long stall.
+
+### What warrants a second pair of eyes
+- New-run seed changes must invalidate resident cells/jobs with generation IDs when full source restart semantics are added; the current same-seed reset can reuse pinned initial cells.
+- Four late intervals are not zero dropped frames. Actual scanout feedback and the complete audio/object workload are still unqualified.
+- Lower resolution affects fine raster detail even though physical print pitch and source font/HUD resolution are preserved.
+
+### What should be done in the future
+- Carry these counters into audio, objects and full pose integration; remeasure only the affected major boundary.
+- Keep one final integrated physical playtest, including image quality, comfort and sustained load.
+
+### Code review instructions
+- Review `TerrainJob`, `Renderer::upload_cell`, residency/eviction in `update_player`, HUD batches and the pacer.
+- Reproduce with the dated analyzer and `profile-cooperative.csv`; compare `profile-isolated-cpu-summary.json`, `profile-batched-summary.json`, `profile-unpaced-summary.json` and `profile-lowres-summary.json`.
+
+### Technical details
+- New job budget is checked after a complete row; one row may extend the nominal 1 ms budget. Final GPU upload is included in measured stream work.
+- Initial terrain construction still occurs before first presentation; this is startup work, not an in-ride boundary rebuild.
+- CSV records `pace_wait_ms` separately from lower swap. Full frame intervals include pacing/bookkeeping; CPU stage metrics do not count sleep as rendering.

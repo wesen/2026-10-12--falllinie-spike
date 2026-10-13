@@ -1,0 +1,158 @@
+{
+  "file": "scripts/2026/10/13/falllinie-performance/profile-table.csv",
+  "warmup_frames": 60,
+  "measured_frames": 817,
+  "fps": 49.35771454598715,
+  "app_frame_budget_misses_60hz": 789,
+  "late_over_18_33ms": 731,
+  "over_33_33ms": 3,
+  "stages": {
+    "interval_ms": {
+      "p50": 20.09041,
+      "p95": 22.835305,
+      "p99": 25.288998,
+      "max": 125.313136
+    },
+    "events_ms": {
+      "p50": 0.146705,
+      "p95": 0.247036,
+      "p99": 0.457031,
+      "max": 0.947603
+    },
+    "physics_ms": {
+      "p50": 0.069707,
+      "p95": 0.150205,
+      "p99": 0.250244,
+      "max": 0.765024
+    },
+    "player_ms": {
+      "p50": 0.389074,
+      "p95": 0.825689,
+      "p99": 1.328219,
+      "max": 93.148298
+    },
+    "stream_ms": {
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 87.417765
+    },
+    "top_submit_ms": {
+      "p50": 6.506349,
+      "p95": 13.61206,
+      "p99": 16.326538,
+      "max": 29.676687
+    },
+    "top_swap_ms": {
+      "p50": 10.922955,
+      "p95": 14.626494,
+      "p99": 16.006046,
+      "max": 50.38354
+    },
+    "bottom_submit_ms": {
+      "p50": 1.522756,
+      "p95": 4.816472,
+      "p99": 6.395518,
+      "max": 19.577713
+    },
+    "bottom_swap_ms": {
+      "p50": 0.193954,
+      "p95": 0.444489,
+      "p99": 0.659735,
+      "max": 2.764353
+    }
+  },
+  "streaming_frames": [
+    {
+      "frame": 789,
+      "interval_ms": 125.313136,
+      "events_ms": 0.18987,
+      "physics_ms": 0.187538,
+      "player_ms": 93.148298,
+      "stream_ms": 87.417765,
+      "top_submit_ms": 29.676687,
+      "top_swap_ms": 0.52703,
+      "bottom_submit_ms": 1.322969,
+      "bottom_swap_ms": 0.148163
+    }
+  ],
+  "worst_frames": [
+    {
+      "frame": 789,
+      "interval_ms": 125.313136,
+      "events_ms": 0.18987,
+      "physics_ms": 0.187538,
+      "player_ms": 93.148298,
+      "stream_ms": 87.417765,
+      "top_submit_ms": 29.676687,
+      "top_swap_ms": 0.52703,
+      "bottom_submit_ms": 1.322969,
+      "bottom_swap_ms": 0.148163
+    },
+    {
+      "frame": 791,
+      "interval_ms": 60.339102,
+      "events_ms": 0.166537,
+      "physics_ms": 0.147872,
+      "player_ms": 0.761524,
+      "stream_ms": 0,
+      "top_submit_ms": 7.248957,
+      "top_swap_ms": 50.38354,
+      "bottom_submit_ms": 1.162265,
+      "bottom_swap_ms": 0.353492
+    },
+    {
+      "frame": 792,
+      "interval_ms": 38.739768,
+      "events_ms": 0.111998,
+      "physics_ms": 0.207078,
+      "player_ms": 0.369242,
+      "stream_ms": 0,
+      "top_submit_ms": 17.487928,
+      "top_swap_ms": 0.393157,
+      "bottom_submit_ms": 19.577713,
+      "bottom_swap_ms": 0.518863
+    },
+    {
+      "frame": 271,
+      "interval_ms": 26.901294,
+      "events_ms": 0.130372,
+      "physics_ms": 0.06154,
+      "player_ms": 0.403657,
+      "stream_ms": 0,
+      "top_submit_ms": 8.513553,
+      "top_swap_ms": 11.836476,
+      "bottom_submit_ms": 3.106761,
+      "bottom_swap_ms": 2.764353
+    },
+    {
+      "frame": 744,
+      "interval_ms": 26.099812,
+      "events_ms": 0.176746,
+      "physics_ms": 0.095664,
+      "player_ms": 0.429907,
+      "stream_ms": 0,
+      "top_submit_ms": 6.614847,
+      "top_swap_ms": 14.626494,
+      "bottom_submit_ms": 3.700581,
+      "bottom_swap_ms": 0.354367
+    }
+  ],
+  "gpu": {
+    "samples": 0,
+    "invalid": 0,
+    "top": {
+      "p50": null,
+      "p95": null,
+      "p99": null,
+      "max": null
+    },
+    "bottom": {
+      "p50": null,
+      "p95": null,
+      "p99": null,
+      "max": null
+    }
+  },
+  "limitations": "Application production intervals, not compositor presentation feedback. Submit timing can include driver backpressure. GPU query instrumentation can perturb tile rendering; compare CPU-only control."
+}

@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <cmath>
 #include <cstddef>
+#include <cstring>
 static void require(bool ok,const char* msg){if(!ok)throw std::runtime_error(msg);}
 int main(){try{
  static_assert(offsetof(fl::Vertex,lip)==28 && offsetof(fl::Vertex,lateral)==36,"attribute layout");
@@ -17,6 +18,8 @@ int main(){try{
  for(const auto& h:hashes)require(fl::hash_int(h[0],42)==h[1],"hash mismatch");
  fl::Rng rng{12345};for(double r:random_values)require(rng.next()==r,"RNG mismatch");
  fl::Terrain terrain(42);auto m=fl::build_terrain(terrain,0);
+ fl::Terrain incremental_terrain(42);fl::TerrainJob job(incremental_terrain,0);int slices=0;while(!job.step(.05))require(++slices<10000,"incremental job did not finish");auto incremental=job.take();
+ require(incremental.indices==m.indices && incremental.vertices.size()==m.vertices.size(),"incremental topology mismatch");require(std::memcmp(incremental.vertices.data(),m.vertices.data(),m.vertices.size()*sizeof(fl::Vertex))==0,"incremental vertex bytes differ");
  require(m.vertices.size()==14873 && m.indices.size()==87768,"mesh count mismatch");
  for(uint32_t i:m.indices)require(i<m.vertices.size(),"index out of range");
  for(const auto& v:m.vertices){require(std::isfinite(v.py) && std::isfinite(v.ny),"nonfinite vertex");require(v.ny>=0,"normal points down");}

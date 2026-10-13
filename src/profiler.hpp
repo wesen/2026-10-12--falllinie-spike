@@ -13,7 +13,7 @@ public:
  void poll();
  void begin_gpu(uint64_t frame,int view);
  void end_gpu(uint64_t frame,int view);
- void cpu(uint64_t frame,double interval,double events,double physics,double player,double stream,double top_submit,double top_swap,double bottom_submit,double bottom_swap);
+ void cpu(uint64_t frame,double interval,double events,double physics,double player,double stream,double top_submit,double top_swap,double bottom_submit,double bottom_swap,double pace=0);
  bool enabled()const{return cpu_.is_open();}
 private:
  struct Query{GLuint id=0;uint64_t frame=0;bool pending=false,active=false,invalid=false;};

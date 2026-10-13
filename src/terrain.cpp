@@ -1,4 +1,7 @@
 #include "terrain.hpp"
+#include <chrono>
+#include <limits>
+#include <stdexcept>
 namespace fl {
 uint32_t hash_int(uint32_t n,uint32_t seed){uint32_t h=n^seed;h=(h^(h>>16))*0x7feb352dU;h=(h^(h>>15))*0x846ca68bU;return h^(h>>16);}
 double Rng::next(){a+=0x6D2B79F5U;uint32_t t=(a^(a>>15))*(1U|a);t=(t+(t^(t>>7))*(61U|t))^t;return double(t^(t>>14))/4294967296.0;}
@@ -72,19 +75,29 @@ double Terrain::height(double x,double z,Paint* out){
  if(out){out->rel=rel;out->u=u;}return base(z)+drop(z)+rel;
 }
 Vec3 Terrain::normal(double x,double z){double e=0.08,hx=height(x+e,z)-height(x-e,z),hz=height(x,z+e)-height(x,z-e);return norm({-hx/(2*e),1,-hz/(2*e)});}
-CpuMesh build_terrain(Terrain& terrain,int cell){
- std::vector<double> cols;for(double u:{300,240,185,140,105,80,64,54,48})cols.push_back(-u);
- for(int u=-44;u<=44;++u) cols.push_back(u);
- for(double u:{48,54,64,80,105,140,185,240,300}) cols.push_back(u);
- struct Sample{Vec3 p;Paint o;};std::vector<std::vector<Sample>> samples;
- for(int j=-1;j<=ROWS+1;++j){double z=cell*CELL+j*ROW,cx=Terrain::center(z);std::vector<Sample> row;
-  for(double u:cols){Sample s;s.p={cx+u,0,z};s.p.y=terrain.height(s.p.x,z,&s.o);row.push_back(s);}samples.push_back(std::move(row));}
- CpuMesh mesh;mesh.vertices.reserve((ROWS+1)*cols.size());
- for(int j=1;j<=ROWS+1;++j)for(int i=0;i<int(cols.size());++i){const auto& s=samples[j][i];
-  Vec3 n=norm(cross(samples[j+1][i].p-samples[j-1][i].p,samples[j][std::min(int(cols.size())-1,i+1)].p-samples[j][std::max(0,i-1)].p));if(n.y<0)n=n*-1;
-  mesh.vertices.push_back({float(s.p.x),float(s.p.y),float(s.p.z),float(n.x),float(n.y),float(n.z),0.97f,float(s.o.lip),float(s.o.stripe),float(s.o.u),float(s.o.rel)});
- }
- uint32_t nc=uint32_t(cols.size());for(int j=0;j<ROWS;++j)for(uint32_t i=0;i<nc-1;++i){uint32_t a=j*nc+i,b=a+1,c=a+nc,d=c+1;mesh.indices.insert(mesh.indices.end(),{a,c,b,b,c,d});}
- return mesh;
+TerrainJob::TerrainJob(Terrain& terrain,int cell):terrain_(terrain),cell_(cell){
+ for(double u:{300,240,185,140,105,80,64,54,48})columns_.push_back(-u);
+ for(int u=-44;u<=44;++u)columns_.push_back(u);
+ for(double u:{48,54,64,80,105,140,185,240,300})columns_.push_back(u);
+ samples_.reserve(ROWS+3);mesh_.vertices.reserve((ROWS+1)*columns_.size());mesh_.indices.reserve(ROWS*(columns_.size()-1)*6);
 }
+bool TerrainJob::step(double budget_ms){
+ if(complete_)return true;
+ const auto started=std::chrono::steady_clock::now();
+ do{
+  if(sampling_){double z=cell_*CELL+row_*ROW,cx=Terrain::center(z);std::vector<Sample> row;row.reserve(columns_.size());
+   for(double u:columns_){Sample s;s.p={cx+u,0,z};s.p.y=terrain_.height(s.p.x,z,&s.o);row.push_back(s);}samples_.push_back(std::move(row));
+   if(++row_>ROWS+1){sampling_=false;row_=1;}
+  }else{
+   int j=row_;for(int i=0;i<int(columns_.size());++i){const auto& s=samples_[j][i];Vec3 n=norm(cross(samples_[j+1][i].p-samples_[j-1][i].p,samples_[j][std::min(int(columns_.size())-1,i+1)].p-samples_[j][std::max(0,i-1)].p));if(n.y<0)n=n*-1;
+    mesh_.vertices.push_back({float(s.p.x),float(s.p.y),float(s.p.z),float(n.x),float(n.y),float(n.z),.97f,float(s.o.lip),float(s.o.stripe),float(s.o.u),float(s.o.rel)});
+   }
+   if(j<=ROWS){uint32_t nc=uint32_t(columns_.size());for(uint32_t i=0;i<nc-1;++i){uint32_t a=(j-1)*nc+i,b=a+1,c=a+nc,d=c+1;mesh_.indices.insert(mesh_.indices.end(),{a,c,b,b,c,d});}}
+   if(++row_>ROWS+1)complete_=true;
+  }
+ }while(!complete_ && std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-started).count()<budget_ms);
+ return complete_;
+}
+CpuMesh TerrainJob::take(){if(!complete_)throw std::runtime_error("terrain job is incomplete");return std::move(mesh_);}
+CpuMesh build_terrain(Terrain& terrain,int cell){TerrainJob job(terrain,cell);job.step(std::numeric_limits<double>::infinity());return job.take();}
 }

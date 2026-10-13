@@ -36,7 +36,7 @@ static GLuint texture(int w,int h,GLint internal,GLenum format,GLenum type){
  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);return t;
 }
-void Renderer::initialize(uint32_t seed,int first_cell,int count,int w,int h,const std::string& assets,bool precise_depth,bool stable_sky){
+void Renderer::initialize(uint32_t seed,int first_cell,int count,int w,int h,const std::string& assets,bool precise_depth,bool stable_sky,bool play_mode){
  scene_=program(read_file(assets+"/scene_vs.glsl"),read_file(assets+"/scene_fs.glsl"),"original scene");
  std::string print_source=read_file(assets+"/post_fs.glsl");
  if(precise_depth){
@@ -49,7 +49,8 @@ void Renderer::initialize(uint32_t seed,int first_cell,int count,int w,int h,con
   // Source layer amplitudes/shapes are retained; only its unstable random basis changes.
   // Wrap the angular lattice so the first-person rear-facing view has no atan seam.
   const std::string helper=R"(
-float skyHash(float index){highp uint h=uint(int(index));h=(h^(h>>16))*0x7feb352du;h=(h^(h>>15))*0x846ca68bu;h^=h>>16;return float(h>>8)*(1./16777216.);}
+uniform highp float uSkySamples[170];
+float skyHash(float index){return uSkySamples[int(index)];}
 float skyNoise(float az,float frequency,float offset){float count=floor(6.28318530718*frequency+.5);float x=(az+3.14159265359)/6.28318530718*count+offset;float i=floor(x),f=fract(x);f=f*f*(3.-2.*f);return mix(skyHash(mod(i,count)),skyHash(mod(i+1.,count)),f);}
 )";
   auto at=print_source.find("void main(){");print_source.insert(at,helper);
@@ -58,6 +59,7 @@ float skyNoise(float az,float frequency,float offset){float count=floor(6.283185
  std::cout<<"sky hash="<<(stable_sky?"stable wrapped integer lattice":"source sine hash")<<'\n';
  std::cout<<"depth sampler="<<(precise_depth?"explicit highp portability override":"original implicit precision")<<'\n';
  post_=program(read_file(assets+"/post_vs.glsl"),print_source,"original print");
+ if(stable_sky){std::array<float,170> values{};for(uint32_t i=0;i<values.size();++i){uint32_t h=i;h=(h^(h>>16))*0x7feb352du;h=(h^(h>>15))*0x846ca68bu;h^=h>>16;values[i]=float(h>>8)*(1.f/16777216.f);}glUseProgram(post_);glUniform1fv(loc(post_,"uSkySamples[0]"),GLsizei(values.size()),values.data());}
  const std::string copy_fs=R"(#version 300 es
 precision highp float;
 uniform sampler2D uC; uniform highp sampler2D uD; uniform vec2 uOutputRes; uniform int uMode; out vec4 o;
@@ -69,14 +71,15 @@ o=vec4(vec3(x),1.);})";
  copy_=program(read_file(assets+"/post_vs.glsl"),copy_fs,"presentation diagnostic");
  const std::string hud_fs=R"(#version 300 es
 precision highp float;
-uniform highp sampler2D uFont;uniform vec4 uRect;uniform float uCharacter;uniform vec3 uInk,uPaper;out vec4 o;
-void main(){vec2 uv=(gl_FragCoord.xy-uRect.xy)/uRect.zw;if(any(lessThan(uv,vec2(0.)))||any(greaterThan(uv,vec2(1.))))discard;
-if(uCharacter<0.){o=vec4(uPaper,.92);return;}float alpha=texture(uFont,vec2((uCharacter+uv.x)/96.,1.-uv.y)).a;o=vec4(uInk,alpha);})";
+uniform highp sampler2D uFont;uniform vec3 uInk,uPaper;in vec2 vUV;out vec4 o;
+void main(){if(vUV.x<0.){o=vec4(uPaper,.92);return;}float alpha=texture(uFont,vUV).a;o=vec4(uInk,alpha);})";
  const std::string hud_vs=R"(#version 300 es
-uniform vec4 uRect;uniform vec2 uOutputRes;
-const vec2 corners[6]=vec2[6](vec2(0,0),vec2(1,0),vec2(0,1),vec2(0,1),vec2(1,0),vec2(1,1));
-void main(){vec2 p=uRect.xy+corners[gl_VertexID]*uRect.zw;gl_Position=vec4(p/uOutputRes*2.-1.,0.,1.);})";
- hud_program_=program(hud_vs,hud_fs,"native HUD using source font");
+precision highp float;
+layout(location=0) in vec2 aPosition;layout(location=1) in vec2 aUV;
+uniform vec2 uOutputRes;out vec2 vUV;
+void main(){vUV=aUV;gl_Position=vec4(aPosition/uOutputRes*2.-1.,0.,1.);})";
+ hud_program_=program(hud_vs,hud_fs,"batched native HUD using source font");
+ glGenVertexArrays(1,&hud_vao_);glBindVertexArray(hud_vao_);glGenBuffers(1,&hud_vbo_);glBindBuffer(GL_ARRAY_BUFFER,hud_vbo_);glEnableVertexAttribArray(0);glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,16,nullptr);glEnableVertexAttribArray(1);glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,16,reinterpret_cast<void*>(8));
  SDL_Surface* font=SDL_LoadBMP((assets+"/../hud-font.bmp").c_str());
  if(!font)throw std::runtime_error("missing source HUD font atlas");
  SDL_Surface* font_rgba=SDL_ConvertSurfaceFormat(font,SDL_PIXELFORMAT_ABGR8888,0);SDL_FreeSurface(font);
@@ -87,12 +90,10 @@ void main(){vec2 p=uRect.xy+corners[gl_VertexID]*uRect.zw;gl_Position=vec4(p/uOu
  for(auto name:{"uC","uD","uRes"})if(loc(post_,name)<0)throw std::runtime_error(std::string("missing print uniform ")+name);
  patch_first_=first_cell;patch_count_=count;
  Terrain terrain(seed);CpuMesh mesh;const auto started=std::chrono::steady_clock::now();
- for(int cell=first_cell;cell<first_cell+count;++cell){auto part=build_terrain(terrain,cell);uint32_t offset=uint32_t(mesh.vertices.size());mesh.vertices.insert(mesh.vertices.end(),part.vertices.begin(),part.vertices.end());for(uint32_t i:part.indices)mesh.indices.push_back(offset+i);}
- build_ms_=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-started).count();vertices_=mesh.vertices.size();indices_=mesh.indices.size();
- glGenVertexArrays(1,&vao_);glBindVertexArray(vao_);glGenBuffers(1,&vbo_);glBindBuffer(GL_ARRAY_BUFFER,vbo_);glBufferData(GL_ARRAY_BUFFER,mesh.vertices.size()*sizeof(Vertex),mesh.vertices.data(),GL_STATIC_DRAW);
- glGenBuffers(1,&ibo_);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,ibo_);glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh.indices.size()*sizeof(uint32_t),mesh.indices.data(),GL_STATIC_DRAW);
+ for(int cell=first_cell;cell<first_cell+count;++cell){auto part=build_terrain(terrain,cell);vertices_+=part.vertices.size();indices_+=part.indices.size();if(play_mode)cell_meshes_.emplace(cell,upload_cell(part));else{uint32_t offset=uint32_t(mesh.vertices.size());mesh.vertices.insert(mesh.vertices.end(),part.vertices.begin(),part.vertices.end());for(uint32_t i:part.indices)mesh.indices.push_back(offset+i);}}
+ build_ms_=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-started).count();
  const int sizes[]={3,3,1,2,2},offsets[]={0,12,24,28,36};
- for(int i=0;i<5;++i){glEnableVertexAttribArray(i);glVertexAttribPointer(i,sizes[i],GL_FLOAT,GL_FALSE,sizeof(Vertex),reinterpret_cast<void*>(intptr_t(offsets[i])));}
+ if(!play_mode){auto static_mesh=upload_cell(mesh);vao_=static_mesh.vao;vbo_=static_mesh.vbo;ibo_=static_mesh.ibo;}
  glGenVertexArrays(1,&fullscreen_vao_);
  glGenVertexArrays(1,&rider_vao_);glBindVertexArray(rider_vao_);glGenBuffers(1,&rider_vbo_);glBindBuffer(GL_ARRAY_BUFFER,rider_vbo_);glGenBuffers(1,&rider_ibo_);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,rider_ibo_);
  for(int i=0;i<5;++i){glEnableVertexAttribArray(i);glVertexAttribPointer(i,sizes[i],GL_FLOAT,GL_FALSE,sizeof(Vertex),reinterpret_cast<void*>(intptr_t(offsets[i])));}
@@ -106,6 +107,7 @@ void main(){vec2 p=uRect.xy+corners[gl_VertexID]*uRect.zw;gl_Position=vec4(p/uOu
   for(auto& pose:rider_poses_){pose.resize(header[1]);file.read(reinterpret_cast<char*>(pose.data()),header[1]*sizeof(Vertex));}
   if(!file)throw std::runtime_error("truncated source rider pose asset");
  }
+ glBindVertexArray(rider_vao_);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,rider_ibo_);glBufferData(GL_ELEMENT_ARRAY_BUFFER,rider_triangles_.size()*sizeof(uint32_t),rider_triangles_.data(),GL_STATIC_DRAW);
  // Complete digit sampler before the original atlas upload.
  glyph_=texture(1,1,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);const unsigned char transparent[4]={0,0,0,0};glTexSubImage2D(GL_TEXTURE_2D,0,0,0,1,1,GL_RGBA,GL_UNSIGNED_BYTE,transparent);
  const std::string atlas=assets+"/../glyphs.bmp";
@@ -140,7 +142,7 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
  // Three nondegenerate shadow segments, far outside every supported fixed patch.
  const float shadows[]={1000000,1000000,1000000,.26f,1000000,1000001,1000000,0,1000002,1000000,1000000,.17f,1000002,1000001,1000000,0,1000004,1000000,1000000,.2f,1000004,1000001,1000000,0};
  glUniform4fv(loc(scene_,"uSeg"),6,shadows);integer(scene_,"uKind",0);scalar(scene_,"uMat",1);scalar(scene_,"uAlbO",-1);scalar(scene_,"uXray",0);
- glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,glyph_);integer(scene_,"uGlyph",0);glBindVertexArray(vao_);glDrawElements(GL_TRIANGLES,GLsizei(indices_),GL_UNSIGNED_INT,nullptr);
+ glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,glyph_);integer(scene_,"uGlyph",0);if(cell_meshes_.empty()){glBindVertexArray(vao_);glDrawElements(GL_TRIANGLES,GLsizei(indices_),GL_UNSIGNED_INT,nullptr);}else for(int cell=patch_first_;cell<patch_first_+patch_count_;++cell){auto found=cell_meshes_.find(cell);if(found!=cell_meshes_.end()){glBindVertexArray(found->second.vao);glDrawElements(GL_TRIANGLES,found->second.indices,GL_UNSIGNED_INT,nullptr);}}
  if(rider_indices_){integer(scene_,"uKind",1);glBindVertexArray(rider_vao_);for(const auto& group:rider_groups_){scalar(scene_,"uMat",float(group[2]));glDrawElements(GL_TRIANGLES,GLsizei(group[1]),GL_UNSIGNED_INT,reinterpret_cast<void*>(uintptr_t(group[0])*4));}}
  glBindFramebuffer(GL_FRAMEBUFFER,print_fbo_);glViewport(0,0,width_,height_);glDisable(GL_DEPTH_TEST);glUseProgram(post_);
  glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,color_);integer(post_,"uC",0);glActiveTexture(GL_TEXTURE1);glBindTexture(GL_TEXTURE_2D,depth_);integer(post_,"uD",1);
@@ -157,10 +159,15 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
  glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,debug?color_:printed_);integer(copy_,"uC",0);glActiveTexture(GL_TEXTURE1);glBindTexture(GL_TEXTURE_2D,depth_);integer(copy_,"uD",1);integer(copy_,"uMode",debug);glUniform2f(loc(copy_,"uOutputRes"),drawable_w,drawable_h);glDrawArrays(GL_TRIANGLES,0,3);
  if(following_){
   glUseProgram(hud_program_);glUniform2f(loc(hud_program_,"uOutputRes"),drawable_w,drawable_h);glEnable(GL_BLEND);glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,hud_font_);integer(hud_program_,"uFont",0);vec3(hud_program_,"uInk",inks[palette]);vec3(hud_program_,"uPaper",papers[palette]);
-  auto text=[&](const std::string& value,float left,float bottom,float width,float height){for(size_t i=0;i<value.size();++i){scalar(hud_program_,"uCharacter",float(static_cast<unsigned char>(value[i])-32));glUniform4f(loc(hud_program_,"uRect"),left+i*width,bottom,width,height);glDrawArrays(GL_TRIANGLES,0,6);}};
-  scalar(hud_program_,"uCharacter",-1);glUniform4f(loc(hud_program_,"uRect"),8,drawable_h-80,drawable_w-16,72);glDrawArrays(GL_TRIANGLES,0,6);
-  text(hud_line_,16,drawable_h-44,18,30);vec3(hud_program_,"uInk",spots[palette]);text(hud_status_,16,drawable_h-74,16,28);
-  scalar(hud_program_,"uCharacter",-1);glUniform4f(loc(hud_program_,"uRect"),8,8,drawable_w-16,34);glDrawArrays(GL_TRIANGLES,0,6);vec3(hud_program_,"uInk",inks[palette]);text("A: HOLD/RELEASE JUMP   D-PAD: RIDE/TRICKS   START: RESTART",16,10,16,28);glDisable(GL_BLEND);
+  struct HUDVertex{float x,y,u,v;};static_assert(sizeof(HUDVertex)==16);std::vector<HUDVertex> glyphs;glyphs.reserve(1200);
+  const float corners[6][2]={{0,0},{1,0},{0,1},{0,1},{1,0},{1,1}};
+  auto quad=[&](float left,float bottom,float width,float height,int character){for(const auto& p:corners)glyphs.push_back({left+p[0]*width,bottom+p[1]*height,character<0?-1.f:(character+p[0])/96.f,character<0?0.f:1.f-p[1]});};
+  auto text=[&](const std::string& value,float left,float bottom,float width,float height){for(size_t i=0;i<value.size();++i)quad(left+i*width,bottom,width,height,int(static_cast<unsigned char>(value[i]))-32);};
+  quad(8,drawable_h-80,drawable_w-16,72,-1);text(hud_line_,16,drawable_h-44,18,30);GLsizei primary=GLsizei(glyphs.size());
+  text(hud_status_,16,drawable_h-74,16,28);GLsizei status_end=GLsizei(glyphs.size());
+  quad(8,8,drawable_w-16,34,-1);text("A: HOLD/RELEASE JUMP   D-PAD: RIDE/TRICKS   START: RESTART",16,10,16,28);
+  glBindVertexArray(hud_vao_);glBindBuffer(GL_ARRAY_BUFFER,hud_vbo_);glBufferData(GL_ARRAY_BUFFER,glyphs.size()*sizeof(HUDVertex),glyphs.data(),GL_DYNAMIC_DRAW);
+  glDrawArrays(GL_TRIANGLES,0,primary);vec3(hud_program_,"uInk",spots[palette]);glDrawArrays(GL_TRIANGLES,primary,status_end-primary);vec3(hud_program_,"uInk",inks[palette]);glDrawArrays(GL_TRIANGLES,status_end,GLsizei(glyphs.size())-status_end);glDisable(GL_BLEND);
  }
  gl_check("render");
 }
@@ -180,7 +187,15 @@ void Renderer::capture(const std::string& path){
  integer(copy_,"uMode",5);glUniform2f(loc(copy_,"uOutputRes"),width_,height_);glBindVertexArray(fullscreen_vao_);glDrawArrays(GL_TRIANGLES,0,3);gl_check("depth diagnostic");
  save(print_fbo_,parent+"/depth.bmp");
 }
+Renderer::CellMesh Renderer::upload_cell(const CpuMesh& mesh){
+ CellMesh cell;cell.indices=GLsizei(mesh.indices.size());cell.vertices=mesh.vertices.size();glGenVertexArrays(1,&cell.vao);glBindVertexArray(cell.vao);glGenBuffers(1,&cell.vbo);glBindBuffer(GL_ARRAY_BUFFER,cell.vbo);glBufferData(GL_ARRAY_BUFFER,mesh.vertices.size()*sizeof(Vertex),mesh.vertices.data(),GL_STATIC_DRAW);glGenBuffers(1,&cell.ibo);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,cell.ibo);glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh.indices.size()*sizeof(uint32_t),mesh.indices.data(),GL_STATIC_DRAW);
+ const int sizes[]={3,3,1,2,2},offsets[]={0,12,24,28,36};for(int i=0;i<5;++i){glEnableVertexAttribArray(i);glVertexAttribPointer(i,sizes[i],GL_FLOAT,GL_FALSE,sizeof(Vertex),reinterpret_cast<void*>(intptr_t(offsets[i])));}return cell;
+}
+void Renderer::delete_cell(CellMesh& cell){glDeleteVertexArrays(1,&cell.vao);glDeleteBuffers(1,&cell.vbo);glDeleteBuffers(1,&cell.ibo);cell={};}
 Renderer::~Renderer(){
+ for(auto& entry:cell_meshes_)delete_cell(entry.second);
+ if(hud_vao_)glDeleteVertexArrays(1,&hud_vao_);
+ if(hud_vbo_)glDeleteBuffers(1,&hud_vbo_);
  if(hud_program_)glDeleteProgram(hud_program_);
  if(hud_font_)glDeleteTextures(1,&hud_font_);
  if(rider_vao_)glDeleteVertexArrays(1,&rider_vao_);

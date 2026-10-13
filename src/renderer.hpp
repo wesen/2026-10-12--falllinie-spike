@@ -3,6 +3,7 @@
 #include "game.hpp"
 #include <GLES3/gl3.h>
 #include <string>
+#include <memory>
 namespace fl {
 struct Camera {Vec3 eye,look;Mat4 vp,inverse_vp;};
 class Renderer {
@@ -10,7 +11,7 @@ public:
  Renderer()=default;
  ~Renderer();
  Renderer(const Renderer&)=delete;Renderer& operator=(const Renderer&)=delete;
- void initialize(uint32_t seed,int first_cell,int cell_count,int width,int height,const std::string& assets,bool precise_depth=true,bool stable_sky=true);
+ void initialize(uint32_t seed,int first_cell,int cell_count,int width,int height,const std::string& assets,bool precise_depth=true,bool stable_sky=true,bool play_mode=false);
  void resize(int width,int height);
  void update_player(Game& game,double dt);
  void render_first_person(int width,int height,int palette=0);
@@ -25,8 +26,13 @@ public:
  int height()const{return height_;}
  const Camera& camera()const{return camera_;}
 private:
- GLuint hud_program_=0,hud_font_=0;
+ GLuint hud_program_=0,hud_font_=0,hud_vao_=0,hud_vbo_=0;
  std::string hud_line_,hud_status_;
+ struct CellMesh{GLuint vao=0,vbo=0,ibo=0;GLsizei indices=0;size_t vertices=0;};
+ std::map<int,CellMesh> cell_meshes_;
+ std::unique_ptr<TerrainJob> terrain_job_;
+ CellMesh upload_cell(const CpuMesh& mesh);
+ void delete_cell(CellMesh& cell);
  GLuint scene_=0,post_=0,copy_=0,vao_=0,vbo_=0,ibo_=0,fullscreen_vao_=0;
  GLuint rider_vao_=0,rider_vbo_=0,rider_ibo_=0;
  GLsizei rider_indices_=0;

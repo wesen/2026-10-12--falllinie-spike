@@ -7,7 +7,7 @@ static constexpr GLenum elapsed=0x88BF,available=0x8867,result=0x8866,disjoint=0
 Profiler::Profiler(const std::string& path,bool gpu){
  if(path.empty())return;
  cpu_.open(path);gpu_.open(path+".gpu.csv");if(!cpu_||!gpu_)throw std::runtime_error("cannot open profile logs");
- cpu_<<"frame,interval_ms,events_ms,physics_ms,player_ms,stream_ms,top_submit_ms,top_swap_ms,bottom_submit_ms,bottom_swap_ms\n";gpu_<<"frame,view,gpu_ms,disjoint\n";cpu_<<std::setprecision(9);gpu_<<std::setprecision(9);
+ cpu_<<"frame,interval_ms,events_ms,physics_ms,player_ms,stream_ms,top_submit_ms,top_swap_ms,bottom_submit_ms,bottom_swap_ms,pace_wait_ms\n";gpu_<<"frame,view,gpu_ms,disjoint\n";cpu_<<std::setprecision(9);gpu_<<std::setprecision(9);
  if(!gpu){std::cout<<"GPU queries disabled for unperturbed CPU timing\n";return;}
  auto ext=reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS));
  if(!ext||std::string(ext).find("GL_EXT_disjoint_timer_query")==std::string::npos){std::cout<<"GPU elapsed queries unsupported\n";return;}
@@ -24,6 +24,6 @@ void Profiler::poll(){
 }
 void Profiler::begin_gpu(uint64_t frame,int view){if(!supported_ || frame%60!=0)return;auto& q=queries_[frame%8][view];if(q.pending)return;q.frame=frame;q.invalid=false;q.active=true;begin_(elapsed,q.id);}
 void Profiler::end_gpu(uint64_t frame,int view){if(!supported_)return;auto& q=queries_[frame%8][view];if(!q.active)return;end_(elapsed);q.active=false;q.pending=true;}
-void Profiler::cpu(uint64_t f,double i,double e,double p,double u,double s,double t,double ts,double b,double bs){if(enabled())cpu_<<f<<','<<i<<','<<e<<','<<p<<','<<u<<','<<s<<','<<t<<','<<ts<<','<<b<<','<<bs<<'\n';}
+void Profiler::cpu(uint64_t f,double i,double e,double p,double u,double s,double t,double ts,double b,double bs,double pace){if(enabled())cpu_<<f<<','<<i<<','<<e<<','<<p<<','<<u<<','<<s<<','<<t<<','<<ts<<','<<b<<','<<bs<<','<<pace<<'\n';}
 Profiler::~Profiler(){if(supported_){poll();for(auto& frame:queries_)for(auto& q:frame)del_(1,&q.id);}}
 }

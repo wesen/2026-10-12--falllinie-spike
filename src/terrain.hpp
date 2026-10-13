@@ -34,5 +34,16 @@ private:
 struct Vertex {float px,py,pz,nx,ny,nz,albedo,lip,stripe,lateral,relative_height;};
 static_assert(sizeof(Vertex)==44,"vertex stride must match the original 11 floats");
 struct CpuMesh {std::vector<Vertex> vertices;std::vector<uint32_t> indices;};
+class TerrainJob {
+public:
+ TerrainJob(Terrain& terrain,int cell);
+ bool step(double budget_ms);
+ int cell()const{return cell_;}
+ CpuMesh take();
+private:
+ struct Sample{Vec3 p;Paint o;};
+ Terrain& terrain_;int cell_,row_=-1;bool sampling_=true,complete_=false;
+ std::vector<double> columns_;std::vector<std::vector<Sample>> samples_;CpuMesh mesh_;
+};
 CpuMesh build_terrain(Terrain& terrain,int cell);
 }

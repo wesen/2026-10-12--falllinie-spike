@@ -1,0 +1,9 @@
+aarch64
+7.2.7
+ldd (GNU libc) 2.44
+Copyright (C) 2024 Free Software Foundation, Inc.
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+               total        used        free      shared  buff/cache   available
+Mem:             975         618         144          78         447         356
+Swap:              0           0           0
+/usr/bin/timeout

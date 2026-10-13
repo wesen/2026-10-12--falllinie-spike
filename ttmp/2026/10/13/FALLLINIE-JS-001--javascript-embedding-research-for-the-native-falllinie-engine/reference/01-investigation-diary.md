@@ -255,3 +255,42 @@ Inspect the fetch helper URL and reconciliation assertions, central versus archi
 
 ### Technical details
 Parent native DSP/overlay code at eb6c1a5 independently passed review for further qualification, not release. A subsequent 55-second native 48kHz/1024-frame muted overlay run still recorded 3/2574 callback budget misses, maximum39.8702ms versus21.3333ms budget and about50FPS. These are callback wall-budget observations, not driver XRUN counts. No JS binary was run on the handheld.
+
+## Step 6: Resume real ARM64 and V8 qualification
+
+The user authorized resuming interpreter experiments, including actual ARM64 execution and V8 embedding. New useful tooling and bounded evidence will live under this ticket's scripts/02-arm64-v8 rather than extending the old external experiment group. Existing captures and previous results remain historical and unchanged; production gameplay/audio ownership is not being migrated.
+
+### Prompt Context
+**User prompt (verbatim):** "ok, go ahead. Continue the diary. Keep all useful scripts in the scripts/ folder of the ticket (the previous JS ticket)."
+**Assistant interpretation:** Execute the previously described QuickJS/QuickJS-ng handheld and real V8 C++ embedding qualification, with continued evidence-backed diary and ticket-local tooling.
+**Inferred user intent:** Resolve actual device/runtime feasibility and wrapper constraints before choosing live game integration.
+
+### What I did
+Read latest diary checkpoint, prior wrapper diagnostics and subagent execution/review rules. Created ticket scripts/02-arm64-v8/evidence and added explicit ARM64, V8 and review tasks i082/gplk/aaim. Read-only target preflight confirmed aarch64, kernel7.2.7,glibc2.44,975MiB RAM/356MiB available/no swap,ARM SIMD/atomics features,timeout utility and no node executable. No native Falllinie process appeared in the bounded process listing. This is an as-of observation, not permission to stop other applications.
+
+### Why
+Cross-linking is not execution proof. V8 C++ embedding must be measured separately from Node script execution and QuickJS wrappers. A1GiB physical device requires conservative benchmark memory limits rather than unbounded allocation stress.
+
+### What worked
+Read-only SSH preflight succeeded and bounded target receipt was saved. Existing production source/worktree was clean before ticket-only preparation.
+
+### What didn't work
+The initially guessed ~/.pi/agent/skills/pi-subagents/SKILL.md path returned ENOENT; loaded the actual project package skill path instead. No interpreter execution or new V8 result exists yet.
+
+### What I learned
+Current target has only975MiB total RAM and no swap. Benchmark limits must account for total native/process overhead, not only JS heap accounting.
+
+### What was tricky to build
+Old ignored build trees are absent on parent main and must be rebuilt or reused only with pinned provenance. Wrapper bundled-header/current-library and current-header compile failures are distinct from underlying runtime support.
+
+### What warrants a second pair of eyes
+Runtime/handle lifetimes, exception and typed-buffer boundaries, fair cold/warm timing, accurate engine/library/build labeling and device safety. Embedded V8 via libnode is not Node JS execution, but must not be misreported as a custom standalone V8 build.
+
+### What should be done in the future
+Build isolated harnesses, review exact candidate, then parent execute bounded device tests with actual version/configuration/startup/memory/GC receipts. No JS enters audio callback,GL worker or live simulation in this phase.
+
+### Code review instructions
+Start at new ticket scripts/02-arm64-v8 and previous external experiment README/pin manifest. Require actual AArch64 run records and fixture comparisons; do not accept ELF identification alone.
+
+### Technical details
+Parent owns device transfer/run and final acceptance; isolated worker owns harness/build/reproducibility scripts and a focused continuation diary. Preserve historical script group rather than moving or silently rewriting its evidence. Credentials and arbitrary environment values stay outside receipts; useful scripts use explicit non-sensitive configuration and ignored .work directories.

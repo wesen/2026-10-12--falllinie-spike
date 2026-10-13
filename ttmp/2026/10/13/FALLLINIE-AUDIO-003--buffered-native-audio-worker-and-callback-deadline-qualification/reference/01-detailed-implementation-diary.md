@@ -68,3 +68,43 @@ Begin at the guide and audio.hpp/audio.cpp. Inspect `audio-crackle-isolation/man
 
 ### Technical details
 The guide proposes one same-process worker, a bounded PCM SPSC, a small request-aware lead, silence on callback shortage, cumulative starvation counters and independent wall/thread CPU timing. Source-default vinyl and offline behavior remain available; the handheld clean preference is explicit. No production audio changes have been made at this checkpoint. Cloud upload and implementation evidence follow in later steps.
+
+## Step 2: Publish the intern guide before implementation
+
+The parent completed the design checkpoint5a3b745 and uploaded the guide once to the ticket-aware reMarkable cloud destination. Delivery succeeded without renderer/auth investigation. This closes documentation/delivery tasks only; implementation, review and target qualification remain open.
+
+### Prompt Context
+**User prompt (verbatim):** See Step 1.
+**Assistant interpretation:** Deliver the requested guide before starting the implementation lane.
+**Inferred user intent:** Make the detailed analysis and proposed implementation available for reading independently of code progress.
+**Commit (code/docs):** 5a3b745 — Document buffered audio worker design and matched vinyl isolation.
+
+### What I did
+Ran `remarquee upload bundle <ticket>/design-doc/01-native-audio-timing-analysis-and-buffered-worker-implementation-guide.md --name 'FALLLINIE-AUDIO-003 Buffered Audio Worker Intern Guide' --remote-dir /ai/2026/10/13/FALLLINIE-AUDIO-003 --toc-depth 2 --non-interactive`. Preserved its bounded output in `scripts/initial-guide-upload.log` and prepared scoped implementation/review authority.
+
+### Why
+The user requested guide delivery followed by implementation. A new document name/destination avoids overwriting prior annotated reports; no --force was used.
+
+### What worked
+`OK: uploaded FALLLINIE-AUDIO-003 Buffered Audio Worker Intern Guide.pdf -> /ai/2026/10/13/FALLLINIE-AUDIO-003`.
+
+### What didn't work
+No upload failures observed. No extra local render/PDF inspection or independent cloud listing was requested or necessary under the delivery policy.
+
+### What I learned
+Cloud delivery proves that the document reached the cloud destination; it does not prove physical reMarkable synchronization.
+
+### What was tricky to build
+The document explicitly separates current f5ab7b1 behavior from planned worker APIs and records pending acceptance. An uploaded design is not an implemented audio feature.
+
+### What warrants a second pair of eyes
+The ensuing implementation's queue/lifetime ownership, not the successful routine upload receipt.
+
+### What should be done in the future
+Implement in isolated scope, then fresh review and parent target qualification. Keep uploaded guide historical; record finalized APIs/evidence in the repository without assuming another upload is required.
+
+### Code review instructions
+Read the guide and Step1 before starting audio changes. Compare the upload log with the destination above; inspect source and recorded test evidence independently.
+
+### Technical details
+Parent owns `reference/01-detailed-implementation-diary.md`, ticket task/changelog/index state, deployment and delivery. The implementation worker will own a separate reference diary and scoped source/tests/scripts in an isolated worktree. No device access, installs, push or subagents are delegated.

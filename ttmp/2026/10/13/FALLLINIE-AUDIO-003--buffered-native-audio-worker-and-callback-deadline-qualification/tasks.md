@@ -1,8 +1,8 @@
 # Tasks
 
 ## TODO
-- [ ] Write intern analysis and implementation guide with exact ownership/lifecycle contracts <!-- t:a1ym -->
-- [ ] Upload initial guide to reMarkable with cloud receipt <!-- t:plnk -->
+- [x] Write intern analysis and implementation guide with exact ownership/lifecycle contracts <!-- t:a1ym -->
+- [x] Upload initial guide to reMarkable with cloud receipt <!-- t:plnk -->
 - [ ] Implement bounded PCM transport and deterministic tests <!-- t:b19a -->
 - [ ] Implement DSP worker, pause/close/reopen and source-preserving options <!-- t:2xkx -->
 - [ ] Complete independent review and host numerical/concurrency/lifecycle validation <!-- t:0suj -->

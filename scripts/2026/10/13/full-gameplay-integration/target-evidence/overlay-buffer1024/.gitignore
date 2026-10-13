@@ -1,0 +1,2 @@
+# Raw BMPs are retained locally; identical decoded PNG pixels are committed.
+*.bmp

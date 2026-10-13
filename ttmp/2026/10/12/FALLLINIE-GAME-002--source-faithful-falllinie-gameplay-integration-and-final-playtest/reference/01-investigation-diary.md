@@ -629,3 +629,56 @@ The target trend improved substantially, but the512-frame audio gate is still no
 ### Technical details
 - Full2.6-second stereo response, sample rate, musical arrangement, native wet latency and bounded128voice/256command/64pump limits are unchanged.
 - Callback over-budget is wall time versus buffer duration, not actual PipeWire/ALSA XRUN count; prepared-render allocations/nonfinite/drop/steal metrics remain separately reported.
+
+## Step 12: Independent review, explicit buffering and developer panel on Mali
+
+The parent integrated the worker's developer overlay and obtained an independent exact-diff review of both the DSP optimization and overlay at eb6c1a5. No code blockers were found; the reviewer explicitly accepted further qualification, not release. The overlay is now installed on the handheld and captured on the top screen, with the lower first-person view free of developer text.
+
+A new explicit buffer request allows a conservative latency/headroom experiment without changing the source DSP graph. A 55-second muted dual-view run with the overlay and actual1024-frame/48kHz buffer still missed three callback budgets. This is substantially better operational headroom, not proof that audible crackling or the60FPS requirement is resolved.
+
+### Prompt Context
+**User prompt (verbatim):** See Step 1 and the overlay worker's diary05. The immediate events were automated worker/reviewer notifications, not newly authored feature requests.
+**Assistant interpretation:** Integrate and review the requested SELECT diagnostics, continue measured audio repair, preserve source fidelity and publish honest device evidence.
+**Inferred user intent:** A usable native game with inspectable low-level behavior and clean sound, not silently reduced effects or unsupported acceptance claims.
+
+### What I did
+- Cherry-picked overlay commits as0a153c7/eb6c1a5; the integrated host suite passed8/8.
+- Supplied exact text patches after the read-only reviewer could not execute Git. Archived the patches, change stat and full review under `review-evidence/`.
+- Added `AudioEngine::open(int buffer_frames=512)` with power-of-two256..4096 validation before opening; obtained SDL buffer remains diagnostic truth. Added `--audio-buffer`, retaining executable/API512 default. The port launcher requests1024; callers can override it explicitly.
+- Extended dummy lifecycle checks for rejecting123 and obtaining1024 after close/reopen. Existing idempotent-open behavior remains intact.
+- Rebuilt host and ARM64, deployed to the parent-owned device and ran55seconds muted autoplay/dual384x288/no-vsync/fps60/overlay/1024. Saved logs, CSV and scene/print captures (no --receipt was requested) under `target-evidence/overlay-buffer1024/`.
+- Left a separate audible-capable interactive title instance with the overlay enabled, then captured DSI-2 and DSI-1 using grim. Audio remains unopened until A/START drops in; no claim of human listening is made.
+- Reviewed the JS research package separately. Its underlying measurements/design were supported, but historical deployment wording and ng capture provenance required correction. Parent corrected those in research-only commit720afc7; no production interpreter was introduced.
+
+### Why
+The source reverb's full2.6-second stereo response,1024-sample wet delay, arrangement and2x saturation stay unchanged. A larger callback buffer is a documented latency trade-off rather than a concealed DSP reduction. The developer pane explicitly distinguishes CPU wall intervals and callback budget misses from scanout, utilization and driver XRUNs.
+
+### What worked
+- Exact DSP/overlay review found no qualifying code issues: delayed history indexing, Hermitian reconstruction, occupied-voice ordering, callback fixed storage, control rollback/F2 ownership, cached geometry bounds and exception-safe first-person restoration were supported.
+- All8 host tests passed after the buffer change; ARM64 compilation/link had no warnings.
+- Device: pulseaudio/48kHz/1024frames,2574callbacks,mean12.2459ms,max39.8702ms,3budget misses,queue high3,drops/steals/nonfinite0;2756frames/2696measured,p5019.7951ms,p9521.6306ms,p9923.0993ms,RSS115092KiB,GL_error0.
+- Top grim capture shows the bounded source-font panel; lower capture has no developer panel. The GPU scene captures visibly contain tree geometry and persistent trail/particle forms. Screenshot readability is not physical human legibility acceptance.
+
+### What didn't work
+- Audio still exceeded its21.3333ms wall budget three times; rendering remained about50FPS. No driver-XRUN or audible-success evidence was produced. The55-second1024-buffer run covers different song phases than earlier30-second512 comparisons, so it is not a controlled same-workload buffer-only benchmark.
+- Initial edits to main/lifecycle tests matched two occurrences: `Found 2 occurrences ... Each oldText must be unique.` Those failed calls changed neither file; bounded contextual replacements resolved the ambiguity. Audio header/implementation edits in parallel had succeeded and were verified before compilation.
+- The reviewer lacked Git execution by design. Parent-generated immutable patch artifacts resolved this without granting commands or changing agent execution mode.
+- Staging initially failed with `fatal: pathspec 'scripts/2026/10/13/full-gameplay-integration/target-evidence/overlay-buffer1024/receipt.json' did not match any files`: no --receipt had been requested. That combined shell lacked failure guards, so the attempted native commit had no staged changes while four unrelated research cherry-picks still succeeded. Verified all eight native modifications remained intact and unstaged, removed the nonexistent staging path and repeated with explicit failure guards. No research/production file overlap occurred. Raw BMPs remain local/ignored; the conversion helper asserts identical decoded PNG pixels before committing bounded captures.
+
+### What I learned
+The developer panel makes the remaining cost observable: title captures show top/bottom CPU submit wall time, but that cannot establish additive GPU time. Source terrain residency is seven cells, unlike the earlier four-cell graphics prototype; prior60FPS results are not equivalent integrated-workload acceptance.
+
+### What was tricky to build
+Buffer configuration belongs to main-thread device setup, not the callback. Changing an already-open engine still requires close/reopen; the sample clock and DSP graph are not restarted by an idempotent open. SELECT late-chord rollback remains worker-owned logic already reviewed; the new buffer path does not touch it.
+
+### What warrants a second pair of eyes
+Physical panel legibility/SELECT chord behavior, sustained audible playback, late callback timing, and combined render/audio performance. The separate reviewer reports preserve exact scope and unresolved qualification gates.
+
+### What should be done in the future
+Obtain focused listening feedback from the installed build, identify remaining frame-stage work without removing source features, and qualify combined60FPS/audio only after sufficient evidence. Research corrections do not authorize JS in production or imply JS target execution.
+
+### Code review instructions
+Inspect audio.hpp/open setup, main argument/start paths, port launcher and dummy lifecycle test. Run8/8 host suite and bounded target comparisons. Review top/lower PNGs and run.log; do not infer scanout rate or driver XRUNs from the CSV/callback counters.
+
+### Technical details
+At48kHz,512 and1024 frames have10.6667ms and21.3333ms nominal buffer durations respectively; actual end-to-end audio latency is not measured. Interactive controls are SELECT overlay, F2 keyboard toggle, SELECT+Y new run and SELECT+START quit. The source-font pane updates at4Hz and is top-only; original mathematical X-ray/DOM/Unicode omissions are not repaired merely by adding developer telemetry.

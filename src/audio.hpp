@@ -38,7 +38,7 @@ public:
  ~AudioEngine();
  AudioEngine(const AudioEngine&)=delete;
  AudioEngine& operator=(const AudioEngine&)=delete;
- bool open();                         // main thread, paused device setup
+ bool open(int buffer_frames=512);    // main thread; reopen to change buffer
  void close();                        // stops callback before releasing storage
  void pause(bool);
  void set_ride(const RideSound&);

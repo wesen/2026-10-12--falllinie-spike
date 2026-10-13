@@ -161,3 +161,17 @@ Detailed implementation/evidence/review diary:
 `ttmp/2026/10/12/FALLLINIE-GAME-002--source-faithful-falllinie-gameplay-integration-and-final-playtest/reference/05-developer-overlay-diary.md`.
 Host tests do not qualify actual GL linkage, panel legibility, two-screen placement
 or physical audio/presentation performance; the parent owns that gate after DSP repair.
+
+### Audio buffer qualification option
+
+`--audio-buffer N` requests a power-of-two SDL buffer from 256 to 4096 frames.
+The executable/API default remains512; the handheld port launcher currently
+requests1024. At the observed48kHz this increases the buffer duration from10.667ms
+to21.333ms, trading additional latency for callback headroom. The backend's actual
+rate/buffer appears in the overlay. Close/reopen is required to change an already
+open engine; repeated open remains idempotent. This does not shorten the2.6-second
+stereo IR or alter the1024-sample wet latency, arrangement or saturation.
+
+A55-second muted dual-view overlay run with1024frames recorded3/2574 callback
+budget misses (maximum39.8702ms), about50FPS and GL_error0. This is an improvement,
+**not zero-miss audio or60FPS acceptance**, and not a measured driver-XRUN count.

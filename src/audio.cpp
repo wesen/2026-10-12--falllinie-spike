@@ -382,12 +382,13 @@ static_assert(std::atomic<uint64_t>::is_always_lock_free && std::atomic<uint32_t
  "Audio commands and diagnostics require lock-free atomics");
 AudioEngine::AudioEngine():impl_(new Impl) {}
 AudioEngine::~AudioEngine() { close(); }
-bool AudioEngine::open() {
+bool AudioEngine::open(int buffer_frames) {
+ if(buffer_frames<256||buffer_frames>4096||(buffer_frames&(buffer_frames-1)))return false;
  auto& a=*impl_; if(a.device) return true;
  bool initialized=(SDL_WasInit(SDL_INIT_AUDIO)&SDL_INIT_AUDIO)!=0;
  if(!initialized && SDL_InitSubSystem(SDL_INIT_AUDIO)!=0) return false;
  a.owns_subsystem=!initialized;
- SDL_AudioSpec desired{},obtained{}; desired.freq=48000; desired.format=AUDIO_F32SYS; desired.channels=2; desired.samples=512; desired.callback=Impl::callback; desired.userdata=&a;
+ SDL_AudioSpec desired{},obtained{}; desired.freq=48000; desired.format=AUDIO_F32SYS; desired.channels=2; desired.samples=Uint16(buffer_frames); desired.callback=Impl::callback; desired.userdata=&a;
  auto device=SDL_OpenAudioDevice(nullptr,0,&desired,&obtained,SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
  if(!device) { close(); return false; }
  if(obtained.format!=AUDIO_F32SYS || obtained.channels!=2) { SDL_CloseAudioDevice(device); close(); return false; }

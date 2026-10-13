@@ -1,0 +1,152 @@
+diff --git a/src/audio.cpp b/src/audio.cpp
+index 12e200bcead054ba92036570ff02b78e859cde6c..2a3b2be1b51b65bc14434b8ea29fe13e9edeefa5 100644
+--- a/src/audio.cpp
++++ b/src/audio.cpp
+@@ -73,6 +73,7 @@ struct AudioEngine::Impl {
+   Biquad filter[3];
+  };
+  std::array<Voice,voice_capacity> voices{};
++ std::array<size_t,voice_capacity> active_slots{};size_t active_count=0;
+  struct Pump { bool active=false; uint64_t sample=0; double depth=0; };
+  std::array<Pump,64> pumps{};
+  bool send(Command command) {
+@@ -102,7 +103,7 @@ struct AudioEngine::Impl {
+   prog=chop_pattern=vowel_set=chop_offset=0; air=grot=grind=muted=false;
+   drum=1; cutoff=9000; carve=wind=grind_gain=carve_target=wind_target=0; out_gain=0.85;
+   pump_gain=1; pump_delta=0; pump_end=0; bail_start=-1; lfo_phase=0; comp_envelope=0;
+-  voices={}; pumps={}; noise_pos=vinyl_pos=delay_pos=0; trace_begin=trace_count=0;
++  voices={};active_count=0; pumps={}; noise_pos=vinyl_pos=delay_pos=0; trace_begin=trace_count=0;
+   read.store(0); write.store(0); dropped.store(0); high_water.store(0); paused.store(false);last_ride={};ride_sent=false;
+   noise.resize(rate*2); for(auto& x:noise) x=float(noise_rng.next()*2-1);
+   vinyl.assign(rate*6,0);
+@@ -129,6 +130,7 @@ struct AudioEngine::Impl {
+   Voice* v=nullptr;
+   for(auto& candidate:voices) if(!candidate.active) { v=&candidate; break; }
+   if(!v) { v=&voices[0]; for(auto& candidate:voices) if(candidate.begin+candidate.length<v->begin+v->length) v=&candidate; ++d.stolen_voices; }
++  if(!v->active){size_t slot=size_t(v-voices.data()),at=0;while(at<active_count&&active_slots[at]<slot)++at;for(size_t i=active_count;i>at;--i)active_slots[i]=active_slots[i-1];active_slots[at]=slot;++active_count;}
+   *v={}; v->active=true; v->kind=kind; v->begin=uint64_t(std::max(now(),t)*rate+0.5); v->note=note; v->duration=dur; v->velocity=velocity; v->vowel=vowel; v->crushed=special; v->frequency=mtof(note); v->noise_begin=size_t(rng.next()*1.5*rate);
+   auto length=[&](double seconds) { v->length=uint64_t(seconds*rate+0.5); };
+   auto filter=[&](int slot,FilterType type,double f,double q=1) { v->filter[slot].set(type,f,q,rate); };
+@@ -334,7 +336,8 @@ struct AudioEngine::Impl {
+    carve+=(carve_target-carve)*carve_s; wind+=(wind_target-wind)*wind_s; grind_gain+=((grind?0.09:0)-grind_gain)*grind_s;
+    out_gain+=((muted?0:0.85)-out_gain)*out_s;
+    Buses b; double lfo=std::pow(2.0,oscillator(lfo_phase,0.43,0,rate,sine)*8/1200);
+-   for(auto& v:voices) voice_sample(v,b,lfo);
++   // Visit only occupied slots, in the original ascending summation order.
++   for(size_t i=0;i<active_count;){auto& v=voices[active_slots[i]];voice_sample(v,b,lfo);if(v.active){++i;}else{for(size_t j=i+1;j<active_count;++j)active_slots[j-1]=active_slots[j];--active_count;}}
+    double delayed=delay[delay_pos]; delay[delay_pos]=float(b.delay+delay_filter.process(delayed)*0.38); delay_pos=(delay_pos+1)%delay.size();
+    double vl=0,vr=0; reverb.process(b.verb[0],b.verb[1],vl,vr);
+    // Preserve branch gains and sends from Music.init(); sfx/vinyl bypass music master.
+diff --git a/src/audio_dsp.hpp b/src/audio_dsp.hpp
+index 2b6682bc344987f00e34d402d06ba1d0ca8b72a9..f32b847ff12ac14117d1176a3dd486f5c252dd8e 100644
+--- a/src/audio_dsp.hpp
++++ b/src/audio_dsp.hpp
+@@ -112,6 +112,19 @@ struct Envelope {
+   reset(); point(0,0.0001,false,rate); point(attack,std::max(peak,0.0002),true,rate); point(attack+decay,0.0001,true,rate);
+  }
+ };
++// Numeric FFT inputs are finite and bounded. Explicit real arithmetic avoids
++// general-purpose complex overflow recovery and permits SIMD in convolution.
++inline std::complex<float> complex_product(std::complex<float> a,std::complex<float> b){
++ return {a.real()*b.real()-a.imag()*b.imag(),a.real()*b.imag()+a.imag()*b.real()};
++}
++#if defined(__GNUC__) && !defined(__clang__)
++__attribute__((optimize("O3")))
++#endif
++inline void planar_accumulate(float* __restrict out_r,float* __restrict out_i,const float* __restrict ar,const float* __restrict ai,const float* __restrict br,const float* __restrict bi,size_t count){
++ // Separate planes let ARM NEON process four independent bins per vector,
++ // without interleaved complex shuffles. No fast-math/reassociation required.
++ for(size_t j=0;j<count;++j){out_r[j]+=ar[j]*br[j]-ai[j]*bi[j];out_i[j]+=ar[j]*bi[j]+ai[j]*br[j];}
++}
+ struct FFT {
+  size_t n=0;
+  std::vector<size_t> reverse;
+@@ -125,7 +138,7 @@ struct FFT {
+   for(size_t i=0;i<n;++i) if(i<reverse[i]) std::swap(x[i],x[reverse[i]]);
+   for(size_t len=2;len<=n;len*=2) for(size_t base=0;base<n;base+=len) for(size_t j=0;j<len/2;++j) {
+    auto root=roots[j*n/len]; if(inverse) root=std::conj(root);
+-   auto a=x[base+j],b=x[base+j+len/2]*root; x[base+j]=a+b; x[base+j+len/2]=a-b;
++   auto a=x[base+j],b=complex_product(x[base+j+len/2],root); x[base+j]=a+b; x[base+j+len/2]=a-b;
+   }
+   if(inverse) for(size_t i=0;i<n;++i) x[i]/=float(n);
+  }
+@@ -133,38 +146,48 @@ struct FFT {
+ // Uniform partitioned overlap-add, stereo IR / stereo input. One partition of
+ // explicit wet latency; O(partitions * FFT-size) per block, not per sample.
+ struct Reverb {
+- static constexpr size_t block=1024, n=block*2;
++ static constexpr size_t block=1024, n=block*2, bins=n/2+1;
+  FFT fft;
+- size_t partitions=0,head=0,pos=0;
+- std::vector<std::complex<float>> impulse[2],history[2];
++ size_t partitions=0,head=0,pos=0,next_tail=1;
++ std::vector<float> impulse_real[2],impulse_imag[2],history_real[2],history_imag[2];
+  std::array<std::complex<float>,n> scratch{},acc{};
++ std::array<float,bins> tail_real[2]{},tail_imag[2]{};
+  std::array<float,block> input[2]{},output[2]{},overlap[2]{};
+  void init(int rate,Random& rng) {
+   fft.init(n); size_t length=static_cast<size_t>(rate*2.6); partitions=(length+block-1)/block;
+-  for(int ch=0;ch<2;++ch) { history[ch].assign(partitions*n,{}); input[ch].fill(0); }
+-  head=pos=0;
++  for(int ch=0;ch<2;++ch) { history_real[ch].assign(partitions*bins,0);history_imag[ch].assign(partitions*bins,0); input[ch].fill(0); }
++  head=pos=0;next_tail=1;for(auto& t:tail_real)t.fill(0);for(auto& t:tail_imag)t.fill(0);
+   std::vector<float> ir[2]; double power=0;
+   for(int ch=0;ch<2;++ch) { ir[ch].resize(length); for(size_t i=0;i<length;++i) { double v=(rng.next()*2-1)*std::pow(1-double(i)/length,3.4); ir[ch][i]=float(v); power+=v*v; } }
+   // WebAudio ConvolverNode normalize default: RMS calibration and sample-rate correction.
+   double scale=0.00125/std::max(0.000125,std::sqrt(power/(length*2)))*44100/rate;
+   for(int ch=0;ch<2;++ch) {
+-   output[ch].fill(0); overlap[ch].fill(0); impulse[ch].resize(partitions*n);
+-   for(size_t p=0;p<partitions;++p) { scratch.fill({}); for(size_t j=0;j<block && p*block+j<length;++j) scratch[j]=ir[ch][p*block+j]*float(scale); fft.run(scratch.data()); std::copy(scratch.begin(),scratch.end(),impulse[ch].begin()+p*n); }
++   output[ch].fill(0); overlap[ch].fill(0); impulse_real[ch].resize(partitions*bins);impulse_imag[ch].resize(partitions*bins);
++   for(size_t p=0;p<partitions;++p) { scratch.fill({}); for(size_t j=0;j<block && p*block+j<length;++j) scratch[j]=ir[ch][p*block+j]*float(scale); fft.run(scratch.data()); for(size_t j=0;j<bins;++j){impulse_real[ch][p*bins+j]=scratch[j].real();impulse_imag[ch][p*bins+j]=scratch[j].imag();} }
+   }
+  }
+  void process(double in_left,double in_right,double& left,double& right) {
+   left=output[0][pos]; right=output[1][pos]; input[0][pos]=float(in_left); input[1][pos]=float(in_right);
+-  if(++pos<block) return;
++  ++pos;
++  // All delayed partitions depend only on already complete history blocks.
++  // Spread that work across this block instead of bursting every other SDL
++  // callback. Only the newest partition/FFT must wait for the final sample.
++  // 64-sample groups retain locality for voices between convolution batches.
++  const size_t due=(pos/64)*(partitions-1)/(block/64);
++  while(next_tail<=due){size_t p=next_tail++;for(int ch=0;ch<2;++ch){size_t old=((head+partitions-p)%partitions)*bins;planar_accumulate(tail_real[ch].data(),tail_imag[ch].data(),impulse_real[ch].data()+p*bins,impulse_imag[ch].data()+p*bins,history_real[ch].data()+old,history_imag[ch].data()+old,bins);}}
++  if(pos<block)return;
+   pos=0;
+   for(int ch=0;ch<2;++ch) {
+    scratch.fill({}); for(size_t j=0;j<block;++j) scratch[j]=input[ch][j]; fft.run(scratch.data());
+-   std::copy(scratch.begin(),scratch.end(),history[ch].begin()+head*n);
+-   acc.fill({});
+-   for(size_t p=0;p<partitions;++p) { const auto* h=impulse[ch].data()+p*n; const auto* in=history[ch].data()+((head+partitions-p)%partitions)*n; for(size_t j=0;j<n;++j) acc[j]+=h[j]*in[j]; }
++   for(size_t j=0;j<bins;++j){history_real[ch][head*bins+j]=scratch[j].real();history_imag[ch][head*bins+j]=scratch[j].imag();}
++   planar_accumulate(tail_real[ch].data(),tail_imag[ch].data(),impulse_real[ch].data(),impulse_imag[ch].data(),history_real[ch].data()+head*bins,history_imag[ch].data()+head*bins,bins);
++   for(size_t j=0;j<bins;++j)acc[j]={tail_real[ch][j],tail_imag[ch][j]};
++   // Real input/IR spectra are Hermitian: the other half carries no new data.
++   for(size_t j=1;j<n/2;++j)acc[n-j]=std::conj(acc[j]);
+    fft.run(acc.data(),true);
+    for(size_t j=0;j<block;++j) { output[ch][j]=acc[j].real()+overlap[ch][j]; overlap[ch][j]=acc[j+block].real(); }
+   }
+-  head=(head+1)%partitions;
++  head=(head+1)%partitions;next_tail=1;for(auto& t:tail_real)t.fill(0);for(auto& t:tail_imag)t.fill(0);
+  }
+ };
+ }
+diff --git a/tests/test_audio.cpp b/tests/test_audio.cpp
+index de72c876cb1d85200c54c2a71d446115faa753e4..0db7c6448af73f6bee4c72a4cc19ff2f78829395 100644
+--- a/tests/test_audio.cpp
++++ b/tests/test_audio.cpp
+@@ -86,6 +86,14 @@ void test_fft_and_source_ir() {
+  }
+  require(error<1e-6,"partition convolution retains all 2.6s source-shaped taps with fixed latency");
+  require(late>1e-8,"IR tail retained past two seconds");
++ // Non-impulse inputs exercise the complex cross terms and Hermitian rebuild.
++ seed.state=7;verb.init(8000,seed);std::array<double,127> signal{};
++ for(size_t i=0;i<signal.size();++i)signal[i]=std::sin(i*.173)*.3+std::cos(i*.071)*.1;
++ double signal_error=0;
++ for(size_t i=0;i<5000;++i){double l=0,r=0;verb.process(i<signal.size()?signal[i]:0,i<signal.size()?-signal[i]*.7:0,l,r);double want_l=0,want_r=0;if(i>=Reverb::block){size_t t=i-Reverb::block;for(size_t j=0;j<signal.size()&&j<=t;++j){want_l+=signal[j]*ir[0][t-j]*scale;want_r-=signal[j]*.7*ir[1][t-j]*scale;}}signal_error=std::max(signal_error,std::max(std::abs(l-want_l),std::abs(r-want_r)));}
++ require(signal_error<1e-6,"half-spectrum convolution matches direct source IR for non-impulse stereo signal");
++ require(verb.impulse_real[0].size()==verb.partitions*Reverb::bins,"only independent real-signal bins stored");
++ std::cout<<"convolution signal max error "<<signal_error<<'\n';
+  std::cout<<"source IR: 20800 taps/channel, max error "<<error<<", late energy "<<late<<'\n';
+ }
+ void test_arrangement() {

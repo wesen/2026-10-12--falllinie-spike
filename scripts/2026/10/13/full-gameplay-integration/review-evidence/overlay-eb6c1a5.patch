@@ -1,0 +1,645 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5c953710a7979b832881a2fbd4599fd62e934447..c2287e70966b5c991def13064c8a0fe2ac6ee9f2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,11 +12,11 @@ add_executable(test-terrain tests/test_terrain.cpp)
+ target_link_libraries(test-terrain PRIVATE terrain)
+ enable_testing()
+ add_test(NAME terrain-parity COMMAND test-terrain)
+-add_library(source-systems src/game.cpp src/world.cpp src/pose.cpp src/particles.cpp src/audio.cpp src/runtime.cpp)
++add_library(source-systems src/game.cpp src/world.cpp src/pose.cpp src/particles.cpp src/audio.cpp src/runtime.cpp src/developer_overlay.cpp)
+ target_include_directories(source-systems PUBLIC src)
+ target_link_libraries(source-systems PUBLIC terrain PkgConfig::SDL2 Threads::Threads)
+ target_compile_options(source-systems PRIVATE -Wall -Wextra)
+-foreach(name gameplay gameplay_world gameplay_pose integration)
++foreach(name gameplay gameplay_world gameplay_pose integration developer_overlay developer_controls)
+  add_executable(test-${name} tests/test_${name}.cpp)
+  target_link_libraries(test-${name} PRIVATE source-systems)
+  add_test(NAME ${name} COMMAND test-${name})
+diff --git a/README.md b/README.md
+index a198e44ecf9510fc556a76e4e04cba141423a618..a5a6ea3f3af6386058b4fcab6c2085cd787d1322 100644
+--- a/README.md
++++ b/README.md
+@@ -41,13 +41,13 @@ Device command, in `/storage/apps/falllinie-spike`:
+   --capture-dir captures/marker --receipt marker.json
+ ```
+ 
+-Run without `--seconds` for an indefinite fixed-camera inspection. ESC or
+-retrogame_joypad SELECT+START (indices 8+9) quits. D / joystick button 2 cycles
+-final, luminance, key ink, material ID, spot ink and depth views; C / button 3 cycles
+-three original palette presets (Riso, Signal, Print). The joystick name is logged.
++Run without `--seconds` for an indefinite fixed-camera inspection. F10 or
++retrogame_joypad SELECT+START (indices 8+9) quits. F3 cycles final, luminance,
++key ink, material ID, spot ink and depth views; C cycles six palettes. Debug and
++palette controls no longer occupy source gameplay buttons. The joystick name is logged.
+ 
+ Options: `--seed`, `--cell -1..64`, `--cells 1..7`, `--render-size WxH`,
+-`--debug-view 0..5`, `--palette 0..2`, `--frames`, `--assets`, `--resize-check`.
++`--debug-view 0..5`, `--palette 0..5`, `--frames`, `--assets`, `--resize-check`.
+ Scene and print targets have the same resolution; nearest presentation scales to
+ 1024x768. Print pitch scales as 4.4×width/1024 so final dot spacing is intentional.
+ 
+@@ -93,11 +93,71 @@ for recording; it is not a substitute for physical playtesting.
+ 
+ Ground: stick/dpad left/right steer; UP tucks, DOWN brakes; hold/release button 0
+ (A/SPACE) to jump. Air: left/right spin, up/down flip, release to auto-complete.
+-START/R restarts; SELECT+START/ESC exits. HUD displays speed, distance, raw landing
++START/P/ESC pauses; R or SELECT+Y starts a new seeded run; F10 or SELECT+START
++quits. SELECT/F2 toggles developer data. HUD displays speed, distance, landing
+ points and contextual controls using the original embedded IBM Plex Mono font.
+ 
++Historical limitations at the first-playable checkpoint (see FALLLINIE-GAME-002
++for the subsequently merged source systems, not a complete-parity claim):
+ Spins/flips and landing alignment follow the source, but full grabs/ubers, runtime
+ IK, combo/repetition scoring, original bail animation, objects, trails and reactive
+ audio remain unfinished. Crouch uses three baked original poses. Cell transitions
+ currently rebuild a four-cell patch synchronously. This is a playable port slice,
+ not a claim of complete game parity. Current diary: native ttmp ticket FALLLINIE-PLAY-001.
++
++## Native developer overlay (source gameplay)
++
++`--dev-overlay` enables gameplay (`--play`) and shows the panel from the title/demo.
++For parent qualification without injected input, use `--dual-screen --dev-overlay`
++with the existing launcher/render-size settings. It does not start the run or open
++audio until the usual A/START/ENTER/SPACE drop-in. The port launcher forwards flags:
++`bash scripts/falllinie-spike.sh --dev-overlay`. No launcher default has changed.
++
++Current raw pad map: A0 jump, B1/X2 boost, Y3 in the new-run chord,
++L1/R1/L2/R2 (4–7) grabs, SELECT8 developer overlay, START9 pause/start,
++dpad13–16. Keyboard: WASD/arrows steer/drive, SPACE jump, SHIFT/B boost,
++J/K/U/I grabs, R new run, F2 overlay, F3 diagnostic views, C palettes, M mute,
++P/ESC pause, F10 quit.
++
++- SELECT/F2 toggles on the press edge; holding does not repeat. Available in title,
++  run and pause; drawn only on the top/chase output, never first-person.
++- SELECT+Y requests a new seeded run (not from title); either press order works.
++  SELECT+START quits with precedence, without new-run or same-snapshot overlay effects.
++- An immediate standalone SELECT press necessarily shows/hides the panel briefly
++  if Y/START joins on a later frame. That chord restores the pre-SELECT visibility;
++  SELECT release clears ownership. An independent F2 press cancels that restoration
++  token, so a later chord cannot undo an unrelated keyboard toggle.
++
++The readable 1024x768 panel uses the original font, 18 bounded rows and one extra
++quad batch, not fullscreen per-glyph passes. Text and geometry refresh about 4 Hz
++(or on toggle/resize); the disabled path never reads audio diagnostics or formats
++text. The main thread captures numeric snapshots without changing simulation or
++consuming additional events. It displays:
++
++- Rolling CPU loop FPS/interval (up to 120 completed frames), **not physical
++  presentation rate**, and previous completed frame input, physics, player,
++  streaming (a player subset), top/bottom submit/swap and pacing wall times.
++- Rider state/position/speed/air/charge/slowmo/ticks, seed and generation;
++  resident terrain/object cells, terrain job activity/cell, visible vertex/index
++  counts, snow/trail counts, internal/output size and camera-relative origin.
++- Audio backend, actual rate/buffer, cumulative callback mean/max versus computed
++  budget, cumulative budget misses/callbacks, queue depth/high/drops, steals,
++  nonfinite samples and active/peak voices. **Budget misses are CPU callback wall
++  deadline misses, NOT driver XRUN counts.** Closed audio and missing measurements
++  are n/a. Max/miss counters do not reset at each 4 Hz text refresh.
++- GPU elapsed/utilization and CPU utilization are explicitly **n/a**. The separate
++  CSV/GPU profiler remains independent; no utilization estimate is invented.
++
++Host checks (no video/device access):
++
++```
++cmake -S . -B /tmp/falllinie-dev-overlay-build -DCMAKE_BUILD_TYPE=Release
++cmake --build /tmp/falllinie-dev-overlay-build -j4
++ctest --test-dir /tmp/falllinie-dev-overlay-build \
++  -R '^(developer_overlay|developer_controls|integration)$' --output-on-failure
++```
++
++Detailed implementation/evidence/review diary:
++`ttmp/2026/10/12/FALLLINIE-GAME-002--source-faithful-falllinie-gameplay-integration-and-final-playtest/reference/05-developer-overlay-diary.md`.
++Host tests do not qualify actual GL linkage, panel legibility, two-screen placement
++or physical audio/presentation performance; the parent owns that gate after DSP repair.
+diff --git a/src/developer_overlay.cpp b/src/developer_overlay.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..6a832c66405eb044500236cbf51276dd5443d380
+--- /dev/null
++++ b/src/developer_overlay.cpp
+@@ -0,0 +1,69 @@
++#include "developer_overlay.hpp"
++#include <cmath>
++#include <cstdio>
++namespace fl {
++DeveloperOverlayLines format_developer_overlay(const DeveloperOverlaySnapshot& s){
++ DeveloperOverlayLines lines;
++ size_t row=0;
++ auto line=[&](const char* fmt,auto... args){
++  char text[developer_overlay_columns+1]{};
++  if constexpr(sizeof...(args)==0)std::snprintf(text,sizeof text,"%s",fmt);
++  else std::snprintf(text,sizeof text,fmt,args...);
++  for(char& c:text)if(c&&((unsigned char)c<32||(unsigned char)c>127))c='?';
++  lines[row++]=text;
++ };
++ const auto& f=s.frame;const auto& r=s.render;const auto& a=s.audio;
++ const char* mode=s.mode==RiderMode::Ground?"ground":s.mode==RiderMode::Air?"air":s.mode==RiderMode::Rail?"rail":"bail";
++ line("DEV / SELECT-F2 / 4 Hz cache / CPU wall times, NOT presentation rate");
++ if(s.rolling_interval_ms>0)line("Rolling loop %.1f FPS / %.2f ms interval (last <=120 frames)",s.rolling_fps,s.rolling_interval_ms);
++ else line("Rolling loop FPS n/a / interval n/a (no completed frames yet)");
++ if(f.valid){
++  line("Previous completed frame %.2f ms / ticks %d / physics scale %.2f",f.interval_ms,f.ticks,f.physics_scale);
++  line("CPU ms input %.2f / physics %.2f / player %.2f (stream %.2f subset)",f.input_ms,f.physics_ms,f.player_ms,f.stream_ms);
++  line("CPU ms top submit %.2f / swap %.2f / pace %.2f",f.top_submit_ms,f.top_swap_ms,f.pace_ms);
++  if(f.dual)line("CPU ms bottom submit %.2f / swap %.2f",f.bottom_submit_ms,f.bottom_swap_ms);
++  else line("CPU ms bottom submit n/a / swap n/a (single window)");
++ }else{
++  line("Previous completed frame n/a / ticks n/a / physics scale n/a");
++  line("CPU ms input / physics / player / stream: n/a");
++  line("CPU ms top submit / swap / pace: n/a");
++  line("CPU ms bottom submit / swap: n/a");
++ }
++ line("GPU elapsed n/a / GPU utilization n/a / CPU utilization n/a");
++ line("%s / %s / pos %.1f %.1f %.1f / speed %.2f m/s",s.title?"TITLE":s.paused?"PAUSE":"RUN",mode,s.position.x,s.position.y,s.position.z,s.speed);
++ line("Air %.2f s / charge %.2f / slowmo %.2f s / seed %u / gen %llu",s.air_time,s.charge,s.slowmo,s.seed,(unsigned long long)s.generation);
++ if(r.job_active)line("Resident terrain %zu / objects %zu / terrain row job cell %d ACTIVE",r.terrain_cells,r.object_cells,r.job_cell);
++ else line("Resident terrain %zu / objects %zu / terrain row job idle",r.terrain_cells,r.object_cells);
++ line("Visible terrain V/I %zu/%zu / objects V/I %zu/%zu",r.terrain_vertices,r.terrain_indices,r.object_vertices,r.object_indices);
++ line("Snow %zu / trail points %zu / render %dx%d / output %dx%d",r.snow,r.trail,r.render_width,r.render_height,r.output_width,r.output_height);
++ line("%s origin %.1f %.1f %.1f",r.relative_origin?"Camera-relative":"Absolute",r.origin.x,r.origin.y,r.origin.z);
++ if(s.audio_open&&a.sample_rate>0){
++  const double budget=1000.*a.buffer_frames/a.sample_rate;
++  line("Audio %.24s / %d Hz / actual buffer %d frames / %s",s.audio_backend.c_str(),a.sample_rate,a.buffer_frames,a.muted?"muted":"on");
++  if(a.callback_count)line("Callback mean %.3f / max %.3f / budget %.3f ms (wall, cumulative)",double(a.callback_total_ns)/a.callback_count/1e6,double(a.callback_max_ns)/1e6,budget);
++  else line("Callback mean n/a / max n/a / budget %.3f ms (no callbacks yet)",budget);
++  line("Callback budget misses %llu / calls %llu (NOT driver XRUNs)",(unsigned long long)a.callback_over_budget,(unsigned long long)a.callback_count);
++ }else{
++  line("Audio n/a (device not open) / rate n/a / actual buffer n/a");
++  line("Callback mean n/a / max n/a / budget n/a");
++  line("Callback budget misses n/a / calls n/a (NOT driver XRUNs)");
++ }
++ if(s.audio_open){
++  line("Queue %u / high %u / drops %llu / steals %llu",a.queue_depth,a.queue_high_water,(unsigned long long)a.dropped_commands,(unsigned long long)a.stolen_voices);
++  line("Nonfinite %llu / voices active %u / peak %u (cumulative counters)",(unsigned long long)a.nonfinite_samples,a.active_voices,a.peak_voices);
++ }else{
++  line("Queue n/a / high n/a / drops n/a / steals n/a");
++  line("Nonfinite n/a / voices active n/a / peak n/a (device not open)");
++ }
++ return lines;
++}
++void DeveloperOverlayCache::refresh(const DeveloperOverlaySnapshot& s,double now){
++ if(!due(now))return;
++ lines_=format_developer_overlay(s);refresh_at_=now+.25;dirty_=false;
++}
++void DeveloperFrameWindow::add(double interval){
++ if(!std::isfinite(interval)||interval<=0)return;
++ sum_-=intervals_[next_];intervals_[next_]=interval;sum_+=interval;
++ next_=(next_+1)%intervals_.size();count_=std::min(count_+1,intervals_.size());
++}
++}
+diff --git a/src/developer_overlay.hpp b/src/developer_overlay.hpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..42d75d9676831bc18e26fb516f2ffd70e461263a
+--- /dev/null
++++ b/src/developer_overlay.hpp
+@@ -0,0 +1,55 @@
++#pragma once
++#include "audio.hpp"
++#include "game.hpp"
++#include <array>
++#include <string>
++namespace fl {
++// Main-thread-owned CPU wall times; streaming is a subset of player_ms.
++// Bottom times are unavailable without a second window, not measured zeros.
++struct DeveloperFrameTimings {
++ bool valid=false,dual=false;
++ double interval_ms=0,input_ms=0,physics_ms=0,player_ms=0,stream_ms=0;
++ double top_submit_ms=0,top_swap_ms=0,bottom_submit_ms=0,bottom_swap_ms=0,pace_ms=0;
++ int ticks=0;double physics_scale=1;
++};
++struct DeveloperRenderDiagnostics {
++ size_t terrain_cells=0,object_cells=0,terrain_vertices=0,terrain_indices=0;
++ size_t object_vertices=0,object_indices=0,snow=0,trail=0;
++ bool job_active=false,relative_origin=true;int job_cell=0;
++ int render_width=0,render_height=0,output_width=0,output_height=0;
++ Vec3 origin{};
++};
++struct DeveloperOverlaySnapshot {
++ DeveloperFrameTimings frame;
++ DeveloperRenderDiagnostics render;
++ AudioDiagnostics audio;
++ std::string audio_backend="n/a";
++ bool audio_open=false,title=false,paused=false;
++ RiderMode mode=RiderMode::Ground;Vec3 position{};
++ double speed=0,air_time=0,charge=0,slowmo=0,rolling_fps=0,rolling_interval_ms=0;
++ uint32_t seed=0;uint64_t generation=0;
++};
++// Bounded ASCII rows using the original 96-character HUD atlas.
++constexpr size_t developer_overlay_rows=18,developer_overlay_columns=82;
++using DeveloperOverlayLines=std::array<std::string,developer_overlay_rows>;
++DeveloperOverlayLines format_developer_overlay(const DeveloperOverlaySnapshot&);
++class DeveloperOverlayCache {
++ double refresh_at_=0;
++ bool dirty_=true;
++ DeveloperOverlayLines lines_{};
++public:
++ void invalidate(){dirty_=true;}
++ bool due(double now)const{return dirty_||now>=refresh_at_;}
++ void refresh(const DeveloperOverlaySnapshot&,double now);
++ const DeveloperOverlayLines& lines()const{return lines_;}
++};
++// Bounded rolling frame interval window, updated without formatting/allocation.
++class DeveloperFrameWindow {
++ std::array<double,120> intervals_{};
++ size_t next_=0,count_=0;double sum_=0;
++public:
++ void add(double interval_ms);
++ double interval_ms()const{return count_?sum_/count_:0;}
++ double fps()const{return sum_>0?1000*count_/sum_:0;}
++};
++}
+diff --git a/src/game_renderer.cpp b/src/game_renderer.cpp
+index 9d76912e90190134881505725a3e94df4355b836..73018bd8892465a6ccbc36b76c0ae8d5863bbab5 100644
+--- a/src/game_renderer.cpp
++++ b/src/game_renderer.cpp
+@@ -3,6 +3,19 @@
+ #include <iostream>
+ #include <chrono>
+ namespace fl {
++DeveloperRenderDiagnostics Renderer::developer_diagnostics(int output_width,int output_height)const{
++ DeveloperRenderDiagnostics d;
++ d.terrain_cells=cell_meshes_.size();d.object_cells=object_meshes_.size();
++ d.terrain_vertices=vertices_;d.terrain_indices=indices_;
++ for(int cell=patch_first_;cell<patch_first_+patch_count_;++cell){auto it=object_meshes_.find(cell);if(it!=object_meshes_.end()){d.object_vertices+=it->second.vertices;d.object_indices+=size_t(it->second.indices);}}
++ d.job_active=bool(terrain_job_);if(terrain_job_)d.job_cell=terrain_job_->cell();
++ d.snow=particles_.snow.size();d.trail=particles_.trail.size();
++ d.render_width=width_;d.render_height=height_;d.output_width=output_width;d.output_height=output_height;
++ d.relative_origin=relative_coordinates_;
++ Vec3 up=norm({camera_.vp[1],camera_.vp[5],camera_.vp[9]});
++ d.origin=render_frame(camera_.eye+camera_shake_,camera_.look,up,fov_*PI/180,double(width_)/height_,relative_coordinates_).origin;
++ return d;
++}
+ void Renderer::update_player(Game& game,double dt){
+  // Source post print animation follows real time, while trail age follows G.time.
+  render_time_+=dt;
+@@ -22,14 +35,15 @@ void Renderer::update_player(Game& game,double dt){
+  hud_meter_+="   "+std::string("GROTESK").substr(0,game.letters);
+  hud_meter_fraction_=infinite?1:game.meter;
+  hud_banner_=game.hud.banner_time>0?ascii(game.hud.banner):"";
+- hud_controls_=controller_?"A JUMP / B-X BOOST / L1-R1-L2-R2 GRABS / START PAUSE":"SPACE JUMP / SHIFT-B BOOST / J-K-U-I GRABS / P PAUSE";
++ hud_controls_=controller_?"A JUMP / B-X BOOST / L1-R1-L2-R2 GRABS / START PAUSE / SELECT DEV / SELECT+Y NEW":"SPACE JUMP / SHIFT-B BOOST / J-K-U-I GRABS / P PAUSE / F2 DEV / R NEW";
+  if(game.title()){
+   hud_line_="FALLLINIE";hud_status_="SOURCE DEMO / BEST "+std::to_string(game.best)+" / SEED "+std::to_string(game.seed());
++  hud_controls_=controller_?"A-START DROP IN / SELECT DEV / SELECT+START QUIT":"ENTER-SPACE DROP IN / F2 DEV / F10 QUIT";
+   hud_grade_="";hud_points_="";hud_combo_="";hud_meter_="";hud_meter_fraction_=hud_combo_fraction_=0;
+-  hud_trick_lines_={controller_?"A / START: DROP IN":"ENTER / SPACE: DROP IN","C: SIX COLOURS / M: SOUND","F10 / SELECT+START: QUIT"};hud_banner_="";
++  hud_trick_lines_={controller_?"A / START: DROP IN":"ENTER / SPACE: DROP IN","C: SIX COLOURS / M: SOUND","SELECT / F2: DEV / F3: VIEWS","F10 / SELECT+START: QUIT"};hud_banner_="";
+  }else if(game.paused()){
+   hud_banner_="PAUSED";hud_status_=std::string(muted_?"MUSIC OFF":"MUSIC ON")+" / M TO TOGGLE";
+-  hud_controls_=controller_?"START RESUME / SELECT NEW RUN / SELECT+START QUIT":"P-ESC RESUME / R NEW RUN / F10 QUIT";
++  hud_controls_=controller_?"START RESUME / SELECT+Y NEW / SELECT DEV / SELECT+START QUIT":"P-ESC RESUME / R NEW RUN / F2 DEV / F10 QUIT";
+  }
+  if(!game.persistence_error.empty())hud_status_="BEST SAVE FAILED / SEE LOG";
+  if(game.playing()&&!game.paused()&&muted_)hud_status_+=" / MUTED";
+@@ -72,11 +86,14 @@ void Renderer::update_player(Game& game,double dt){
+  fov_=lerp(fov_,60+std::max(0.,1-double(width_)/height_)*42+clamp(speed-8,0,30)*.5+(game.boosting?7:0)+(game.slowmo>0?-6:0),1-std::exp(-dt*3));double amplitude=game.shake*game.shake*.25;camera_shake_={(camera_rng_.next()-.5)*amplitude,(camera_rng_.next()-.5)*amplitude,(camera_rng_.next()-.5)*amplitude};camera_.vp=multiply(perspective(fov_*3.141592653589793/180,double(width_)/height_,.1,900),look_at(camera_.eye+camera_shake_,camera_.look,{0,1,0}));camera_.inverse_vp=inverse(camera_.vp);game_time_=game.time;
+ }
+ void Renderer::render_first_person(int width,int height,int palette){
+- Camera saved=camera_;Vec3 saved_shake=camera_shake_;camera_shake_={};double saved_fov=fov_;bool saved_follow=following_;GLsizei saved_rider=rider_indices_;
+- camera_.eye=first_person_eye_;camera_.look=first_person_eye_+first_person_forward_*20;fov_=78;
+- camera_.vp=multiply(perspective(fov_*3.141592653589793/180,double(width_)/height_,.1,900),look_at(camera_.eye,camera_.look,first_person_up_));camera_.inverse_vp=inverse(camera_.vp);
+- following_=false;rider_indices_=0; // Do not render the rider's own face into its view.
+- try{render(width,height,0,palette);}catch(...){camera_=saved;camera_shake_=saved_shake;fov_=saved_fov;following_=saved_follow;rider_indices_=saved_rider;throw;}
+- camera_=saved;camera_shake_=saved_shake;fov_=saved_fov;following_=saved_follow;rider_indices_=saved_rider;
++ Camera saved=camera_;Vec3 saved_shake=camera_shake_;double saved_fov=fov_;bool saved_follow=following_,saved_first_person=first_person_view_;GLsizei saved_rider=rider_indices_;
++ try{
++  first_person_view_=true;camera_shake_={};
++  camera_.eye=first_person_eye_;camera_.look=first_person_eye_+first_person_forward_*20;fov_=78;
++  camera_.vp=multiply(perspective(fov_*3.141592653589793/180,double(width_)/height_,.1,900),look_at(camera_.eye,camera_.look,first_person_up_));camera_.inverse_vp=inverse(camera_.vp);
++  following_=false;rider_indices_=0; // Do not render the rider's own face into its view.
++  render(width,height,0,palette);
++ }catch(...){camera_=saved;camera_shake_=saved_shake;fov_=saved_fov;following_=saved_follow;first_person_view_=saved_first_person;rider_indices_=saved_rider;throw;}
++ camera_=saved;camera_shake_=saved_shake;fov_=saved_fov;following_=saved_follow;first_person_view_=saved_first_person;rider_indices_=saved_rider;
+ }
+ }
+diff --git a/src/main.cpp b/src/main.cpp
+index f0d6ce02abe81412c4561b603c1462cb7e19b0e6..47045a18d1265de925ff34d6c1ffbdbf61abaf84 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -25,7 +25,7 @@ namespace {
+ volatile std::sig_atomic_t termination_requested=0;
+ void request_termination(int){termination_requested=1;}
+ struct Config {
+- bool place=false,resize_check=false,source_sampler_precision=false,play=false,autoplay=false,dual=false,source_sky_hash=false,gpu_profile=false,no_vsync=false,absolute_coordinates=false,muted=false;double seconds=0,fps_cap=0;int frames=0,width=512,height=384,cell=0,cells=3,debug=0,palette=0;uint32_t seed=42;
++ bool place=false,resize_check=false,source_sampler_precision=false,play=false,autoplay=false,dual=false,source_sky_hash=false,gpu_profile=false,no_vsync=false,absolute_coordinates=false,muted=false,dev_overlay=false;double seconds=0,fps_cap=0;int frames=0,width=512,height=384,cell=0,cells=3,debug=0,palette=0;uint32_t seed=42;
+  std::string assets="assets/shaders",capture,receipt,profile;
+ };
+ Config parse(int argc,char** argv){
+@@ -37,10 +37,11 @@ Config parse(int argc,char** argv){
+   else if(a=="--cell")c.cell=std::stoi(value());else if(a=="--cells")c.cells=std::stoi(value());
+   else if(a=="--debug-view")c.debug=std::stoi(value());else if(a=="--palette")c.palette=std::stoi(value());
+   else if(a=="--muted")c.muted=true;
++  else if(a=="--dev-overlay"){c.dev_overlay=true;c.play=true;}
+   else if(a=="--absolute-render-coordinates")c.absolute_coordinates=true;
+   else if(a=="--no-vsync")c.no_vsync=true;else if(a=="--gpu-profile")c.gpu_profile=true;else if(a=="--profile")c.profile=value();else if(a=="--assets")c.assets=value();else if(a=="--capture-dir")c.capture=value();else if(a=="--receipt")c.receipt=value();
+   else if(a=="--render-size"){auto size=value();auto x=size.find('x');if(x==std::string::npos)throw std::runtime_error("expected WIDTHxHEIGHT");c.width=std::stoi(size.substr(0,x));c.height=std::stoi(size.substr(x+1));}
+-  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..5] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash] [--absolute-render-coordinates] [--muted] [--profile CSV] [--gpu-profile] [--no-vsync] [--fps N]\nF3 cycles debug; C cycles six palettes; A/START or ENTER/SPACE starts; START/P/ESC pauses; SELECT/R new run; M mutes; F10 or SELECT+START quits.\n";std::exit(0);}
++  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..5] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash] [--absolute-render-coordinates] [--muted] [--dev-overlay] [--profile CSV] [--gpu-profile] [--no-vsync] [--fps N]\nF3 cycles debug; C cycles six palettes; A/START or ENTER/SPACE starts; START/P/ESC pauses; SELECT/F2 toggles developer overlay; SELECT+Y/R new run; M mutes; F10 or SELECT+START quits. --dev-overlay starts gameplay title with overlay. SELECT-first chords restore pre-press visibility; F2 is independent.\n";std::exit(0);}
+   else throw std::runtime_error("unknown argument "+a);
+  }
+  if(!std::isfinite(c.fps_cap)||c.fps_cap<0||c.fps_cap>240||c.width<128||c.height<96||c.width>2048||c.height>1536||c.cell< -1||c.cell>4096||c.cells<1||c.cells>7||c.frames<0||c.seconds<0||!std::isfinite(c.seconds)||c.debug<0||c.debug>5||c.palette<0||c.palette>5)throw std::runtime_error("configuration outside bounded spike limits");
+@@ -86,13 +87,17 @@ int main(int argc,char** argv){
+   fl::Game game(c.seed);fl::NativeFrameClock frame_clock;fl::NativeInputMapper input_mapper;fl::TitleAutopilot autopilot(c.seed);
+   fl::AudioEngine audio;bool audio_started=false,muted=c.muted;std::string last_persistence_error;
+   fl::Rng run_seeds{c.seed^0x97f4a71bu};
++  bool dev_overlay=c.dev_overlay,select_overlay_saved=dev_overlay;
++  fl::DeveloperOverlayCache overlay_cache;fl::DeveloperFrameWindow overlay_window;
++  fl::DeveloperFrameTimings completed_frame;
++  renderer.set_developer_overlay(dev_overlay);
+   if(c.play){
+    char* preference=SDL_GetPrefPath("Falllinie","Falllinie");
+    if(!preference)throw std::runtime_error(std::string("app best path: ")+SDL_GetError());
+    std::string best_path=std::string(preference)+"best-score";SDL_free(preference);game.set_best_path(best_path);
+    if(c.autoplay){game.start();audio_started=audio.open();if(!audio_started)std::cerr<<"audio unavailable: "<<SDL_GetError()<<'\n';else audio.set_muted(muted);}
+    else game.enter_title();
+-   std::cout<<"SOURCE: A jump / B-X boost / L1-R1-L2-R2 grabs / START pause / SELECT new seed / SELECT+START quit; keyboard WASD/arrows, SPACE, SHIFT/B, J/K/U/I, P/ESC, R, M, C, F3, F10\nseed="<<game.seed()<<" best_path="<<best_path<<'\n';
++   std::cout<<"SOURCE: A jump / B-X boost / L1-R1-L2-R2 grabs / START pause / SELECT dev / SELECT+Y new seed / SELECT+START quit; keyboard WASD/arrows, SPACE, SHIFT/B, J/K/U/I, P/ESC, R new seed, F2 dev, M, C, F3, F10\nseed="<<game.seed()<<" best_path="<<best_path<<'\n';
+   }
+   auto previous_frame=std::chrono::steady_clock::now();
+   std::vector<double> times,swaps;
+@@ -118,6 +123,9 @@ int main(int argc,char** argv){
+     physical.axis_x=SDL_JoystickGetAxis(pad,0)/32767.;physical.axis_y=SDL_JoystickGetAxis(pad,1)/32767.;
+    }
+    const auto actions=input_mapper.read(physical,game.title());quit=quit||actions.quit;
++   if(actions.dev_overlay_restore)dev_overlay=select_overlay_saved;
++   if(actions.dev_overlay_toggle){if(actions.dev_overlay_select)select_overlay_saved=dev_overlay;dev_overlay=!dev_overlay;}
++   if(actions.dev_overlay_restore||actions.dev_overlay_toggle){renderer.set_developer_overlay(dev_overlay);overlay_cache.invalidate();}
+    if(actions.debug)c.debug=(c.debug+1)%6;
+    if(actions.palette)c.palette=(c.palette+1)%6;
+    if(c.play&&!quit){
+@@ -128,10 +136,11 @@ int main(int argc,char** argv){
+    }
+    auto event_end=std::chrono::steady_clock::now(),physics_end=event_end,player_end=event_end;
+    double elapsed=std::min(.05,std::chrono::duration<double>(frame_start-previous_frame).count());previous_frame=frame_start;
++   fl::FrameResult current_frame;
+    if(c.play&&!quit){
+     fl::Controls input=game.title()||c.autoplay?autopilot.read(game,elapsed):actions.ride;
+-    auto frame=frame_clock.advance(game,input,elapsed);
+-    physics_end=std::chrono::steady_clock::now();renderer.set_native_feedback(pad!=nullptr,muted);renderer.update_player(game,frame.raw_dt);player_end=std::chrono::steady_clock::now();
++    current_frame=frame_clock.advance(game,input,elapsed);
++    physics_end=std::chrono::steady_clock::now();renderer.set_native_feedback(pad!=nullptr,muted);renderer.update_player(game,current_frame.raw_dt);player_end=std::chrono::steady_clock::now();
+     fl::publish_feedback(audio,game,audio_started);
+     if(game.persistence_error!=last_persistence_error){last_persistence_error=game.persistence_error;if(!last_persistence_error.empty())std::cerr<<last_persistence_error<<'\n';}
+     if(frames%60==0)std::cout<<"ride z="<<game.position.z<<" speed="<<fl::length(game.velocity)<<" airborne="<<game.airborne<<" charge="<<game.charge<<" score="<<game.score<<std::endl;
+@@ -141,6 +150,16 @@ int main(int argc,char** argv){
+     const bool large=(frames/60)%2==1;
+     renderer.resize(large?std::min(2048,c.width*2):c.width,large?std::min(1536,c.height*2):c.height);
+    }
++   const double overlay_now=std::chrono::duration<double>(frame_start-start).count();
++   if(dev_overlay&&overlay_cache.due(overlay_now)){
++    fl::DeveloperOverlaySnapshot snapshot;
++    snapshot.frame=completed_frame;snapshot.render=renderer.developer_diagnostics(drawable_w,drawable_h);
++    snapshot.title=game.title();snapshot.paused=game.paused();snapshot.mode=game.mode;snapshot.position=game.position;
++    snapshot.speed=fl::length(game.velocity);snapshot.air_time=game.airborne?game.air_time:0;snapshot.charge=game.charge;snapshot.slowmo=game.slowmo;
++    snapshot.seed=game.seed();snapshot.generation=game.generation();snapshot.rolling_fps=overlay_window.fps();snapshot.rolling_interval_ms=overlay_window.interval_ms();
++    snapshot.audio_open=audio_started;if(audio_started){snapshot.audio=audio.diagnostics();const char* backend=SDL_GetCurrentAudioDriver();snapshot.audio_backend=backend?backend:"n/a";}
++    overlay_cache.refresh(snapshot,overlay_now);renderer.set_developer_overlay_lines(overlay_cache.lines());
++   }
+    auto top_start=std::chrono::steady_clock::now();profiler.begin_gpu(frames,0);
+    renderer.render(drawable_w,drawable_h,c.debug,c.palette);profiler.end_gpu(frames,0);
+    auto swap_start=std::chrono::steady_clock::now();SDL_GL_SwapWindow(window);auto top_swap_end=std::chrono::steady_clock::now(),bottom_submit_end=top_swap_end;
+@@ -148,7 +167,10 @@ int main(int argc,char** argv){
+    auto swap_end=std::chrono::steady_clock::now();
+    if(c.fps_cap>0){auto period=std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(1.0/c.fps_cap));frame_deadline+=period;if(swap_end<frame_deadline)std::this_thread::sleep_until(frame_deadline);else if(swap_end>frame_deadline+period)frame_deadline=swap_end;}
+    auto end=std::chrono::steady_clock::now();
+-   profiler.cpu(frames,ms(previous_end,end),ms(frame_start,event_end),ms(event_end,physics_end),ms(physics_end,player_end),c.play?renderer.stream_ms():0,ms(top_start,swap_start),ms(swap_start,top_swap_end),ms(top_swap_end,bottom_submit_end),ms(bottom_submit_end,swap_end),ms(swap_end,end));previous_end=end;
++   completed_frame={true,bool(lower_window),ms(previous_end,end),ms(frame_start,event_end),ms(event_end,physics_end),ms(physics_end,player_end),c.play?renderer.stream_ms():0,ms(top_start,swap_start),ms(swap_start,top_swap_end),ms(top_swap_end,bottom_submit_end),ms(bottom_submit_end,swap_end),ms(swap_end,end),current_frame.ticks,current_frame.scale};
++   const auto& t=completed_frame;
++   profiler.cpu(frames,t.interval_ms,t.input_ms,t.physics_ms,t.player_ms,t.stream_ms,t.top_submit_ms,t.top_swap_ms,t.bottom_submit_ms,t.bottom_swap_ms,t.pace_ms);previous_end=end;
++   overlay_window.add(t.interval_ms);
+    ++fps_frames;if(ms(fps_epoch,end)>=1000){double fps=fps_frames*1000.0/ms(fps_epoch,end);renderer.set_fps(fps);std::cout<<"FPS="<<fps<<" frame_interval_ms="<<ms(frame_start,end)<<std::endl;fps_epoch=end;fps_frames=0;}
+    ++frames;
+    if(frames>60){times.push_back(std::chrono::duration<double,std::milli>(end-frame_start).count());swaps.push_back(std::chrono::duration<double,std::milli>(end-swap_start).count());}
+diff --git a/src/renderer.cpp b/src/renderer.cpp
+index b6df0b3dd5c93a567dd0029c3900d9a2ca197ad9..78ce199a35ff62917ea6a274b7bf855ff9be122c 100644
+--- a/src/renderer.cpp
++++ b/src/renderer.cpp
+@@ -87,6 +87,7 @@ uniform vec2 uOutputRes;out vec2 vUV;
+ void main(){vUV=aUV;gl_Position=vec4(aPosition/uOutputRes*2.-1.,0.,1.);})";
+  hud_program_=program(hud_vs,hud_fs,"batched native HUD using source font");
+  glGenVertexArrays(1,&hud_vao_);glBindVertexArray(hud_vao_);glGenBuffers(1,&hud_vbo_);glBindBuffer(GL_ARRAY_BUFFER,hud_vbo_);glEnableVertexAttribArray(0);glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,16,nullptr);glEnableVertexAttribArray(1);glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,16,reinterpret_cast<void*>(8));
++ glGenVertexArrays(1,&developer_overlay_vao_);glBindVertexArray(developer_overlay_vao_);glGenBuffers(1,&developer_overlay_vbo_);glBindBuffer(GL_ARRAY_BUFFER,developer_overlay_vbo_);glEnableVertexAttribArray(0);glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,16,nullptr);glEnableVertexAttribArray(1);glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,16,reinterpret_cast<void*>(8));
+  SDL_Surface* font=SDL_LoadBMP((assets+"/../hud-font.bmp").c_str());
+  if(!font)throw std::runtime_error("missing source HUD font atlas");
+  SDL_Surface* font_rgba=SDL_ConvertSurfaceFormat(font,SDL_PIXELFORMAT_ABGR8888,0);SDL_FreeSurface(font);
+@@ -182,8 +183,30 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
+   glBindVertexArray(hud_vao_);glBindBuffer(GL_ARRAY_BUFFER,hud_vbo_);glBufferData(GL_ARRAY_BUFFER,glyphs.size()*sizeof(HUDVertex),glyphs.data(),GL_DYNAMIC_DRAW);
+   glDrawArrays(GL_TRIANGLES,0,primary);vec3(hud_program_,"uInk",spots[palette]);glDrawArrays(GL_TRIANGLES,primary,status_end-primary);vec3(hud_program_,"uInk",inks[palette]);glDrawArrays(GL_TRIANGLES,status_end,GLsizei(glyphs.size())-status_end);glDisable(GL_BLEND);
+  }
++ if(developer_overlay_visible_&&!first_person_view_)draw_developer_overlay(drawable_w,drawable_h);
+  gl_check("render");
+ }
++void Renderer::draw_developer_overlay(int width,int height){
++ if(width<=0||height<=0)return;
++ glBindVertexArray(developer_overlay_vao_);
++ if(developer_overlay_dirty_||width!=developer_overlay_width_||height!=developer_overlay_height_){
++  struct GlyphVertex{float x,y,u,v;};static_assert(sizeof(GlyphVertex)==16);
++  std::vector<GlyphVertex> vertices;vertices.reserve((developer_overlay_rows*developer_overlay_columns+1)*6);
++  const float scale=std::min(width/1024.f,height/768.f);
++  const float left=8*scale,bottom=62*scale,panel_width=1008*scale,panel_height=422*scale;
++  const float corners[6][2]={{0,0},{1,0},{0,1},{0,1},{1,0},{1,1}};
++  auto quad=[&](float x,float y,float w,float h,int character){for(const auto& p:corners)vertices.push_back({x+p[0]*w,y+p[1]*h,character<0?-1.f:(character+p[0])/96.f,character<0?0.f:1.f-p[1]});};
++  quad(left,bottom,panel_width,panel_height,-1);
++  for(size_t row=0;row<developer_overlay_lines_.size();++row){const auto& text=developer_overlay_lines_[row];for(size_t col=0;col<std::min(text.size(),developer_overlay_columns);++col){unsigned char c=text[col];if(c<32||c>127)c='?';quad(left+(8+col*12)*scale,bottom+panel_height-(30+row*22)*scale,12*scale,20*scale,int(c)-32);}}
++  glBindBuffer(GL_ARRAY_BUFFER,developer_overlay_vbo_);glBufferData(GL_ARRAY_BUFFER,vertices.size()*sizeof(GlyphVertex),vertices.data(),GL_DYNAMIC_DRAW);
++  developer_overlay_vertices_=GLsizei(vertices.size());developer_overlay_width_=width;developer_overlay_height_=height;developer_overlay_dirty_=false;
++ }
++ glUseProgram(hud_program_);glUniform2f(loc(hud_program_,"uOutputRes"),width,height);
++ glEnable(GL_BLEND);glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
++ glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,hud_font_);integer(hud_program_,"uFont",0);
++ vec3(hud_program_,"uInk",{.05,.08,.12});vec3(hud_program_,"uPaper",{.97,.98,1});
++ glDrawArrays(GL_TRIANGLES,0,developer_overlay_vertices_);glDisable(GL_BLEND);
++}
+ void Renderer::capture(const std::string& path){
+  auto save=[&](GLuint fbo,const std::string& filename){
+  glBindFramebuffer(GL_FRAMEBUFFER,fbo);glPixelStorei(GL_PACK_ALIGNMENT,1);std::vector<unsigned char> pixels(size_t(width_)*height_*4);glReadPixels(0,0,width_,height_,GL_RGBA,GL_UNSIGNED_BYTE,pixels.data());gl_check("readback");
+@@ -213,6 +236,8 @@ Renderer::~Renderer(){
+  for(auto& entry:cell_meshes_)delete_cell(entry.second);
+  for(auto& entry:object_meshes_)delete_cell(entry.second);
+  delete_cell(particle_mesh_);delete_cell(trail_mesh_);
++ if(developer_overlay_vao_)glDeleteVertexArrays(1,&developer_overlay_vao_);
++ if(developer_overlay_vbo_)glDeleteBuffers(1,&developer_overlay_vbo_);
+  if(hud_vao_)glDeleteVertexArrays(1,&hud_vao_);
+  if(hud_vbo_)glDeleteBuffers(1,&hud_vbo_);
+  if(hud_program_)glDeleteProgram(hud_program_);
+diff --git a/src/renderer.hpp b/src/renderer.hpp
+index 345f2d4093150b1a537f94b68444daad610df07a..d9808802fc22a88c5b6ddfb7580b83d0fba8348d 100644
+--- a/src/renderer.hpp
++++ b/src/renderer.hpp
+@@ -2,6 +2,7 @@
+ #include "terrain.hpp"
+ #include "game.hpp"
+ #include "pose.hpp"
++#include "developer_overlay.hpp"
+ #include <GLES3/gl3.h>
+ #include <string>
+ #include <memory>
+@@ -25,11 +26,20 @@ public:
+  void set_fps(double fps){fps_=fps;}
+  void set_native_feedback(bool controller,bool muted){controller_=controller;muted_=muted;}
+  void set_absolute_coordinates(bool absolute){relative_coordinates_=!absolute;}
++ DeveloperRenderDiagnostics developer_diagnostics(int output_width,int output_height)const;
++ void set_developer_overlay(bool visible){developer_overlay_visible_=visible;}
++ void set_developer_overlay_lines(const DeveloperOverlayLines& lines){developer_overlay_lines_=lines;developer_overlay_dirty_=true;}
+  int width()const{return width_;}
+  int height()const{return height_;}
+  const Camera& camera()const{return camera_;}
+ private:
+  GLuint hud_program_=0,hud_font_=0,hud_vao_=0,hud_vbo_=0;
++ GLuint developer_overlay_vao_=0,developer_overlay_vbo_=0;
++ DeveloperOverlayLines developer_overlay_lines_{};
++ bool developer_overlay_visible_=false,developer_overlay_dirty_=true,first_person_view_=false;
++ int developer_overlay_width_=0,developer_overlay_height_=0;
++ GLsizei developer_overlay_vertices_=0;
++ void draw_developer_overlay(int width,int height);
+  std::string hud_line_,hud_status_,hud_combo_,hud_meter_,hud_banner_,hud_controls_,hud_grade_,hud_points_;
+  std::vector<std::string> hud_trick_lines_;
+  double hud_meter_fraction_=0,hud_combo_fraction_=0;
+diff --git a/src/runtime.cpp b/src/runtime.cpp
+index 581501cfd47ae4a0342400f4a02efcd6dde90da3..0bb708d097b5d1be316901c00483d24342a5ea54 100644
+--- a/src/runtime.cpp
++++ b/src/runtime.cpp
+@@ -6,11 +6,18 @@ NativeActions NativeInputMapper::read(const NativeInputSnapshot& s,bool title){
+  auto edge=[&](SDL_Scancode k){return key(k)&&!previous_.keys[k];};
+  auto button_edge=[&](int k){return s.buttons[k]&&!previous_.buttons[k];};
+  a.quit=s.quit||key(SDL_SCANCODE_F10)||(s.buttons[8]&&s.buttons[9]);
+- // Resolve chord from the final snapshot before either individual button edge.
++ const bool new_run_chord=s.buttons[8]&&s.buttons[3];
++ const bool chord_edge=new_run_chord&&!(previous_.buttons[8]&&previous_.buttons[3]);
++ // Final-snapshot chords precede SELECT. A later chord restores the visibility
++ // saved by this SELECT press; immediate standalone press feedback is transient.
++ if((a.quit||new_run_chord)&&select_overlay_owned_){a.dev_overlay_restore=true;select_overlay_owned_=false;}
++ if(!s.buttons[8])select_overlay_owned_=false;
+  if(!a.quit){
++  if(edge(SDL_SCANCODE_F2)){a.dev_overlay_toggle=true;select_overlay_owned_=false;}
++  else if(button_edge(8)&&!new_run_chord){a.dev_overlay_toggle=a.dev_overlay_select=true;select_overlay_owned_=true;}
+   a.start=title&&(edge(SDL_SCANCODE_RETURN)||edge(SDL_SCANCODE_SPACE)||button_edge(0)||button_edge(9));
+   a.pause=!title&&(edge(SDL_SCANCODE_ESCAPE)||edge(SDL_SCANCODE_P)||button_edge(9)||s.focus_lost);
+-  a.new_run=!title&&(edge(SDL_SCANCODE_R)||button_edge(8));
++  a.new_run=!title&&(edge(SDL_SCANCODE_R)||chord_edge);
+   a.mute=edge(SDL_SCANCODE_M);a.palette=edge(SDL_SCANCODE_C);a.debug=edge(SDL_SCANCODE_F3);
+   a.ride.steer=(key(SDL_SCANCODE_RIGHT)||key(SDL_SCANCODE_D))-(key(SDL_SCANCODE_LEFT)||key(SDL_SCANCODE_A));
+   a.ride.drive=(key(SDL_SCANCODE_UP)||key(SDL_SCANCODE_W))-(key(SDL_SCANCODE_DOWN)||key(SDL_SCANCODE_S));
+diff --git a/src/runtime.hpp b/src/runtime.hpp
+index d113c6233526d6790699624369bc9ef2dcfad66d..f475d749326c8814e4b73048e0d35ba145df8476 100644
+--- a/src/runtime.hpp
++++ b/src/runtime.hpp
+@@ -15,9 +15,12 @@ struct NativeInputSnapshot {
+ struct NativeActions {
+  Controls ride;
+  bool quit=false,start=false,pause=false,new_run=false,mute=false,palette=false,debug=false;
++ bool dev_overlay_toggle=false,dev_overlay_select=false,dev_overlay_restore=false;
+ };
+ class NativeInputMapper {
+  NativeInputSnapshot previous_;
++ // Own only the standalone SELECT press; F2 cancels this rollback token.
++ bool select_overlay_owned_=false;
+ public:
+  NativeActions read(const NativeInputSnapshot&,bool title);
+ };
+diff --git a/tests/test_developer_controls.cpp b/tests/test_developer_controls.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..6d3932ed87c9597728b7bd2b4834a5f43b9d6aad
+--- /dev/null
++++ b/tests/test_developer_controls.cpp
+@@ -0,0 +1,49 @@
++#include "runtime.hpp"
++#include "gameplay_test_support.hpp"
++using namespace fl;using namespace gameplay_test;
++namespace {
++struct Fixture {
++ NativeInputMapper mapper;NativeInputSnapshot s;bool visible=false,saved=false;
++ NativeActions read(bool title=false){auto a=mapper.read(s,title);if(a.dev_overlay_restore)visible=saved;if(a.dev_overlay_toggle){if(a.dev_overlay_select)saved=visible;visible=!visible;}return a;}
++};
++}
++int main(){try{
++ for(bool initial:{false,true})for(bool title:{false,true}){
++  Fixture f;f.visible=initial;f.s.buttons[8]=true;auto a=f.read(title);
++  require(a.dev_overlay_toggle&&!a.new_run&&f.visible!=initial,"SELECT press toggles in title/run/pause");
++  for(int i=0;i<10;++i)require(!f.read(title).dev_overlay_toggle,"held SELECT no repeat");
++  f.s={};f.read(title);f.s.buttons[8]=true;f.read(title);require(f.visible==initial,"next SELECT press toggles");
++ }
++ for(bool initial:{false,true})for(int other:{3,9})for(int order:{0,1,2}){
++  Fixture f;f.visible=initial;
++  if(order==1){f.s.buttons[8]=true;f.read();require(f.visible!=initial,"SELECT-first gives immediate transient feedback");}
++  if(order==2){f.s.buttons[other]=true;auto a=f.read();require(!a.new_run&&!a.dev_overlay_toggle,"Y/START first not a SELECT action");}
++  f.s.buttons[8]=f.s.buttons[other]=true;auto a=f.read();
++  require(f.visible==initial&&!a.dev_overlay_toggle,"chord suppresses or restores SELECT effect in either order");
++  require(other==9?(a.quit&&!a.new_run&&!a.pause&&!a.start):(!a.quit&&a.new_run),"quit/new-run chord precedence");
++  require(!f.read().new_run,"held new-run chord not repeated");
++ }
++ Fixture f;f.s.buttons[8]=f.s.buttons[3]=f.s.buttons[9]=true;auto a=f.read();
++ require(a.quit&&!a.new_run&&!a.dev_overlay_toggle&&!a.pause,"quit wins three-button chord");
++ f={};f.s.buttons[8]=f.s.buttons[3]=true;a=f.read(true);require(!a.start&&!a.new_run&&!a.dev_overlay_toggle,"title chord does not start/reset demo");
++ f={};f.s.keys[SDL_SCANCODE_F2]=1;a=f.read(true);require(a.dev_overlay_toggle&&f.visible,"F2 toggles in title");require(!f.read(true).dev_overlay_toggle,"held F2 no repeat");
++ // Independent keyboard changes cancel ownership, so joining Y/START cannot
++ // accidentally restore visibility from before an unrelated F2 toggle.
++ for(int other:{3,9}){
++  f={};f.s.buttons[8]=true;f.read();f.s.keys[SDL_SCANCODE_F2]=1;f.read();require(!f.visible,"F2 independent toggle");
++  f.s.buttons[other]=true;a=f.read();require(!a.dev_overlay_restore&&!f.visible,"chord does not undo independent F2");
++ }
++ f={};f.visible=true;f.s.buttons[8]=true;f.read();f.s.buttons[3]=true;f.s.keys[SDL_SCANCODE_F2]=1;a=f.read();
++ require(a.new_run&&a.dev_overlay_restore&&a.dev_overlay_toggle&&!f.visible,"joined chord restores before simultaneous independent F2");
++ f={};f.s.buttons[8]=true;f.s.keys[SDL_SCANCODE_F2]=1;a=f.read();require(f.visible&&!a.dev_overlay_select,"simultaneous F2/SELECT is one independent toggle");f.s.buttons[3]=true;a=f.read();require(a.new_run&&!a.dev_overlay_restore&&f.visible,"simultaneous keyboard toggle not owned by SELECT");
++ f={};f.s.buttons[8]=true;f.read();f.s={};f.read();f.s.buttons[3]=true;a=f.read();require(f.visible&&!a.new_run&&!a.dev_overlay_restore,"release clears press ownership");
++ f={};f.s.keys[SDL_SCANCODE_R]=1;a=f.read();require(a.new_run&&!a.dev_overlay_toggle,"R new run only");require(!f.read().new_run,"R edge only");
++ f={};f.s.keys[SDL_SCANCODE_F3]=1;a=f.read();require(a.debug&&!a.dev_overlay_toggle,"F3 diagnostics preserved");
++ f={};f.s.buttons[9]=true;a=f.read();require(a.pause&&!a.dev_overlay_toggle&&!a.new_run,"START pause preserved");
++ f={};f.s.buttons[9]=true;require(f.read(true).start,"START title start preserved");
++ f={};f.s.buttons[0]=f.s.buttons[1]=f.s.buttons[2]=true;for(int i=4;i<8;++i)f.s.buttons[i]=true;
++ a=f.read();require(a.ride.jump&&a.ride.boost&&a.ride.grabs==15&&!a.dev_overlay_toggle,"jump boost grabs preserved");
++ Game g(42);g.enter_title();f={};f.s.buttons[8]=true;f.read(g.title());require(g.title(),"overlay does not start simulation");
++ g.start();g.set_paused(true);double time=g.time;auto generation=g.generation();f={};f.s.keys[SDL_SCANCODE_F2]=1;a=f.read(g.title());require(a.dev_overlay_toggle&&!a.pause&&g.paused()&&g.time==time&&g.generation()==generation,"pause overlay has no game side effect");
++ std::cout<<"developer controls: press edges, chord order/rollback/precedence, title/pause and preserved controls passed\n";return 0;
++}catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}
+diff --git a/tests/test_developer_overlay.cpp b/tests/test_developer_overlay.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..57d0168ee1b6fbc940dcb57ad51e1d5b574273fb
+--- /dev/null
++++ b/tests/test_developer_overlay.cpp
+@@ -0,0 +1,32 @@
++#include "developer_overlay.hpp"
++#include "gameplay_test_support.hpp"
++#include <limits>
++using namespace fl;using namespace gameplay_test;
++int main(){try{
++ DeveloperOverlaySnapshot s;auto lines=format_developer_overlay(s);
++ auto contains=[&](const std::string& needle){for(const auto& l:lines)if(l.find(needle)!=std::string::npos)return true;return false;};
++ require(contains("Previous completed frame n/a")&&contains("Audio n/a")&&contains("GPU elapsed n/a")&&contains("FPS n/a")&&contains("Queue n/a"),"unmeasured values explicit n/a");
++ s.frame={true,true,20,1,2,3,1,4,5,6,7,8,2,.4};
++ s.title=true;s.position={1,2,3};s.mode=RiderMode::Air;s.seed=42;s.generation=3;s.air_time=.5;s.speed=10;s.charge=.7;s.slowmo=.4;
++ s.rolling_fps=50;s.rolling_interval_ms=20;
++ s.render.terrain_cells=7;s.render.object_cells=6;s.render.job_active=true;s.render.job_cell=9;s.render.snow=234;s.render.trail=345;
++ s.render.terrain_vertices=12345;s.render.terrain_indices=45678;s.render.object_vertices=123;s.render.object_indices=456;s.render.render_width=512;s.render.render_height=384;s.render.output_width=1024;s.render.output_height=768;s.render.origin={0,128,256};
++ s.audio_open=true;s.audio_backend="pulseaudio";s.audio.sample_rate=48000;s.audio.buffer_frames=512;s.audio.callback_count=1000;s.audio.callback_total_ns=6667000000;s.audio.callback_max_ns=23991000;s.audio.callback_over_budget=521;
++ s.audio.queue_depth=2;s.audio.queue_high_water=10;s.audio.dropped_commands=4;s.audio.stolen_voices=5;s.audio.nonfinite_samples=6;s.audio.active_voices=32;s.audio.peak_voices=128;
++ lines=format_developer_overlay(s);
++ require(contains("50.0 FPS / 20.00 ms")&&contains("ticks 2 / physics scale 0.40"),"rolling loop and fixed tick values");
++ require(contains("player 3.00 (stream 1.00 subset)")&&contains("bottom submit 6.00 / swap 7.00"),"CPU stage timing labels");
++ require(contains("TITLE / air")&&contains("seed 42 / gen 3")&&contains("cell 9 ACTIVE"),"rider and stream state");
++ require(contains("render 512x384 / output 1024x768")&&contains("Snow 234 / trail points 345"),"render and effect counts");
++ require(contains("mean 6.667 / max 23.991 / budget 10.667")&&contains("misses 521 / calls 1000 (NOT driver XRUNs)"),"callback wall budget not XRUN counts");
++ require(contains("Queue 2 / high 10 / drops 4 / steals 5")&&contains("Nonfinite 6 / voices active 32 / peak 128"),"lock-free audio numeric diagnostics");
++ for(const auto& row:lines){require(!row.empty()&&row.size()<=developer_overlay_columns,"bounded complete panel");for(unsigned char c:row)require(c>=32&&c<=127,"original-font ASCII");}
++ s.frame.dual=false;s.title=false;s.paused=true;s.audio.callback_count=0;lines=format_developer_overlay(s);
++ require(contains("PAUSE")&&contains("bottom submit n/a")&&contains("mean n/a"),"pause and missing bottom/callback measures");
++ s.audio.callback_count=std::numeric_limits<uint64_t>::max();s.audio.callback_over_budget=std::numeric_limits<uint64_t>::max();s.audio.callback_total_ns=std::numeric_limits<uint64_t>::max();s.audio.callback_max_ns=std::numeric_limits<uint64_t>::max();
++ s.audio.dropped_commands=s.audio.stolen_voices=s.audio.nonfinite_samples=std::numeric_limits<uint64_t>::max();s.audio_backend=std::string(1000,'x')+"\n";s.audio_backend[0]='\n';
++ lines=format_developer_overlay(s);for(const auto& row:lines){require(row.size()<=developer_overlay_columns,"extreme counters/backend remain bounded");for(unsigned char c:row)require(c>=32&&c<=127,"backend bytes sanitized for atlas");}
++ DeveloperOverlayCache cache;require(cache.due(0),"initial refresh due");cache.refresh(s,0);auto before=cache.lines();s.seed=99;cache.refresh(s,.249);require(cache.lines()==before&&!cache.due(.249),"4Hz cache no early reformat");require(cache.due(.25),"250ms refresh");cache.refresh(s,.25);require(cache.lines()!=before,"refresh replaces cached text");cache.invalidate();require(cache.due(.26),"toggle invalidates cache");
++ DeveloperFrameWindow window;close(window.fps(),0,"empty window");for(int i=0;i<120;++i)window.add(20);close(window.fps(),50,"rolling FPS");window.add(40);close(window.interval_ms(),2420./120,"rolling overwrite bounded");window.add(0);window.add(-1);window.add(std::nan(""));close(window.interval_ms(),2420./120,"bad intervals ignored");
++ std::cout<<"developer overlay: bounded labels, timing scope, callback budget/n-a, cache cadence and rolling window passed\n";return 0;
++}catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}
+diff --git a/tests/test_integration.cpp b/tests/test_integration.cpp
+index 06e5169bd88a7bcf3813b885613b3f8d1a46fe3d..f326acea953e56482a6e27b5fbbce16fe0b2d60f 100644
+--- a/tests/test_integration.cpp
++++ b/tests/test_integration.cpp
+@@ -4,7 +4,7 @@ using namespace fl;using namespace gameplay_test;
+ int main(){try{
+  NativeInputMapper mapper;NativeInputSnapshot physical;
+  physical.buttons[8]=physical.buttons[9]=true;auto a=mapper.read(physical,false);
+- require(a.quit&&!a.pause&&!a.new_run&&!a.start,"quit chord precedes action edges");
++ require(a.quit&&!a.pause&&!a.new_run&&!a.start&&!a.dev_overlay_toggle&&!a.dev_overlay_restore,"quit chord precedes action edges without overlay effects");
+  physical={};mapper.read(physical,false);physical.buttons[9]=true;a=mapper.read(physical,false);require(a.pause&&!a.new_run,"START pause edge");require(!mapper.read(physical,false).pause,"held START not repeated");
+  physical={};mapper.read(physical,true);physical.buttons[0]=true;require(mapper.read(physical,true).start,"A starts title");
+  physical={};physical.buttons[0]=physical.buttons[1]=physical.buttons[2]=true;for(int b=4;b<=7;++b)physical.buttons[b]=true;

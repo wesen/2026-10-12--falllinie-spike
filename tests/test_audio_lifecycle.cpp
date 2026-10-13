@@ -15,7 +15,7 @@ int main(){try{
  require(SDL_getenv("SDL_AUDIODRIVER")&&std::strcmp(SDL_getenv("SDL_AUDIODRIVER"),"dummy")==0,"requires SDL_AUDIODRIVER=dummy");
  require(SDL_Init(0)==0,SDL_GetError());
  {
-  fl::AudioEngine audio;require(audio.open(),SDL_GetError());
+  fl::AudioEngine audio;require(!audio.open(123),"invalid audio buffer accepted");require(audio.open(),SDL_GetError());
   require(std::strcmp(SDL_GetCurrentAudioDriver(),"dummy")==0,"not dummy audio backend");
   require(SDL_WasInit(SDL_INIT_VIDEO)==0,"audio test opened video");
   wait_clock(audio,0);audio.pause(true);auto clock=audio.diagnostics().frames;SDL_Delay(30);require(audio.diagnostics().frames==clock,"pause did not join/freeze callback");
@@ -23,7 +23,7 @@ int main(){try{
   audio.set_muted(true);audio.pause(false);wait_clock(audio,clock);require(audio.diagnostics().muted,"resume lost mute command");
   audio.close();clock=audio.diagnostics().frames;SDL_Delay(30);require(audio.diagnostics().frames==clock,"callback after close");
   require(SDL_WasInit(SDL_INIT_AUDIO)==0,"owned audio subsystem not released");
-  require(audio.open(),"reopen failed");wait_clock(audio,0);audio.close();audio.close();
+  require(audio.open(1024),"reopen failed");wait_clock(audio,0);require(audio.diagnostics().buffer_frames==1024,"requested reopened audio buffer not obtained");audio.close();audio.close();
  }
  // Caller-owned audio subsystem survives engine destruction.
  require(SDL_InitSubSystem(SDL_INIT_AUDIO)==0,SDL_GetError());

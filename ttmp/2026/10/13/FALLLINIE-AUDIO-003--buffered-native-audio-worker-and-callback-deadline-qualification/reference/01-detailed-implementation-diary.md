@@ -170,7 +170,7 @@ This is acceptance evidence for the finite tested configuration, not universal s
 **Commit (code):** Parent f1781ed,9780e3f,a8894cc,36879ae map to worker a71bf65,ef69e0a,32fe75c,c6e4624.
 
 ### What I did
-- Confirmed worker clean at c6e4624; recomputed139691-byte patch SHA25669e69d4518871fa0220bcd6a9e701c2c939813bd95a92432e39727df3227a2d1. Read full reviewer report and finalized API03. Saved scripts/independent-review.md.
+- Confirmed worker clean at c6e4624; recomputed139691-byte patch SHA25669e69d4518871fa0220bcd6a9e701c2c939813bd95a92432e39727df3227a2d1. Read full reviewer report and finalized API03. Saved scripts/independent-review.txt as an unmodified raw reviewer record.
 - Cherry-picked four commits without overwriting parent diary/tasks. Rebuilt Release and reran12/12 CTests in5.99seconds, saved scripts/parent-ctest.log. ARM64 -std=c++17 -O2 -Wall -Wextra -pthread compile/link passed without warnings using the existing offline SDL toolchain.
 - Added parent-only scripts/05-device-compare.sh, announced replacement of the paused instance, transferred executable/launcher and ran direct first then buffered:120seconds each, autoplay, dual384x288,no-vsync,fps60,muted computation,overlay,actual1024-frame buffer,source vinyl enabled.
 - Saved scripts/target/direct and buffered logs/CSV. Restored interactive buffered --no-vinyl with panel, PID419350. No device/system scheduling configuration changed.
@@ -187,7 +187,7 @@ Identical configuration is more informative than earlier differing durations/buf
 ### What didn't work
 Initial shutdown helper used `flock -w 8`; BusyBox reported `flock: invalid option -- 'w'`. The remote compound shell lacked set-e and continued deployment; both actual120-second logs contain normal complete AUDIO/frame results. Corrected helper uses set-e and `timeout 8 flock ... true`, app-run failure guards and explicit-file retrieval to avoid nested rerun directories. Syntax validation is required, not an unnecessary repeat of the completed tests.
 
-Worker TSan0/3 failed before execution with unsupported unexpected-memory-mapping errors. Host llvmpipe/dummy one-starvation result remains a failed configuration, not erased by target success. Final live listening and physical event-to-speaker latency are still unmeasured. An initial parent diary edit did not match its exact tail text; no file changed, and the corrected narrow replacement appended this entry.
+Worker TSan0/3 failed before execution with unsupported unexpected-memory-mapping errors. Ticket doctor initially reported `frontmatter delimiters '---' not found` for the raw copied scripts/independent-review.md. Renamed the raw artifact to .txt without modifying its bytes, avoiding a false docmgr-document classification; reran doctor. Host llvmpipe/dummy one-starvation result remains a failed configuration, not erased by target success. Final live listening and physical event-to-speaker latency are still unmeasured. An initial parent diary edit did not match its exact tail text; no file changed, and the corrected narrow replacement appended this entry.
 
 ### What I learned
 Producer computation remains roughly11.3ms CPU per1024-frame block; the callback no longer computes it. Producer over-budget blocks are not callback failures when ready PCM covers them. Sampled low0 is not starvation if refill precedes the next request. Max CPU and max wall aggregates need not describe the same block.
@@ -202,7 +202,7 @@ Original review covered publication/lifetimes. Remaining questions are rare sust
 Ask user to try live buffered/no-vinyl. Resume the same worker for the authorized detailed vault report using final code/evidence while explicitly keeping listening acceptance open. Do not enlarge lead silently or claim60FPS.
 
 ### Code review instructions
-Read independent-review.md, API03, parent-ctest.log and both target AUDIO/frame records. Check BusyBox-compatible shutdown/failure guards. Source/library vinyl defaults and explicit --source-vinyl override remain available.
+Read independent-review.txt, API03, parent-ctest.log and both target AUDIO/frame records. Check BusyBox-compatible shutdown/failure guards. Source/library vinyl defaults and explicit --source-vinyl override remain available.
 
 ### Technical details
 Nominal callback/block duration1024/48000=21.3333ms;full2048-frame application lead42.6667ms is separate from1024-sample wet delay/backend buffering. No physical end-to-end latency or driver XRUN measurement. No affinity/FIFO change. Finite target results permit further use/reporting, not universal or complete-game acceptance.

@@ -1,10 +1,11 @@
 #include "developer_overlay.hpp"
 #include "gameplay_test_support.hpp"
+#include <limits>
 using namespace fl;using namespace gameplay_test;
 int main(){try{
  DeveloperOverlaySnapshot s;auto lines=format_developer_overlay(s);
  auto contains=[&](const std::string& needle){for(const auto& l:lines)if(l.find(needle)!=std::string::npos)return true;return false;};
- require(contains("Previous completed frame n/a")&&contains("Audio n/a")&&contains("GPU elapsed n/a"),"unmeasured values explicit n/a");
+ require(contains("Previous completed frame n/a")&&contains("Audio n/a")&&contains("GPU elapsed n/a")&&contains("FPS n/a")&&contains("Queue n/a"),"unmeasured values explicit n/a");
  s.frame={true,true,20,1,2,3,1,4,5,6,7,8,2,.4};
  s.title=true;s.position={1,2,3};s.mode=RiderMode::Air;s.seed=42;s.generation=3;s.air_time=.5;s.speed=10;s.charge=.7;s.slowmo=.4;
  s.rolling_fps=50;s.rolling_interval_ms=20;
@@ -22,6 +23,9 @@ int main(){try{
  for(const auto& row:lines){require(!row.empty()&&row.size()<=developer_overlay_columns,"bounded complete panel");for(unsigned char c:row)require(c>=32&&c<=127,"original-font ASCII");}
  s.frame.dual=false;s.title=false;s.paused=true;s.audio.callback_count=0;lines=format_developer_overlay(s);
  require(contains("PAUSE")&&contains("bottom submit n/a")&&contains("mean n/a"),"pause and missing bottom/callback measures");
+ s.audio.callback_count=std::numeric_limits<uint64_t>::max();s.audio.callback_over_budget=std::numeric_limits<uint64_t>::max();s.audio.callback_total_ns=std::numeric_limits<uint64_t>::max();s.audio.callback_max_ns=std::numeric_limits<uint64_t>::max();
+ s.audio.dropped_commands=s.audio.stolen_voices=s.audio.nonfinite_samples=std::numeric_limits<uint64_t>::max();s.audio_backend=std::string(1000,'x')+"\n";s.audio_backend[0]='\n';
+ lines=format_developer_overlay(s);for(const auto& row:lines){require(row.size()<=developer_overlay_columns,"extreme counters/backend remain bounded");for(unsigned char c:row)require(c>=32&&c<=127,"backend bytes sanitized for atlas");}
  DeveloperOverlayCache cache;require(cache.due(0),"initial refresh due");cache.refresh(s,0);auto before=cache.lines();s.seed=99;cache.refresh(s,.249);require(cache.lines()==before&&!cache.due(.249),"4Hz cache no early reformat");require(cache.due(.25),"250ms refresh");cache.refresh(s,.25);require(cache.lines()!=before,"refresh replaces cached text");cache.invalidate();require(cache.due(.26),"toggle invalidates cache");
  DeveloperFrameWindow window;close(window.fps(),0,"empty window");for(int i=0;i<120;++i)window.add(20);close(window.fps(),50,"rolling FPS");window.add(40);close(window.interval_ms(),2420./120,"rolling overwrite bounded");window.add(0);window.add(-1);window.add(std::nan(""));close(window.interval_ms(),2420./120,"bad intervals ignored");
  std::cout<<"developer overlay: bounded labels, timing scope, callback budget/n-a, cache cadence and rolling window passed\n";return 0;

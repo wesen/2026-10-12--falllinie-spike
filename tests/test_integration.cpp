@@ -4,7 +4,7 @@ using namespace fl;using namespace gameplay_test;
 int main(){try{
  NativeInputMapper mapper;NativeInputSnapshot physical;
  physical.buttons[8]=physical.buttons[9]=true;auto a=mapper.read(physical,false);
- require(a.quit&&!a.pause&&!a.new_run&&!a.start,"quit chord precedes action edges");
+ require(a.quit&&!a.pause&&!a.new_run&&!a.start&&!a.dev_overlay_toggle&&!a.dev_overlay_restore,"quit chord precedes action edges without overlay effects");
  physical={};mapper.read(physical,false);physical.buttons[9]=true;a=mapper.read(physical,false);require(a.pause&&!a.new_run,"START pause edge");require(!mapper.read(physical,false).pause,"held START not repeated");
  physical={};mapper.read(physical,true);physical.buttons[0]=true;require(mapper.read(physical,true).start,"A starts title");
  physical={};physical.buttons[0]=physical.buttons[1]=physical.buttons[2]=true;for(int b=4;b<=7;++b)physical.buttons[b]=true;

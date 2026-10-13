@@ -33,6 +33,9 @@ int main(){try{
   f={};f.s.buttons[8]=true;f.read();f.s.keys[SDL_SCANCODE_F2]=1;f.read();require(!f.visible,"F2 independent toggle");
   f.s.buttons[other]=true;a=f.read();require(!a.dev_overlay_restore&&!f.visible,"chord does not undo independent F2");
  }
+ f={};f.visible=true;f.s.buttons[8]=true;f.read();f.s.buttons[3]=true;f.s.keys[SDL_SCANCODE_F2]=1;a=f.read();
+ require(a.new_run&&a.dev_overlay_restore&&a.dev_overlay_toggle&&!f.visible,"joined chord restores before simultaneous independent F2");
+ f={};f.s.buttons[8]=true;f.s.keys[SDL_SCANCODE_F2]=1;a=f.read();require(f.visible&&!a.dev_overlay_select,"simultaneous F2/SELECT is one independent toggle");f.s.buttons[3]=true;a=f.read();require(a.new_run&&!a.dev_overlay_restore&&f.visible,"simultaneous keyboard toggle not owned by SELECT");
  f={};f.s.buttons[8]=true;f.read();f.s={};f.read();f.s.buttons[3]=true;a=f.read();require(f.visible&&!a.new_run&&!a.dev_overlay_restore,"release clears press ownership");
  f={};f.s.keys[SDL_SCANCODE_R]=1;a=f.read();require(a.new_run&&!a.dev_overlay_toggle,"R new run only");require(!f.read().new_run,"R edge only");
  f={};f.s.keys[SDL_SCANCODE_F3]=1;a=f.read();require(a.debug&&!a.dev_overlay_toggle,"F3 diagnostics preserved");

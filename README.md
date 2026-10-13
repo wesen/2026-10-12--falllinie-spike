@@ -41,13 +41,13 @@ Device command, in `/storage/apps/falllinie-spike`:
   --capture-dir captures/marker --receipt marker.json
 ```
 
-Run without `--seconds` for an indefinite fixed-camera inspection. ESC or
-retrogame_joypad SELECT+START (indices 8+9) quits. D / joystick button 2 cycles
-final, luminance, key ink, material ID, spot ink and depth views; C / button 3 cycles
-three original palette presets (Riso, Signal, Print). The joystick name is logged.
+Run without `--seconds` for an indefinite fixed-camera inspection. F10 or
+retrogame_joypad SELECT+START (indices 8+9) quits. F3 cycles final, luminance,
+key ink, material ID, spot ink and depth views; C cycles six palettes. Debug and
+palette controls no longer occupy source gameplay buttons. The joystick name is logged.
 
 Options: `--seed`, `--cell -1..64`, `--cells 1..7`, `--render-size WxH`,
-`--debug-view 0..5`, `--palette 0..2`, `--frames`, `--assets`, `--resize-check`.
+`--debug-view 0..5`, `--palette 0..5`, `--frames`, `--assets`, `--resize-check`.
 Scene and print targets have the same resolution; nearest presentation scales to
 1024x768. Print pitch scales as 4.4×width/1024 so final dot spacing is intentional.
 
@@ -93,11 +93,71 @@ for recording; it is not a substitute for physical playtesting.
 
 Ground: stick/dpad left/right steer; UP tucks, DOWN brakes; hold/release button 0
 (A/SPACE) to jump. Air: left/right spin, up/down flip, release to auto-complete.
-START/R restarts; SELECT+START/ESC exits. HUD displays speed, distance, raw landing
+START/P/ESC pauses; R or SELECT+Y starts a new seeded run; F10 or SELECT+START
+quits. SELECT/F2 toggles developer data. HUD displays speed, distance, landing
 points and contextual controls using the original embedded IBM Plex Mono font.
 
+Historical limitations at the first-playable checkpoint (see FALLLINIE-GAME-002
+for the subsequently merged source systems, not a complete-parity claim):
 Spins/flips and landing alignment follow the source, but full grabs/ubers, runtime
 IK, combo/repetition scoring, original bail animation, objects, trails and reactive
 audio remain unfinished. Crouch uses three baked original poses. Cell transitions
 currently rebuild a four-cell patch synchronously. This is a playable port slice,
 not a claim of complete game parity. Current diary: native ttmp ticket FALLLINIE-PLAY-001.
+
+## Native developer overlay (source gameplay)
+
+`--dev-overlay` enables gameplay (`--play`) and shows the panel from the title/demo.
+For parent qualification without injected input, use `--dual-screen --dev-overlay`
+with the existing launcher/render-size settings. It does not start the run or open
+audio until the usual A/START/ENTER/SPACE drop-in. The port launcher forwards flags:
+`bash scripts/falllinie-spike.sh --dev-overlay`. No launcher default has changed.
+
+Current raw pad map: A0 jump, B1/X2 boost, Y3 in the new-run chord,
+L1/R1/L2/R2 (4–7) grabs, SELECT8 developer overlay, START9 pause/start,
+dpad13–16. Keyboard: WASD/arrows steer/drive, SPACE jump, SHIFT/B boost,
+J/K/U/I grabs, R new run, F2 overlay, F3 diagnostic views, C palettes, M mute,
+P/ESC pause, F10 quit.
+
+- SELECT/F2 toggles on the press edge; holding does not repeat. Available in title,
+  run and pause; drawn only on the top/chase output, never first-person.
+- SELECT+Y requests a new seeded run (not from title); either press order works.
+  SELECT+START quits with precedence, without new-run or same-snapshot overlay effects.
+- An immediate standalone SELECT press necessarily shows/hides the panel briefly
+  if Y/START joins on a later frame. That chord restores the pre-SELECT visibility;
+  SELECT release clears ownership. An independent F2 press cancels that restoration
+  token, so a later chord cannot undo an unrelated keyboard toggle.
+
+The readable 1024x768 panel uses the original font, 18 bounded rows and one extra
+quad batch, not fullscreen per-glyph passes. Text and geometry refresh about 4 Hz
+(or on toggle/resize); the disabled path never reads audio diagnostics or formats
+text. The main thread captures numeric snapshots without changing simulation or
+consuming additional events. It displays:
+
+- Rolling CPU loop FPS/interval (up to 120 completed frames), **not physical
+  presentation rate**, and previous completed frame input, physics, player,
+  streaming (a player subset), top/bottom submit/swap and pacing wall times.
+- Rider state/position/speed/air/charge/slowmo/ticks, seed and generation;
+  resident terrain/object cells, terrain job activity/cell, visible vertex/index
+  counts, snow/trail counts, internal/output size and camera-relative origin.
+- Audio backend, actual rate/buffer, cumulative callback mean/max versus computed
+  budget, cumulative budget misses/callbacks, queue depth/high/drops, steals,
+  nonfinite samples and active/peak voices. **Budget misses are CPU callback wall
+  deadline misses, NOT driver XRUN counts.** Closed audio and missing measurements
+  are n/a. Max/miss counters do not reset at each 4 Hz text refresh.
+- GPU elapsed/utilization and CPU utilization are explicitly **n/a**. The separate
+  CSV/GPU profiler remains independent; no utilization estimate is invented.
+
+Host checks (no video/device access):
+
+```
+cmake -S . -B /tmp/falllinie-dev-overlay-build -DCMAKE_BUILD_TYPE=Release
+cmake --build /tmp/falllinie-dev-overlay-build -j4
+ctest --test-dir /tmp/falllinie-dev-overlay-build \
+  -R '^(developer_overlay|developer_controls|integration)$' --output-on-failure
+```
+
+Detailed implementation/evidence/review diary:
+`ttmp/2026/10/12/FALLLINIE-GAME-002--source-faithful-falllinie-gameplay-integration-and-final-playtest/reference/05-developer-overlay-diary.md`.
+Host tests do not qualify actual GL linkage, panel legibility, two-screen placement
+or physical audio/presentation performance; the parent owns that gate after DSP repair.

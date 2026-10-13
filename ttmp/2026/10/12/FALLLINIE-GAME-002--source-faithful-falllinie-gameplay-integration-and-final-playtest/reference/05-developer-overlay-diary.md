@@ -80,3 +80,70 @@ The feature now toggles from SELECT/F2 in title, run and pause, uses the origina
 - Callback budget = `1000 * actual buffer_frames / sample_rate` ms; mean = cumulative `callback_total_ns / callback_count / 1e6`, max = cumulative max ns / 1e6. No callbacks => mean/max n/a; closed device => callback/rate/buffer n/a.
 - Source terrain/world/particles are only observed through renderer-owned existing state. No added second simulation, no extra frame advance, no second publish_feedback.
 - Build outputs are outside the worktree at `/tmp/falllinie-dev-overlay-build`. No scripts/experiments were needed for Step 1.
+
+## Step 2: Tighten unavailable-data semantics, publish current controls and finish host evidence
+
+The functional checkpoint was committed promptly as ecbd3de72eea25f33b59250e3bdb7d8370e0bef3, before extended documentation/polish. I then reviewed the complete scoped diff, tightened missing-measurement text, added extreme-value/independent-toggle cases, and documented the approved transient SELECT chord behavior. No device access, deployment, installs, subagents, alternate execution mode or pushes occurred.
+
+The final host executable builds warning-free and the three narrow tests pass. This is a checked host candidate, not a graphics/audio-device qualification; external reviewer and parent physical acceptance remain required. README historical first-playable limitations are explicitly historical rather than a new parity claim. Only this new diary is changed in the ticket; parent diary/index/tasks remain untouched.
+
+### Prompt Context
+**User prompt (verbatim):** See Step 1.
+**Assistant interpretation:** Finish the scoped overlay candidate with independent review evidence, current controls/help, and a clean committed worktree.
+**Inferred user intent:** The parent can cherry-pick without guessing APIs, rebuilding a full audio matrix or mistaking callback misses for driver faults.
+**Commit (code):** ecbd3de72eea25f33b59250e3bdb7d8370e0bef3 — "Add cached native developer overlay and SELECT chord controls"; this step accompanies the subsequent bounded-polish commit, discoverable immediately after it on the ref below.
+
+### What I did
+- Fixed the initial successful-build format-security warning and verified a warning-free rebuild before the functional commit. Exact follow-up command: `cmake --build /tmp/falllinie-dev-overlay-build -j4 && ctest --test-dir /tmp/falllinie-dev-overlay-build -R '^(developer_overlay|developer_controls)$' --output-on-failure && git diff --check`; result 2/2 passed, 0 failed (0.01 s), no diff whitespace errors.
+- Made rolling FPS/interval n/a before any completed frames, and queue/voice counters n/a when audio is closed instead of presenting fabricated zero measurements. Sanitized formatting bytes to the original ASCII atlas range, retaining bounded 82-column clipping for extreme counters/backend names.
+- Added simultaneous F2+SELECT and F2+joined-new-run checks, maximum uint64 counters/long backend checks, and the existing integration test's no-overlay-side-effect quit assertion.
+- Moved all first-person camera mutations into the existing exception restoration region; camera, shake, FOV, following state, rider count and first-person overlay suppression are restored even if view setup/render throws.
+- Updated run/title/pause HUD legends, native `--help`, and README current controls/overlay semantics. The launcher already forwards arguments unchanged; no launcher defaults or scripts changed.
+- Final changed source/test paths: CMakeLists.txt, README.md, src/developer_overlay.hpp/cpp, src/runtime.hpp/cpp, src/renderer.hpp/cpp, src/game_renderer.cpp, src/main.cpp, tests/test_developer_controls.cpp, tests/test_developer_overlay.cpp, tests/test_integration.cpp. Ticket changes consist solely of this reference/05 file.
+
+### Why
+- Explicit n/a is a stronger diagnostic contract than zero before a measurement exists, especially on title where audio intentionally remains closed.
+- F2 must remain independent even when it coincides with the snapshot that joins a SELECT chord. Main's restore-then-toggle action order is now explicitly tested.
+- First-person suppression is per-view state, not globally switching off the overlay; that prevents visibility leaks and preserves top redraw/capture behavior.
+
+### What worked
+- Exact final narrow command: `cmake --build /tmp/falllinie-dev-overlay-build -j4 && ctest --test-dir /tmp/falllinie-dev-overlay-build -R '^(developer_overlay|developer_controls|integration)$' --output-on-failure && /tmp/falllinie-dev-overlay-build/falllinie-spike --help && git diff --check`. Build succeeded without warnings; CTest reported `100% tests passed, 0 tests failed out of 3`, total 0.02 s. Help reports SELECT/F2 overlay, SELECT+Y/R new run, F3 debug views and SELECT+START/F10 quit. Help exits before SDL initialization/instance lock, so this command did not open devices.
+- After the final title-only HUD legend adjustment, `cmake --build /tmp/falllinie-dev-overlay-build -j4 && git diff --check` succeeded warning-free. No test logic changed afterward.
+- Scope audit: `git diff f1402c7 -- src/audio.cpp src/audio.hpp src/audio_dsp.hpp src/game.cpp src/world.cpp src/terrain.cpp src/terrain.hpp src/math.hpp assets/shaders` produced no output. Shader assets, audio, physics/world/terrain/math are unchanged.
+- Static review found no known blockers in the scoped diff: source-font UV convention matches existing HUD; upload bound is 8,862 vertices; 12x20 glyphs and 22px row spacing fit the 1008x422 panel at 1024x768; normal frames only draw cached geometry.
+
+### What didn't work
+- No tests/builds failed in this step. No full audio suite or graphics matrix was run. The earlier warning and its fix are preserved in Step 1 rather than hidden.
+- There is no actual device/pixel evidence for this candidate. GL shader linking, visible panel legibility, top-only placement, first-person exception restoration under actual GL errors and performance delta must still be reviewed/qualified physically.
+
+### What I learned
+- Existing port launcher argument forwarding already supports `--dev-overlay`; modifying launcher defaults would unnecessarily widen scope.
+- The telemetry schema intentionally leaves CPU/GPU utilization absent and formats them n/a. A future parent extension must provide a real measurement and scope rather than overload CPU loop FPS.
+
+### What was tricky to build
+- Each text refresh builds the bounded lines on the main thread and copies them into Renderer; Renderer rebuilds GPU glyph geometry only when dirty or drawable dimensions change. Separate overlay VAO/VBO prevents the unchanged original HUD upload from overwriting the cache.
+- The panel intentionally overlays some central gameplay feedback when enabled; the top primary HUD and bottom control legend remain in their original rendering path. Disabling restores the original view rather than adding a second render/simulation path.
+
+### What warrants a second pair of eyes
+- Required external reviewer gate is pending; this lane performed a self-review only and did not launch subagents.
+- Inspect actual glyph size/contrast at 1024x768, potential overlap of long trick feedback, SELECT-first transient then restoration, and no panel on lower output.
+- Verify callback snapshot consistency against parent instrumentation. As supplied in the supervisor update, parent DSP optimization improved prior target mean 8.84 to 6.67 ms but still had 178/1320 misses and max 19 ms; these are parent observations, not this lane's qualification results or a reason to relax measurement wording.
+
+### What should be done in the future
+- Parent should review and cherry-pick this ref's two commits onto the DSP-fixed main worktree, resolve any narrowly overlapping main/input/HUD documentation edits, then deploy/run its physical gate.
+- Suggested physical invocation appended to the existing launcher: `--dev-overlay`; use `--autoplay --dev-overlay` only for automatic run/audio qualification if desired. Title mode alone intentionally has audio n/a until drop-in.
+- For acceptance, compare with and without overlay, inspect original HUD on disable, title/run/pause/F2/SELECT/SELECT+Y/both SELECT+START orders, first-person absence, and audio misses versus actual buffer budget. Do not equate loop FPS with physical scanout rate.
+
+### Code review instructions
+- Managed ref: `pi-subagents/worker-Implement-a-lightweight-native-developer-overlay-for-Falllinie-in-your-isolated-6fb1cf25-d979bc7-d17d-s0-t0`.
+- Worktree: `/home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-d979bc73-d1bb-4d8c-9e55-bfe1271f758b-s0-0`.
+- Base: f1402c7. Review `git diff f1402c7..HEAD` and the narrow host command above, not a full audio/graphics matrix. Worktree/index should be empty after the polish commit; final handoff reports exact hashes and that check.
+- Formatting/control tests are named after their source features. Integration retains one frame clock/one feedback publisher and only adds the quit assertion.
+
+### Technical details
+- Extension seam: `DeveloperFrameTimings` contains valid/dual, interval and stage wall times, ticks and physics_scale. Main uses precisely those same values for the existing Profiler::cpu call, then stores them for the next overlay snapshot. Snapshot state/cell counters are current-at-refresh; only frame timing/ticks are labeled previous-completed.
+- `DeveloperRenderDiagnostics` exposes resident mesh-cell counts, visible terrain/object V/I, active terrain job/cell, particle counts, render/output dimensions and the origin obtained from the existing `render_frame` function. It does not mutate jobs, meshes, terrain or world.
+- `DeveloperOverlaySnapshot` owns numeric rider/audio/frame/render data plus a main-thread backend name. `format_developer_overlay` and `DeveloperOverlayCache` are host-testable without GL. Cache invalidation is explicit on visibility actions; normal refresh is every 250 ms. `DeveloperFrameWindow` is fixed-size/no allocation.
+- `Renderer::set_developer_overlay(bool)` changes visibility; `set_developer_overlay_lines` publishes the cache and dirties geometry; `developer_diagnostics` is main-thread only. Private per-view `first_person_view_` suppresses the panel, and restoration covers the setup/render catch path.
+- NativeActions visibility integration contract: apply `dev_overlay_restore` to the stored pre-SELECT visibility first; for `dev_overlay_toggle`, save current visibility only when `dev_overlay_select`, then invert. A restore+independent-F2 toggle can coexist on one snapshot. No hold-repeat/new-run repeat occurs.
+- Residual risks: added cached batch still has a real GPU/blend cost, unmeasured here; extreme numeric text is deliberately clipped rather than dynamically resized; FPS uses up to 120 intervals and can include warmup/new-seed stalls. GPU elapsed/utilization, CPU utilization and driver XRUN counts remain unavailable. No binaries, shared libraries, WAVs, secrets or experiment scripts were added.

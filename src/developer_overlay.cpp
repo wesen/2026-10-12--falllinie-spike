@@ -9,12 +9,14 @@ DeveloperOverlayLines format_developer_overlay(const DeveloperOverlaySnapshot& s
   char text[developer_overlay_columns+1]{};
   if constexpr(sizeof...(args)==0)std::snprintf(text,sizeof text,"%s",fmt);
   else std::snprintf(text,sizeof text,fmt,args...);
+  for(char& c:text)if(c&&((unsigned char)c<32||(unsigned char)c>127))c='?';
   lines[row++]=text;
  };
  const auto& f=s.frame;const auto& r=s.render;const auto& a=s.audio;
  const char* mode=s.mode==RiderMode::Ground?"ground":s.mode==RiderMode::Air?"air":s.mode==RiderMode::Rail?"rail":"bail";
  line("DEV / SELECT-F2 / 4 Hz cache / CPU wall times, NOT presentation rate");
- line("Rolling loop %.1f FPS / %.2f ms interval (last <=120 frames)",s.rolling_fps,s.rolling_interval_ms);
+ if(s.rolling_interval_ms>0)line("Rolling loop %.1f FPS / %.2f ms interval (last <=120 frames)",s.rolling_fps,s.rolling_interval_ms);
+ else line("Rolling loop FPS n/a / interval n/a (no completed frames yet)");
  if(f.valid){
   line("Previous completed frame %.2f ms / ticks %d / physics scale %.2f",f.interval_ms,f.ticks,f.physics_scale);
   line("CPU ms input %.2f / physics %.2f / player %.2f (stream %.2f subset)",f.input_ms,f.physics_ms,f.player_ms,f.stream_ms);
@@ -46,8 +48,13 @@ DeveloperOverlayLines format_developer_overlay(const DeveloperOverlaySnapshot& s
   line("Callback mean n/a / max n/a / budget n/a");
   line("Callback budget misses n/a / calls n/a (NOT driver XRUNs)");
  }
- line("Queue %u / high %u / drops %llu / steals %llu",a.queue_depth,a.queue_high_water,(unsigned long long)a.dropped_commands,(unsigned long long)a.stolen_voices);
- line("Nonfinite %llu / voices active %u / peak %u (cumulative counters)",(unsigned long long)a.nonfinite_samples,a.active_voices,a.peak_voices);
+ if(s.audio_open){
+  line("Queue %u / high %u / drops %llu / steals %llu",a.queue_depth,a.queue_high_water,(unsigned long long)a.dropped_commands,(unsigned long long)a.stolen_voices);
+  line("Nonfinite %llu / voices active %u / peak %u (cumulative counters)",(unsigned long long)a.nonfinite_samples,a.active_voices,a.peak_voices);
+ }else{
+  line("Queue n/a / high n/a / drops n/a / steals n/a");
+  line("Nonfinite n/a / voices active n/a / peak n/a (device not open)");
+ }
  return lines;
 }
 void DeveloperOverlayCache::refresh(const DeveloperOverlaySnapshot& s,double now){

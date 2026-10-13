@@ -35,9 +35,10 @@ void Renderer::update_player(Game& game,double dt){
  hud_meter_+="   "+std::string("GROTESK").substr(0,game.letters);
  hud_meter_fraction_=infinite?1:game.meter;
  hud_banner_=game.hud.banner_time>0?ascii(game.hud.banner):"";
- hud_controls_=controller_?"A JUMP / B-X BOOST / L1-R1-L2-R2 GRABS / START PAUSE / SELECT DEV":"SPACE JUMP / SHIFT-B BOOST / J-K-U-I GRABS / P PAUSE / F2 DEV";
+ hud_controls_=controller_?"A JUMP / B-X BOOST / L1-R1-L2-R2 GRABS / START PAUSE / SELECT DEV / SELECT+Y NEW":"SPACE JUMP / SHIFT-B BOOST / J-K-U-I GRABS / P PAUSE / F2 DEV / R NEW";
  if(game.title()){
   hud_line_="FALLLINIE";hud_status_="SOURCE DEMO / BEST "+std::to_string(game.best)+" / SEED "+std::to_string(game.seed());
+  hud_controls_=controller_?"A-START DROP IN / SELECT DEV / SELECT+START QUIT":"ENTER-SPACE DROP IN / F2 DEV / F10 QUIT";
   hud_grade_="";hud_points_="";hud_combo_="";hud_meter_="";hud_meter_fraction_=hud_combo_fraction_=0;
   hud_trick_lines_={controller_?"A / START: DROP IN":"ENTER / SPACE: DROP IN","C: SIX COLOURS / M: SOUND","SELECT / F2: DEV / F3: VIEWS","F10 / SELECT+START: QUIT"};hud_banner_="";
  }else if(game.paused()){
@@ -85,12 +86,14 @@ void Renderer::update_player(Game& game,double dt){
  fov_=lerp(fov_,60+std::max(0.,1-double(width_)/height_)*42+clamp(speed-8,0,30)*.5+(game.boosting?7:0)+(game.slowmo>0?-6:0),1-std::exp(-dt*3));double amplitude=game.shake*game.shake*.25;camera_shake_={(camera_rng_.next()-.5)*amplitude,(camera_rng_.next()-.5)*amplitude,(camera_rng_.next()-.5)*amplitude};camera_.vp=multiply(perspective(fov_*3.141592653589793/180,double(width_)/height_,.1,900),look_at(camera_.eye+camera_shake_,camera_.look,{0,1,0}));camera_.inverse_vp=inverse(camera_.vp);game_time_=game.time;
 }
 void Renderer::render_first_person(int width,int height,int palette){
- Camera saved=camera_;Vec3 saved_shake=camera_shake_;camera_shake_={};double saved_fov=fov_;bool saved_follow=following_,saved_first_person=first_person_view_;GLsizei saved_rider=rider_indices_;
- first_person_view_=true;
- camera_.eye=first_person_eye_;camera_.look=first_person_eye_+first_person_forward_*20;fov_=78;
- camera_.vp=multiply(perspective(fov_*3.141592653589793/180,double(width_)/height_,.1,900),look_at(camera_.eye,camera_.look,first_person_up_));camera_.inverse_vp=inverse(camera_.vp);
- following_=false;rider_indices_=0; // Do not render the rider's own face into its view.
- try{render(width,height,0,palette);}catch(...){camera_=saved;camera_shake_=saved_shake;fov_=saved_fov;following_=saved_follow;first_person_view_=saved_first_person;rider_indices_=saved_rider;throw;}
+ Camera saved=camera_;Vec3 saved_shake=camera_shake_;double saved_fov=fov_;bool saved_follow=following_,saved_first_person=first_person_view_;GLsizei saved_rider=rider_indices_;
+ try{
+  first_person_view_=true;camera_shake_={};
+  camera_.eye=first_person_eye_;camera_.look=first_person_eye_+first_person_forward_*20;fov_=78;
+  camera_.vp=multiply(perspective(fov_*3.141592653589793/180,double(width_)/height_,.1,900),look_at(camera_.eye,camera_.look,first_person_up_));camera_.inverse_vp=inverse(camera_.vp);
+  following_=false;rider_indices_=0; // Do not render the rider's own face into its view.
+  render(width,height,0,palette);
+ }catch(...){camera_=saved;camera_shake_=saved_shake;fov_=saved_fov;following_=saved_follow;first_person_view_=saved_first_person;rider_indices_=saved_rider;throw;}
  camera_=saved;camera_shake_=saved_shake;fov_=saved_fov;following_=saved_follow;first_person_view_=saved_first_person;rider_indices_=saved_rider;
 }
 }

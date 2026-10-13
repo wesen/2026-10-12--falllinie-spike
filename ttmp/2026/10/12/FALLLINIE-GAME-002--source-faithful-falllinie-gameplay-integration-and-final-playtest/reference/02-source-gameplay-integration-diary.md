@@ -1,0 +1,222 @@
+---
+Title: Source gameplay integration diary
+Ticket: FALLLINIE-GAME-002
+Status: active
+Topics: [handheld, retro-gaming, architecture]
+DocType: reference
+Intent: long-term
+Owners: []
+RelatedFiles:
+  - src/game.cpp
+  - src/world.cpp
+  - src/pose.cpp
+  - src/game_renderer.cpp
+  - tests/gameplay_oracle.hpp
+ExternalSources: []
+Summary: "Isolated source gameplay/world/pose lane: implementation, host evidence, failures, timeout recovery and integration contracts."
+LastUpdated: 2026-10-13
+WhatFor: "Review and integrate the committed native gameplay lane without mistaking CPU checks for target playtest qualification."
+WhenToUse: "When cherry-picking this lane, wiring main/audio, or reviewing source behavior and documented differences."
+---
+
+# Source gameplay integration diary
+
+## Step 1: Port the cohesive source simulation, world, rig and feedback
+
+This lane replaces the provisional inline ground/air-only game with the original source-shaped ground, air, rail and bail mechanics, shared seeded course objects, runtime rider IK and bounded snow interaction. It retains the frozen HTML and shader bodies rather than substituting generic mechanics or rider geometry. The implementation is now checkpointed at `a30784e7eae813fc46063440efea87693066ac29`; it compiles and passes targeted source-derived CPU cases, but has not been run on the handheld or a graphics context in this lane.
+
+The source engine and renderer are cohesive because scoring, grab/uber pose, rails, particles and feedback depend on the same transitions. Audio synthesis, main-loop/controller integration, CMake integration and the final physical session remain separate owners. No source/audio/main/CMake changes outside the approved seams were made.
+
+### Prompt Context
+
+**User prompt:** See the actual verbatim request in [parent diary Step 4](01-investigation-diary.md#step-4-deliver-report-and-guide-authorize-source-complete-integration). This entry deliberately references that record instead of inventing another quotation from the delegated task.
+
+**Assistant interpretation:** Implement the remaining source gameplay/world/pose/feedback as one isolated writer lane, provide explicit main/audio contracts, make scoped commits, and use only narrow host checks.
+
+**Inferred user intent:** A recognizable source-faithful Falllinie ride on both views, with the original interactions rather than replacement mechanics or a design-only completion claim.
+
+**Commit (code):** `a30784e7eae813fc46063440efea87693066ac29` — `Port source gameplay, world collisions, live rider rig and feedback`.
+
+### What I did
+
+- Read `AGENTS.md`, the frozen source ranges for math, deterministic terrain/objects, state/physics/score, pose/IK, HUD and frame/camera/render, `src/feedback.hpp`, the intern design guide, and the diary skill/investigation-entry reference.
+- Moved growing mechanics from `src/game.hpp` into `src/game.cpp`; preserved the prior public position/velocity/orientation, charge, air-angle/time and score fields used by existing main.
+- Ported grab mask precedence, ten grab definitions, held/tweak durations, all six uber definitions/readiness/edge/completion paths, Superman flip lock, source trick labels and repetition, combo bank/loss, meter/boost/fakie, seven-letter GROTESK, landing thresholds and unfinished-uber landing handling.
+- Ported source course placement, safe period, trunk collision, rail capture/style/slide/boost/pop/scoring, and angular bail/contact/recovery. World definitions and object rendering use the same seeded `World` implementation; an active rail owns its definition.
+- Replaced baked-pose interpolation with original runtime base/uber poses and two-bone IK, original primitive topology/material groups, live shadows and the actual head anchor. Lower view retains its explicitly documented board-nose/up direction policy.
+- Added source trees, rail bars/supports, survey gates, trails and billboards. Snow/trails cap at 700 entries. GPU resources are reused and retired on the main thread; cells use the existing cooperative terrain job and per-cell buffers.
+- Added live/result/grade/combo/meter/letters/banner feedback, print flash/inversion/speed effect, camera shake and source portrait/FOV behavior. Native HUD retains the source font atlas and bounded glyph rectangles; known Unicode labels are transliterated only for display.
+- Added numeric events and continuous `RideSound`, persistence with an integration-supplied path, source frame clock APIs, and generation-based CPU-job/GPU-cell invalidation on `restart(seed)`.
+- With explicit supervisor approval, extended generated GL loading for `glPolygonOffset`, added `begin_frame`, and bounded terrain parameter/feature caches using the original FIFO 500 policy. Rail generation copies the small feature vector before nested height queries; cumulative cliff history is not trimmed.
+- Added a frozen-source Node evaluator and three distinctly named gameplay/world/pose CPU tests. Oracle data is generated by executing original functions, not by asking C++ to validate its own result.
+
+### Why
+
+- Shared definitions avoid independently positioned rendering and collision objects. A copied rail avoids dangling cache references when definition cells retire.
+- Original local pose/IK and primitives preserve grabs/ubers as visible actions, not merely scoring labels.
+- Typed numeric feedback keeps strings and filesystem operations on the main thread, outside any audio callback.
+- A separate pre-tick frame hook is necessary: source slowmo is sampled/decremented before fixed ticks, while a newly awarded uber slowmo must survive that frame and particles use the pre-tick scale.
+- FIFO bounds preserve source deterministic regeneration without treating cumulative cliff drops as an ordinary disposable cache.
+
+### What worked
+
+Commands run at the implementation boundary, and repeated after same-protocol recovery:
+
+```sh
+bash scripts/2026/10/13/full-gameplay-integration/check-gameplay-host.sh
+c++ -std=c++17 -O2 -Wall -Wextra -Isrc tests/test_terrain.cpp src/terrain.cpp -o build/gameplay-check/test-terrain
+build/gameplay-check/test-terrain
+git diff --cached --check
+```
+
+Results:
+
+```text
+gameplay: source score/repetition/tick/landing oracles and transition checks passed
+world: seeded source definitions, rail capture/pop/cache ownership, tree/safe collision passed
+pose: 10 grabs, all 6 ubers, bail, primitive groups and sampled vertices match source
+host executable link passed (not run; no device/graphics access)
+PASS 268 terrain cases; 5 hash cases; 12 RNG values; 6 mesh samples; topology/layout/matrix checks. max_height_error=0 min_normal_dot=1
+```
+
+The terrain test also checks byte-identical incremental versus synchronous meshes. Gameplay cases cover 5 seeded object cells, 18 rig configurations, 10 score/repetition cases, 5 ground/air ticks, landing branches, rail slide/boost/pop/exit, mask precedence, and an actual-source frame-clock block with a newly awarded uber. Transition tests additionally cover persistence failure, pause, safe recovery, cache eviction and bounded trails/particles.
+
+After the implementation commit:
+
+```sh
+node scripts/2026/10/13/full-gameplay-integration/generate-gameplay-oracle.cjs
+node scripts/generate-gl-loader.cjs
+git diff --exit-code -- tests/gameplay_oracle.hpp src/gl_api.hpp
+```
+
+Results: `source oracle: 5 worlds, 18 poses, 10 scores, 5 ticks -> tests/gameplay_oracle.hpp`; `Generated 60 GL entry points`; regeneration produced no diff. Existing source shader files and the frozen HTML are unchanged. No GL execution, deployment, dependencies, pushes or hardware matrix were attempted.
+
+### What didn't work
+
+1. Initial syntax checks succeeded but reported `-Wmisleading-indentation` in compressed adjacent statements. The affected statements were separated; the final host commands emit no such warnings.
+2. First `bash scripts/2026/10/13/full-gameplay-integration/check-gameplay-host.sh` stopped with `air exactly .35 is not sustained`. The fixture had used `.34 + .01`, which is slightly above `.35` in binary floating point. The test now sets exactly `.35` and advances zero time to check strict `> .35`, then advances `.001`. No production threshold was changed.
+3. The next host command passed CPU tests but linking failed with:
+
+   ```text
+   /usr/bin/ld: /tmp/ccwK9bqJ.o: in function `fl::Renderer::render(int, int, int, int)':
+   renderer.cpp:(.text+0x323b): undefined reference to `glPolygonOffset'
+   collect2: error: ld returned 1 exit status
+   ```
+
+   The original generated typed GL loader did not yet include the new source trail call. Supervisor approved the narrow loader seam. `node scripts/generate-gl-loader.cjs` discovers it and regenerated `src/gl_api.hpp`; no direct GLES linkage was added. Host link subsequently passed.
+4. Extending the source frame oracle initially failed under `node scripts/2026/10/13/full-gameplay-integration/generate-gameplay-oracle.cjs` with `SyntaxError: Identifier 'ts' has already been declared`. Repeated VM evaluations had placed source `const ts` in the same lexical scope. Each evaluated source clock block now runs inside its own function scope. Regeneration succeeds and is stable.
+5. The first lane invocation hit the exact **1800000 ms timeout** before its first implementation commit or required diary/handoff. Recovery is documented separately below. This is a delivery failure, not evidence of a game/runtime failure.
+
+### What I learned
+
+- Original frame-clock ordering is observable in slowmo and snow particle lifetime; a post-tick-only API is insufficient.
+- JavaScript can keep a feature array alive after map deletion; native references cannot. Nested `height` calls during rail generation require a copied feature vector when FIFO cache trimming is enabled.
+- Passing CPU source cases and a host executable link proves neither graphical presentation nor physical gameplay quality.
+
+### What was tricky to build
+
+- Quaternion axes, source fallback vectors, switch/fakie names, exact half/quarter thresholds and grab insertion order all influence labels/landings/rigs. The evaluator executes frozen source functions to capture those expectations.
+- Events need to survive multiple fixed ticks and be cleared once after the displayed frame. The renderer reads persistent HUD state, never consumes the event vector or owns score/audio transitions.
+- New-seed restart invalidates the CPU job before any next upload and deletes both terrain/object GPU maps. Two essential cells are synchronously primed at this explicit restart boundary, matching source `ensureCell`; ordinary lookahead remains cooperative.
+
+### What warrants a second pair of eyes
+
+- Integration call order, event draining, raw physical masks and the audio engine's treatment of paused/bail snapshots.
+- `RideSound` is completely zeroed during bail while the GROTESK timer can remain positive; original `Music.grotesk` is an event-latched state. Independent integration review must confirm that the audio module does not accidentally terminate GROTESK from the temporary bail snapshot. No new correction was added during the recovery/finalization-only slice.
+- Source recovery/restart transient details differ: the native compatibility reset/course-placement clears input edges, charge/crouch, grabs and continuous sound; reset also clears slowmo/flash/shake/HUD. Original `newRun`/`placeOnCourse` leave some transients intact. These differences prevent a strict all-state parity claim and should be reviewed rather than concealed.
+- Native HUD layout/transliteration is not browser DOM typography/layout parity. Source X-ray scene/palette are supported, but browser `drawXray` diagnostic overlay and DOM title/notes/touch UI are not implemented here.
+- Cache-copy lifetime protection, synchronous restart priming cost, cell upload/finalization cost and dynamic rig/billboard costs need target profiling. No frame-time claim is made from this lane.
+
+### What should be done in the future
+
+- Parent must integrate CMake/main/controller/audio and best path, run independent review, then perform the parent-owned integrated target profile and final human playtest.
+- Use `restart(seed)` for runtime restart actions; legacy `reset()` does not bump generation or reset the chase camera, so returning to retired starting cells through that compatibility API can await cooperative refill. A same-seed runtime restart can use `restart(game.seed())` to obtain correct invalidation/priming.
+- Review the explicit transient/audio differences above before accepting strict parity. Do not extend this finalization slice into new feature work.
+
+### Code review instructions
+
+1. Start with `src/game.hpp`, `src/game.cpp` mode routing/landing/scoring/frame hooks and `src/feedback.hpp` (unchanged contract).
+2. Review `src/world.cpp`, `src/terrain.cpp` FIFO eviction and the copied features in rail generation.
+3. Review `src/pose.cpp` against source 1163–1248 and draw primitives 757–797/1676–1699. All primitive groups and sampled transformed vertices have original-source expectations.
+4. Review `src/game_renderer.cpp` generation invalidation, CPU/GPU ownership and dual-view head policy; `src/renderer.cpp` scene kinds/materials, dynamic resources and bounded HUD rasterization.
+5. Run the exact host commands above. Review remains required; passing this lane's checks is not final acceptance.
+
+### Technical details
+
+**Frame order:** Read/resolve physical actions; clamp real dt to `.05`; call `begin_frame(raw_dt)` once and use its returned scale for the fixed-step accumulator; execute at most 12 `step(input,1/120)` ticks and discard overflow as in source; call `real_time_feedback(input,raw_dt)` once after ticks; update renderer once; publish `sound`, dispatch numeric events and clear `events` once; render both views without a second simulation/audio engine. `step` already owns `combo_tick` — do not call it again from main. `physics_scale()` is a query; using it without `begin_frame` omits the required slowmo decrement/snapshot.
+
+**Controls:** `steer` = source `inp.x` (left negative/right positive); `drive` = source `inp.y` (tuck/frontflip positive, brake/backflip negative); `jump` hold/release; `boost` modifier; `grabs` bitmask `1,2,4,8` (exact combinations/fallback precedence retained). Parent maps raw measured dpad 13–16, jump button 0, boost 1/2, grabs 4–7, start pause 9/select restart 8 and quit chord before individual edges. Physical labels remain unconfirmed. HUD binding text is provisional to that mapping.
+
+**Events:** Public `std::vector<GameEvent> events` and `RideSound sound` use unchanged `feedback.hpp`. Audio consumes only Pop, Land (`amount` source big, `flag` scored), Bail, Uber, GroteskOn/Off and GrindOn/Off. ComboAdded/Banked, Recovery and Restart are UI/integration-only. No event strings enter an audio callback. Sustained air requires original strict `air_time > .35`; ordinary takeoff clears carve.
+
+**Lifecycle/persistence:** `start()` resets the same seed and unpauses; `set_paused(bool)` stops ticks and zeros sound; `reset()` is the old same-seed compatibility reset; `restart(uint32_t)` changes/increments generation even if the supplied seed equals the old one, resets world/terrain definitions and resumes. Best is preserved in memory. `set_best_path(path)` defaults to no writes, loads nonnegative int values defensively and preserves the larger in-memory best. Parent supplies an SDL_GetPrefPath-derived app-owned path. Bank writes `<path>.tmp`, closes, then renames over the best file; failures populate `persistence_error` without stopping gameplay. This is atomic replacement, not an fsync/power-loss durability guarantee.
+
+**Build inputs:** Add `src/game.cpp`, `src/world.cpp`, `src/pose.cpp`, `src/particles.cpp` to parent build targets alongside terrain; tests need the same CPU inputs. `src/main.cpp`, `CMakeLists.txt`, all `src/audio*`, `src/feedback.hpp` and parent ticket diary/index/tasks/changelog were not modified. The host check deliberately compiles explicit sources because parent-owned CMake is not yet wired.
+
+**Resource limits:** Rail/tree definition caches 300; terrain parameter/feature caches 500 FIFO; cumulative cliff history retains source distance growth; snow/trail entries 700 each; one cooperative terrain job; visible source cell range current−1 through current+5, retirement outside current−1/current+7. Renderer uses one object cell build per frame; essential two-cell restart priming and per-cell final upload remain bounded but synchronous. All GL/SDL video stays on the caller/main thread.
+
+## Step 2: Recover the timed-out lane and finalize its delivery
+
+The orchestrator revived the same worker protocol after the exact 1800000 ms timeout, using the preserved managed worktree rather than switching execution modes or recreating implementation elsewhere. The reported recovery snapshot was HEAD `c99143e`, branch `pi-subagents/source-gameplay-3dc4c46-aa40-s0-t0`, with 21 staged files and 889 insertions/142 deletions. The parent retained the full HEAD diff/status under its `scripts/2026/10/13/full-gameplay-integration/recovery/` directory; individual receipt filenames were not supplied and are not invented here.
+
+This recovery slice only confirmed the existing targeted results, committed the preserved implementation promptly, wrote this diary and prepared the managed handoff. It did not add features, run deployments, change execution modes, install dependencies or access devices. Separate audio checkpoint `c14eba0` was reported by the orchestrator, not inspected or incorporated by this lane.
+
+### Prompt Context
+
+**User prompt:** The actual authored gameplay request remains parent diary Step 4. The recovery instruction is an orchestrator follow-up: finish the preserved checkpoint/diary/handoff only, explicitly name gaps, and return usable commits for the pending parent integration/review stages.
+
+**Assistant interpretation:** Preserve the existing diff and worktree identity, verify bounded CPU/link checks once, and close the previously missing delivery artifacts.
+
+**Inferred user intent:** Avoid losing useful implementation after a lane timeout or confusing uncommitted work with a review-ready checkpoint.
+
+**Commit (code):** `a30784e7eae813fc46063440efea87693066ac29`.
+
+### What I did
+
+- Confirmed `pwd`, `git status --short`, `git rev-parse HEAD`, `git branch --show-current`, staged/unstaged stats. All 21 implementation files were staged, with no unstaged implementation diff.
+- Re-ran the host gameplay check, existing terrain oracle/incremental identity check, and staged whitespace check; all passed as recorded above.
+- Committed exactly the preserved scoped implementation, then re-generated gameplay oracle and GL loader and verified byte-stable generated files using `git diff --exit-code`.
+- Wrote only this lane's `reference/02-source-gameplay-integration-diary.md`; parent metadata/diary remained untouched.
+- Prepared the required handoff at the authoritative managed output path, including commits, inventory, call order, limitations, exact checks and structured acceptance evidence.
+
+### Why
+
+- The missing first commit and diary were delivery blockers, not a reason to expand implementation or repeat broad validation.
+- A source code checkpoint before documentation ensures another deadline cannot again strand only staged code.
+
+### What worked
+
+- Commit output: `[pi-subagents/source-gameplay-3dc4c46-aa40-s0-t0 a30784e] Port source gameplay, world collisions, live rider rig and feedback`, 21 files changed, 889 insertions/142 deletions.
+- Targeted CPU/link and source-regeneration checks reproduced the prior success without installing tools or accessing graphics hardware.
+
+### What didn't work
+
+- Original lane timed out before commit/diary/handoff; the recovery instruction and parent recovery snapshot provide the exact failure context.
+- No additional check failed in this recovery slice.
+
+### What I learned
+
+- A substantial staged diff is not a usable completed delegation; commits and the managed handoff must be checkpointed promptly.
+
+### What was tricky to build
+
+- Separating original game correctness evidence from lane delivery recovery: the timeout does not imply a game crash, and host successes do not establish physical acceptance.
+
+### What warrants a second pair of eyes
+
+- The complete source/call-order/resource review remains pending under parent orchestration. The handoff explicitly exposes missing browser/UI diagnostic branches and native transient differences rather than claiming full parity.
+
+### What should be done in the future
+
+- Integrate these scoped commits with audio `c14eba0`, review, then run the still-pending integrated target/profile/playtest gates. No hardware/deployment command belongs to this recovered lane.
+
+### Code review instructions
+
+- Review code commit `a30784e7eae813fc46063440efea87693066ac29` and this diary's integration contracts and risks. Confirm the final handoff's no-staged-files evidence after the diary commit.
+
+### Technical details
+
+- Worktree: `/home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-3dc4c461-36f4-4457-ad18-03bf42ca5dc7-s0-0`.
+- Ref: `pi-subagents/source-gameplay-3dc4c46-aa40-s0-t0`.
+- Base: `c99143ebc76a3c4ebc775e22f95e6ad3418abbe7`.
+- Managed handoff: `/home/manuel/.pi/agent/sessions/--home-manuel-code-wesen-claw-stuff--/subagent-artifacts/outputs/5dc015a1-c84c-4616-b9d6-c77b91669238/implementation/source-gameplay.md`.

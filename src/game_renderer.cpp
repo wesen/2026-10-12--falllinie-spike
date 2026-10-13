@@ -4,6 +4,8 @@
 #include <chrono>
 namespace fl {
 void Renderer::update_player(Game& game,double dt){
+ // Source post print animation follows real time, while trail age follows G.time.
+ render_time_+=dt;
  // The ASCII source-font atlas deliberately transliterates only known UTF-8
  // labels for display. Score/repetition labels retain original Unicode.
  auto ascii=[](std::string s){for(auto replacement:std::array<std::array<std::string,2>,4>{{{{" · "," / "}},{{"×","x"}},{{"Über","Uber"}},{{"→","->"}}}}){size_t at;while((at=s.find(replacement[0]))!=std::string::npos)s.replace(at,replacement[0].size(),replacement[1]);}return s;};

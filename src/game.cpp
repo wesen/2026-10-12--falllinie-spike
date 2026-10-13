@@ -122,7 +122,7 @@ void Game::air_step(Controls input,double dt,uint8_t edge){
  if(air_normal_initialized_)air_normal_=norm(air_normal_+(nb-air_normal_)*(1-std::exp(-dt*6)));else {air_normal_={0,1,0};air_normal_initialized_=true;}
  Quat up=source_frame(source_norm(horizontal(qrot(takeoff_orientation,{1,0,0})),{0,0,1}),air_normal_),base=qslerp(takeoff_orientation,up,1-std::exp(-air_time*2.5));
  orientation=qnorm(qmul(qaxis({0,1,0},spin),qmul(qaxis(flip_axis_,flip),base)));crouch=lerp(crouch,.3+.6*grab_amount,1-std::exp(-dt*10));
- sound.wind=clamp(sp/30,0,1);hud.live=trick_name(true);hud.live_time=.12;
+ sound.wind=clamp(sp/30,0,1);if(playing_){hud.live=trick_name(true);hud.live_time=.12;}
 }
 std::string Game::trick_name(bool live)const{
  int sn=rounded(std::abs(spin)/PI),fn=rounded(std::abs(flip)/TAU),fl=live?int(std::floor(std::abs(flip)/TAU+.15)):fn;
@@ -177,7 +177,7 @@ void Game::rail_step(Controls input,double dt,bool release){
  auto& g=*rail_;Vec3 d=g.rail.d;auto sign=[](double x){return x>0?1.:x<0?-1.:0.;};g.speed+=-13*d.y*dt;g.speed-=sign(g.speed)*.8*dt;bool infinite=grotesk>0||uber_boost>0;
  if(input.boost&&(meter>.01||infinite)){g.speed+=sign(g.speed)*6*dt;if(!infinite)meter=std::max(0.,meter-.2*dt);}
  g.s+=g.speed*dt;g.t+=dt;position=g.rail.a+d*g.s;velocity=d*g.speed;Vec3 travel=d*(sign(g.speed)==0?1:sign(g.speed)),side=norm(cross(travel,{0,1,0}));orientation=source_frame(g.parallel?travel:side,{0,1,0});crouch=lerp(crouch,.4,1-std::exp(-dt*8));grab_amount=0;
- std::string style=g.parallel?"50-50":"Boardslide";hud.live=style+" "+fixed1(g.t)+" s";hud.live_time=.12;combo.timer=std::max(combo.timer,1.2);
+ std::string style=g.parallel?"50-50":"Boardslide";if(playing_){hud.live=style+" "+fixed1(g.t)+" s";hud.live_time=.12;}combo.timer=std::max(combo.timer,1.2);
  if(effects_rng_.next()<dt*30)particles.spray(1,true,position,velocity,visual_orientation,effects_rng_);
  if(g.s<0||g.s>g.rail.length||release){int pts=rounded(350*g.t/5)*5;if(pts>50){add_to_combo(style,pts);landed(style+" "+fixed1(g.t)+" s",pts,"Rail");last_points=pts;}mode=RiderMode::Ground;rail_.reset();sound.grinding=false;emit(GameEventKind::GrindOff);if(release)velocity.y+=6.5;position.y+=.05;velocity.y+=.8;takeoff(true);}
 }
@@ -185,7 +185,7 @@ void Game::hit_trees(){int c=int(std::floor(position.z/CELL));for(int k=c-1;k<=c
 void Game::do_bail(const std::string& reason){
  if(sound.grinding)emit(GameEventKind::GrindOff);
  mode=RiderMode::Bail;airborne=false;air={};rail_.reset();particles.break_trail();bail_elapsed_=0;bail_time=1.8;
- bail_angular_={(effects_rng_.next()-.5)*12,(effects_rng_.next()-.5)*6,6+effects_rng_.next()*6};combo={};last_points=0;hud.result=reason;hud.grade="Bail";hud.result_time=1.6;hud.live_time=0;banner("Bail",1.1);emit(GameEventKind::Bail,0,false,0,reason);particles.spray(40,false,position,velocity,visual_orientation,effects_rng_);shake=1;grab_amount=0;boosting=false;silence_ride();
+ bail_angular_={(effects_rng_.next()-.5)*12,(effects_rng_.next()-.5)*6,6+effects_rng_.next()*6};combo={};if(playing_){last_points=0;hud.result=reason;hud.grade="Bail";hud.result_time=1.6;hud.live_time=0;}banner("Bail",1.1);emit(GameEventKind::Bail,0,false,0,reason);particles.spray(40,false,position,velocity,visual_orientation,effects_rng_);shake=1;grab_amount=0;silence_ride();
 }
 void Game::bail_step(double dt){
  bail_elapsed_+=dt;bail_time=std::max(0.,1.8-bail_elapsed_);velocity.y-=13*dt;position=position+velocity*dt;double h=terrain.height(position.x,position.z);

@@ -34,6 +34,34 @@ struct Harness {
  }
  void seconds(double count) { frames(size_t(count*audio.diagnostics().sample_rate+0.5)); }
 };
+void test_saturation_2x(){
+ using namespace fl::audio_detail;
+ Saturation2x effect;effect.init();double dc=0;
+ for(int i=0;i<256;++i)dc=effect.process(.3);
+ require(std::abs(dc-Saturation2x::shape(.3))<1e-12,"2x original curve, unity DC");
+ effect.init();double previous=0;
+ for(int i=0;i<256;++i){double y=effect.process(-.3);require(std::isfinite(y),"2x finite startup");previous=y;}
+ require(std::abs(previous+dc)<1e-12,"2x odd curve/stereo-independent state");
+ // The third harmonic of .21875 Fs folds to .34375 Fs without oversampling.
+ effect.init();constexpr int count=8192;constexpr double tone=.21875,alias=.34375;
+ double native_c=0,native_s=0,up_c=0,up_s=0;
+ watch_allocations.store(true);
+ for(int i=0;i<count+256;++i){
+  double x=.8*std::sin(2*pi*tone*i),y=effect.process(x);
+  if(i<256)continue;
+  double c=std::cos(2*pi*alias*i),s=std::sin(2*pi*alias*i),native=Saturation2x::shape(x);
+  native_c+=native*c;native_s+=native*s;up_c+=y*c;up_s+=y*s;
+ }
+ watch_allocations.store(false);
+ double attenuation=20*std::log10(std::hypot(up_c,up_s)/std::hypot(native_c,native_s));
+ require(attenuation<-25,"2x anti-alias suppresses folded nonlinear third harmonic >25dB");
+ effect.init();double impulse_peak=0;int peak_sample=-1;
+ for(int i=0;i<128;++i){double y=std::abs(effect.process(i==0?1e-6:0));if(y>impulse_peak){impulse_peak=y;peak_sample=i;}}
+ require(peak_sample==24,"2x interpolation/decimation total group delay 24 samples");
+ effect.init();Saturation2x fresh;fresh.init();
+ for(int i=0;i<512;++i)require(effect.process(std::sin(i))==fresh.process(std::sin(i)),"2x reset/block independent fixed state");
+ std::cout<<"final saturation: preallocated 2x, original DC curve, 24-sample latency, folded third harmonic "<<attenuation<<" dB vs 1x\n";
+}
 void test_fft_and_source_ir() {
  using namespace fl::audio_detail;
  Sines sine; double phase=0;
@@ -135,6 +163,9 @@ void test_reactions() {
  h.seconds(2.5); require(h.audio.diagnostics().music_cutoff>8950,"bail delayed recovery");
  h.audio.trigger(event(fl::GameEventKind::GroteskOn)); h.seconds(2);
  d=h.audio.diagnostics(); require(d.grotesk && d.voices_started[ix(fl::AudioVoice::Acid)]>0 && d.voices_started[ix(fl::AudioVoice::Impact)]==2 && d.voices_started[ix(fl::AudioVoice::Chop)]==7,"GROTESK source landing plus acid reaction");
+ h.audio.set_ride({});h.frames(1);require(h.audio.diagnostics().grotesk,"bail/zero snapshot cannot cancel source GROTESK latch");
+ fl::RideSound steady;steady.grotesk=true;h.audio.set_ride(steady);h.audio.trigger(event(fl::GameEventKind::GroteskOn));h.frames(1);
+ require(h.audio.diagnostics().voices_started[ix(fl::AudioVoice::Impact)]==2,"steady snapshot plus duplicate event cannot duplicate GROTESK landing");
  h.audio.trigger(event(fl::GameEventKind::GroteskOff)); h.audio.trigger(event(fl::GameEventKind::GrindOff)); h.seconds(0.5);
  d=h.audio.diagnostics(); require(!d.grotesk && d.grind_gain<1e-6,"Grotesk/grind off");
  auto before=d.voices_started;
@@ -214,7 +245,7 @@ void operator delete(void* p,std::size_t) noexcept { std::free(p); }
 void operator delete[](void* p,std::size_t) noexcept { std::free(p); }
 int main(int argc,char** argv) {
  if(argc>=3 && std::string(argv[1])=="--render") { render_evidence(argv[2],argc>3?std::stod(argv[3]):90); }
- else { test_fft_and_source_ir(); test_arrangement(); test_reactions(); test_limits_and_spsc(); test_block_independence(); }
+ else { test_saturation_2x(); test_fft_and_source_ir(); test_arrangement(); test_reactions(); test_limits_and_spsc(); test_block_independence(); }
  require(allocations.load()==0,"no callback/render allocation after preparation");
  std::cout<<"PASS: source audio CPU checks; callback allocations "<<allocations.load()<<'\n';
 }

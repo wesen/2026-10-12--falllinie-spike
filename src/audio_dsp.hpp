@@ -48,6 +48,42 @@ struct Biquad {
  }
  double process(double x) { double y=b0*x+z1; z1=b1*x-a1*y+z2; z2=b2*x-a2*y; return y; }
 };
+// 49-tap Blackman half-band FIR: symmetric odd taps plus exact 0.5 centre.
+// Polyphase zeros/symmetry reduce each high-rate sample to 12 paired MACs.
+// Both interpolation and decimation have fixed storage, including at 192kHz.
+struct HalfBand {
+ static constexpr size_t taps=49, delay=24;
+ std::array<double,12> coefficients{};
+ std::array<double,64> history{};
+ size_t cursor=0;
+ void init(){
+  history.fill(0);cursor=0;double sum=0;
+  for(size_t j=0;j<coefficients.size();++j){
+   double k=double(2*j+1),m=k-delay;
+   double window=.42-.5*std::cos(2*pi*k/(taps-1))+.08*std::cos(4*pi*k/(taps-1));
+   coefficients[j]=std::sin(pi*.5*m)/(pi*m)*window;sum+=2*coefficients[j];
+  }
+  // Preserve exact unity DC and the exact zero taps of the half-band.
+  for(auto& c:coefficients)c*=.5/sum;
+ }
+ double process(double x){
+  history[cursor]=x;double out=.5*history[(cursor+64-delay)&63];
+  for(size_t j=0;j<coefficients.size();++j){size_t k=2*j+1;out+=coefficients[j]*(history[(cursor+64-k)&63]+history[(cursor+64-(taps-1-k))&63]);}
+  cursor=(cursor+1)&63;return out;
+ }
+};
+struct Saturation2x {
+ HalfBand interpolate,decimate;
+ void init(){interpolate.init();decimate.init();}
+ static double shape(double x){return std::tanh(clamp(x,-1,1)*1.5)/std::tanh(1.5);}
+ double process(double x){
+  // Zero-insert, reconstruct at 2x, apply the original nonlinear curve there,
+  // anti-alias, then decimate. 24 base-rate samples total fixed group delay.
+  double out=decimate.process(shape(2*interpolate.process(x)));
+  decimate.process(shape(2*interpolate.process(0)));
+  return out;
+ }
+};
 // AudioParam-style piecewise exponential/constant/linear automation. Knots are
 // converted to sample counts at voice creation; segment advancement is bounded.
 struct Envelope {

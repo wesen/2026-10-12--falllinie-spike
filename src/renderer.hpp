@@ -54,7 +54,7 @@ private:
  Vec3 camera_direction_{0,0,1},camera_velocity_{},look_velocity_{},camera_shake_{};
  bool following_=false,relative_coordinates_=true;
  Vec3 first_person_eye_{},first_person_forward_{0,0,1},first_person_up_{0,1,0};
- double fov_=62,game_time_=0,stream_ms_=0,fps_=0;
+ double fov_=62,game_time_=0,render_time_=0,stream_ms_=0,fps_=0;
  int patch_first_=0,patch_count_=3;
  GLuint scene_fbo_=0,print_fbo_=0,color_=0,depth_=0,printed_=0,glyph_=0;
  int width_=0,height_=0;size_t vertices_=0,indices_=0;double build_ms_=0;

@@ -54,6 +54,7 @@ struct AudioEngine::Impl {
  size_t noise_offset[3]{};
  Biquad music_filter[2],delay_filter,carve_filter,wind_filter,grind_filter,vinyl_filter;
  Reverb reverb;
+ Saturation2x saturation[2];
  double comp_envelope=0;
  std::array<AudioTrace,4096> trace{};
  size_t trace_begin=0,trace_count=0;
@@ -111,7 +112,7 @@ struct AudioEngine::Impl {
   delay_filter.set(FilterType::Low,2800,1,rate);
   carve_filter.set(FilterType::Band,650,0.6,rate); wind_filter.set(FilterType::Low,800,0.5,rate);
   grind_filter.set(FilterType::Band,3300,6,rate); vinyl_filter.set(FilterType::Band,3200,0.5,rate);
-  reverb.init(rate,noise_rng); prepared=true; publish(); return true;
+  reverb.init(rate,noise_rng);for(auto& s:saturation)s.init();prepared=true;publish();return true;
  }
  double now() const { return double(clock)/rate; }
  void set_air(bool on) { if(air==on) return; air=on; bail_start=-1; if(!on) { pump_gain=1; pump_delta=0; pump_end=0; for(auto& p:pumps) p.active=false; } }
@@ -343,8 +344,10 @@ struct AudioEngine::Impl {
    double db=20*std::log10(std::max(comp_envelope,1e-12)),over=db+16,reduction=0;
    if(over>5) reduction=over*(1/3.5-1); else if(over>-5) reduction=(1/3.5-1)*(over+5)*(over+5)/20;
    double comp_gain=std::pow(10.0,reduction/20);
-   left=std::tanh(clamp(left*comp_gain,-1,1)*1.5)/std::tanh(1.5)*out_gain;
-   right=std::tanh(clamp(right*comp_gain,-1,1)*1.5)/std::tanh(1.5)*out_gain;
+   // Source final WaveShaper oversample='2x', after compressor and before out.
+   // The finite native output guard also bounds FIR ringing under overload.
+   left=clamp(saturation[0].process(left*comp_gain),-1,1)*out_gain;
+   right=clamp(saturation[1].process(right*comp_gain),-1,1)*out_gain;
    if(!std::isfinite(left) || !std::isfinite(right)) { ++d.nonfinite_samples; left=right=0; }
    stereo[i*2]=float(left); stereo[i*2+1]=float(right); ++clock;
   }
@@ -378,7 +381,12 @@ void AudioEngine::close() {
  auto& a=*impl_; if(a.device) { SDL_CloseAudioDevice(a.device); a.device=0; }
  if(a.owns_subsystem) { SDL_QuitSubSystem(SDL_INIT_AUDIO); a.owns_subsystem=false; }
 }
-void AudioEngine::pause(bool on) { auto& a=*impl_; if(a.device) SDL_PauseAudioDevice(a.device,on?1:0); a.paused.store(on,std::memory_order_release); }
+void AudioEngine::pause(bool on) {
+ auto& a=*impl_;
+ if(on&&a.device)SDL_PauseAudioDevice(a.device,1); // join active callback first
+ a.paused.store(on,std::memory_order_release);
+ if(!on&&a.device)SDL_PauseAudioDevice(a.device,0); // publish resume before callback
+}
 void AudioEngine::set_ride(const RideSound& ride) {
  // Values are source gains, not raw speed/air_time. Simulation owns the >0.35s test.
  double carve=std::isfinite(ride.carve)?clamp(ride.carve,0,3):0;

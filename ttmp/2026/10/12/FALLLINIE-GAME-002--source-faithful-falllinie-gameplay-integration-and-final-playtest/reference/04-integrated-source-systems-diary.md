@@ -123,3 +123,64 @@ Source inspection showed meaningful restart/recovery differences in the lane: ne
 - Raw dt clamp .05; scaled accumulator uses pre-tick begin_frame result; fixed DT=1/120; cap12 discards backlog. Pause neither accumulates nor steps; real-time visual/UI feedback continues as source.
 - Restart does not reopen audio or reset song. Mute does not pause clock. Audio closure is explicit normal-path plus RAII exception-path, before global SDL_Quit.
 - Native title/pause typography and bounded HUD are not DOM identity. Browser notes/touch markup and mathematical X-ray overlay remain unported; scene X-ray palette remains available.
+
+## Step 3: Restore final 2x nonlinear processing and verify audio lifecycle without video
+
+Integration milestone e789f18 is committed. I restored the source final waveshaper's 2x processing after compression and before output gain, with preallocated symmetric half-band interpolation and anti-alias decimation. The source tanh curve is evaluated at the doubled rate; this is no longer the audio lane's known omitted graph behavior. It remains a native FIR/analytic implementation, not browser waveform identity.
+
+The affected audio gates pass, including an exact DC/odd-curve check, measured 24-base-sample impulse peak, a selected nonlinear folded-harmonic probe, no prepared-render allocation and the existing arrangement/IR/reactivity/rate/block/queue tests. A separate SDL dummy-backend test verifies actual callback pause/resume/close and subsystem ownership without initializing video. I also retained precise target-vs-host caveats, suppressed title UI mutations as source and fixed application-wide blur handling so focus moving between our two windows cannot pause the game.
+
+### Prompt Context
+- **User prompt:** See Step 1 (verbatim).
+- **Assistant interpretation:** Restore the explicitly missing source graph behavior with a bounded native implementation and targeted evidence; no hardware claims.
+- **Inferred user intent:** Avoid calling integration complete while a known source audio effect is omitted.
+- **Commit (code):** e789f18 — Integrate source runtime, native title controls and single audio lifecycle; current DSP milestone committed immediately after this entry.
+
+### What I did
+- Added HalfBand/Saturation2x fixed numeric state: 49 taps, symmetric zero-tap reduction, 12 paired MACs per high-rate sample, two stages per channel, original analytic clamped tanh at 2x, 24 base-sample group delay.
+- Preserved post-compressor/pre-output graph position. Added an overload-only native output guard for FIR ringing (existing ±.85 bound); no allocation, locks or I/O in processing.
+- Audio resume publishes the unpaused atomic before enabling the callback; pause joins active callback first.
+- Added test_audio_lifecycle.cpp with mandatory dummy-driver refusal guard and no-video assertion; CTest sets its environment explicitly.
+- Extended audio CPU tests with curve/impulse/alias/reset checks and GROTESK zero-snapshot/duplicate-event checks.
+- Kept browser title UI guards and boost transient; post grain follows real raw frame time independently of simulation slowmo/pause, while trails still age on G.time.
+- Added bounded current logs/reproduction/contracts under integration-evidence; retained lane logs as explicitly historical.
+
+### Why
+- Evaluating a nonlinear curve only at native rate cannot recreate oversampling; interpolation before the curve and low-pass before decimation are both necessary.
+- Symmetric half-band fixed storage avoids doubling the entire synth/reverb/voice workload or introducing callback allocation/dependencies.
+
+### What worked
+- `scripts/2026/10/13/full-gameplay-integration/check-audio.sh` and `AUDIO_SANITIZE=1 scripts/2026/10/13/full-gameplay-integration/check-audio.sh`: strict CPU and ASan/UBSan gates passed; zero watched prepared-render allocations.
+- Selected folded third harmonic: −103.314 dB vs direct 1x. Original DC curve matches within1e-12, odd response, measured group delay24 samples, reset/rate/block identity pass. This selected tone is not a universal alias suppression claim.
+- Source 20 sections/2434 steps, IR20800 taps/channel max error9.28995e-09 and late tail, reactivity and limits remain passing. Current arrangement peak .662827, peak40 voices.
+- `check-audio.sh --render /tmp/falllinie-integrated-audio.wav 120`: all16 voices, peak42, queue high water2, zero normal drops/steals/nonfinite; peak .748301 RMS .132354. Host512 cost mean .978062ms, p95 1.62701ms, max3.42308ms vs10.6667ms interval, not target profiling. WAV uncommitted/outside repository and not listened to.
+- `cmake -S . -B build/integrated-source && cmake --build build/integrated-source -j4 && ctest --test-dir build/integrated-source --output-on-failure`: all6 tests pass, including dummy callback/lifecycle without video.
+- Relative precision probe built with `-O2 -ffp-contract=off`: max relative error2.96038603e-05 vs absolute .0322687073; origin-boundary world/rolled jumps3.2737144e-05/3.84849886e-05, below1e-4. Bounded output retained.
+
+### What didn't work
+- No production compile/test failure occurred at this boundary.
+- One exact-text editing tool attempt failed `Could not find edits[1] in tests/test_audio.cpp. The oldText must match exactly including all whitespace and newlines.` No partial edit occurred; used source-matching substrings and then ran checks normally.
+- Neither offline cost nor dummy backend qualifies target sound or graphics. Those checks were deliberately not run.
+
+### What I learned
+- Restoring source 2x graph behavior need not double FFT/reverb or all voice rendering. The new host cost is higher than the pre-integration lane (.978ms mean vs .747ms), but still only host evidence.
+
+### What was tricky to build
+- Two FIR stages must have unity DC with zero insertion/interpolation gain2, matching decimation phase and retained state across block boundaries. Separate per-channel rings prevent cross-talk.
+- A native output bound after FIR ringing is an explicit safety adaptation, not a claim about WebAudio filter overshoot.
+- SDL audio ownership is independent of global SDL video lifecycle; callback joins and caller-owned subsystem preservation are tested directly.
+
+### What warrants a second pair of eyes
+- FIR phase/transition/latency, overload guard, GROTESK event latch, pause callback ordering and queue behavior under target pressure.
+- The resumed shader has source eye shake and relative post/sun inputs but no fresh graphics run in this lane.
+
+### What should be done in the future
+- Independent review and parent-only combined target profile/graphics/controller/audio/final physical playtest.
+
+### Code review instructions
+- Review Saturation2x/HalfBand, final AudioEngine::Impl::render graph order and audio lifecycle tests; reproduce current integration-evidence README commands.
+- Review native title/focus and render-time fixes alongside the source fixture; no frozen shader edits.
+
+### Technical details
+- FIR49+49 high-rate group delays sum48 high-rate samples=24 native samples=.5ms at48kHz. Fixed rings are64 doubles each; no per-rate buffers for this path.
+- Original final nonlinear curve, arrangement/instruments/effects preserved. Native random/oscillator/filter/compressor/FIR internals and wet partition latency remain documented, not waveform-identity claims.

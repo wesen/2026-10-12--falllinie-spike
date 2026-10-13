@@ -161,7 +161,7 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
  const Vec3 inks[]={{28/255.0,47/255.0,158/255.0},{18/255.0,18/255.0,18/255.0},{43/255.0,26/255.0,92/255.0},{11/255.0,42/255.0,58/255.0},{17/255.0,17/255.0,18/255.0},{143/255.0,234/255.0,1}};
  const Vec3 spots[]={{1,77/255.0,141/255.0},{227/255.0,18/255.0,11/255.0},{1,106/255.0,0},{0,166/255.0,166/255.0},{141/255.0,141/255.0,145/255.0},{74/255.0,99/255.0,1}};
  palette=(palette%6+6)%6;vec3(post_,"uPaper",papers[palette]);vec3(post_,"uInk",inks[palette]);vec3(post_,"uGrey",spots[palette]);
- scalar(post_,"uNear",.1);scalar(post_,"uFar",900);scalar(post_,"uPitch",4.4f*width_/1024);scalar(post_,"uInv",float(inversion_));scalar(post_,"uTime",float(game_time_));scalar(post_,"uSpeed",float(speed_effect_));scalar(post_,"uFlash",float(flash_));scalar(post_,"uEW",1);scalar(post_,"uApx",float((fov_*3.141592653589793/180)/height_*1.2));glUniform2f(loc(post_,"uFogP"),150,380);
+ scalar(post_,"uNear",.1);scalar(post_,"uFar",900);scalar(post_,"uPitch",4.4f*width_/1024);scalar(post_,"uInv",float(inversion_));scalar(post_,"uTime",float(render_time_));scalar(post_,"uSpeed",float(speed_effect_));scalar(post_,"uFlash",float(flash_));scalar(post_,"uEW",1);scalar(post_,"uApx",float((fov_*3.141592653589793/180)/height_*1.2));glUniform2f(loc(post_,"uFogP"),150,380);
  Vec3 sun=frame.eye+norm({.42,.14,1})*800;double clip[4]{};for(int r=0;r<4;++r)clip[r]=frame.vp[r]*sun.x+frame.vp[4+r]*sun.y+frame.vp[8+r]*sun.z+frame.vp[12+r];
  if(clip[3]>0)glUniform2f(loc(post_,"uSunPx"),(clip[0]/clip[3]*.5+.5)*width_,(clip[1]/clip[3]*.5+.5)*height_);else glUniform2f(loc(post_,"uSunPx"),-9999,-9999);
  scalar(post_,"uSunR",height_*.085);glBindVertexArray(fullscreen_vao_);glDrawArrays(GL_TRIANGLES,0,3);

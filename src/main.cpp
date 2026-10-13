@@ -83,7 +83,7 @@ int main(int argc,char** argv){
   fl::Renderer renderer;renderer.set_absolute_coordinates(c.absolute_coordinates);renderer.initialize(c.seed,c.play?-1:c.cell,c.play?4:c.cells,c.width,c.height,c.assets,!c.source_sampler_precision,!c.source_sky_hash,c.play);
   fl::Profiler profiler(c.profile,c.gpu_profile);
   fl::Game game(c.seed);fl::NativeFrameClock frame_clock;fl::NativeInputMapper input_mapper;fl::TitleAutopilot autopilot(c.seed);
-  fl::AudioEngine audio;bool audio_started=false,muted=false;
+  fl::AudioEngine audio;bool audio_started=false,muted=false;std::string last_persistence_error;
   fl::Rng run_seeds{c.seed^0x97f4a71bu};
   if(c.play){
    char* preference=SDL_GetPrefPath("Falllinie","Falllinie");
@@ -102,11 +102,13 @@ int main(int argc,char** argv){
   while(!quit && !termination_requested){auto frame_start=std::chrono::steady_clock::now();SDL_Event e;
    if(lower_window){if(SDL_GL_MakeCurrent(window,context)!=0)throw std::runtime_error(SDL_GetError());SDL_GL_SetSwapInterval(c.no_vsync?0:1);}
    profiler.poll();
-   fl::NativeInputSnapshot physical;
+   fl::NativeInputSnapshot physical;bool focus_event=false;
    while(SDL_PollEvent(&e)){
     if(e.type==SDL_QUIT)physical.quit=true;
-    if(e.type==SDL_WINDOWEVENT&&(e.window.event==SDL_WINDOWEVENT_FOCUS_LOST||e.window.event==SDL_WINDOWEVENT_MINIMIZED))physical.focus_lost=true;
+    if(e.type==SDL_WINDOWEVENT&&(e.window.event==SDL_WINDOWEVENT_FOCUS_LOST||e.window.event==SDL_WINDOWEVENT_MINIMIZED))focus_event=true;
    }
+   // Focus moving between our two windows is not an application blur.
+   auto* focused=SDL_GetKeyboardFocus();physical.focus_lost=focus_event&&focused!=window&&(!lower_window||focused!=lower_window);
    if(pad&&!SDL_JoystickGetAttached(pad)){SDL_JoystickClose(pad);pad=nullptr;}
    if(!pad&&SDL_NumJoysticks()>0)pad=SDL_JoystickOpen(0);
    const auto* keys=SDL_GetKeyboardState(nullptr);std::copy(keys,keys+SDL_NUM_SCANCODES,physical.keys.begin());
@@ -130,6 +132,7 @@ int main(int argc,char** argv){
     auto frame=frame_clock.advance(game,input,elapsed);
     physics_end=std::chrono::steady_clock::now();renderer.set_native_feedback(pad!=nullptr,muted);renderer.update_player(game,frame.raw_dt);player_end=std::chrono::steady_clock::now();
     fl::publish_feedback(audio,game,audio_started);
+    if(game.persistence_error!=last_persistence_error){last_persistence_error=game.persistence_error;if(!last_persistence_error.empty())std::cerr<<last_persistence_error<<'\n';}
     if(frames%60==0)std::cout<<"ride z="<<game.position.z<<" speed="<<fl::length(game.velocity)<<" airborne="<<game.airborne<<" charge="<<game.charge<<" score="<<game.score<<std::endl;
    }
    SDL_GL_GetDrawableSize(window,&drawable_w,&drawable_h);

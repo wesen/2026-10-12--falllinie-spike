@@ -16,6 +16,8 @@ struct GameEvent {
 };
 struct RideSound {
  double carve=0,wind=0,speed=0,air_time=0;
+ // grotesk is a UI/state diagnostic; audio is latched exclusively by On/Off
+ // events so bail/pause snapshots cannot cancel or duplicate source reactions.
  bool sustained_air=false,grinding=false,grotesk=false;
 };
 }

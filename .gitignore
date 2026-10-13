@@ -3,3 +3,5 @@ target-libs/
 __pycache__/
 # Full parent-review patch is intentionally uncommitted, never part of itself.
 /scripts/2026/10/13/full-gameplay-integration/integrated-candidate.patch
+# Isolated JS runtime research downloads and builds (never production dependencies).
+/scripts/2026/10/13/falllinie-js-runtime/.work/

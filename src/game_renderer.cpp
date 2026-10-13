@@ -16,6 +16,9 @@ void Renderer::update_player(Game& game,double dt){
  Vec3 x=qrot(game.orientation,{1,0,0}),y=qrot(game.orientation,{0,1,0}),z=qrot(game.orientation,{0,0,1});
  double pose=clamp(game.crouch,0,1)*2;int a=std::min(1,int(pose));double mix=pose-a;std::vector<Vertex> vertices=rider_poses_[a];
  for(size_t i=0;i<vertices.size();++i){const auto& b=rider_poses_[a+1][i];auto& v=vertices[i];Vec3 p{lerp(v.px,b.px,mix),lerp(v.py,b.py,mix),lerp(v.pz,b.pz,mix)},n{lerp(v.nx,b.nx,mix),lerp(v.ny,b.ny,mix),lerp(v.nz,b.nz,mix)};p=game.position+x*p.x+y*p.y+z*p.z;n=norm(x*n.x+y*n.y+z*n.z);v.px=p.x;v.py=p.y;v.pz=p.z;v.nx=n.x;v.ny=n.y;v.nz=n.z;}
+ Vec3 low{1e9,1e9,1e9},high{-1e9,-1e9,-1e9};
+ for(const auto& group:rider_groups_)if(group[2]==23)for(uint32_t k=0;k<group[1];++k){const auto& v=vertices[rider_triangles_[group[0]+k]];low={std::min(low.x,double(v.px)),std::min(low.y,double(v.py)),std::min(low.z,double(v.pz))};high={std::max(high.x,double(v.px)),std::max(high.y,double(v.py)),std::max(high.z,double(v.pz))};}
+ first_person_eye_=(low+high)*.5+y*.025;first_person_forward_=x;first_person_up_=y;
  glBindVertexArray(rider_vao_);glBindBuffer(GL_ARRAY_BUFFER,rider_vbo_);glBufferData(GL_ARRAY_BUFFER,vertices.size()*sizeof(Vertex),vertices.data(),GL_STREAM_DRAW);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,rider_ibo_);glBufferData(GL_ELEMENT_ARRAY_BUFFER,rider_triangles_.size()*4,rider_triangles_.data(),GL_STREAM_DRAW);rider_indices_=GLsizei(rider_triangles_.size());
  // Source camera direction blending, offsets, damped spring and speed-dependent FOV.
  double speed=length(game.velocity);Vec3 want=speed>2.5?norm({game.velocity.x,0,game.velocity.z}):f;
@@ -26,5 +29,13 @@ void Renderer::update_player(Game& game,double dt){
  spring(camera_.eye.x,camera_velocity_.x,target.x,.09);spring(camera_.eye.z,camera_velocity_.z,target.z,.09);spring(camera_.eye.y,camera_velocity_.y,target.y,game.airborne?.16:.08);
  spring(camera_.look.x,look_velocity_.x,look.x,.06);spring(camera_.look.y,look_velocity_.y,look.y,.06);spring(camera_.look.z,look_velocity_.z,look.z,.06);camera_.eye.y=std::max(camera_.eye.y,ground-.4);
  fov_=lerp(fov_,60+clamp(speed-8,0,30)*.5,1-std::exp(-dt*3));camera_.vp=multiply(perspective(fov_*3.141592653589793/180,double(width_)/height_,.1,900),look_at(camera_.eye,camera_.look,{0,1,0}));camera_.inverse_vp=inverse(camera_.vp);game_time_=game.time;
+}
+void Renderer::render_first_person(int width,int height,int palette){
+ Camera saved=camera_;double saved_fov=fov_;bool saved_follow=following_;GLsizei saved_rider=rider_indices_;
+ camera_.eye=first_person_eye_;camera_.look=first_person_eye_+first_person_forward_*20;fov_=78;
+ camera_.vp=multiply(perspective(fov_*3.141592653589793/180,double(width_)/height_,.1,900),look_at(camera_.eye,camera_.look,first_person_up_));camera_.inverse_vp=inverse(camera_.vp);
+ following_=false;rider_indices_=0; // Do not render the rider's own face into its view.
+ try{render(width,height,0,palette);}catch(...){camera_=saved;fov_=saved_fov;following_=saved_follow;rider_indices_=saved_rider;throw;}
+ camera_=saved;fov_=saved_fov;following_=saved_follow;rider_indices_=saved_rider;
 }
 }

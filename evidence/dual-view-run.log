@@ -1,0 +1,64 @@
+Could not open module param file '/sys/module/bifrost_kbase/parameters/large_page_conf'
+arm_release_ver: g29p1-12eac0, rk_so_ver: 5
+GL_VERSION=OpenGL ES 3.2 v1.g29p1-12eac0.d6e9c0f8499d70cc285f3f0ca2ede780
+GL_RENDERER=Mali-G52
+GL_VENDOR=ARM
+GLSL=OpenGL ES GLSL ES 3.20
+joystick=retrogame_joypad
+program original scene linked
+sky hash=stable wrapped integer lattice
+depth sampler=explicit highp portability override
+program original print linked
+program presentation diagnostic linked
+program native HUD using source font linked
+glyph atlas loaded
+terrain vertices=44619 indices=263304 build_ms=66.7105 targets=512x384 FBOs complete
+PLAY: stick/dpad steer, UP tuck, DOWN brake, hold/release A or SPACE to jump; START/R restart; SELECT+START exits
+terrain patch -1..2
+ride z=4 speed=6 airborne=0 charge=0 score=0
+placement=[
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  }
+]
+
+ride z=17.7936 speed=11.3636 airborne=0 charge=0 score=0
+ride z=31.8017 speed=14.9857 airborne=1 charge=0 score=0
+LAND spin=180 flip=0 points=220 score=220
+ride z=46.3438 speed=14.6395 airborne=0 charge=0 score=220
+ride z=55.8646 speed=15.7934 airborne=1 charge=0 score=220
+LAND spin=180 flip=0 points=230 score=450
+frames=277 measured=217 frame_p50_ms=21.5384 frame_p95_ms=30.3757 frame_p99_ms=32.1901 peak_rss_kib=76972 GL_error=0

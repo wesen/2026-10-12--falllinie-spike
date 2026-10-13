@@ -1,0 +1,641 @@
+{
+  "id": 1,
+  "type": "root",
+  "orientation": "horizontal",
+  "percent": null,
+  "urgent": false,
+  "marks": [],
+  "focused": false,
+  "layout": "splith",
+  "border": "none",
+  "current_border_width": 0,
+  "rect": {
+    "x": 0,
+    "y": 0,
+    "width": 2048,
+    "height": 768
+  },
+  "deco_rect": {
+    "x": 0,
+    "y": 0,
+    "width": 0,
+    "height": 0
+  },
+  "window_rect": {
+    "x": 0,
+    "y": 0,
+    "width": 0,
+    "height": 0
+  },
+  "geometry": {
+    "x": 0,
+    "y": 0,
+    "width": 0,
+    "height": 0
+  },
+  "name": "root",
+  "window": null,
+  "nodes": [
+    {
+      "id": 2147483647,
+      "type": "output",
+      "orientation": "horizontal",
+      "percent": null,
+      "urgent": false,
+      "marks": [],
+      "focused": false,
+      "layout": "output",
+      "border": "none",
+      "current_border_width": 0,
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 2048,
+        "height": 768
+      },
+      "deco_rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "window_rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "geometry": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "name": "__i3",
+      "window": null,
+      "nodes": [
+        {
+          "id": 2147483646,
+          "type": "workspace",
+          "orientation": "horizontal",
+          "percent": null,
+          "urgent": false,
+          "marks": [],
+          "focused": false,
+          "layout": "splith",
+          "border": "none",
+          "current_border_width": 0,
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 2048,
+            "height": 768
+          },
+          "deco_rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "window_rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "geometry": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "name": "__i3_scratch",
+          "window": null,
+          "nodes": [],
+          "floating_nodes": [],
+          "focus": [],
+          "fullscreen_mode": 1,
+          "sticky": false,
+          "floating": null,
+          "scratchpad_state": null
+        }
+      ],
+      "floating_nodes": [],
+      "focus": [
+        2147483646
+      ],
+      "fullscreen_mode": 0,
+      "sticky": false,
+      "floating": null,
+      "scratchpad_state": null
+    },
+    {
+      "id": 4,
+      "type": "output",
+      "orientation": "none",
+      "percent": 0.5,
+      "urgent": false,
+      "marks": [],
+      "focused": false,
+      "layout": "output",
+      "border": "none",
+      "current_border_width": 0,
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 1024,
+        "height": 768
+      },
+      "deco_rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "window_rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "geometry": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "name": "DSI-2",
+      "window": null,
+      "nodes": [
+        {
+          "id": 5,
+          "type": "workspace",
+          "orientation": "horizontal",
+          "percent": null,
+          "urgent": false,
+          "marks": [],
+          "focused": false,
+          "layout": "splith",
+          "border": "none",
+          "current_border_width": 0,
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1024,
+            "height": 768
+          },
+          "deco_rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "window_rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "geometry": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "name": "1",
+          "window": null,
+          "nodes": [
+            {
+              "id": 29,
+              "type": "con",
+              "orientation": "none",
+              "percent": 1.0,
+              "urgent": false,
+              "marks": [],
+              "focused": false,
+              "layout": "none",
+              "border": "none",
+              "current_border_width": 2,
+              "rect": {
+                "x": 0,
+                "y": 0,
+                "width": 1024,
+                "height": 768
+              },
+              "deco_rect": {
+                "x": 0,
+                "y": 0,
+                "width": 0,
+                "height": 0
+              },
+              "window_rect": {
+                "x": 0,
+                "y": 0,
+                "width": 1024,
+                "height": 768
+              },
+              "geometry": {
+                "x": 0,
+                "y": 0,
+                "width": 1024,
+                "height": 768
+              },
+              "name": "EmulationStation",
+              "window": null,
+              "nodes": [],
+              "floating_nodes": [],
+              "focus": [],
+              "fullscreen_mode": 0,
+              "sticky": false,
+              "floating": "auto_off",
+              "scratchpad_state": "none",
+              "pid": 53594,
+              "app_id": "emulationstation",
+              "foreign_toplevel_identifier": "81aab29ef7d7554db1daa52e02781ac5",
+              "visible": true,
+              "max_render_time": 0,
+              "allow_tearing": false,
+              "shell": "xdg_shell",
+              "inhibit_idle": true,
+              "sandbox_engine": null,
+              "sandbox_app_id": null,
+              "sandbox_instance_id": null,
+              "idle_inhibitors": {
+                "user": "none",
+                "application": "enabled"
+              }
+            }
+          ],
+          "floating_nodes": [
+            {
+              "id": 47,
+              "type": "floating_con",
+              "orientation": "none",
+              "percent": 1.0,
+              "urgent": false,
+              "marks": [],
+              "focused": false,
+              "layout": "none",
+              "border": "none",
+              "current_border_width": 2,
+              "rect": {
+                "x": 0,
+                "y": 0,
+                "width": 1024,
+                "height": 768
+              },
+              "deco_rect": {
+                "x": 0,
+                "y": 0,
+                "width": 0,
+                "height": 0
+              },
+              "window_rect": {
+                "x": 0,
+                "y": 0,
+                "width": 1024,
+                "height": 768
+              },
+              "geometry": {
+                "x": 0,
+                "y": 0,
+                "width": 1024,
+                "height": 768
+              },
+              "name": "falllinie:spike",
+              "window": null,
+              "nodes": [],
+              "floating_nodes": [],
+              "focus": [],
+              "fullscreen_mode": 0,
+              "sticky": false,
+              "floating": "user_on",
+              "scratchpad_state": "none",
+              "pid": 162003,
+              "app_id": "falllinie-spike",
+              "foreign_toplevel_identifier": "07ddf200907082ba3eab0689b5c1f683",
+              "visible": true,
+              "max_render_time": 0,
+              "allow_tearing": false,
+              "shell": "xdg_shell",
+              "inhibit_idle": true,
+              "sandbox_engine": null,
+              "sandbox_app_id": null,
+              "sandbox_instance_id": null,
+              "idle_inhibitors": {
+                "user": "none",
+                "application": "enabled"
+              }
+            },
+            {
+              "id": 51,
+              "type": "floating_con",
+              "orientation": "none",
+              "percent": 1.0,
+              "urgent": false,
+              "marks": [],
+              "focused": true,
+              "layout": "none",
+              "border": "none",
+              "current_border_width": 2,
+              "rect": {
+                "x": 0,
+                "y": 0,
+                "width": 1024,
+                "height": 768
+              },
+              "deco_rect": {
+                "x": 0,
+                "y": 0,
+                "width": 0,
+                "height": 0
+              },
+              "window_rect": {
+                "x": 0,
+                "y": 0,
+                "width": 1024,
+                "height": 768
+              },
+              "geometry": {
+                "x": 0,
+                "y": 0,
+                "width": 1024,
+                "height": 768
+              },
+              "name": "falllinie:spike",
+              "window": null,
+              "nodes": [],
+              "floating_nodes": [],
+              "focus": [],
+              "fullscreen_mode": 0,
+              "sticky": false,
+              "floating": "user_on",
+              "scratchpad_state": "none",
+              "pid": 172380,
+              "app_id": "falllinie-spike",
+              "foreign_toplevel_identifier": "8308c20a79d123d11cec00d86c1d2229",
+              "visible": true,
+              "max_render_time": 0,
+              "allow_tearing": false,
+              "shell": "xdg_shell",
+              "inhibit_idle": true,
+              "sandbox_engine": null,
+              "sandbox_app_id": null,
+              "sandbox_instance_id": null,
+              "idle_inhibitors": {
+                "user": "none",
+                "application": "enabled"
+              }
+            }
+          ],
+          "focus": [
+            51,
+            47,
+            29
+          ],
+          "fullscreen_mode": 1,
+          "sticky": false,
+          "floating": null,
+          "scratchpad_state": null,
+          "num": 1,
+          "output": "DSI-2",
+          "representation": "H[emulationstation]"
+        }
+      ],
+      "floating_nodes": [],
+      "focus": [
+        5
+      ],
+      "fullscreen_mode": 0,
+      "sticky": false,
+      "floating": null,
+      "scratchpad_state": null,
+      "primary": false,
+      "make": "Unknown",
+      "model": "Unknown",
+      "serial": "Unknown",
+      "modes": [
+        {
+          "width": 1024,
+          "height": 768,
+          "refresh": 60171,
+          "picture_aspect_ratio": "none"
+        }
+      ],
+      "non_desktop": false,
+      "active": true,
+      "dpms": true,
+      "power": true,
+      "scale": 1.0,
+      "scale_filter": "nearest",
+      "transform": "normal",
+      "adaptive_sync_status": "disabled",
+      "current_workspace": "1",
+      "current_mode": {
+        "width": 1024,
+        "height": 768,
+        "refresh": 60171,
+        "picture_aspect_ratio": "none"
+      },
+      "max_render_time": 0,
+      "allow_tearing": true
+    },
+    {
+      "id": 3,
+      "type": "output",
+      "orientation": "none",
+      "percent": 0.5,
+      "urgent": false,
+      "marks": [],
+      "focused": false,
+      "layout": "output",
+      "border": "none",
+      "current_border_width": 0,
+      "rect": {
+        "x": 1024,
+        "y": 0,
+        "width": 1024,
+        "height": 768
+      },
+      "deco_rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "window_rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "geometry": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "name": "DSI-1",
+      "window": null,
+      "nodes": [
+        {
+          "id": 6,
+          "type": "workspace",
+          "orientation": "horizontal",
+          "percent": null,
+          "urgent": false,
+          "marks": [],
+          "focused": false,
+          "layout": "splith",
+          "border": "none",
+          "current_border_width": 0,
+          "rect": {
+            "x": 1024,
+            "y": 0,
+            "width": 1024,
+            "height": 768
+          },
+          "deco_rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "window_rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "geometry": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "name": "2",
+          "window": null,
+          "nodes": [],
+          "floating_nodes": [
+            {
+              "id": 52,
+              "type": "floating_con",
+              "orientation": "none",
+              "percent": 1.0,
+              "urgent": false,
+              "marks": [],
+              "focused": false,
+              "layout": "none",
+              "border": "none",
+              "current_border_width": 2,
+              "rect": {
+                "x": 1024,
+                "y": 0,
+                "width": 1024,
+                "height": 768
+              },
+              "deco_rect": {
+                "x": 0,
+                "y": 0,
+                "width": 0,
+                "height": 0
+              },
+              "window_rect": {
+                "x": 0,
+                "y": 0,
+                "width": 1024,
+                "height": 768
+              },
+              "geometry": {
+                "x": 0,
+                "y": 0,
+                "width": 1024,
+                "height": 768
+              },
+              "name": "falllinie:firstperson",
+              "window": null,
+              "nodes": [],
+              "floating_nodes": [],
+              "focus": [],
+              "fullscreen_mode": 1,
+              "sticky": false,
+              "floating": "user_on",
+              "scratchpad_state": "none",
+              "pid": 172380,
+              "app_id": "falllinie-spike",
+              "foreign_toplevel_identifier": "e53617f5d1f0831ddaf85ed1cc83c12e",
+              "visible": true,
+              "max_render_time": 0,
+              "allow_tearing": false,
+              "shell": "xdg_shell",
+              "inhibit_idle": true,
+              "sandbox_engine": null,
+              "sandbox_app_id": null,
+              "sandbox_instance_id": null,
+              "idle_inhibitors": {
+                "user": "none",
+                "application": "enabled"
+              }
+            }
+          ],
+          "focus": [
+            52
+          ],
+          "fullscreen_mode": 1,
+          "sticky": false,
+          "floating": null,
+          "scratchpad_state": null,
+          "num": 2,
+          "output": "DSI-1",
+          "representation": "H[]"
+        }
+      ],
+      "floating_nodes": [],
+      "focus": [
+        6
+      ],
+      "fullscreen_mode": 0,
+      "sticky": false,
+      "floating": null,
+      "scratchpad_state": null,
+      "primary": false,
+      "make": "Unknown",
+      "model": "Unknown",
+      "serial": "Unknown",
+      "modes": [
+        {
+          "width": 1024,
+          "height": 768,
+          "refresh": 60171,
+          "picture_aspect_ratio": "none"
+        }
+      ],
+      "non_desktop": false,
+      "active": true,
+      "dpms": true,
+      "power": true,
+      "scale": 1.0,
+      "scale_filter": "nearest",
+      "transform": "normal",
+      "adaptive_sync_status": "disabled",
+      "current_workspace": "2",
+      "current_mode": {
+        "width": 1024,
+        "height": 768,
+        "refresh": 60171,
+        "picture_aspect_ratio": "none"
+      },
+      "max_render_time": 0,
+      "allow_tearing": false
+    }
+  ],
+  "floating_nodes": [],
+  "focus": [
+    4,
+    3
+  ],
+  "fullscreen_mode": 0,
+  "sticky": false,
+  "floating": null,
+  "scratchpad_state": null
+}

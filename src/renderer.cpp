@@ -36,7 +36,7 @@ static GLuint texture(int w,int h,GLint internal,GLenum format,GLenum type){
  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);return t;
 }
-void Renderer::initialize(uint32_t seed,int first_cell,int count,int w,int h,const std::string& assets,bool precise_depth){
+void Renderer::initialize(uint32_t seed,int first_cell,int count,int w,int h,const std::string& assets,bool precise_depth,bool stable_sky){
  scene_=program(read_file(assets+"/scene_vs.glsl"),read_file(assets+"/scene_fs.glsl"),"original scene");
  std::string print_source=read_file(assets+"/post_fs.glsl");
  if(precise_depth){
@@ -45,6 +45,17 @@ void Renderer::initialize(uint32_t seed,int first_cell,int count,int w,int h,con
   if(at==std::string::npos) throw std::runtime_error("original depth sampler declaration not found");
   print_source.replace(at,original.size(),"uniform sampler2D uC; uniform highp sampler2D uD;");
  }
+ if(stable_sky){
+  // Source layer amplitudes/shapes are retained; only its unstable random basis changes.
+  // Wrap the angular lattice so the first-person rear-facing view has no atan seam.
+  const std::string helper=R"(
+float skyHash(float index){highp uint h=uint(int(index));h=(h^(h>>16))*0x7feb352du;h=(h^(h>>15))*0x846ca68bu;h^=h>>16;return float(h>>8)*(1./16777216.);}
+float skyNoise(float az,float frequency,float offset){float count=floor(6.28318530718*frequency+.5);float x=(az+3.14159265359)/6.28318530718*count+offset;float i=floor(x),f=fract(x);f=f*f*(3.-2.*f);return mix(skyHash(mod(i,count)),skyHash(mod(i+1.,count)),f);}
+)";
+  auto at=print_source.find("void main(){");print_source.insert(at,helper);
+  for(const auto& entry:std::array<std::array<std::string,2>,4>{{{{"n1(az*3.+3.)","skyNoise(az,3.,3.)"}},{{"n1(az*11.)","skyNoise(az,11.,0.)"}},{{"n1(az*6.+11.)","skyNoise(az,6.,11.)"}},{{"n1(az*27.)","skyNoise(az,27.,0.)"}}}}){auto pos=print_source.find(entry[0]);if(pos==std::string::npos)throw std::runtime_error("sky source expression missing");print_source.replace(pos,entry[0].size(),entry[1]);}
+ }
+ std::cout<<"sky hash="<<(stable_sky?"stable wrapped integer lattice":"source sine hash")<<'\n';
  std::cout<<"depth sampler="<<(precise_depth?"explicit highp portability override":"original implicit precision")<<'\n';
  post_=program(read_file(assets+"/post_vs.glsl"),print_source,"original print");
  const std::string copy_fs=R"(#version 300 es

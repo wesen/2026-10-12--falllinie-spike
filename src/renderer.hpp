@@ -23,6 +23,7 @@ public:
  double build_ms()const{return build_ms_;}
  double stream_ms()const{return stream_ms_;}
  void set_fps(double fps){fps_=fps;}
+ void set_native_feedback(bool controller,bool muted){controller_=controller;muted_=muted;}
  void set_absolute_coordinates(bool absolute){relative_coordinates_=!absolute;}
  int width()const{return width_;}
  int height()const{return height_;}
@@ -38,7 +39,7 @@ private:
  Particles particles_;
  uint64_t world_generation_=0;
  RiderGeometry rider_geometry_;RiderMesh rider_mesh_;RiderRig rig_;
- bool rig_valid_=false;
+ bool rig_valid_=false,controller_=false,muted_=false;
  double inversion_=0,flash_=0,speed_effect_=0;
  Rng camera_rng_{0x821371u};
  std::unique_ptr<TerrainJob> terrain_job_;

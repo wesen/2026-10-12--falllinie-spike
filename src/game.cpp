@@ -29,24 +29,31 @@ void Game::reset_rider(double z){
  position={Terrain::center(z),terrain.height(Terrain::center(z),z),z};
  yaw=std::atan2(55./310*std::cos(z/310)+22./127*std::cos(z/127+2.1)+8./53*std::cos(z/53+.4),1);
  board_normal=terrain.normal(position.x,z);Vec3 f=forward_of(yaw);velocity=norm(f-board_normal*dot(f,board_normal))*6;
- orientation=source_frame(f,board_normal);visual_orientation=orientation;mode=RiderMode::Ground;airborne=false;air={};rail_.reset();fakie=false;crouch=charge=bail_time=0;grab_amount=0;
+ orientation=source_frame(f,board_normal);visual_orientation=orientation;mode=RiderMode::Ground;airborne=false;air={};rail_.reset();fakie=false;crouch=charge=bail_time=0;
 }
 void Game::reset(){
  if(sound.grinding)emit(GameEventKind::GrindOff);
  if(grotesk>0)emit(GameEventKind::GroteskOff);
- reset_rider(4);score=last_points=0;distance=0;meter=.3;letters=0;grotesk=uber_boost=0;combo={};recent_.clear();z0_=position.z;particles.clear();silence_ride();hud={};
- previous_jump_=false;previous_grabs_=0;out_of_bounds_=stuck_=safe_=0;boosting=false;slowmo=flash=shake=0;
+ reset_rider(4);score=0;distance=0;meter=.3;letters=0;grotesk=uber_boost=0;combo={};recent_.clear();z0_=position.z;particles.clear();silence_ride();
+ // Source newRun keeps input edges, slowmo/flash/shake, HUD and recovery timers.
+ // In particular a held grab must not manufacture a new uber edge on restart.
  emit(GameEventKind::Restart);
 }
 void Game::restart(uint32_t seed){++generation_;seed_=seed;terrain=Terrain(seed);world.reset(seed);reset();paused_=false;playing_=true;}
-void Game::start(){playing_=true;paused_=false;reset();}
+void Game::start(){restart(seed_);}
+void Game::enter_title(){playing_=false;paused_=false;}
 void Game::set_paused(bool on){paused_=on;if(on)silence_ride();}
 void Game::place(double z){
  if(sound.grinding)emit(GameEventKind::GrindOff);
  auto p=terrain.params(z);double u=clamp(position.x-Terrain::center(z),-(p.W/2-4),p.W/2-4);int c=int(std::floor(z/CELL));
  for(int k=c-1;k<=c+1;++k)for(const auto& t:world.trees(k))if(std::abs(t.z-z)<6&&std::abs(t.x-Terrain::center(z)-u)<3)u+=u>0?-5:5;
- reset_rider(z);position.x=Terrain::center(z)+u;position.y=terrain.height(position.x,z);board_normal=terrain.normal(position.x,z);Vec3 f=forward_of(yaw);orientation=source_frame(f,board_normal);visual_orientation=orientation;velocity=norm(f-board_normal*dot(f,board_normal))*6;
- out_of_bounds_=stuck_=0;safe_=1.2;particles.break_trail();boosting=false;silence_ride();emit(GameEventKind::Recovery);
+ // Source placeOnCourse is not resetRider: retain charge/crouch/grab amount,
+ // input edges and boost transient through automatic recovery.
+ position.x=Terrain::center(z)+u;position.z=z;position.y=terrain.height(position.x,z);
+ yaw=std::atan2(55./310*std::cos(z/310)+22./127*std::cos(z/127+2.1)+8./53*std::cos(z/53+.4),1);
+ board_normal=terrain.normal(position.x,z);Vec3 f=forward_of(yaw);orientation=source_frame(f,board_normal);visual_orientation=orientation;velocity=norm(f-board_normal*dot(f,board_normal))*6;
+ mode=RiderMode::Ground;airborne=false;air={};rail_.reset();fakie=false;bail_time=0;
+ out_of_bounds_=stuck_=0;safe_=1.2;particles.break_trail();silence_ride();emit(GameEventKind::Recovery);
 }
 void Game::takeoff(bool ollie){
  mode=RiderMode::Air;airborne=true;particles.break_trail();sound.carve=0;air_time=spin=flip=spin_velocity=flip_velocity=0;tricked=false;spin_goal_=flip_goal_=NaN;takeoff_orientation=orientation;
@@ -54,7 +61,7 @@ void Game::takeoff(bool ollie){
  air={};air.switch_takeoff=fakie;air.ollie=ollie;air.peak=position.y;
 }
 void Game::step(Controls input,double dt){
- if(paused_||!playing_)return;
+ if(paused_)return;
  time+=dt;if(grotesk>0){grotesk-=dt;if(grotesk<=0){letters=0;banner("Grotesk off",1.2);emit(GameEventKind::GroteskOff);}}
  if(uber_boost>0)uber_boost-=dt;
  bool release=!input.jump&&previous_jump_;uint8_t grab_edge=input.grabs&~previous_grabs_;previous_jump_=input.jump;previous_grabs_=input.grabs;
@@ -185,23 +192,23 @@ void Game::bail_step(double dt){
  if(position.y<=h){Vec3 n=terrain.normal(position.x,position.z);position.y=h;double vn=dot(velocity,n);if(vn<0)velocity=velocity-n*(vn*1.3);velocity=velocity*std::exp(-1.8*dt);if(effects_rng_.next()<dt*20)particles.spray(1,false,position,velocity,visual_orientation,effects_rng_);}
  bail_angular_=bail_angular_*std::exp(-1.2*dt);double wl=length(bail_angular_);if(wl>1e-3)orientation=qnorm(qmul(qaxis(bail_angular_,wl*dt),orientation));if(bail_elapsed_>1.8)place(position.z);
 }
-void Game::banner(const std::string& text,double duration){hud.banner=text;hud.banner_time=duration;}
-void Game::landed(const std::string& name,int points,const std::string& grade){hud.result=name;hud.grade=grade;hud.result_time=1.7;hud.live_time=0;last_points=points;}
+void Game::banner(const std::string& text,double duration){if(!playing_)return;hud.banner=text;hud.banner_time=duration;}
+void Game::landed(const std::string& name,int points,const std::string& grade){if(!playing_)return;hud.result=name;hud.grade=grade;hud.result_time=1.7;hud.live_time=0;last_points=points;}
 void Game::sync_sound(){
- if(paused_||!playing_||mode==RiderMode::Bail){silence_ride();return;}
+ if(paused_||mode==RiderMode::Bail){silence_ride();sound.grotesk=grotesk>0;return;}
  sound.speed=length(velocity);sound.air_time=mode==RiderMode::Air?air_time:0;sound.sustained_air=mode==RiderMode::Air&&air_time>.35;sound.grinding=mode==RiderMode::Rail;sound.grotesk=grotesk>0;
  if(mode!=RiderMode::Ground)sound.carve=0;
  if(mode!=RiderMode::Air)sound.wind=0;
 }
 double Game::begin_frame(double raw){
- frame_scale_=physics_scale();if(!paused_&&playing_)slowmo-=clamp(raw,0,.05);
+ frame_scale_=physics_scale();if(!paused_)slowmo-=clamp(raw,0,.05);
  return frame_scale_;
 }
 void Game::real_time_feedback(Controls input,double raw){
- raw=clamp(raw,0,.05);if(!paused_&&playing_)particles.step(raw*frame_scale_);
+ raw=clamp(raw,0,.05);if(!paused_)particles.step(raw*frame_scale_);
  steer_visual=lerp(steer_visual,input.steer,1-std::exp(-raw*8));visual_orientation=qslerp(visual_orientation,orientation,1-std::exp(-raw*(mode==RiderMode::Ground?14:40)));
  flash=std::max(0.,flash-raw);inversion=clamp(inversion+(grotesk>0?raw:-raw)/.6,0,1);shake=std::max(0.,shake-raw*2.2);
- hud.live_time-=raw;hud.result_time-=raw;hud.banner_time-=raw;sync_sound();
+ if(playing_){hud.live_time-=raw;hud.result_time-=raw;hud.banner_time-=raw;}sync_sound();
 }
 void Game::set_best_path(const std::string& path){best_path_=path;persistence_error.clear();if(path.empty())return;std::ifstream f(path);long long value=0;if(f>>value&&value>=0&&value<=std::numeric_limits<int>::max())best=std::max(best,int(value));}
 void Game::save_best(){

@@ -37,8 +37,9 @@ public:
  std::string persistence_error;
  explicit Game(uint32_t seed);
  Game(const Game&)=delete;Game& operator=(const Game&)=delete;
- void reset();void restart(uint32_t seed);void start();void set_paused(bool on);
+ void reset();void restart(uint32_t seed);void start();void enter_title();void set_paused(bool on);
  bool paused()const{return paused_;}bool playing()const{return playing_;}
+ bool title()const{return !playing_;}
  uint64_t generation()const{return generation_;}uint32_t seed()const{return seed_;}
  // Caller scales its fixed-step accumulator once; step uses an unscaled 1/120 s.
  double physics_scale()const{return slowmo>0?.4:1;}

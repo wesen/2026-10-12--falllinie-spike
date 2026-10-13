@@ -20,7 +20,17 @@ void Renderer::update_player(Game& game,double dt){
  hud_meter_+="   "+std::string("GROTESK").substr(0,game.letters);
  hud_meter_fraction_=infinite?1:game.meter;
  hud_banner_=game.hud.banner_time>0?ascii(game.hud.banner):"";
- hud_controls_=game.paused()?"PAUSED / START RESUME / SELECT RESTART":"A JUMP / B-X BOOST / L-R-L2-R2 GRABS / START PAUSE";
+ hud_controls_=controller_?"A JUMP / B-X BOOST / L1-R1-L2-R2 GRABS / START PAUSE":"SPACE JUMP / SHIFT-B BOOST / J-K-U-I GRABS / P PAUSE";
+ if(game.title()){
+  hud_line_="FALLLINIE";hud_status_="SOURCE DEMO / BEST "+std::to_string(game.best)+" / SEED "+std::to_string(game.seed());
+  hud_grade_="";hud_points_="";hud_combo_="";hud_meter_="";hud_meter_fraction_=hud_combo_fraction_=0;
+  hud_trick_lines_={controller_?"A / START: DROP IN":"ENTER / SPACE: DROP IN","C: SIX COLOURS / M: SOUND","F10 / SELECT+START: QUIT"};hud_banner_="";
+ }else if(game.paused()){
+  hud_banner_="PAUSED";hud_status_=std::string(muted_?"MUSIC OFF":"MUSIC ON")+" / M TO TOGGLE";
+  hud_controls_=controller_?"START RESUME / SELECT NEW RUN / SELECT+START QUIT":"P-ESC RESUME / R NEW RUN / F10 QUIT";
+ }
+ if(!game.persistence_error.empty())hud_status_="BEST SAVE FAILED / SEE LOG";
+ if(game.playing()&&!game.paused()&&muted_)hud_status_+=" / MUTED";
  stream_ms_=0;auto stream_start=std::chrono::steady_clock::now();
  int cell=int(std::floor(game.position.z/CELL));bool streamed=false;
  if(world_generation_!=game.generation()){

@@ -135,7 +135,7 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
  Vec3 eye=camera_.eye+camera_shake_;
  // Keep the active view's roll; rebase projection only, never world shading.
  Vec3 up=norm({camera_.vp[1],camera_.vp[5],camera_.vp[9]});
- const auto frame=render_frame(eye,camera_.look+camera_shake_,up,fov_*3.141592653589793/180,double(width_)/height_,relative_coordinates_);
+ const auto frame=render_frame(eye,camera_.look,up,fov_*3.141592653589793/180,double(width_)/height_,relative_coordinates_);
  glBindFramebuffer(GL_FRAMEBUFFER,scene_fbo_);glViewport(0,0,width_,height_);glEnable(GL_DEPTH_TEST);glDisable(GL_BLEND);glDisable(GL_CULL_FACE);glDepthMask(GL_TRUE);glClearColor(1,0,0,0);glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);glUseProgram(scene_);
  matrix(scene_,"uVP",frame.vp);vec3(scene_,"uRenderOrigin",frame.origin);matrix(scene_,"uM",identity());const float identity3[]={1,0,0,0,1,0,0,0,1};glUniformMatrix3fv(loc(scene_,"uN"),1,GL_FALSE,identity3);
  vec3(scene_,"uCam",eye);vec3(scene_,"uL",norm({0.45,0.78,-0.5}));glUniform2f(loc(scene_,"uFog"),150,400);

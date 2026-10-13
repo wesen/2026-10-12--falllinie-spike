@@ -2,6 +2,7 @@
 #include "gl_api.hpp"
 #include "renderer.hpp"
 #include "profiler.hpp"
+#include "runtime.hpp"
 #include <atomic>
 #include <chrono>
 #include <cstdio>
@@ -38,10 +39,10 @@ Config parse(int argc,char** argv){
   else if(a=="--absolute-render-coordinates")c.absolute_coordinates=true;
   else if(a=="--no-vsync")c.no_vsync=true;else if(a=="--gpu-profile")c.gpu_profile=true;else if(a=="--profile")c.profile=value();else if(a=="--assets")c.assets=value();else if(a=="--capture-dir")c.capture=value();else if(a=="--receipt")c.receipt=value();
   else if(a=="--render-size"){auto size=value();auto x=size.find('x');if(x==std::string::npos)throw std::runtime_error("expected WIDTHxHEIGHT");c.width=std::stoi(size.substr(0,x));c.height=std::stoi(size.substr(x+1));}
-  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..2] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash] [--absolute-render-coordinates] [--profile CSV] [--gpu-profile] [--no-vsync] [--fps N]\nD cycles final/luminance/paint/material/contour/depth; C cycles palette; ESC or SELECT+START quits.\n";std::exit(0);}
+  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..5] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash] [--absolute-render-coordinates] [--profile CSV] [--gpu-profile] [--no-vsync] [--fps N]\nF3 cycles debug; C cycles six palettes; A/START or ENTER/SPACE starts; START/P/ESC pauses; SELECT/R new run; M mutes; F10 or SELECT+START quits.\n";std::exit(0);}
   else throw std::runtime_error("unknown argument "+a);
  }
- if(!std::isfinite(c.fps_cap)||c.fps_cap<0||c.fps_cap>240||c.width<128||c.height<96||c.width>2048||c.height>1536||c.cell< -1||c.cell>4096||c.cells<1||c.cells>7||c.frames<0||c.seconds<0||!std::isfinite(c.seconds)||c.debug<0||c.debug>5||c.palette<0||c.palette>2)throw std::runtime_error("configuration outside bounded spike limits");
+ if(!std::isfinite(c.fps_cap)||c.fps_cap<0||c.fps_cap>240||c.width<128||c.height<96||c.width>2048||c.height>1536||c.cell< -1||c.cell>4096||c.cells<1||c.cells>7||c.frames<0||c.seconds<0||!std::isfinite(c.seconds)||c.debug<0||c.debug>5||c.palette<0||c.palette>5)throw std::runtime_error("configuration outside bounded spike limits");
  return c;
 }
 std::string ipc(const std::string& command){
@@ -81,8 +82,18 @@ int main(int argc,char** argv){
   std::cout<<"joystick="<<(pad?SDL_JoystickName(pad):"none")<<'\n';
   fl::Renderer renderer;renderer.set_absolute_coordinates(c.absolute_coordinates);renderer.initialize(c.seed,c.play?-1:c.cell,c.play?4:c.cells,c.width,c.height,c.assets,!c.source_sampler_precision,!c.source_sky_hash,c.play);
   fl::Profiler profiler(c.profile,c.gpu_profile);
-  fl::Game game(c.seed);double accumulator=0;auto previous_frame=std::chrono::steady_clock::now();
-  if(c.play)std::cout<<"PLAY: stick/dpad steer, UP tuck, DOWN brake, hold/release A or SPACE to jump; START/R restart; SELECT+START exits\n";
+  fl::Game game(c.seed);fl::NativeFrameClock frame_clock;fl::NativeInputMapper input_mapper;fl::TitleAutopilot autopilot(c.seed);
+  fl::AudioEngine audio;bool audio_started=false,muted=false;
+  fl::Rng run_seeds{c.seed^0x97f4a71bu};
+  if(c.play){
+   char* preference=SDL_GetPrefPath("Falllinie","Falllinie");
+   if(!preference)throw std::runtime_error(std::string("app best path: ")+SDL_GetError());
+   std::string best_path=std::string(preference)+"best-score";SDL_free(preference);game.set_best_path(best_path);
+   if(c.autoplay){game.start();audio_started=audio.open();if(!audio_started)std::cerr<<"audio unavailable: "<<SDL_GetError()<<'\n';}
+   else game.enter_title();
+   std::cout<<"SOURCE: A jump / B-X boost / L1-R1-L2-R2 grabs / START pause / SELECT new seed / SELECT+START quit; keyboard WASD/arrows, SPACE, SHIFT/B, J/K/U/I, P/ESC, R, M, C, F3, F10\nseed="<<game.seed()<<" best_path="<<best_path<<'\n';
+  }
+  auto previous_frame=std::chrono::steady_clock::now();
   std::vector<double> times,swaps;
   std::vector<std::pair<int,size_t>> rss_samples;size_t start_rss=rss_kib(),peak_rss=start_rss;
   auto start=std::chrono::steady_clock::now();auto previous_end=start,fps_epoch=start,frame_deadline=start;int fps_frames=0;
@@ -91,24 +102,34 @@ int main(int argc,char** argv){
   while(!quit && !termination_requested){auto frame_start=std::chrono::steady_clock::now();SDL_Event e;
    if(lower_window){if(SDL_GL_MakeCurrent(window,context)!=0)throw std::runtime_error(SDL_GetError());SDL_GL_SetSwapInterval(c.no_vsync?0:1);}
    profiler.poll();
+   fl::NativeInputSnapshot physical;
    while(SDL_PollEvent(&e)){
-    if(e.type==SDL_QUIT || (e.type==SDL_KEYDOWN && e.key.keysym.sym==SDLK_ESCAPE))quit=true;
-    if(e.type==SDL_KEYDOWN && !e.key.repeat){if(e.key.keysym.sym==SDLK_d && !c.play)c.debug=(c.debug+1)%6;if(e.key.keysym.sym==SDLK_c)c.palette=(c.palette+1)%3;if(c.play && e.key.keysym.sym==SDLK_r)game.reset();}
-    if(e.type==SDL_JOYBUTTONDOWN){if(e.jbutton.button==2)c.debug=(c.debug+1)%6;if(e.jbutton.button==3)c.palette=(c.palette+1)%3;if(c.play && e.jbutton.button==9)game.reset();}
+    if(e.type==SDL_QUIT)physical.quit=true;
+    if(e.type==SDL_WINDOWEVENT&&(e.window.event==SDL_WINDOWEVENT_FOCUS_LOST||e.window.event==SDL_WINDOWEVENT_MINIMIZED))physical.focus_lost=true;
    }
-   if(pad && SDL_JoystickGetButton(pad,8) && SDL_JoystickGetButton(pad,9))quit=true;
+   if(pad&&!SDL_JoystickGetAttached(pad)){SDL_JoystickClose(pad);pad=nullptr;}
+   if(!pad&&SDL_NumJoysticks()>0)pad=SDL_JoystickOpen(0);
+   const auto* keys=SDL_GetKeyboardState(nullptr);std::copy(keys,keys+SDL_NUM_SCANCODES,physical.keys.begin());
+   if(pad){
+    for(int b=0;b<17;++b)physical.buttons[b]=SDL_JoystickGetButton(pad,b);
+    physical.axis_x=SDL_JoystickGetAxis(pad,0)/32767.;physical.axis_y=SDL_JoystickGetAxis(pad,1)/32767.;
+   }
+   const auto actions=input_mapper.read(physical,game.title());quit=quit||actions.quit;
+   if(actions.debug)c.debug=(c.debug+1)%6;
+   if(actions.palette)c.palette=(c.palette+1)%6;
+   if(c.play&&!quit){
+    if(actions.start){game.start();frame_clock.accumulator=0;if(!audio_started){audio_started=audio.open();if(!audio_started)std::cerr<<"audio unavailable: "<<SDL_GetError()<<'\n';else audio.set_muted(muted);}}
+    else if(actions.new_run){uint32_t seed=uint32_t(run_seeds.next()*2147483648.);if(seed==game.seed())seed=(seed+1)&0x7fffffffU;game.restart(seed);c.seed=seed;frame_clock.accumulator=0;audio.pause(false);std::cout<<"new_run seed="<<seed<<" (--seed "<<seed<<") generation="<<game.generation()<<std::endl;}
+    else if(actions.pause){game.set_paused(physical.focus_lost?true:!game.paused());audio.pause(game.paused());}
+    if(actions.mute){muted=!muted;audio.set_muted(muted);}
+   }
    auto event_end=std::chrono::steady_clock::now(),physics_end=event_end,player_end=event_end;
-   double elapsed=std::min(.1,std::chrono::duration<double>(frame_start-previous_frame).count());previous_frame=frame_start;
-   if(c.play){
-    auto keys=SDL_GetKeyboardState(nullptr);fl::Controls input;
-    input.steer=(keys[SDL_SCANCODE_RIGHT]||keys[SDL_SCANCODE_D])-(keys[SDL_SCANCODE_LEFT]||keys[SDL_SCANCODE_A]);
-    input.drive=(keys[SDL_SCANCODE_UP]||keys[SDL_SCANCODE_W])-(keys[SDL_SCANCODE_DOWN]||keys[SDL_SCANCODE_S]);input.jump=keys[SDL_SCANCODE_SPACE];
-    if(pad){double axis=SDL_JoystickGetAxis(pad,0)/32767.0;if(std::abs(axis)>.15)input.steer=axis;double ay=-SDL_JoystickGetAxis(pad,1)/32767.0;if(std::abs(ay)>.15)input.drive=ay;
-     input.steer+=SDL_JoystickGetButton(pad,16)-SDL_JoystickGetButton(pad,15);input.drive+=SDL_JoystickGetButton(pad,13)-SDL_JoystickGetButton(pad,14);input.jump=input.jump||SDL_JoystickGetButton(pad,0);}
-    if(c.autoplay){input.steer=.35*std::sin(game.time*.55);input.drive=.6;input.jump=std::fmod(game.time,5)>2 && std::fmod(game.time,5)<2.65;if(game.airborne){input.drive=0;input.steer=game.air_time>.12&&game.air_time<.38?.65:0;}}
-    input.steer=fl::clamp(input.steer,-1,1);input.drive=fl::clamp(input.drive,-1,1);accumulator+=elapsed;
-    while(accumulator>=1.0/120){game.step(input,1.0/120);accumulator-=1.0/120;}
-    physics_end=std::chrono::steady_clock::now();renderer.update_player(game,elapsed);player_end=std::chrono::steady_clock::now();
+   double elapsed=std::min(.05,std::chrono::duration<double>(frame_start-previous_frame).count());previous_frame=frame_start;
+   if(c.play&&!quit){
+    fl::Controls input=game.title()||c.autoplay?autopilot.read(game,elapsed):actions.ride;
+    auto frame=frame_clock.advance(game,input,elapsed);
+    physics_end=std::chrono::steady_clock::now();renderer.set_native_feedback(pad!=nullptr,muted);renderer.update_player(game,frame.raw_dt);player_end=std::chrono::steady_clock::now();
+    fl::publish_feedback(audio,game,audio_started);
     if(frames%60==0)std::cout<<"ride z="<<game.position.z<<" speed="<<fl::length(game.velocity)<<" airborne="<<game.airborne<<" charge="<<game.charge<<" score="<<game.score<<std::endl;
    }
    SDL_GL_GetDrawableSize(window,&drawable_w,&drawable_h);
@@ -139,6 +160,7 @@ int main(int argc,char** argv){
    });}
    if((c.frames && frames>=c.frames) || (c.seconds && std::chrono::duration<double>(end-start).count()>=c.seconds))quit=true;
   }
+  audio.close();
   stop=true;if(placement.joinable())placement.join();
   if(c.place && !placed)throw std::runtime_error("placement did not succeed");
   if(!c.capture.empty()){if(SDL_GL_MakeCurrent(window,context)!=0)throw std::runtime_error(SDL_GetError());renderer.render(drawable_w,drawable_h,c.debug,c.palette);std::filesystem::create_directories(c.capture);renderer.capture(c.capture+"/print.bmp");}

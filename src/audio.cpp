@@ -188,14 +188,14 @@ struct AudioEngine::Impl {
   // Snapshot the write cursor: producer activity cannot make callback work unbounded.
   while(r!=w) {
    Command c=queue[r++%command_capacity];
-   if(c.kind==0) { carve_target=std::round(c.a*30)/30*0.14; wind_target=std::round(c.b*30)/30*0.12; set_air(c.flags&1); grind=c.flags&2; grot=c.flags&4; }
+   if(c.kind==0) { carve_target=std::round(c.a*30)/30*0.14; wind_target=std::round(c.b*30)/30*0.12; set_air(c.flags&1); grind=c.flags&2; /* GROTESK is source event-latched, never snapshot-owned. */ }
    else if(c.kind==1) {
     switch(static_cast<GameEventKind>(c.flags)) {
     case GameEventKind::Pop: add(AudioVoice::Pop,now(),0,0,1); break;
     case GameEventKind::Land: land(c.a,c.b!=0); break;
     case GameEventKind::Bail: set_air(false); bail_start=int64_t(clock); cutoff=9000; add(AudioVoice::BailNoise,now(),0,0,1); break;
     case GameEventKind::Uber: { add(AudioVoice::UberNoise,now(),0,0,1); const int* chord=cur_chord(); chop(now()+0.1,chord[4]+12,0.5,0,0.9); break; }
-    case GameEventKind::GroteskOn: grot=true; land(1,true); break;
+    case GameEventKind::GroteskOn: if(!grot){grot=true;land(1,true);} break;
     case GameEventKind::GroteskOff: grot=false; break;
     case GameEventKind::GrindOn: grind=true; break;
     case GameEventKind::GrindOff: grind=false; break;
@@ -383,7 +383,7 @@ void AudioEngine::set_ride(const RideSound& ride) {
  // Values are source gains, not raw speed/air_time. Simulation owns the >0.35s test.
  double carve=std::isfinite(ride.carve)?clamp(ride.carve,0,3):0;
  double wind=std::isfinite(ride.wind)?clamp(ride.wind,0,1):0;
- impl_->send({0,carve,wind,uint8_t((ride.sustained_air?1:0)|(ride.grinding?2:0)|(ride.grotesk?4:0))});
+ impl_->send({0,carve,wind,uint8_t((ride.sustained_air?1:0)|(ride.grinding?2:0))});
 }
 void AudioEngine::trigger(const GameEvent& event) {
  switch(event.kind) {

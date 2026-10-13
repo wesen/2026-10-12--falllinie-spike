@@ -27,6 +27,8 @@ double number(uint64_t b) { double x; std::memcpy(&x,&b,8); return x; }
 struct AudioEngine::Impl {
  struct Command { uint8_t kind=0; double a=0,b=0; uint8_t flags=0; };
  std::array<Command,command_capacity> queue{};
+ // Main-producer-only source gain cache, reset only while device is closed.
+ Command last_ride{};bool ride_sent=false;
  alignas(64) std::atomic<uint32_t> write{0};
  alignas(64) std::atomic<uint32_t> read{0};
  std::atomic<uint64_t> dropped{0};
@@ -72,12 +74,13 @@ struct AudioEngine::Impl {
  std::array<Voice,voice_capacity> voices{};
  struct Pump { bool active=false; uint64_t sample=0; double depth=0; };
  std::array<Pump,64> pumps{};
- void send(Command command) {
+ bool send(Command command) {
   uint32_t w=write.load(std::memory_order_relaxed),r=read.load(std::memory_order_acquire);
-  if(w-r==command_capacity) { dropped.fetch_add(1,std::memory_order_relaxed); return; }
+  if(w-r==command_capacity) { dropped.fetch_add(1,std::memory_order_relaxed); return false; }
   queue[w%command_capacity]=command; write.store(w+1,std::memory_order_release);
   uint32_t depth=w-r+1,old=high_water.load(std::memory_order_relaxed);
   if(depth>old) high_water.store(depth,std::memory_order_relaxed);
+  return true;
  }
  void publish() {
   d.frames=clock; d.steps=step; d.sections=section_index; d.section=section; d.sample_rate=rate;
@@ -98,7 +101,7 @@ struct AudioEngine::Impl {
   drum=1; cutoff=9000; carve=wind=grind_gain=carve_target=wind_target=0; out_gain=0.85;
   pump_gain=1; pump_delta=0; pump_end=0; bail_start=-1; lfo_phase=0; comp_envelope=0;
   voices={}; pumps={}; noise_pos=vinyl_pos=delay_pos=0; trace_begin=trace_count=0;
-  read.store(0); write.store(0); dropped.store(0); high_water.store(0); paused.store(false);
+  read.store(0); write.store(0); dropped.store(0); high_water.store(0); paused.store(false);last_ride={};ride_sent=false;
   noise.resize(rate*2); for(auto& x:noise) x=float(noise_rng.next()*2-1);
   vinyl.assign(rate*6,0);
   for(size_t i=0;i<vinyl.size();++i) {
@@ -391,7 +394,12 @@ void AudioEngine::set_ride(const RideSound& ride) {
  // Values are source gains, not raw speed/air_time. Simulation owns the >0.35s test.
  double carve=std::isfinite(ride.carve)?clamp(ride.carve,0,3):0;
  double wind=std::isfinite(ride.wind)?clamp(ride.wind,0,1):0;
- impl_->send({0,carve,wind,uint8_t((ride.sustained_air?1:0)|(ride.grinding?2:0))});
+ auto& a=*impl_;
+ Impl::Command command{0,std::round(carve*30)/30,std::round(wind*30)/30,uint8_t((ride.sustained_air?1:0)|(ride.grinding?2:0))};
+ // Source Music gain setters ignore unchanged quantized values. In native this
+ // also keeps long pauses from filling the suspended callback's command queue.
+ if(a.ride_sent&&command.a==a.last_ride.a&&command.b==a.last_ride.b&&command.flags==a.last_ride.flags)return;
+ if(a.send(command)){a.last_ride=command;a.ride_sent=true;}
 }
 void AudioEngine::trigger(const GameEvent& event) {
  switch(event.kind) {

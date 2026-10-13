@@ -2,5 +2,5 @@ final saturation: preallocated 2x, original DC curve, 24-sample latency, folded 
 source IR: 20800 taps/channel, max error 9.28995e-09, late energy 1.28538e-05
 arrangement: 20 sections, 2434 steps, peak voices 40, output peak 0.662827
 reactivity: air/land/pop/uber/bail/GROTESK/grind/pause/mute/restart passed
-limits: queue high water 256, drops 9788, steals 138
+limits: queue high water 256, drops 9464, steals 138
 PASS: source audio CPU checks; callback allocations 0

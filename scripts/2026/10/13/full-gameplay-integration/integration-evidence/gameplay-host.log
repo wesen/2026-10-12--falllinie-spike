@@ -1,0 +1,4 @@
+gameplay: source score/repetition/tick/landing oracles and transition checks passed
+world: seeded source definitions, rail capture/pop/cache ownership, tree/safe collision passed
+pose: 10 grabs, all 6 ubers, bail, primitive groups and sampled vertices match source
+host executable link passed (not run; no device/graphics access)

@@ -172,7 +172,10 @@ void test_reactions() {
  for(auto kind:{fl::GameEventKind::ComboAdded,fl::GameEventKind::ComboBanked,fl::GameEventKind::Recovery,fl::GameEventKind::Restart}) h.audio.trigger(event(kind,1,true));
  h.frames(1); require(before==h.audio.diagnostics().voices_started,"no invented combo/recovery/restart jingles");
  uint64_t frame=h.audio.diagnostics().frames,step=h.audio.diagnostics().steps;
- h.audio.pause(true); h.frames(4096); require(h.audio.diagnostics().frames==frame && h.audio.diagnostics().steps==step,"pause freezes sample/section clock");
+ h.audio.pause(true);
+ for(int i=0;i<600;++i)h.audio.set_ride({}); // ten seconds at 60FPS, callback suspended
+ h.frames(4096);require(h.audio.diagnostics().dropped_commands==0,"unchanged paused snapshots cannot fill suspended queue");
+ require(h.audio.diagnostics().frames==frame && h.audio.diagnostics().steps==step,"pause freezes sample/section clock");
  for(float value:h.buffer) require(value==0,"pause outputs zero");
  h.audio.pause(false); h.frames(32); require(h.audio.diagnostics().frames==frame+32,"resume continues rather than restarts");
  h.audio.set_muted(true); h.seconds(1);

@@ -52,3 +52,7 @@ scripts/2026/10/13/full-gameplay-integration/check-audio.sh \
 ## Remaining acceptance gates
 
 Independent review is required. Parent owns combined target workload/profile, fresh graphics evidence, physical controller comfort/UI legibility, real audio negotiation/underruns/listening and the final human playtest. Synchronous bounded restart/object/upload costs and cumulative terrain history remain target performance risks. Existing float world attributes/shading retain extreme-distance limitations beyond the relative projection repair. No complete browser parity, waveform identity or physical acceptance is claimed.
+
+Final self-review also suppresses unchanged **effective quantized** ride commands on the sole producer (same source gain-setter policy). Main still publishes once/frame, but ten seconds/600 paused frames cannot fill the suspended callback queue; dropped sends do not poison the cache and are retried. Final CPU/sanitizer and all6 CTest gates were rerun after this correction. The optional offline-render timing/WAV above was measured at DSP milestone `cd514ea`; later transport deduplication is not a new target profile. Its external WAV SHA256 is `cad341086f51a07c0c80a158cf96569a2078b490637775a5c2b299401d7d8838`.
+
+The full binary-capable patch is intentionally ignored/uncommitted at `../integrated-candidate.patch`, generated with `git diff --binary --full-index d911ee4 HEAD`. Final exact revision, absolute patch path/hash and independent-review status are in the authoritative external candidate handoff, not embedded in the patch itself.

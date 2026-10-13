@@ -184,3 +184,61 @@ The affected audio gates pass, including an exact DC/odd-curve check, measured 2
 ### Technical details
 - FIR49+49 high-rate group delays sum48 high-rate samples=24 native samples=.5ms at48kHz. Fixed rings are64 doubles each; no per-rate buffers for this path.
 - Original final nonlinear curve, arrangement/instruments/effects preserved. Native random/oscillator/filter/compressor/FIR internals and wet partition latency remain documented, not waveform-identity claims.
+
+## Step 4: Prevent long-pause transport overflow and finalize the reviewable candidate
+
+DSP/lifecycle milestone cd514eae9be093346b8edbbdc71f22b54c0ec498 is committed. Final self-inspection found that publishing identical zeroed RideSound on every paused frame would fill the queue because SDL has stopped its consumer. I retained the required one publish call/frame but made the producer cache source-quantized effective gains/flags and suppress identical commands, matching source Music's unchanged gain-setter policy. Failed/drop-newest sends do not update the cache, so a later frame retries rather than losing the desired state permanently.
+
+The final strict audio/sanitizer gates and six CTest gates pass, including a new 600-paused-frame queue test, source regeneration identity, terrain and integrated host link. No physical/graphics qualification is inferred. The full binary-capable diff from d911ee4 is generated after this final commit, ignored intentionally so it remains uncommitted and cannot include itself; exact path/hash/HEAD/ref/worktree and acceptance report are supplied in the authoritative external candidate handoff.
+
+### Prompt Context
+- **User prompt:** See Step 1 (verbatim).
+- **Assistant interpretation:** Finish source-correct normal lifecycle transport, preserve evidence and package an independently applicable candidate.
+- **Inferred user intent:** Durable progress and clean review state rather than timeout-induced uncommitted ambiguity.
+- **Commit (code):** cd514eae9be093346b8edbbdc71f22b54c0ec498 — Restore source 2x final saturation and verify dummy audio lifecycle; final transport/evidence commit follows this entry.
+
+### What I did
+- Added main-producer-only effective ride cache and successful-send result; no callback-thread mutation, allocation, lock or architecture change.
+- Added 600 identical paused snapshots assertion (ten seconds at60FPS), with zero normal command drops and frozen audio clock.
+- Re-ran audio CPU and ASan/UBSan, integrated CMake/CTest and gameplay host link. Saved final bounded gameplay/terrain/current audio/CTest logs.
+- Regenerated gameplay oracle and typed60-entry GL loader; no generated diff.
+- Verified frozen fixture, original shader assets, parent math.hpp and jitter evidence are unchanged from d911ee4.
+- Added exact candidate.patch ignore entry in managed-worktree .gitignore, not shared repository metadata; patch itself remains uncommitted.
+
+### Why
+- A pause longer than256 frames is ordinary use, not hostile overflow. Unchanged snapshots must not exhaust the stopped consumer's finite queue.
+- Self-containing patches and missing staged additions would defeat independent acceptance; HEAD-inclusive binary-capable diff is the packaging contract.
+
+### What worked
+- Final `check-audio.sh` and `AUDIO_SANITIZE=1 check-audio.sh`: PASS, zero watched allocations; selected2x alias result unchanged−103.314dB. Stress-only queue drops remain deliberately visible.
+- `cmake --build build/integrated-source -j4 && ctest --test-dir build/integrated-source --output-on-failure`:6/6 passed, including dummy callback ownership test.
+- Final gameplay host script: source score/repetition/tick/landing, seeded world/rail/tree, all10grabs/6ubers/pose vertices, explicit integrated executable link passed, executable not run.
+- `build/integrated-source/test-terrain`:268 terrain cases,5hash cases,12RNG values,6mesh samples, topology/layout/matrix/incremental identity, max_height_error0 min_normal_dot1.
+- `node .../generate-gameplay-oracle.cjs && node scripts/generate-gl-loader.cjs && git diff --exit-code -- tests/gameplay_oracle.hpp src/gl_api.hpp`:passed/no changes.
+- Fixture SHA256 remains cb9b4befd0252859d9c45246f94fbd7dd1662c6d034c6ccb95fbe16947e8b556. Offline WAV outside repository has cad341086f51a07c0c80a158cf96569a2078b490637775a5c2b299401d7d8838, measured atcd514ea, not committed/listened to.
+
+### What didn't work
+- No new test/build failure. Potential paused-queue defect was found by inspection before a physical run; targeted600frame check now prevents it.
+- Independent reviewer, hardware graphics/audio profile and final physical playtest are pending and parent-owned, not bypassed by this writer.
+
+### What I learned
+- Continuous publish APIs need not enqueue unchanged state. Producer-side source quantization also reduces normal queue pressure without changing sample clock or song.
+
+### What was tricky to build
+- Cache is exclusively producer-owned and resets only during closed-device prepare. Cache advances only if numeric SPSC send succeeds; callback state stays callback-owned.
+- Exact final patch hash cannot be embedded in the commit it hashes; the external durable handoff records it after final commit.
+
+### What warrants a second pair of eyes
+- Source/native lifecycle APIs, source transients/title, relative shader/camera projection, event-latch and producer cache semantics, 2x FIR/overload safety and target budgets.
+
+### What should be done in the future
+- Required independent review, then parent-only combined target/profile/graphics/audio/controller and final human acceptance.
+
+### Code review instructions
+- Start with integration-evidence/README.md, runtime.cpp/main.cpp, Game::reset/place/start, Renderer::render, final saturation and AudioEngine::set_ride/pause/commands.
+- Apply/inspect the full candidate patch against exact d911ee4; run the listed narrow commands. Current handheld remains the old fixed prototype.
+
+### Technical details
+- Final patch command: `git diff --binary --full-index d911ee4 HEAD -- . ':!scripts/2026/10/13/full-gameplay-integration/integrated-candidate.patch' > scripts/2026/10/13/full-gameplay-integration/integrated-candidate.patch`.
+- Verify `git apply --reverse --check` on candidate HEAD, SHA256, whitespace, empty index and clean normal git status. Review handoff includes all changed paths and exact commits.
+- No device/deploy/install/push/subagents/alternate execution mode; no build outputs, target libraries, WAV or secrets committed. Parent diary/index/tasks untouched.

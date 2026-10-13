@@ -7,7 +7,13 @@ Topics:
 DocType: reference
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://scripts/2026/10/13/falllinie-js-runtime/README.md
+      Note: Reproduction and expected limitations
+    - Path: repo://scripts/2026/10/13/falllinie-js-runtime/evidence/comparison.json
+      Note: Measured parity result
+    - Path: repo://ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/sources/fetch-receipt.json
+      Note: Actual fetched refs timestamps hashes and remaining failure
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-10-13T10:10:27.260849613-04:00
@@ -160,3 +166,49 @@ Read script README, run `00-download-pins.sh`, `03-run-host.sh`, `04-compare.py`
 
 ### Technical details
 Receipts under `scripts/2026/10/13/falllinie-js-runtime/evidence/`; cross ELFs, libraries and working engines remain ignored. `ctest --test-dir .../.work/native-tests --output-on-failure` passed 6/6. Graphics/hardware gate deferred: research does not change a graphics feature and has no device permission.
+
+## Step 4: Foundational guide, proposed boundaries and research acceptance
+
+I wrote the long-form guide around actual native seams and the measured interpreter results, then linked the ticket, reproduction README, tasks, source receipts and docmgr relations. The recommendation remains an optional future rules experiment, not replacement of the shipping native candidate. Source/native gaps, deployment status and unmeasured alternatives are explicit.
+
+### Prompt Context
+**User prompt (verbatim):** See Step 1.
+**Assistant interpretation:** Deliver an engineer-readable research/design package and acceptance evidence, without implementing production JS integration.
+**Inferred user intent:** Make the next architectural choice informed and executable while retaining completed native progress.
+**Commit (code):** `1fb960d` — pin/probe runtimes and bounded evidence; final guide checkpoint follows.
+
+### What I did
+- Wrote the substantial guide: conceptual embedding/browser separation, actual feature/gap inventory, evidence-backed matrix, runtime C API/lifetime/GC primer, chosen alternatives, concrete native-file seams, immutable schemas, fixed120Hz frame contract, seeded RNG streams, cooperative rows/generation cancellation, numeric audio boundary, copy/lease safety, exception/fault/security/hot reload policy and eight implementation phases.
+- Corrected native source line anchors against numbered source, and checked native X-ray is a shader grid rather than the browser Canvas2D equation/callout overlay.
+- Clarified optional stateless scoring: pass a copied recent-label list into temporary adapter state and preserve repeat multiplication before five-point rounding; native commits history once. No independent mutable JS score-history owner is proposed.
+- Wrote experiment README, `evidence/pins.json`, ticket index/README and approval-gated follow-up tasks; related six primary guide files and three diary evidence files through docmgr.
+- Ran `bash -n` for all five shell scripts; `node --check` on extractor/probe; Python py_compile and independent oracle comparator; `git diff --check`; docmgr doctor; production diff scope check.
+
+### Why
+Measured interpreter compatibility does not resolve ownership, interrupted tick recovery, external memory, native audio safety or renderer state migration. Those constraints must be taught before an intern writes bindings.
+
+### What worked
+- Static script checks, parity comparator and diff check passed.
+- `docmgr doctor --ticket FALLLINIE-JS-001 --stale-after 30`: ticket `All checks passed`; global INFO `no_vocabulary` means unknown-value checks skipped because no vocabulary is configured. I did not initialize global metadata or mutate parent tickets to suppress an informational finding.
+- `git diff 24b50d8 -- src CMakeLists.txt assets fixtures tests` is empty (0 lines). All edits remain research documentation, scripts, ignored-work rule, attribution and bounded evidence.
+
+### What didn't work
+No new blocking failure in this phase. Source-fetch404s, expected wrapper incompatibilities and Duktape expectation correction remain visible in Steps2/3 rather than rewritten as success.
+
+### What I learned
+The lowest-risk authoring seam is stateless rules because it avoids frame/terrain/audio authority migration. Host results favor Bellard over ng for this sample but neither qualifies ARM frame predictability; native terrain is substantially faster and should remain the initial authority.
+
+### What was tricky to build
+A full JS simulation would need a new render-only snapshot seam, not field writes into Game with missing private rail/input/timer state. Restart must preserve current seeded-stream and input-edge lifetimes. Source score repetition must occur before final rounding, not on already-rounded base points.
+
+### What warrants a second pair of eyes
+Required parent reviewer gate: inspect ownership recommendations, source/native gap inventory and exact measured-versus-proposed claims. The prototype is not hardened and V8/JSC performance remains unmeasured. Device work belongs exclusively to parent acceptance.
+
+### What should be done in the future
+Parent decides whether optional JS authoring is justified, then approves the scoped rules/lifecycle phase. Full simulation, modules, reload/migration, detached/resizable/adversarial bridge tests and device profiling are future gates, not completed integration.
+
+### Code review instructions
+Start at ticket index/guide and experiment README, compare scripts/evidence, inspect source-fetch receipts and pin manifest, run the listed bounded experiments. Verify no production diff and empty final index before cherry-picking the research checkpoint sequence.
+
+### Technical details
+Doctor receipt: experiment `evidence/docmgr-doctor.txt`. Existing native CPU receipt: `evidence/native-tests.txt` (6/6). Cross-link receipt: `evidence/cross-link.txt` (AArch64, never executed). Changed paths and final commit/ref/worktree are provided in the runtime handoff artifact. No reMarkable/vault publication was requested or performed.

@@ -1,0 +1,10 @@
+## Doctor Report (2 findings)
+
+### (unknown)
+
+- [INFO] no_vocabulary — no vocabulary configured; skipping unknown-value checks (run 'docmgr init' to seed defaults or 'docmgr vocab add --category <topics|docTypes|intent|status> --slug <slug> --description "TODO"')
+
+### FALLLINIE-JS-001
+
+- ✅ All checks passed
+

@@ -1,0 +1,27 @@
+{
+  "native_base": "24b50d8ab6007ba9f66499354331d3d1c93ba30f",
+  "fixture_sha256": "cb9b4befd0252859d9c45246f94fbd7dd1662c6d034c6ccb95fbe16947e8b556",
+  "bellard": {
+    "version": "2026-06-04",
+    "url": "https://bellard.org/quickjs/quickjs-2026-06-04.tar.xz",
+    "sha256": "b376e839b322978313d929fd20663b11ba58b75df5a46c126dd19ea2fa70ad2a"
+  },
+  "quickjs_ng": {
+    "tag": "v0.17.0",
+    "commit": "6d46d07d04041b40f4f49eaa7fdebe44c314c699"
+  },
+  "duktape": {
+    "version": "2.7.0",
+    "url": "https://duktape.org/duktape-2.7.0.tar.xz",
+    "sha256": "90f8d2fa8b5567c6899830ddef2c03f3c27960b11aca222fa17aa7ac613c2890"
+  },
+  "quickjspp": {
+    "commit": "01cdd3047ced48265b127790848a0ca88204f2c7",
+    "commit_time": "2025-07-04T22:29:00+03:00",
+    "bundled_engine_version": "2025-04-26"
+  },
+  "cross_image": "sha256:8068d5a56ed677c85ffd8e02f9ee4e88c9804d56d070aead0d598c44eb0f83dd",
+  "v8_isolate_license_capture_commit": "cce823212e9a36b5e22c72bb7edc4e017045bd5e",
+  "webkit_private_limits_capture_commit": "9f4a36c5c53a4fa67421fa25fdf5194572d29795",
+  "v8_and_jsc": "Documentation/source inspection only; no runtime build or device qualification. Main header captures have individual hashes but are not release pins."
+}

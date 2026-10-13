@@ -1,0 +1,14 @@
+{
+  "bellard": {
+    "leaves": 85,
+    "max_absolute_float_error": 0.0
+  },
+  "ng": {
+    "leaves": 85,
+    "max_absolute_float_error": 0.0
+  },
+  "native": {
+    "leaves": 85,
+    "max_absolute_float_error": 2.220446049250313e-16
+  }
+}

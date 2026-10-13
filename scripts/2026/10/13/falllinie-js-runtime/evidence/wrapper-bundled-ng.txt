@@ -1,0 +1,20 @@
+/usr/bin/ld: /tmp/cc9ODWy4.o: in function `qjs::Value::~Value()':
+quickjspp-smoke.cpp:(.text._ZN3qjs5ValueD2Ev[_ZN3qjs5ValueD5Ev]+0x38): undefined reference to `__JS_FreeValue'
+/usr/bin/ld: /tmp/cc9ODWy4.o: in function `qjs::Runtime::promise_unhandled_rejection_tracker(JSContext*, JSValue, JSValue, int, void*)':
+quickjspp-smoke.cpp:(.text._ZN3qjs7Runtime35promise_unhandled_rejection_trackerEP9JSContext7JSValueS3_iPv[_ZN3qjs7Runtime35promise_unhandled_rejection_trackerEP9JSContext7JSValueS3_iPv]+0xbc): undefined reference to `__JS_FreeValue'
+/usr/bin/ld: /tmp/cc9ODWy4.o: in function `qjs::Context::~Context()':
+quickjspp-smoke.cpp:(.text._ZN3qjs7ContextD2Ev[_ZN3qjs7ContextD5Ev]+0x191): undefined reference to `__JS_FreeValue'
+/usr/bin/ld: quickjspp-smoke.cpp:(.text._ZN3qjs7ContextD2Ev[_ZN3qjs7ContextD5Ev]+0x1a1): undefined reference to `__JS_FreeValue'
+/usr/bin/ld: /tmp/cc9ODWy4.o: in function `qjs::Context::eval(std::basic_string_view<char, std::char_traits<char> >, char const*, int)':
+quickjspp-smoke.cpp:(.text._ZN3qjs7Context4evalESt17basic_string_viewIcSt11char_traitsIcEEPKci[_ZN3qjs7Context4evalESt17basic_string_viewIcSt11char_traitsIcEEPKci]+0xff): undefined reference to `__JS_FreeValue'
+/usr/bin/ld: /tmp/cc9ODWy4.o:quickjspp-smoke.cpp:(.text._ZN3qjs7Context4evalESt17basic_string_viewIcSt11char_traitsIcEEPKci[_ZN3qjs7Context4evalESt17basic_string_viewIcSt11char_traitsIcEEPKci]+0x117): more undefined references to `__JS_FreeValue' follow
+/usr/bin/ld: /tmp/cc9ODWy4.o: in function `main':
+quickjspp-smoke.cpp:(.text.startup+0x40): undefined reference to `JS_SetHostUnhandledPromiseRejectionTracker'
+/usr/bin/ld: /tmp/cc9ODWy4.o: in function `qjs::Runtime::module_loader(JSContext*, char const*, void*)':
+quickjspp-smoke.cpp:(.text._ZN3qjs7Runtime13module_loaderEP9JSContextPKcPv[_ZN3qjs7Runtime13module_loaderEP9JSContextPKcPv]+0x56a): undefined reference to `__JS_FreeValue'
+/usr/bin/ld: quickjspp-smoke.cpp:(.text._ZN3qjs7Runtime13module_loaderEP9JSContextPKcPv[_ZN3qjs7Runtime13module_loaderEP9JSContextPKcPv]+0x697): undefined reference to `__JS_FreeValue'
+/usr/bin/ld: quickjspp-smoke.cpp:(.text._ZN3qjs7Runtime13module_loaderEP9JSContextPKcPv[_ZN3qjs7Runtime13module_loaderEP9JSContextPKcPv]+0x6aa): undefined reference to `__JS_FreeValue'
+/usr/bin/ld: quickjspp-smoke.cpp:(.text._ZN3qjs7Runtime13module_loaderEP9JSContextPKcPv[_ZN3qjs7Runtime13module_loaderEP9JSContextPKcPv]+0x714): undefined reference to `__JS_FreeValue'
+/usr/bin/ld: quickjspp-smoke.cpp:(.text._ZN3qjs7Runtime13module_loaderEP9JSContextPKcPv[_ZN3qjs7Runtime13module_loaderEP9JSContextPKcPv]+0x9eb): undefined reference to `__JS_FreeValue'
+/usr/bin/ld: /tmp/cc9ODWy4.o:quickjspp-smoke.cpp:(.text._ZN3qjs7Runtime13module_loaderEP9JSContextPKcPv[_ZN3qjs7Runtime13module_loaderEP9JSContextPKcPv]+0xa23): more undefined references to `__JS_FreeValue' follow
+collect2: error: ld returned 1 exit status

@@ -1,0 +1,3 @@
+/usr/bin/ld: /tmp/ccQIXFTe.o: in function `main':
+quickjspp-smoke.cpp:(.text.startup+0x40): undefined reference to `JS_SetHostUnhandledPromiseRejectionTracker'
+collect2: error: ld returned 1 exit status

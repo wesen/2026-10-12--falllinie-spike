@@ -1,0 +1,6 @@
+In file included from scripts/2026/10/13/falllinie-js-runtime/quickjspp-smoke.cpp:2:
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp: In constructor ‘qjs::Runtime::Runtime()’:
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:1463:9: error: ‘JS_SetHostUnhandledPromiseRejectionTracker’ was not declared in this scope; did you mean ‘JS_SetHostPromiseRejectionTracker’?
+ 1463 |         JS_SetHostUnhandledPromiseRejectionTracker(rt, promise_unhandled_rejection_tracker, NULL);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |         JS_SetHostPromiseRejectionTracker

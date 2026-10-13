@@ -1,0 +1,18 @@
+Internal ctest changing into directory: /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-a382d91a-b7f5-4aac-b4c8-7ac9d4a8ce9e-s0-0/scripts/2026/10/13/falllinie-js-runtime/.work/native-tests
+Test project /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-a382d91a-b7f5-4aac-b4c8-7ac9d4a8ce9e-s0-0/scripts/2026/10/13/falllinie-js-runtime/.work/native-tests
+    Start 1: terrain-parity
+1/6 Test #1: terrain-parity ...................   Passed    0.01 sec
+    Start 2: gameplay
+2/6 Test #2: gameplay .........................   Passed    0.00 sec
+    Start 3: gameplay_world
+3/6 Test #3: gameplay_world ...................   Passed    0.01 sec
+    Start 4: gameplay_pose
+4/6 Test #4: gameplay_pose ....................   Passed    0.00 sec
+    Start 5: integration
+5/6 Test #5: integration ......................   Passed    0.01 sec
+    Start 6: audio-lifecycle
+6/6 Test #6: audio-lifecycle ..................   Passed    0.24 sec
+
+100% tests passed, 0 tests failed out of 6
+
+Total Test time (real) =   0.27 sec

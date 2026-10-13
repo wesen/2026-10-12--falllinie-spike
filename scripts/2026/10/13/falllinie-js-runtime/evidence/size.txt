@@ -1,0 +1,4 @@
+   text	   data	    bss	    dec	    hex	filename
+ 952787	  25304	    712	 978803	  eef73	scripts/2026/10/13/falllinie-js-runtime/.work/host-bellard
+1194360	  26784	    688	1221832	 12a4c8	scripts/2026/10/13/falllinie-js-runtime/.work/host-ng
+ 419230	   2704	      8	 421942	  67036	scripts/2026/10/13/falllinie-js-runtime/.work/duktape-probe

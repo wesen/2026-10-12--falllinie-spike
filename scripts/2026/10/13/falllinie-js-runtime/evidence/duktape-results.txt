@@ -1,0 +1,7 @@
+const f = x => x + 1; => FAIL: SyntaxError: parse error (line 1)
+let [a,b]=[1,2]; => FAIL: ReferenceError: identifier 'let' undefined
+class MB { constructor(){this.v=[];} } => FAIL: SyntaxError: parse error (line 1)
+new Map([[1,2]]) => FAIL: ReferenceError: identifier 'Map' undefined
+2 ** 3 => PASS: 8
+new Float64Array([1,2,3]).length => PASS: 3
+EXPECTED COMPATIBILITY REJECTIONS PASS

@@ -1,0 +1,19 @@
+oracle {"hashes":[388445122,1852637032,2623512388,2116654401,3790136032],"random":[0.9797282677609473,0.3067522644996643,0.484205421525985,0.817934412509203,0.5094283693470061,0.34747186047025025,0.07375754183158278,0.7663964673411101,0.9968264393974096,0.8250224851071835,0.4599348735064268,0.9458441860042512],"terrain":[{"x":0,"z":4,"h":12.055505421381783,"n":[-0.01221150173264416,0.9472057558104173,0.32039371932834415],"paint":{"lip":0,"stripe":0,"rel":-0.710232298948544,"u":-23.00315141371464}},{"x":12,"z":150,"h":-36.96929557018999,"n":[-0.01976529287120197,0.9997120832087747,0.01360455379964659],"paint":{"lip":0,"stripe":0,"rel":1.727153318392796,"u":-9.819399348692851}},{"x":-25,"z":365,"h":-100.8096294677378,"n":[0.20652640188648874,0.8856252510403028,0.415950429791365],"paint":{"lip":0,"stripe":0,"rel":10.264547121060117,"u":-61.2950595367975}},{"x":60,"z":900,"h":-258.43919932608065,"n":[-0.2606629944533109,0.9553389628374831,0.1392202191035307],"paint":{"lip":0,"stripe":0,"rel":8.425735683309256,"u":49.781527764447404}},{"x":0,"z":-10,"h":16.935691711728786,"n":[0.005341387230046656,0.9423960910150199,0.3344563906132888],"paint":{"lip":0,"stripe":0,"rel":-0.5471903648650425,"u":-19.709524417421562}}],"scores":[{"name":"FS Rodeo 360 · Indy · Helikopter","pts":10260,"ubers":1},{"name":"FS Rodeo 360 · Indy · Helikopter","pts":6155,"ubers":1}],"trees":[{"x":-8.010790018932532,"z":366.3853706466034,"y":-104.46265213387652,"h":5.977854648604989,"r":1.6426332410424949,"g":true},{"x":130.1151116989399,"z":408.36359534878284,"y":-109.39148661426374,"h":6.033417958766222,"r":2.3693085871636868,"g":true}]}
+full inline syntax PASS (not browser execution)
+HTML eval: SyntaxError: unexpected token in expression: '<'
+inline without browser: ReferenceError: 'document' is not defined
+exception: Error: intentional bridge test
+wrong width: RangeError: invalid numeric batch
+NaN: RangeError: nonfinite numeric batch
+oversize: RangeError: invalid numeric batch
+copy/offset/lease PASS release_count=1
+bench noop n=300 warmup=30 p50_us=0.024 p95_us=0.025 p99_us=0.032 max_us=0.033
+bench batch n=300 warmup=30 p50_us=713.393 p95_us=860.584 p99_us=1007.25 max_us=1214.79
+bench scalarBridge n=300 warmup=30 p50_us=20.984 p95_us=21.421 p99_us=29.569 max_us=34.629
+bench batchedBridge n=300 warmup=30 p50_us=13.247 p95_us=13.371 p99_us=16.521 max_us=19.511
+bench churn n=300 warmup=30 p50_us=108.927 p95_us=122.295 p99_us=129.157 max_us=176.877
+gc explicit_us=33.714 used_before=262241 used_after=184201 objects_before=1210 objects_after=398
+interrupt: InternalError: interrupted
+interrupt wall_ms=20.0082 polls=1228
+memory limit: InternalError: out of memory
+HOST PROBE PASS

@@ -1,0 +1,107 @@
+In file included from scripts/2026/10/13/falllinie-js-runtime/quickjspp-smoke.cpp:2:
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp: In static member function ‘static std::optional<std::variant<_Types ...> > qjs::js_traits<std::variant<_Types ...> >::unwrapObj(JSContext*, JSValue, JSClassID)’:
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:328:27: error: could not convert ‘ctx’ from ‘JSContext*’ to ‘JSValue’
+  328 |             if(JS_IsArray(ctx, v) == 1)
+      |                           ^~~
+      |                           |
+      |                           JSContext*
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:342:27: error: could not convert ‘ctx’ from ‘JSContext*’ to ‘JSValue’
+  342 |             if(JS_IsArray(ctx, v) == 1)
+      |                           ^~~
+      |                           |
+      |                           JSContext*
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp: In static member function ‘static bool qjs::js_traits<std::variant<_Types ...> >::isCompatible(JSContext*, JSValue)’:
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:393:31: error: could not convert ‘ctx’ from ‘JSContext*’ to ‘JSValue’
+  393 |                 if(JS_IsArray(ctx, v) == 1)
+      |                               ^~~
+      |                               |
+      |                               JSContext*
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp: In static member function ‘static std::enable_if_t<((! is_same_v<B, T>) && (! is_same_v<B, void>))> qjs::js_traits<std::shared_ptr<_Tp> >::ensureCanCastToBase()’:
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:859:27: error: cannot convert ‘JSClassID*’ {aka ‘unsigned int*’} to ‘JSRuntime*’
+  859 |             JS_NewClassID(&js_traits<std::shared_ptr<T>>::QJSClassId);
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                           |
+      |                           JSClassID* {aka unsigned int*}
+In file included from scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:3:
+scripts/2026/10/13/falllinie-js-runtime/.work/quickjs-ng/quickjs.h:707:46: note:   initializing argument 1 of ‘JSClassID JS_NewClassID(JSRuntime*, JSClassID*)’
+  707 | JS_EXTERN JSClassID JS_NewClassID(JSRuntime *rt, JSClassID *pclass_id);
+      |                                   ~~~~~~~~~~~^~
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp: In static member function ‘static void qjs::js_traits<std::shared_ptr<_Tp> >::register_class(JSContext*, const char*, JSValue, JSValue (*)(JSContext*, JSValue, JSValue, int, JSValue*, int), JSClassExoticMethods*)’:
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:889:27: error: cannot convert ‘JSClassID*’ {aka ‘unsigned int*’} to ‘JSRuntime*’
+  889 |             JS_NewClassID(&QJSClassId);
+      |                           ^~~~~~~~~~~
+      |                           |
+      |                           JSClassID* {aka unsigned int*}
+scripts/2026/10/13/falllinie-js-runtime/.work/quickjs-ng/quickjs.h:707:46: note:   initializing argument 1 of ‘JSClassID JS_NewClassID(JSRuntime*, JSClassID*)’
+  707 | JS_EXTERN JSClassID JS_NewClassID(JSRuntime *rt, JSClassID *pclass_id);
+      |                                   ~~~~~~~~~~~^~
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp: In static member function ‘static void qjs::js_traits<qjs::detail::function>::register_class(JSContext*, const char*)’:
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:1092:27: error: cannot convert ‘JSClassID*’ {aka ‘unsigned int*’} to ‘JSRuntime*’
+ 1092 |             JS_NewClassID(&QJSClassId);
+      |                           ^~~~~~~~~~~
+      |                           |
+      |                           JSClassID* {aka unsigned int*}
+scripts/2026/10/13/falllinie-js-runtime/.work/quickjs-ng/quickjs.h:707:46: note:   initializing argument 1 of ‘JSClassID JS_NewClassID(JSRuntime*, JSClassID*)’
+  707 | JS_EXTERN JSClassID JS_NewClassID(JSRuntime *rt, JSClassID *pclass_id);
+      |                                   ~~~~~~~~~~~^~
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp: In member function ‘bool qjs::Value::isError() const’:
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:1322:46: error: could not convert ‘((const qjs::Value*)this)->qjs::Value::ctx’ from ‘JSContext* const’ to ‘JSValue’
+ 1322 |     bool isError() const { return JS_IsError(ctx, v); }
+      |                                              ^~~
+      |                                              |
+      |                                              JSContext* const
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp: At global scope:
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:1484:74: error: ‘JS_BOOL’ has not been declared
+ 1484 |                                                     JSValueConst reason, JS_BOOL is_handled, void *opaque);
+      |                                                                          ^~~~~~~
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp: In constructor ‘qjs::Runtime::Runtime()’:
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:1463:9: error: ‘JS_SetHostUnhandledPromiseRejectionTracker’ was not declared in this scope; did you mean ‘JS_SetHostPromiseRejectionTracker’?
+ 1463 |         JS_SetHostUnhandledPromiseRejectionTracker(rt, promise_unhandled_rejection_tracker, NULL);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |         JS_SetHostPromiseRejectionTracker
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp: In member function ‘qjs::Value qjs::Context::eval(std::string_view, const char*, int)’:
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:1840:27: error: could not convert ‘((qjs::Context*)this)->qjs::Context::ctx’ from ‘JSContext*’ to ‘JSValue’
+ 1840 |             if(JS_IsError(ctx, result)) {
+      |                           ^~~
+      |                           |
+      |                           JSContext*
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp: In member function ‘qjs::Value qjs::Context::fromJSON(std::string_view, const char*, int)’:
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:1864:27: error: ‘JS_ParseJSON2’ was not declared in this scope; did you mean ‘JS_ParseJSON’?
+ 1864 |         return Value{ctx, JS_ParseJSON2(ctx, buffer.data(), buffer.size(), filename, flags)};
+      |                           ^~~~~~~~~~~~~
+      |                           JS_ParseJSON
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:1864:92: error: no matching function for call to ‘qjs::Value::Value(<brace-enclosed initializer list>)’
+ 1864 |         return Value{ctx, JS_ParseJSON2(ctx, buffer.data(), buffer.size(), filename, flags)};
+      |                                                                                            ^
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:1273:5: note: candidate: ‘template<class T> qjs::Value::Value(JSContext*, T&&)’
+ 1273 |     Value(JSContext * ctx, T&& val) : ctx(ctx)
+      |     ^~~~~
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:1273:5: note:   template argument deduction/substitution failed:
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:1288:5: note: candidate: ‘qjs::Value::Value(qjs::Value&&)’
+ 1288 |     Value(Value&& rhs) noexcept
+      |     ^~~~~
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:1288:5: note:   candidate expects 1 argument, 2 provided
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:1282:5: note: candidate: ‘qjs::Value::Value(const qjs::Value&)’
+ 1282 |     Value(const Value& rhs) noexcept
+      |     ^~~~~
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:1282:5: note:   candidate expects 1 argument, 2 provided
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:1280:5: note: candidate: ‘qjs::Value::Value(JSValue&&)’
+ 1280 |     Value(JSValue&& v) noexcept : v(std::move(v)), ctx(nullptr) {}
+      |     ^~~~~
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:1280:5: note:   candidate expects 1 argument, 2 provided
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp: In static member function ‘static std::vector<T> qjs::js_traits<std::vector<T> >::unwrap(JSContext*, JSValue)’:
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:2028:28: error: could not convert ‘ctx’ from ‘JSContext*’ to ‘JSValue’
+ 2028 |         int e = JS_IsArray(ctx, jsarr);
+      |                            ^~~
+      |                            |
+      |                            JSContext*
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp: In static member function ‘static std::pair<_T1, _T2> qjs::js_traits<std::pair<_T1, _T2> >::unwrap(JSContext*, JSValue)’:
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:2074:28: error: could not convert ‘ctx’ from ‘JSContext*’ to ‘JSValue’
+ 2074 |         int e = JS_IsArray(ctx, jsarr);
+      |                            ^~~
+      |                            |
+      |                            JSContext*
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp: At global scope:
+scripts/2026/10/13/falllinie-js-runtime/.work/wrapper-current/quickjspp.hpp:2176:79: error: ‘JS_BOOL’ has not been declared
+ 2176 |                                                          JSValueConst reason, JS_BOOL is_handled, void *opaque)
+      |                                                                               ^~~~~~~

@@ -210,7 +210,7 @@ void Game::real_time_feedback(Controls input,double raw){
  flash=std::max(0.,flash-raw);inversion=clamp(inversion+(grotesk>0?raw:-raw)/.6,0,1);shake=std::max(0.,shake-raw*2.2);
  if(playing_){hud.live_time-=raw;hud.result_time-=raw;hud.banner_time-=raw;}sync_sound();
 }
-void Game::set_best_path(const std::string& path){best_path_=path;persistence_error.clear();if(path.empty())return;std::ifstream f(path);long long value=0;if(f>>value&&value>=0&&value<=std::numeric_limits<int>::max())best=std::max(best,int(value));}
+void Game::set_best_path(const std::string& path){best_path_=path;persistence_error.clear();if(path.empty())return;std::ifstream f(path);long long value=0;if(f>>value&&value>=0&&value<=std::numeric_limits<int>::max()){f>>std::ws;if(f.eof())best=std::max(best,int(value));}}
 void Game::save_best(){
  if(best_path_.empty())return;
  std::string tmp=best_path_+".tmp";std::ofstream file(tmp,std::ios::trunc);file<<best<<'\n';file.close();if(!file){persistence_error="Cannot write best score: "+tmp;return;}

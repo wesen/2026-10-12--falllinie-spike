@@ -248,7 +248,7 @@ void operator delete(void* p,std::size_t) noexcept { std::free(p); }
 void operator delete[](void* p,std::size_t) noexcept { std::free(p); }
 int main(int argc,char** argv) {
  if(argc>=3 && std::string(argv[1])=="--render") { render_evidence(argv[2],argc>3?std::stod(argv[3]):90); }
- else { test_saturation_2x(); test_fft_and_source_ir(); test_arrangement(); test_reactions(); test_limits_and_spsc(); test_block_independence(); }
+ else { for(double x:{-20.,-3.,-2.,-.5,0.,.5,2.,3.,20.})require(std::abs(fl::audio_detail::acid_shape(x)-std::tanh(std::max(-1.,std::min(1.,x*.5))*3))<1e-12,"acid source endpoint clamp"); test_saturation_2x(); test_fft_and_source_ir(); test_arrangement(); test_reactions(); test_limits_and_spsc(); test_block_independence(); }
  require(allocations.load()==0,"no callback/render allocation after preparation");
  std::cout<<"PASS: source audio CPU checks; callback allocations "<<allocations.load()<<'\n';
 }

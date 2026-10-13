@@ -337,7 +337,7 @@ struct AudioEngine::Impl {
    double vl=0,vr=0; reverb.process(b.verb[0],b.verb[1],vl,vr);
    // Preserve branch gains and sends from Music.init(); sfx/vinyl bypass music master.
    double drums=(b.drums+std::round(clamp(b.glitch*0.8,-1,1)*6)/6*0.6)*drum;
-   double common=drums+b.bass*0.85+(b.chop*0.5+delayed*0.35)*pump_gain+std::tanh(b.acid*0.5*3)*0.35;
+   double common=drums+b.bass*0.85+(b.chop*0.5+delayed*0.35)*pump_gain+acid_shape(b.acid)*0.35;
    double ride=carve_filter.process(noise[(noise_pos+noise_offset[0])%noise.size()])*carve+wind_filter.process(noise[(noise_pos+noise_offset[1])%noise.size()])*wind+grind_filter.process(noise[(noise_pos+noise_offset[2])%noise.size()])*grind_gain;
    noise_pos=(noise_pos+1)%noise.size(); double crackle=vinyl_filter.process(vinyl[vinyl_pos])*0.22; vinyl_pos=(vinyl_pos+1)%vinyl.size();
    double left=music_filter[0].process(common+b.keys[0]*0.55*pump_gain+vl*0.32)*0.7+(b.sfx+ride)*0.9+crackle;

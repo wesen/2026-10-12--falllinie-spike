@@ -1,0 +1,18 @@
+Internal ctest changing into directory: /home/manuel/code/wesen/2026-10-12--falllinie-spike/build/integrated-source
+Test project /home/manuel/code/wesen/2026-10-12--falllinie-spike/build/integrated-source
+    Start 1: terrain-parity
+1/6 Test #1: terrain-parity ...................   Passed    0.03 sec
+    Start 2: gameplay
+2/6 Test #2: gameplay .........................   Passed    0.01 sec
+    Start 3: gameplay_world
+3/6 Test #3: gameplay_world ...................   Passed    0.02 sec
+    Start 4: gameplay_pose
+4/6 Test #4: gameplay_pose ....................   Passed    0.01 sec
+    Start 5: integration
+5/6 Test #5: integration ......................   Passed    0.06 sec
+    Start 6: audio-lifecycle
+6/6 Test #6: audio-lifecycle ..................   Passed    0.79 sec
+
+100% tests passed, 0 tests failed out of 6
+
+Total Test time (real) =   0.92 sec

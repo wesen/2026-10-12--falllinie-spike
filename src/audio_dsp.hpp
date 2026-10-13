@@ -11,6 +11,8 @@
 namespace fl::audio_detail {
 constexpr double pi=3.14159265358979323846;
 inline double clamp(double x, double lo, double hi) { return std::max(lo,std::min(hi,x)); }
+// Source WaveShaper curve spans [-1,1]; inputs outside it use endpoint values.
+inline double acid_shape(double bus) { return std::tanh(clamp(bus*.5,-1,1)*3); }
 struct Random {
  uint32_t state=1;
  double next() { state^=state<<13; state^=state>>17; state^=state<<5; return state/4294967296.0; }

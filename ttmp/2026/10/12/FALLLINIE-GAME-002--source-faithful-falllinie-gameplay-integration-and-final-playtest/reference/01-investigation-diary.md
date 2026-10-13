@@ -456,3 +456,59 @@ The selected on-device A/B comparison reproduces dense false blue texture/edge s
 ### Technical details
 - Archived shader files are unchanged; the vertex projection substitution is guarded at runtime. Float world-space mesh/shading precision remains a limitation at much more extreme distances.
 - The two diagnostic cases deliberately use normal vsync and are not a 60 FPS performance qualification. The subsequent paced dual-view CSV is the relevant regression sample.
+
+## Step 9: Accept the reviewed source integration, correct two notes and build ARM64
+
+The integration workflow and independent read-only review finished successfully on candidate `6338bf5`. The reviewer accepted that exact candidate with two non-blocking source-correctness notes. I verified its full patch hash/applicability and clean worktree, fast-forwarded parent main to the candidate, corrected both notes with targeted regression checks, and independently reran the affected host gates. The complete ARM64 executable now builds, but a fresh SSH check found the handheld unreachable, so no integrated deployment or physical qualification is claimed.
+
+### Prompt Context
+- **User prompt:** Continuing the implementation authorization in Step 4 and the verbatim diary/commit instruction in Step 6. The workflow completion and review are runtime evidence, not additional authored user requests.
+- **Assistant interpretation:** Parent must inspect/accept the candidate, retain the rendering repair, address small genuine review findings and own final target qualification.
+- **Inferred user intent:** Finish the source systems without calling host success physical acceptance.
+- **Commit (code):** Reviewed candidate `6338bf566ef96e095729a43609e8e7a0e65b3b26`; parent correction hash is supplied by the next commit/response.
+
+### What I did
+- Read the full integration handoff and independent review from workflow `8aa2753a-f96d-4c91-9364-3db00bc07873`.
+- Verified candidate patch SHA256 `e6613823e11c564873946e05ee2ad7e7dc06e97538dc07a7e539aef0c155cea3`, `git apply --check` at parent base d911ee4, and clean parent/candidate status; integrated through `git merge --ff-only 6338bf5`, not by also applying the patch.
+- Added `audio_detail::acid_shape`: clamp the half-gain acid input to [-1,1] before tanh, matching the source WaveShaper endpoint behavior. Added positive/negative over-range scalar checks.
+- Required best-score parsing to end after trailing whitespace; added rejection of `123garbage` and acceptance of trailing whitespace.
+- Copied the independent report into `scripts/2026/10/13/full-gameplay-integration/parent-evidence/`; recorded fresh CTest/audio CPU/audio sanitizer/precision output there.
+- Built ARM64 with the existing Docker toolchain and captured target SDL library, without installing dependencies or directly linking GLES.
+
+### Why
+- The source curves clamp inputs outside their table domain; an unbounded analytic tanh was a real transfer-function mismatch, not merely lookup interpolation.
+- Parsing an integer prefix silently accepts malformed persistence data; source numeric conversion rejects malformed suffixes.
+- A reviewed worker result still requires parent verification. The old prototype's GPU/audio/performance evidence cannot qualify the substantially larger integrated workload.
+
+### What worked
+- Fast-forward integration succeeded after hash/applicability and clean-state checks; original shader/math/jitter evidence remains preserved.
+- Fresh parent `cmake -S . -B build/integrated-source`, build and CTest: 6/6 passed (terrain/gameplay/world/pose/integration/dummy audio lifecycle).
+- Fresh strict audio CPU and ASan/UBSan runs passed, including source arrangement/IR/reactivity/2x saturation, endpoint check, long-pause transport and watched callback allocations=0. Queue drops/steals printed by the deliberate stress case are not normal-workload failures.
+- Fresh production relative-coordinate probe passed for world and rolled up/boundary cases.
+- ARM64 cross-link passed; executable SHA256 `a6b940e628ea514f42bb668c6a121b61c630107115cc06dfc0f5eb0362d682e5`.
+
+### What didn't work
+- Device read-only preflight failed exactly: `ssh: connect to host 192.168.0.202 port 22: No route to host` (exit 255). No new executable was transferred or launched after this failure.
+- A precautionary exact-text edit against an assumed literal newline in the new test returned `Could not find the exact text`; inspection showed the test already contained correctly escaped C++ newline/tab characters, so no repair was needed. Subsequent compile/tests passed.
+
+### What I learned
+- The independent review establishes a useful merge boundary, not physical release acceptance. The restored 2x audio graph, full objects/rig and source feedback need a new combined target budget check.
+
+### What was tricky to build
+- Keeping world-space source shading while preserving relative scene/post/sun projection during source-renderer conflict resolution; the reviewer explicitly inspected that seam.
+- Long pauses suspend callback consumption; effective-snapshot suppression must avoid filling the queue without losing failed-command retry or source event latching. The candidate includes targeted tests for this.
+
+### What warrants a second pair of eyes
+- Parent correction tests are independently rerun, but actual SDL backend negotiation, callback budget/underruns, dynamic GPU behavior and controller comfort remain unqualified.
+- The read-only reviewer did not execute tests; parent fresh outputs supply that missing executable evidence, not a claim of exhaustive parity.
+
+### What should be done in the future
+- Restore console SSH reachability, check whether an emulator is active before any target run, then deploy/qualify the combined source build and perform the single final human playtest. Do not interrupt a user's DS game without agreement.
+- Update ticket completion metadata only against concrete acceptance evidence; physical tasks remain open.
+
+### Code review instructions
+- Review `parent-evidence/independent-review.md` against candidate 6338bf5, then the small parent acid_shape/persistence diffs and corresponding scalar/malformed-input tests. Reproduce CTest and check-audio.sh with AUDIO_SANITIZE=1.
+
+### Technical details
+- The first full candidate includes source gameplay/world/pose/particles/audio/runtime/main/CMake, native title/autopilot, app-owned persistence, bounded SPSC transport, full 2.6-second partitioned IR and preallocated final 2x saturation.
+- Native/WebAudio numeric and presentation adaptations remain documented; no waveform identity, browser DOM/touch equivalence or final physical acceptance is claimed. The currently installed binary is still the old prototype with the coordinate fix, not this new executable.

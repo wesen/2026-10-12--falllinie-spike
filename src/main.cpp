@@ -82,11 +82,11 @@ int main(int argc,char** argv){
     input.drive=(keys[SDL_SCANCODE_UP]||keys[SDL_SCANCODE_W])-(keys[SDL_SCANCODE_DOWN]||keys[SDL_SCANCODE_S]);input.jump=keys[SDL_SCANCODE_SPACE];
     if(pad){double axis=SDL_JoystickGetAxis(pad,0)/32767.0;if(std::abs(axis)>.15)input.steer=axis;double ay=-SDL_JoystickGetAxis(pad,1)/32767.0;if(std::abs(ay)>.15)input.drive=ay;
      input.steer+=SDL_JoystickGetButton(pad,16)-SDL_JoystickGetButton(pad,15);input.drive+=SDL_JoystickGetButton(pad,13)-SDL_JoystickGetButton(pad,14);input.jump=input.jump||SDL_JoystickGetButton(pad,0);}
-    if(c.autoplay){input.steer=.35*std::sin(game.time*.55);input.drive=.6;input.jump=std::fmod(game.time,5)>2 && std::fmod(game.time,5)<2.65;}
+    if(c.autoplay){input.steer=.35*std::sin(game.time*.55);input.drive=.6;input.jump=std::fmod(game.time,5)>2 && std::fmod(game.time,5)<2.65;if(game.airborne){input.drive=0;input.steer=game.air_time>.12&&game.air_time<.38?.65:0;}}
     input.steer=fl::clamp(input.steer,-1,1);input.drive=fl::clamp(input.drive,-1,1);accumulator+=elapsed;
     while(accumulator>=1.0/120){game.step(input,1.0/120);accumulator-=1.0/120;}
     renderer.update_player(game,elapsed);
-    if(frames%60==0)std::cout<<"ride z="<<game.position.z<<" speed="<<fl::length(game.velocity)<<" airborne="<<game.airborne<<" charge="<<game.charge<<std::endl;
+    if(frames%60==0)std::cout<<"ride z="<<game.position.z<<" speed="<<fl::length(game.velocity)<<" airborne="<<game.airborne<<" charge="<<game.charge<<" score="<<game.score<<std::endl;
    }
    SDL_GL_GetDrawableSize(window,&drawable_w,&drawable_h);
    if(c.resize_check && frames>0 && frames%60==0){

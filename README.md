@@ -1,8 +1,10 @@
 # Falllinie native terrain / print-shader spike
 
 C++17 + SDL2 platform layer, GLES3 renderer loaded through SDL_GL_GetProcAddress.
-A bounded native graphics qualification, **not the complete game port**: no rider,
-physics, scoring, streaming, reactive audio, HUD or second-screen game logic.
+The original bounded graphics qualification now also has a **first playable
+source-based downhill slice** (`--play`). This is not the complete game port;
+reactive audio, full tricks/combos, incremental streaming and second-screen game
+logic remain unfinished. The static graphics checkpoint below remains reproducible.
 
 Authoritative design/tasks/detailed diary: sibling `claw-stuff` docmgr ticket
 `FALLLINIE-GLES-001`. Original SHA256:
@@ -81,3 +83,21 @@ native captures, A/B comparison and hardware qualifications. Frame percentiles a
 CPU submission **plus swap** after 60 warmup frames, not GPU timer measurements.
 Preliminary 512x384, three-cell runs were approximately 18 ms p95; final qualification
 results are indexed in `evidence/qualification-summary.json` when available.
+
+## First playable milestone (after the static graphics checkpoint)
+
+`--play` now enables source-based downhill physics, charged jumps, original
+source-generated rider poses, following camera and moving terrain patches.
+The device port launcher defaults to this mode. `--autoplay` is synthetic input
+for recording; it is not a substitute for physical playtesting.
+
+Ground: stick/dpad left/right steer; UP tucks, DOWN brakes; hold/release button 0
+(A/SPACE) to jump. Air: left/right spin, up/down flip, release to auto-complete.
+START/R restarts; SELECT+START/ESC exits. HUD displays speed, distance, raw landing
+points and contextual controls using the original embedded IBM Plex Mono font.
+
+Spins/flips and landing alignment follow the source, but full grabs/ubers, runtime
+IK, combo/repetition scoring, original bail animation, objects, trails and reactive
+audio remain unfinished. Crouch uses three baked original poses. Cell transitions
+currently rebuild a four-cell patch synchronously. This is a playable port slice,
+not a claim of complete game parity. Current diary: native ttmp ticket FALLLINIE-PLAY-001.

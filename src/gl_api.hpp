@@ -11,6 +11,7 @@ inline decltype(&::glBindBuffer) glBindBuffer_fn = nullptr;
 inline decltype(&::glBindFramebuffer) glBindFramebuffer_fn = nullptr;
 inline decltype(&::glBindTexture) glBindTexture_fn = nullptr;
 inline decltype(&::glBindVertexArray) glBindVertexArray_fn = nullptr;
+inline decltype(&::glBlendFunc) glBlendFunc_fn = nullptr;
 inline decltype(&::glBufferData) glBufferData_fn = nullptr;
 inline decltype(&::glCheckFramebufferStatus) glCheckFramebufferStatus_fn = nullptr;
 inline decltype(&::glClear) glClear_fn = nullptr;
@@ -56,6 +57,7 @@ inline decltype(&::glUniform1f) glUniform1f_fn = nullptr;
 inline decltype(&::glUniform1i) glUniform1i_fn = nullptr;
 inline decltype(&::glUniform2f) glUniform2f_fn = nullptr;
 inline decltype(&::glUniform3f) glUniform3f_fn = nullptr;
+inline decltype(&::glUniform4f) glUniform4f_fn = nullptr;
 inline decltype(&::glUniform4fv) glUniform4fv_fn = nullptr;
 inline decltype(&::glUniformMatrix3fv) glUniformMatrix3fv_fn = nullptr;
 inline decltype(&::glUniformMatrix4fv) glUniformMatrix4fv_fn = nullptr;
@@ -75,6 +77,8 @@ inline void load() {
   if (!glBindTexture_fn) throw std::runtime_error("missing GL entry: glBindTexture");
   glBindVertexArray_fn = reinterpret_cast<decltype(glBindVertexArray_fn)>(SDL_GL_GetProcAddress("glBindVertexArray"));
   if (!glBindVertexArray_fn) throw std::runtime_error("missing GL entry: glBindVertexArray");
+  glBlendFunc_fn = reinterpret_cast<decltype(glBlendFunc_fn)>(SDL_GL_GetProcAddress("glBlendFunc"));
+  if (!glBlendFunc_fn) throw std::runtime_error("missing GL entry: glBlendFunc");
   glBufferData_fn = reinterpret_cast<decltype(glBufferData_fn)>(SDL_GL_GetProcAddress("glBufferData"));
   if (!glBufferData_fn) throw std::runtime_error("missing GL entry: glBufferData");
   glCheckFramebufferStatus_fn = reinterpret_cast<decltype(glCheckFramebufferStatus_fn)>(SDL_GL_GetProcAddress("glCheckFramebufferStatus"));
@@ -165,6 +169,8 @@ inline void load() {
   if (!glUniform2f_fn) throw std::runtime_error("missing GL entry: glUniform2f");
   glUniform3f_fn = reinterpret_cast<decltype(glUniform3f_fn)>(SDL_GL_GetProcAddress("glUniform3f"));
   if (!glUniform3f_fn) throw std::runtime_error("missing GL entry: glUniform3f");
+  glUniform4f_fn = reinterpret_cast<decltype(glUniform4f_fn)>(SDL_GL_GetProcAddress("glUniform4f"));
+  if (!glUniform4f_fn) throw std::runtime_error("missing GL entry: glUniform4f");
   glUniform4fv_fn = reinterpret_cast<decltype(glUniform4fv_fn)>(SDL_GL_GetProcAddress("glUniform4fv"));
   if (!glUniform4fv_fn) throw std::runtime_error("missing GL entry: glUniform4fv");
   glUniformMatrix3fv_fn = reinterpret_cast<decltype(glUniformMatrix3fv_fn)>(SDL_GL_GetProcAddress("glUniformMatrix3fv"));
@@ -185,6 +191,7 @@ inline void load() {
 #define glBindFramebuffer glapi::glBindFramebuffer_fn
 #define glBindTexture glapi::glBindTexture_fn
 #define glBindVertexArray glapi::glBindVertexArray_fn
+#define glBlendFunc glapi::glBlendFunc_fn
 #define glBufferData glapi::glBufferData_fn
 #define glCheckFramebufferStatus glapi::glCheckFramebufferStatus_fn
 #define glClear glapi::glClear_fn
@@ -230,6 +237,7 @@ inline void load() {
 #define glUniform1i glapi::glUniform1i_fn
 #define glUniform2f glapi::glUniform2f_fn
 #define glUniform3f glapi::glUniform3f_fn
+#define glUniform4f glapi::glUniform4f_fn
 #define glUniform4fv glapi::glUniform4fv_fn
 #define glUniformMatrix3fv glapi::glUniformMatrix3fv_fn
 #define glUniformMatrix4fv glapi::glUniformMatrix4fv_fn

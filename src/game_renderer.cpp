@@ -3,6 +3,8 @@
 #include <iostream>
 namespace fl {
 void Renderer::update_player(Game& game,double dt){
+ hud_line_="SPEED "+std::to_string(int(length(game.velocity)*3.6))+" KM/H   DIST "+std::to_string(int(game.distance))+" M   SCORE "+std::to_string(game.score);
+ hud_status_=game.bail_time>0?"BAIL - RECOVERING":game.airborne?"AIR: LEFT/RIGHT SPIN, UP/DOWN FLIP; RELEASE TO COMPLETE":"RIDE: UP TUCK, DOWN BRAKE; LAST LANDING +"+std::to_string(game.last_points);
  int cell=int(std::floor(game.position.z/CELL));
  if(cell!=patch_first_+1){
   patch_first_=cell-1;patch_count_=4;CpuMesh mesh;
@@ -10,7 +12,8 @@ void Renderer::update_player(Game& game,double dt){
   vertices_=mesh.vertices.size();indices_=mesh.indices.size();glBindVertexArray(vao_);glBindBuffer(GL_ARRAY_BUFFER,vbo_);glBufferData(GL_ARRAY_BUFFER,mesh.vertices.size()*sizeof(Vertex),mesh.vertices.data(),GL_STATIC_DRAW);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,ibo_);glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh.indices.size()*4,mesh.indices.data(),GL_STATIC_DRAW);
   std::cout<<"terrain patch "<<patch_first_<<".."<<patch_first_+3<<'\n';
  }
- Vec3 y=game.board_normal,f{std::sin(game.yaw),0,std::cos(game.yaw)},x=norm(f-y*dot(f,y)),z=cross(x,y);
+ Vec3 f{std::sin(game.yaw),0,std::cos(game.yaw)};
+ Vec3 x=qrot(game.orientation,{1,0,0}),y=qrot(game.orientation,{0,1,0}),z=qrot(game.orientation,{0,0,1});
  double pose=clamp(game.crouch,0,1)*2;int a=std::min(1,int(pose));double mix=pose-a;std::vector<Vertex> vertices=rider_poses_[a];
  for(size_t i=0;i<vertices.size();++i){const auto& b=rider_poses_[a+1][i];auto& v=vertices[i];Vec3 p{lerp(v.px,b.px,mix),lerp(v.py,b.py,mix),lerp(v.pz,b.pz,mix)},n{lerp(v.nx,b.nx,mix),lerp(v.ny,b.ny,mix),lerp(v.nz,b.nz,mix)};p=game.position+x*p.x+y*p.y+z*p.z;n=norm(x*n.x+y*n.y+z*n.z);v.px=p.x;v.py=p.y;v.pz=p.z;v.nx=n.x;v.ny=n.y;v.nz=n.z;}
  glBindVertexArray(rider_vao_);glBindBuffer(GL_ARRAY_BUFFER,rider_vbo_);glBufferData(GL_ARRAY_BUFFER,vertices.size()*sizeof(Vertex),vertices.data(),GL_STREAM_DRAW);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,rider_ibo_);glBufferData(GL_ELEMENT_ARRAY_BUFFER,rider_triangles_.size()*4,rider_triangles_.data(),GL_STREAM_DRAW);rider_indices_=GLsizei(rider_triangles_.size());

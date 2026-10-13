@@ -56,6 +56,22 @@ if(uMode==1)x=c.r;else if(uMode==2)x=c.g;else if(uMode==3)x=c.b*255./32.;else if
 else{float d=texture(uD,uv).r;float z=d*2.-1.;float linear=2.*.1*900./(900.+.1-z*(900.-.1));x=linear/150.;}
 o=vec4(vec3(x),1.);})";
  copy_=program(read_file(assets+"/post_vs.glsl"),copy_fs,"presentation diagnostic");
+ const std::string hud_fs=R"(#version 300 es
+precision highp float;
+uniform highp sampler2D uFont;uniform vec4 uRect;uniform float uCharacter;uniform vec3 uInk,uPaper;out vec4 o;
+void main(){vec2 uv=(gl_FragCoord.xy-uRect.xy)/uRect.zw;if(any(lessThan(uv,vec2(0.)))||any(greaterThan(uv,vec2(1.))))discard;
+if(uCharacter<0.){o=vec4(uPaper,.92);return;}float alpha=texture(uFont,vec2((uCharacter+uv.x)/96.,1.-uv.y)).a;o=vec4(uInk,alpha);})";
+ const std::string hud_vs=R"(#version 300 es
+uniform vec4 uRect;uniform vec2 uOutputRes;
+const vec2 corners[6]=vec2[6](vec2(0,0),vec2(1,0),vec2(0,1),vec2(0,1),vec2(1,0),vec2(1,1));
+void main(){vec2 p=uRect.xy+corners[gl_VertexID]*uRect.zw;gl_Position=vec4(p/uOutputRes*2.-1.,0.,1.);})";
+ hud_program_=program(hud_vs,hud_fs,"native HUD using source font");
+ SDL_Surface* font=SDL_LoadBMP((assets+"/../hud-font.bmp").c_str());
+ if(!font)throw std::runtime_error("missing source HUD font atlas");
+ SDL_Surface* font_rgba=SDL_ConvertSurfaceFormat(font,SDL_PIXELFORMAT_ABGR8888,0);SDL_FreeSurface(font);
+ if(!font_rgba)throw std::runtime_error(SDL_GetError());
+ hud_font_=texture(font_rgba->w,font_rgba->h,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);glTexSubImage2D(GL_TEXTURE_2D,0,0,0,font_rgba->w,font_rgba->h,GL_RGBA,GL_UNSIGNED_BYTE,font_rgba->pixels);SDL_FreeSurface(font_rgba);
+ glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
  for(auto name:{"uVP","uM","uKind"})if(loc(scene_,name)<0)throw std::runtime_error(std::string("missing scene uniform ")+name);
  for(auto name:{"uC","uD","uRes"})if(loc(post_,name)<0)throw std::runtime_error(std::string("missing print uniform ")+name);
  patch_first_=first_cell;patch_count_=count;
@@ -128,6 +144,13 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
  scalar(post_,"uSunR",height_*.085);glBindVertexArray(fullscreen_vao_);glDrawArrays(GL_TRIANGLES,0,3);
  glBindFramebuffer(GL_FRAMEBUFFER,0);glViewport(0,0,drawable_w,drawable_h);glUseProgram(copy_);
  glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,debug?color_:printed_);integer(copy_,"uC",0);glActiveTexture(GL_TEXTURE1);glBindTexture(GL_TEXTURE_2D,depth_);integer(copy_,"uD",1);integer(copy_,"uMode",debug);glUniform2f(loc(copy_,"uOutputRes"),drawable_w,drawable_h);glDrawArrays(GL_TRIANGLES,0,3);
+ if(following_){
+  glUseProgram(hud_program_);glUniform2f(loc(hud_program_,"uOutputRes"),drawable_w,drawable_h);glEnable(GL_BLEND);glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,hud_font_);integer(hud_program_,"uFont",0);vec3(hud_program_,"uInk",inks[palette]);vec3(hud_program_,"uPaper",papers[palette]);
+  auto text=[&](const std::string& value,float left,float bottom,float width,float height){for(size_t i=0;i<value.size();++i){scalar(hud_program_,"uCharacter",float(static_cast<unsigned char>(value[i])-32));glUniform4f(loc(hud_program_,"uRect"),left+i*width,bottom,width,height);glDrawArrays(GL_TRIANGLES,0,6);}};
+  scalar(hud_program_,"uCharacter",-1);glUniform4f(loc(hud_program_,"uRect"),8,drawable_h-80,drawable_w-16,72);glDrawArrays(GL_TRIANGLES,0,6);
+  text(hud_line_,16,drawable_h-44,18,30);vec3(hud_program_,"uInk",spots[palette]);text(hud_status_,16,drawable_h-74,16,28);
+  scalar(hud_program_,"uCharacter",-1);glUniform4f(loc(hud_program_,"uRect"),8,8,drawable_w-16,34);glDrawArrays(GL_TRIANGLES,0,6);vec3(hud_program_,"uInk",inks[palette]);text("A: HOLD/RELEASE JUMP   D-PAD: RIDE/TRICKS   START: RESTART",16,10,16,28);glDisable(GL_BLEND);
+ }
  gl_check("render");
 }
 void Renderer::capture(const std::string& path){
@@ -147,6 +170,8 @@ void Renderer::capture(const std::string& path){
  save(print_fbo_,parent+"/depth.bmp");
 }
 Renderer::~Renderer(){
+ if(hud_program_)glDeleteProgram(hud_program_);
+ if(hud_font_)glDeleteTextures(1,&hud_font_);
  if(rider_vao_)glDeleteVertexArrays(1,&rider_vao_);
  if(rider_vbo_)glDeleteBuffers(1,&rider_vbo_);
  if(rider_ibo_)glDeleteBuffers(1,&rider_ibo_);

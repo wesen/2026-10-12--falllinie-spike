@@ -22,6 +22,8 @@ public:
  int height()const{return height_;}
  const Camera& camera()const{return camera_;}
 private:
+ GLuint hud_program_=0,hud_font_=0;
+ std::string hud_line_,hud_status_;
  GLuint scene_=0,post_=0,copy_=0,vao_=0,vbo_=0,ibo_=0,fullscreen_vao_=0;
  GLuint rider_vao_=0,rider_vbo_=0,rider_ibo_=0;
  GLsizei rider_indices_=0;

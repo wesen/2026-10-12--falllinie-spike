@@ -108,3 +108,51 @@ Read the guide and Step1 before starting audio changes. Compare the upload log w
 
 ### Technical details
 Parent owns `reference/01-detailed-implementation-diary.md`, ticket task/changelog/index state, deployment and delivery. The implementation worker will own a separate reference diary and scoped source/tests/scripts in an isolated worktree. No device access, installs, push or subagents are delegated.
+
+## Step 3: Queue the worker-authored vault report and retain the first starvation result
+
+The user added a publication follow-up: the implementation worker should write a detailed textbook-style project report after the work is finished, then commit and push the vault. The parent routed that instruction to the existing worker without launching another writer or diverting implementation. Publication waits for the independent review and parent qualification evidence.
+
+The worker subsequently reported two coherent audio commits and12/12 host CTests passing, including actual worker/callback bit identity and full/empty shutdown. A60-second llvmpipe/dummy integration run had negligible callback copy time but one PCM starvation. This is an intermediate worker report, not parent-verified target acceptance.
+
+### Prompt Context
+**User prompt (verbatim):**
+
+> have the worker  write a detailed project report for the obsidian vault as a deep dive technical analysis blog post using a textbook writing style (no analogies, see skill).
+> Commit and push the bsidian vault when done (go-go-parc vault).    once they're finished
+
+**Assistant interpretation:** Resume the same implementation worker for an append-only vault report after the final native result is known; grant scoped vault commit/push authority then.
+**Inferred user intent:** Preserve a rigorous technical account of the finished work, including actual remaining failures, without publishing a design as completed implementation.
+
+### What I did
+- Confirmed the workflow and worker entries point to the same child session, not competing writers.
+- Sent a bounded steering instruction to live child7c532c54-8195-46ce-a832-0eea5d97d995 with steeringRecovery=false. Delivery was acknowledged under request2ce8653c-25c6-4ac8-a97a-b1e93ac7bf0b.
+- Added taskmdph for worker-written report/assets and intended-file-only go-go-parc commit/push after native completion. No vault edits or push happened in this step.
+- Preserved the worker's interim failure report without authorizing a larger lead or changing acceptance thresholds.
+
+### Why
+The report needs exact final commits, source/API relationships, concurrency/lifecycle reasoning, numerical/test evidence and actual target observations. The worker is already collecting implementation reasoning; reuse that context later rather than create a concurrent vault writer now.
+
+### What worked
+Steering was delivered. Worker acknowledged the deferred follow-up. Reported host run: GL_error0,2815callbacks,mean wall0.004962ms,max0.550192ms,zero callback budget misses. Reported12/12 tests include transported bit identity and deterministic full/empty shutdown.
+
+### What didn't work
+The same host run reportedly had producer maximum48.956ms, two nominal block-budget exceedances, and one starved callback/1024 missing frames with2048-frame lead. This is not zero-starvation acceptance. Host llvmpipe/dummy results are not Mali/PulseAudio handheld results; full evidence review and sanitizers remain pending.
+
+### What I learned
+Moving DSP out of the callback changes which component can miss its supply obligation. A fast copy-only callback can still output fallback silence if the producer does not maintain enough ready PCM.
+
+### What was tricky to build
+The asynchronous workflow's buffered-worker and single worker display refer to one actual implementation owner. New publication authority is conditional and separate from the child's current no-device/no-native-push boundary.
+
+### What warrants a second pair of eyes
+Inspect exact queue/lifecycle code and the cause/measurement scope of starvation; distinguish producer CPU time from wall time. Review must not convert successful callback counters into total playback acceptance.
+
+### What should be done in the future
+Complete implementation/sanitizers/review, integrate and qualify on device, then resume the same worker with final evidence and vault-specific authority. Read Obsidian writing and textbook-authoring skills, preserve older reports/unrelated state, include self-contained assets and commit/push only report files.
+
+### Code review instructions
+Use the forthcoming worker handoff/commits/logs rather than treating this interim progress message as executed parent validation. Keep taskmdph open until the vault report is actually committed and remote push succeeds.
+
+### Technical details
+Report destination is /home/manuel/code/wesen/go-go-golems/go-go-parc under a new dated Projects note with colocated _assets. Discuss PCM/SPSC publication, DSP/FFT/sample clocks, produced-versus-delivered frontiers, pause/stop ownership, API/file references, tests and limitations in prose, pseudocode and diagrams without analogies.

@@ -196,6 +196,7 @@ The requested ticket doctor also exposed the raw harness README.md as invalid fr
 **User prompt (verbatim):** See Step 1. The parent follow-up accepts both reviewer P2 findings and requests corrections before any parent ARM64 execution.
 **Assistant interpretation:** Correct measurement endpoints and atomic finite-sum validation, prove preservation in native/helper and all real embeddings, regenerate clearly separated evidence/packages, run honest docmgr checks and commit a scoped checkpoint.
 **Inferred user intent:** Make the already-reviewed research candidate safe and accurately measured before hardware qualification.
+**Commit (code):** 6dd6f89210c1a009a4c83e536cd3e2473fa2e1f6 — "research(js): fix probe timing endpoints and reject copied sum overflow"
 
 ### What I did
 - Read full independent review at implementation run d80ad95c's review/arm64-v8-probes.md.

@@ -1,0 +1,32 @@
+{
+  "vault": "/home/manuel/code/wesen/go-go-golems/go-go-parc",
+  "branch": "main",
+  "pre_head": "68f01ce1d88e385be17df047c64e971318b1b6f3",
+  "pre_status": "clean; no staged files",
+  "vault_commit": "520788f61bff9a1400899121626a192725f357de",
+  "remote_main_verified": "520788f61bff9a1400899121626a192725f357de",
+  "local_origin_main": "520788f61bff9a1400899121626a192725f357de",
+  "post_status": "clean; no staged files",
+  "push_output": "To ssh://github.com/go-go-golems/go-go-parc\n   68f01ce..520788f  main -> main\n",
+  "remote_verification_output": "520788f61bff9a1400899121626a192725f357de\trefs/heads/main\n",
+  "note": "Projects/2026/10/13/PROJECT REPORT - Falllinie Buffered Audio - PCM Ownership, Callback Deadlines and Measured Producer Scheduling.md",
+  "word_count_without_frontmatter_or_fences": 7340,
+  "word_count_body_total": 7604,
+  "assets": [
+    "Projects/2026/10/13/_assets/falllinie-buffered-audio-20261013/01-ownership.svg",
+    "Projects/2026/10/13/_assets/falllinie-buffered-audio-20261013/02-partial-wrap.svg",
+    "Projects/2026/10/13/_assets/falllinie-buffered-audio-20261013/03-convolution.svg",
+    "Projects/2026/10/13/_assets/falllinie-buffered-audio-20261013/04-target-timing.svg",
+    "Projects/2026/10/13/_assets/falllinie-buffered-audio-20261013/05-frame-intervals.svg",
+    "Projects/2026/10/13/_assets/falllinie-buffered-audio-20261013/provenance.json"
+  ],
+  "native_source_revision_read_only": "686872c1d68776924b94dbf9a684eae174c1573e",
+  "immutable_worker_source_checkpoint": "c6e4624ef50365b3fd28445bff4bde58cb17fc53",
+  "validation": "PASS before staging, with exact seven staged files, and after commit/push: frontmatter fields; >6000 words; five balanced fences; six local asset links; five valid standalone SVG XML files; no external figure resources; no placeholders/analogy patterns; source log/CSV hashes; GPU header-only row counts; exact paused frontier equality; scope and git diff checks",
+  "limits": [
+    "Finite target buffered120s had zero application shortage; host llvmpipe/dummy60s had one callback/1024 missing frames at same lead; both preserved.",
+    "TSan0/3 aborted before test execution; no race-sanitizer pass.",
+    "Live no-vinyl listening, physical event-to-speaker latency and backend XRUNs unmeasured; r35o remains open.",
+    "Renderer remains approximately50FPS; no causal60FPS or physical-scanout claim."
+  ]
+}

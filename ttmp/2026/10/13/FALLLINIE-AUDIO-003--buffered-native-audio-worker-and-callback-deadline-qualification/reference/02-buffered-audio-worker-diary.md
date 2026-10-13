@@ -186,3 +186,56 @@ Read source API reference03, then exact base→final patch and tests. Source com
 6. Separate callback wall/CPU, producer wall/CPU, application starvation, block-budget exceedance and actual driver XRUN evidence. Plot only measured host aggregates; preserve the 1/1024 shortage and unsupported TSan failures.
 7. Explain vinyl preference as documented source adaptation and exact historical A/B reproduction, not timing repair.
 8. Append independent reviewer result and parent device comparisons/latency/listening **only after available**; state remaining finite-run limits and no fabricated utilization/60FPS/physical-scanout claims. Vault writing awaits scoped follow-up authorization and required skills.
+
+## Step 5: Publish the deferred textbook report after review and target evidence
+
+Resumed the same implementation worker with the explicitly scoped vault publication authority. Read both required writing skills completely, the ZK Tool and article exemplars, actual finalized native source/API, parent reference01 Step4/tasks/changelog, raw independent review, parent CTest receipt and both target logs/CPU/GPU CSVs. The authored report follow-up is recorded in parent reference01 Step3; this entry does not invent a user quotation. Parent native main remained read-only at `686872c1d68776924b94dbf9a684eae174c1573e`.
+
+Wrote a new append-only dated textbook-style technical report, with foundations before claims, one pop-event sequence, actual APIs/pseudocode, equations, two Mermaid blocks, compact invariants, tables and five original self-contained SVG figures. It preserves both the host shortage and finite real-backend success, explains that maxima need not be paired blocks, and keeps live listening/physical latency/renderer~50FPS limits explicit. Previous vault reports/assets were untouched.
+
+**Vault publication commit:** `520788f61bff9a1400899121626a192725f357de` — Document Falllinie buffered audio ownership and finite target qualification.
+**Immutable reviewed worker source:** `c6e4624ef50365b3fd28445bff4bde58cb17fc53`; publication helper/diary commits are separate, with no audio-code changes or native push.
+
+### What I did
+- Confirmed vault branch main, origin existing GitHub SSH remote, initial clean/no-staged state at `68f01ce1d88e385be17df047c64e971318b1b6f3`.
+- Created `Projects/2026/10/13/PROJECT REPORT - Falllinie Buffered Audio - PCM Ownership, Callback Deadlines and Measured Producer Scheduling.md` and six files in its unique `_assets/falllinie-buffered-audio-20261013/` subtree (five SVGs and bounded provenance JSON).
+- Added reproducible helpers in this original isolated worktree's `scripts/2026/10/13/buffered-audio-report/`: `generate_figures.py`, `validate_report.py`, local `.work/` ignore, staged validation result and scoped publication receipt. Figures derive timing/interval plots from original parent evidence; no binaries/WAVs/large logs copied to vault.
+- Ran both scripts and inspected exact staged file list/diff/check. Validation passed before staging, with exactly seven intended staged additions, and after push.
+- Committed only those seven vault files; ran `git push origin main` without force, captured its actual output, then `git ls-remote origin refs/heads/main`. Remote and local origin/main both match the published commit. Final vault state clean/no-staged.
+
+### Why
+The report was deferred until independent source review and parent target results existed. It teaches the implemented frame-addressed ring, not an obsolete slot sketch, and distinguishes immutable audio changes from report tooling. Assets resolve inside the vault so the note remains readable without cross-repository image access.
+
+### What worked
+Report has **7340 whitespace-delimited body words excluding frontmatter and fenced code**,7604 total body words. Five fenced blocks (including two Mermaid),six local asset links,five valid standalone SVG XML documents; all resolve. Source artifact hashes, actual CSV row counts/header-only GPU files and paused frontier equality validate. Required fields, fence balance, minimum word count, placeholder/analogy-pattern absence and intended scope checks pass.
+
+Actual push receipt:
+
+```text
+To ssh://github.com/go-go-golems/go-go-parc
+   68f01ce..520788f  main -> main
+```
+
+Actual remote verification:
+
+```text
+520788f61bff9a1400899121626a192725f357de refs/heads/main
+```
+
+### What didn't work
+No publication tooling, permission, branch, staged-scope or push failures. Historical unsupported TSan and host shortage remain described as failures; publication did not rerun broad native matrices or claim those results changed.
+
+### What I learned
+The target's sampled low0 and zero shortages are compatible: all requested frames can be delivered before the ring briefly becomes empty. Terminal frame cost and CSV completed-frame interval are distinct quantities; the figure labels preserve that distinction. Two matched configurations still do not supply identical live commands or causal renderer-performance proof.
+
+### What was tricky to build
+Self-contained SVGs with meaningful scales and provenance; retaining finite-run and live-listening caveats in a long explanatory report; staging exactly the append-only files rather than incidental vault state. Report publication authority does not authorize changes to source, target or parent bookkeeping.
+
+### What warrants a second pair of eyes
+Parent final editorial/technical review should check source terminology, target tables and figures against provenance, including independent maximum CPU/wall values and no inferred physical latency. Structural validation is not a substitute for that final read.
+
+### What should be done in the future
+Parent owns taskmdph bookkeeping and final review. Taskr35o/live no-vinyl listening, physical output latency/backend XRUN measurement and extended scheduling qualification remain open; renderer is still~50FPS. No new source changes or scheduling policy proposed by this publication lane.
+
+### Code review instructions
+Read the new vault report and its provenance JSON at the published commit. Replay figure/validation helpers from this isolated worktree. `publication.json` records pre/post state, exact remote commit and actual push text. Optional helper/diary commit is separate from reviewed sourcec6e4624; parent main remains unchanged.

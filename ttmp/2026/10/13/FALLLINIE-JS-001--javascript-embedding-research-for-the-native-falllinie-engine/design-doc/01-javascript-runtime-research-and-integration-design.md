@@ -31,7 +31,7 @@ WhenToUse: Before implementing a script runtime, bridge, reload path or browser-
 
 ## 1. Recommendation and scope
 
-**Keep the existing native game as the shipping candidate. Do not introduce JS merely to recover trees or trails: those systems already exist in candidate `24b50d8`.** Their source merge is not their device deployment. The parent's last console preflight was unreachable, and this research has no hardware acceptance authority.
+**Keep the existing native game as the shipping candidate. Do not introduce JS merely to recover trees or trails: those systems already exist in candidate `24b50d8`.** Their source merge is not their device deployment. **Historical research context:** at the start of this isolated research, the parent's console preflight was unreachable. **Parent review update:** the native build has since been deployed; its combined audio/performance gate failed, and optimization/qualification remains ongoing. This research never executed JavaScript on the device and has no hardware acceptance authority.
 
 Embedding means the C++ application creates and owns a JavaScript runtime: an interpreter and its managed object heap. A binding is a native function made callable from script. A snapshot is a copied, versioned description of state, not a second mutable owner. Garbage collection (GC) reclaims unreachable script objects; an application binary interface (ABI) specifies how the host and script exchange values. These distinctions matter because enabling JavaScript does not transfer control of rendering, input or audio to a browser.
 

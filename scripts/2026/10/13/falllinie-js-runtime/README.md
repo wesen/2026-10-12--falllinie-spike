@@ -19,7 +19,7 @@ Prerequisites already available during research: GCC/G++13.3, Node24.18, CMake3.
 ## Files and evidence
 
 - `00-download-pins.sh`: checks Bellard 2026-06-04 and Duktape2.7 tar hashes; checks ng v0.17.0 and wrapper commits. Exact pins and attribution are in guide/diary and `licenses/`.
-- `01-fetch-sources.py`: known official/upstream URLs only, per-fetch timestamp/resolved URL/hash; raw downloads ignored. Writes docmgr source captures and receipt. Optional arguments select capture names. Current 19-timeout URL remains a documented404. No Kagi success claimed.
+- `01-fetch-sources.py`: known official/upstream URLs only, per-fetch timestamp/resolved URL/hash; raw downloads ignored. Writes docmgr source captures and receipt. Optional arguments select capture names. The ng README URL uses uppercase README.md. The retained-capture index uses its original successful timestamp/hash; the later lowercase404 attempt remains in fetch-receipt-lowercase-retry.json. Current 19-timeout URL remains a documented404. 07-reconcile-capture-receipt.cjs reproduces this historical reconciliation without a new fetch. No Kagi success claimed.
 - `02-extract-source.cjs`: unchanged frozen math/world/scoring/terrainRow bodies, no DOM; wrappers are explicit. Writes ignored `pure.js`, `inline.js`, oracle and source hash.
 - `host.cpp` and `probe.js`: C++17 C API embedding for both pinned interpreters. Full-inline syntax, source/native oracle, typed row snapshot copy/offset/lease, wrong-width/nonfinite/oversize, exceptions, GC/cyclic workload, memory limit and deadline probes. No quickjs-libc capabilities.
 - `native-oracle.cpp`, `native-bench.cpp`: selected original-vs-native values and comparative flat row work. Reuses actual native source, never modifies it.

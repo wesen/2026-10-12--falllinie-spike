@@ -2,16 +2,21 @@
 Title: JavaScript embedding research for the native Falllinie engine
 Ticket: FALLLINIE-JS-001
 Status: active
-Topics: [research]
+Topics:
+    - research
 DocType: index
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://scripts/2026/10/13/falllinie-js-runtime/README.md
+      Note: Reproducible commands and bounded evidence
+    - Path: repo://scripts/2026/10/13/falllinie-js-runtime/evidence/pins.json
+      Note: Pinned engine archives and hashes
 ExternalSources: []
-Summary: "Completed research and isolated probes; optional rules embedding recommendation, no production integration or device acceptance."
+Summary: Completed research and isolated probes; optional rules embedding recommendation, no production integration or device acceptance.
 LastUpdated: 2026-10-13T14:35:00Z
-WhatFor: "Find the engine-specific runtime tradeoffs, design, sources and reproducible evidence."
-WhenToUse: "Review JS authoring feasibility before approving a production implementation phase."
+WhatFor: Find the engine-specific runtime tradeoffs, design, sources and reproducible evidence.
+WhenToUse: Review JS authoring feasibility before approving a production implementation phase.
 ---
 
 # Falllinie JavaScript embedding research
@@ -23,8 +28,12 @@ Research complete; implementation/device decisions remain parent-owned. Native t
 - [Research and integration guide](design-doc/01-javascript-runtime-research-and-integration-design.md): actual browser/native gaps, runtime comparison, experiments and proposed ownership/API/clock/audio/terrain/reload contracts with phased implementation plan.
 - [Chronological investigation diary](reference/01-investigation-diary.md): exact authored request, reported Kagi failure, direct-fetch404s, ng API compile failure, corrected Duktape expectation, wrapper failures and validation.
 - [Tasks](tasks.md) and [changelog](changelog.md): completed research versus approval-gated follow-ups.
-- `sources/`: 24 official/upstream Markdown captures with metadata and per-fetch timestamps/hashes; `fetch-receipt.json` includes one supplemental404, `initial-fetch-failures.json` preserves three corrected404s. Long Duktape manual extraction is explicitly abbreviated.
-- Repo experiment root `scripts/2026/10/13/falllinie-js-runtime/`: README, pinned downloads, extraction, host/native/Duktape/wrapper probes, cross-link script, MIT notices and bounded `evidence/`.
+- `sources/`: 24 official/upstream Markdown captures with metadata and per-fetch timestamps/hashes; `fetch-receipt.json` indexes retained captures using their actual successful timestamps/hashes and includes one supplemental404. `initial-fetch-failures.json` preserves the initial attempts; `fetch-receipt-lowercase-retry.json` preserves the later two-failure retry (including the mistaken lowercase ng README request). No successful fetch is fabricated. Long Duktape manual extraction is explicitly abbreviated.
+- [Experiment README](../../../../../scripts/2026/10/13/falllinie-js-runtime/README.md): pinned downloads, extraction, host/native/Duktape/wrapper probes, cross-link commands and evidence.
+- [Ticket script index](scripts/01-research-script-index.md): navigable experiment/evidence paths without duplicating tooling.
+- [Pin manifest](../../../../../scripts/2026/10/13/falllinie-js-runtime/evidence/pins.json) and [cross-link receipt](../../../../../scripts/2026/10/13/falllinie-js-runtime/evidence/cross-link.txt).
+
+**Current parent status after review:** native code has been deployed; combined audio/performance qualification failed and remains ongoing. Earlier unreachable/not-deployed diary entries are historical. No JavaScript device execution has occurred.
 
 ## Recommendation
 

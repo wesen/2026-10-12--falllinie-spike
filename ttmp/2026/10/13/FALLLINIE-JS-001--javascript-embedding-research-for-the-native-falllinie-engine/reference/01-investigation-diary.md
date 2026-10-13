@@ -212,3 +212,46 @@ Start at ticket index/guide and experiment README, compare scripts/evidence, ins
 
 ### Technical details
 Doctor receipt: experiment `evidence/docmgr-doctor.txt`. Existing native CPU receipt: `evidence/native-tests.txt` (6/6). Cross-link receipt: `evidence/cross-link.txt` (AArch64, never executed). Changed paths and final commit/ref/worktree are provided in the runtime handoff artifact. No reMarkable/vault publication was requested or performed.
+
+## Step 5: Parent review corrections without repeating runtime experiments
+
+The independent reviewer supported the actual oracle/probe/benchmark evidence and ownership recommendations, but blocked final research acceptance on stale deployment wording and an inconsistent ng README receipt. The parent corrected those exact findings and added ticket-local navigation to the dated experiment group. No interpreter or production code changed.
+
+### Prompt Context
+**User prompt (verbatim):** See Step 1. The immediate trigger was an automated completed-review notification, not a new authored implementation request.
+**Assistant interpretation:** Correct the research package before acceptance; preserve historical failures and measured-versus-proposed distinctions.
+**Inferred user intent:** A reproducible, source-grounded report rather than a misleading success summary.
+
+### What I did
+- Verified the preserved child worktree was clean at d973e98 before editing. The child's earlier final orchestration abort was not a reason to launch another execution mode.
+- Labelled unreachable/not-deployed context historical and annotated the guide/index with the subsequent failed native device qualification. Original diary observations remain intact.
+- Restored uppercase `README.md` in `01-fetch-sources.py`.
+- Added `07-reconcile-capture-receipt.cjs`: validates the retained ng capture's URL, timestamp and hash against the successful initial receipt; archives the complete later failed retry before rebuilding the central retained-capture index.
+- Added linked experiment README/pin manifest/cross-link receipt and `scripts/01-research-script-index.md` within the ticket.
+
+### Why
+A later failed fetch must not erase the provenance of a retained earlier successful capture. Combining retained-capture records is legitimate only with original successful timestamps/hashes, explicit historical retry preservation and no invented network success. Deployment observations also require an as-of boundary.
+
+### What worked
+`node scripts/2026/10/13/falllinie-js-runtime/07-reconcile-capture-receipt.cjs` validated the retained capture and preserved the failed retry without network access. The central index now has one supplemental failure; the archived later retry still has both failures. Existing runtime measurements were not rerun or altered.
+
+### What didn't work
+The reviewed central receipt contained `HTTP Error 404: Not Found` for lowercase ng `readme.md`, contradicting its retained uppercase successful capture and the one-failure summary. `docmgr doctor --ticket FALLLINIE-JS-001 --stale-after 30` initially reported `missing_numeric_prefix` for newly added `scripts/README.md`; renamed it to `scripts/01-research-script-index.md` and corrected its link. The information-only `no_vocabulary` finding is existing repository configuration, not an experiment failure.
+
+### What I learned
+A source-capture index and a chronological fetch-attempt log have different purposes. Both must remain navigable and cannot be conflated into a fabricated final successful run.
+
+### What was tricky to build
+Reconciliation uses the existing successful receipt, not metadata reconstructed from Markdown or a new fetch. The helper checks all three identity fields before changing the index and preserves the retry bytes. Ticket links must climb five levels from the ticket root and six from its scripts directory.
+
+### What warrants a second pair of eyes
+Confirm both historical failures remain available, capture identity is unchanged, and no statement implies device JS execution or native acceptance. The original review found no underlying experiment/design blockers.
+
+### What should be done in the future
+Only approve optional JS production work through a separate implementation decision; native audio/frame qualification remains unresolved. V8/JSC target performance and hardened adversarial/OOM bridges remain unmeasured future gates.
+
+### Code review instructions
+Inspect the fetch helper URL and reconciliation assertions, central versus archived receipt, guide opening annotation and ticket-relative links. Run the reconciliation helper, `git diff --check` and ticket doctor. Do not repeat the broad runtime matrix for these documentation-only corrections.
+
+### Technical details
+Parent native DSP/overlay code at eb6c1a5 independently passed review for further qualification, not release. A subsequent 55-second native 48kHz/1024-frame muted overlay run still recorded 3/2574 callback budget misses, maximum39.8702ms versus21.3333ms budget and about50FPS. These are callback wall-budget observations, not driver XRUN counts. No JS binary was run on the handheld.

@@ -28,10 +28,12 @@
   },
   {
     "name": "04-ng-readme",
-    "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/v0.17.0/readme.md",
-    "timestamp": "2026-10-13T14:14:08.497220+00:00",
-    "status": "failed",
-    "error": "HTTP Error 404: Not Found"
+    "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/v0.17.0/README.md",
+    "final": "https://raw.githubusercontent.com/quickjs-ng/quickjs/v0.17.0/README.md",
+    "timestamp": "2026-10-13T14:12:18.345744+00:00",
+    "sha256": "fe2760de5a67464245431d4916c9ad190a29ecc041e0f6c28bcce5d0d6fbfc3b",
+    "bytes": 837,
+    "status": "ok"
   },
   {
     "name": "05-ng-api",

@@ -8,7 +8,7 @@ URLS={
  '01-bellard-home':'https://bellard.org/quickjs/',
  '02-bellard-manual':'https://bellard.org/quickjs/quickjs.html',
  '03-bellard-changelog':'https://bellard.org/quickjs/Changelog',
- '04-ng-readme':'https://raw.githubusercontent.com/quickjs-ng/quickjs/v0.17.0/readme.md',
+ '04-ng-readme':'https://raw.githubusercontent.com/quickjs-ng/quickjs/v0.17.0/README.md',
  '05-ng-api':'https://raw.githubusercontent.com/quickjs-ng/quickjs/v0.17.0/quickjs.h',
  '06-ng-build':'https://raw.githubusercontent.com/quickjs-ng/quickjs/v0.17.0/CMakeLists.txt',
  '07-duktape-home':'https://duktape.org/',

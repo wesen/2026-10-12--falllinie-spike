@@ -118,3 +118,52 @@ git diff --check
 - Source BPM 86, S16 `60/86/4`, section length 128 steps. Fixed numeric queue 256, voice capacity 128, pending pumps 64, trace 4096; overflow exposed via diagnostics. No callback dynamic allocation, strings, locks, I/O or video calls.
 - Owned branch/ref: `pi-subagents/source-audio-29dd4e5-e6b1-s0-t0`; worktree `/home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-29dd4e59-3882-4bfc-8c59-091e36911ff6-s0-0`.
 - Code commit `d03b756ee353123d6baf822fd7003910df9fb462` contains ten scoped files, 965 insertions. This subsequent diary checkpoint records that revision; shared index/task bookkeeping intentionally remains parent-owned.
+
+## Step 2: Correct Rhodes detune ordering during final source review
+
+Final self-review found a small but real signal-order discrepancy: WebAudio applies detune to the complete frequency AudioParam, including incoming FM. The first native version detuned the base frequency and then added the modulation unchanged. I corrected both carriers to `(base + modulation) * detune_ratio`, preserving negative instantaneous frequency and the original ±6-cent/LFO detune.
+
+The same narrow CPU, sanitizer and optional-render checks pass again. Final evidence logs/README were refreshed; Step 1's recorded values remain historical rather than being rewritten. No integration or physical acceptance was added.
+
+### Prompt Context
+- User prompt: see parent diary Step 4 and audio diary Step 1; no new authored request.
+- Assistant interpretation: complete source self-review and correct the local numerical routing error before handoff.
+- Inferred user intent: recognizable original FM timbre, not an undocumented frequency-parameter ordering change.
+- Commit (code): `bcd77043223b9ea181f521f0b6cf08a0f74b588a` — `Apply Rhodes detune to the full signed FM frequency`.
+
+### What I did
+- Corrected Rhodes carrier frequency composition in `voice_sample`.
+- Added a direct negative-frequency sine phase check, protecting the source FM requirement.
+- Re-ran the identical three narrow commands from Step 1 and refreshed their bounded logs.
+- Updated audio-evidence/README.md with the final render measurements and hash.
+
+### Why
+- Detune and frequency modulation do not commute when modulation depth changes with time. The source frequency AudioParam must be combined before cents scaling.
+
+### What worked
+- CPU / ASan / UBSan: PASS, 20 sections / 2,434 steps, peak 40 voices, output peak 0.664208, zero watched render allocations; other source/IR/reactivity/budget checks unchanged.
+- Final 120s render: peak 0.746482, RMS 0.132355; host 512-frame mean 0.747223ms, p95 1.25212ms, max 2.26112ms against 10.6667ms nominal interval.
+- Normal-render diagnostics unchanged: 689 steps, 6 sections, peak 42 voices, queue high water 2, all sixteen instrument/SFX families, no command/note drops/steals/nonfinite.
+- Final WAV SHA256: `aabb21cf8f6fbd2cb1862ce029f6ae548da8f83e79585fef8d3041eec56cc253`, still 23,040,044 bytes, outside the commit.
+
+### What didn't work
+- Self-review identified the first carrier composition as a source-routing error; this was not a compile/test/runtime failure. No new failed command.
+
+### What I learned
+- Preserve WebAudio's computed-frequency ordering, not merely its isolated frequency/detune constants.
+
+### What was tricky to build
+- The final carrier must allow negative full FM frequency after cents scaling; ordinary positive-only oscillator clamping is not valid for the original depth.
+
+### What warrants a second pair of eyes
+- Verify the corrected frequency composition directly against Music.rhodes; physical sound and target callback headroom remain unconfirmed.
+
+### What should be done in the future
+- Same parent-owned integration/profiling/human listening gate as Step 1. All documented compressor, oscillator, latency and oversampling differences remain explicit.
+
+### Code review instructions
+- Review `src/audio.cpp` Rhodes branch and the signed oscillator check in `tests/test_audio.cpp`; use the three Step 1 reproduction commands and final logs.
+
+### Technical details
+- Only six existing lane-owned files changed in this code checkpoint; no shared/main/build/device scope expansion.
+- Final source code checkpoint is bcd7704 on the same managed branch; the diary is recorded separately after that code hash becomes available.

@@ -1,0 +1,35 @@
+Could not open module param file '/sys/module/bifrost_kbase/parameters/large_page_conf'
+arm_release_ver: g29p1-12eac0, rk_so_ver: 5
+GL_VERSION=OpenGL ES 3.2 v1.g29p1-12eac0.d6e9c0f8499d70cc285f3f0ca2ede780
+GL_RENDERER=Mali-G52
+GL_VENDOR=ARM
+GLSL=OpenGL ES GLSL ES 3.20
+joystick=retrogame_joypad
+program original scene linked
+depth sampler=explicit highp portability override
+program original print linked
+program presentation diagnostic linked
+glyph atlas loaded
+terrain vertices=44619 indices=263304 build_ms=52.6617 targets=512x384 FBOs complete
+placement=[
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  }
+]
+
+frames=357 measured=297 frame_p50_ms=16.6208 frame_p95_ms=17.9987 frame_p99_ms=18.5574 peak_rss_kib=60044 GL_error=0

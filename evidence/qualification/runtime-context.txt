@@ -1,0 +1,5 @@
+aarch64
+53594 emulationstation --log-path /var/log --no-splash
+137838 sh -c uname -m; pgrep -af "ds-demo-game/main.py|retroarch|emulationstation" || true; for f in /sys/class/thermal/thermal_zone*/temp; do printf "%s " "$f"; cat "$f"; done
+/sys/class/thermal/thermal_zone0/temp 36666
+/sys/class/thermal/thermal_zone1/temp 37222

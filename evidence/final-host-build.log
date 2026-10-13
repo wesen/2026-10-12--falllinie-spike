@@ -1,0 +1,6 @@
+[ 28%] Built target terrain
+[ 57%] Built target test-terrain
+[ 85%] Building CXX object CMakeFiles/falllinie-spike.dir/src/main.cpp.o
+[ 85%] Building CXX object CMakeFiles/falllinie-spike.dir/src/renderer.cpp.o
+[100%] Linking CXX executable falllinie-spike
+[100%] Built target falllinie-spike

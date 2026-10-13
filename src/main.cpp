@@ -63,7 +63,8 @@ int main(int argc,char** argv){
   pad=SDL_NumJoysticks()>0?SDL_JoystickOpen(0):nullptr;
   std::cout<<"joystick="<<(pad?SDL_JoystickName(pad):"none")<<'\n';
   fl::Renderer renderer;renderer.initialize(c.seed,c.cell,c.cells,c.width,c.height,c.assets,!c.source_sampler_precision);
-  std::vector<double> times,swaps;size_t start_rss=rss_kib(),peak_rss=start_rss;
+  std::vector<double> times,swaps;
+  std::vector<std::pair<int,size_t>> rss_samples;size_t start_rss=rss_kib(),peak_rss=start_rss;
   auto start=std::chrono::steady_clock::now();int frames=0,drawable_w=0,drawable_h=0;bool quit=false;
   while(!quit){auto frame_start=std::chrono::steady_clock::now();SDL_Event e;
    while(SDL_PollEvent(&e)){
@@ -73,12 +74,14 @@ int main(int argc,char** argv){
    }
    if(pad && SDL_JoystickGetButton(pad,8) && SDL_JoystickGetButton(pad,9))quit=true;
    SDL_GL_GetDrawableSize(window,&drawable_w,&drawable_h);
-   if(c.resize_check && frames==60)renderer.resize(std::min(2048,c.width*2),std::min(1536,c.height*2));
-   if(c.resize_check && frames==120)renderer.resize(c.width,c.height);
+   if(c.resize_check && frames>0 && frames%60==0){
+    const bool large=(frames/60)%2==1;
+    renderer.resize(large?std::min(2048,c.width*2):c.width,large?std::min(1536,c.height*2):c.height);
+   }
    renderer.render(drawable_w,drawable_h,c.debug,c.palette);
    auto swap_start=std::chrono::steady_clock::now();SDL_GL_SwapWindow(window);auto end=std::chrono::steady_clock::now();++frames;
    if(frames>60){times.push_back(std::chrono::duration<double,std::milli>(end-frame_start).count());swaps.push_back(std::chrono::duration<double,std::milli>(end-swap_start).count());}
-   if(frames%60==0)peak_rss=std::max(peak_rss,rss_kib());
+   if(frames%60==0){size_t rss=rss_kib();peak_rss=std::max(peak_rss,rss);rss_samples.emplace_back(frames,rss);}
    if(c.place && frames==1){placement=std::thread([&stop,&placed]{
     for(int i=0;i<60 && !stop;++i){if(ipc("-t get_tree").find("falllinie:spike")!=std::string::npos){auto reply=ipc("'[title=\"^falllinie:spike$\"] fullscreen disable, floating enable, border none, move to output DSI-2, fullscreen enable, focus'");
       placed=reply.find("false")==std::string::npos && reply.find("\"success\": true")!=std::string::npos;std::cout<<"placement="<<reply<<std::endl;return;}
@@ -94,7 +97,10 @@ int main(int argc,char** argv){
   std::cout<<"frames="<<frames<<" measured="<<times.size()<<" frame_p50_ms="<<percentile(times,.5)<<" frame_p95_ms="<<p95<<" frame_p99_ms="<<percentile(times,.99)<<" peak_rss_kib="<<peak_rss<<" GL_error="<<glGetError()<<std::endl;
   if(!c.receipt.empty()){
    std::ofstream out(c.receipt);if(!out)throw std::runtime_error("cannot write receipt");
-   out<<std::setprecision(10)<<"{\n\"source_sha256\":\"cb9b4befd0252859d9c45246f94fbd7dd1662c6d034c6ccb95fbe16947e8b556\",\n\"seed\":"<<c.seed<<",\"cell\":"<<c.cell<<",\"cells\":"<<c.cells<<",\n\"context\":{\"version\":"<<std::quoted(version)<<",\"vendor\":"<<std::quoted(vendor)<<",\"renderer\":"<<std::quoted(gpu)<<"},\n\"render_size\":["<<c.width<<','<<c.height<<"],\"drawable_size\":["<<drawable_w<<','<<drawable_h<<"],\"placement_ok\":"<<(placed?"true":"false")<<",\n\"debug_view\":"<<c.debug<<",\"palette\":"<<c.palette<<",\"depth_sampler_highp\":"<<(!c.source_sampler_precision?"true":"false")<<",\"resize_check\":"<<(c.resize_check?"true":"false")<<",\n\"camera_eye\":["<<camera.eye.x<<','<<camera.eye.y<<','<<camera.eye.z<<"],\"camera_look\":["<<camera.look.x<<','<<camera.look.y<<','<<camera.look.z<<"],\n\"vertices\":"<<renderer.vertex_count()<<",\"indices\":"<<renderer.index_count()<<",\"terrain_build_ms\":"<<renderer.build_ms()<<",\n\"frames\":"<<frames<<",\"warmup_frames\":60,\"measured_frames\":"<<times.size()<<",\n\"frame_ms\":{\"p50\":"<<percentile(times,.5)<<",\"p95\":"<<p95<<",\"p99\":"<<percentile(times,.99)<<"},\n\"swap_p95_ms\":"<<percentile(swaps,.95)<<",\"rss_kib\":{\"start\":"<<start_rss<<",\"peak\":"<<peak_rss<<",\"end\":"<<rss_kib()<<"},\n\"timing_scope\":\"CPU submission plus swap; not GPU timer\",\"timing_target_met\":"<<(!times.empty() && p95<=33.3?"true":"false")<<"\n}\n";
+   out<<std::setprecision(10)<<"{\n\"source_sha256\":\"cb9b4befd0252859d9c45246f94fbd7dd1662c6d034c6ccb95fbe16947e8b556\",\n\"seed\":"<<c.seed<<",\"cell\":"<<c.cell<<",\"cells\":"<<c.cells<<",\n\"context\":{\"version\":"<<std::quoted(version)<<",\"vendor\":"<<std::quoted(vendor)<<",\"renderer\":"<<std::quoted(gpu)<<"},\n\"render_size\":["<<renderer.width()<<','<<renderer.height()<<"],\"drawable_size\":["<<drawable_w<<','<<drawable_h<<"],\"placement_ok\":"<<(placed?"true":"false")<<",\n\"debug_view\":"<<c.debug<<",\"palette\":"<<c.palette<<",\"depth_sampler_highp\":"<<(!c.source_sampler_precision?"true":"false")<<",\"resize_check\":"<<(c.resize_check?"true":"false")<<",\n\"camera_eye\":["<<camera.eye.x<<','<<camera.eye.y<<','<<camera.eye.z<<"],\"camera_look\":["<<camera.look.x<<','<<camera.look.y<<','<<camera.look.z<<"],\n\"vertices\":"<<renderer.vertex_count()<<",\"indices\":"<<renderer.index_count()<<",\"terrain_build_ms\":"<<renderer.build_ms()<<",\n\"frames\":"<<frames<<",\"warmup_frames\":60,\"measured_frames\":"<<times.size()<<",\n\"frame_ms\":{\"p50\":"<<percentile(times,.5)<<",\"p95\":"<<p95<<",\"p99\":"<<percentile(times,.99)<<"},\n\"swap_p95_ms\":"<<percentile(swaps,.95)<<",\"rss_kib\":{\"start\":"<<start_rss<<",\"peak\":"<<peak_rss<<",\"end\":"<<rss_kib()<<"},\n\"timing_scope\":\"CPU submission plus swap; not GPU timer\",\"timing_target_met\":"<<(!times.empty() && p95<=33.3?"true":"false")<<",\n\"rss_samples\":[";
+   // Keep periodic RSS separate from post-readback allocation in the receipt.
+   for(size_t i=0;i<rss_samples.size();++i){if(i)out<<',';out<<'['<<rss_samples[i].first<<','<<rss_samples[i].second<<']';}
+   out<<"],\"gl_error\":0\n}\n";
   }
  }catch(const std::exception& e){std::cerr<<"fatal: "<<e.what()<<'\n';result=1;}
  stop=true;if(placement.joinable())placement.join();if(pad)SDL_JoystickClose(pad);if(context)SDL_GL_DeleteContext(context);if(window)SDL_DestroyWindow(window);SDL_Quit();return result;

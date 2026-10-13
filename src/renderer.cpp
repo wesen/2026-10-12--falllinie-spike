@@ -49,7 +49,7 @@ void Renderer::initialize(uint32_t seed,int first_cell,int count,int w,int h,con
  post_=program(read_file(assets+"/post_vs.glsl"),print_source,"original print");
  const std::string copy_fs=R"(#version 300 es
 precision highp float;
-uniform sampler2D uC,uD; uniform vec2 uOutputRes; uniform int uMode; out vec4 o;
+uniform sampler2D uC; uniform highp sampler2D uD; uniform vec2 uOutputRes; uniform int uMode; out vec4 o;
 void main(){vec2 uv=gl_FragCoord.xy/uOutputRes;vec4 c=texture(uC,uv);float x=0.;
 if(uMode==0){o=vec4(c.rgb,1.);return;}
 if(uMode==1)x=c.r;else if(uMode==2)x=c.g;else if(uMode==3)x=c.b*255./32.;else if(uMode==4)x=c.a;
@@ -124,7 +124,13 @@ void Renderer::capture(const std::string& path){
  int status=SDL_SaveBMP(s,filename.c_str());SDL_FreeSurface(s);glBindFramebuffer(GL_FRAMEBUFFER,0);if(status!=0)throw std::runtime_error(SDL_GetError());
  };
  save(print_fbo_,path);
- save(scene_fbo_,std::filesystem::path(path).parent_path().string()+"/scene.bmp");
+ const auto parent=std::filesystem::path(path).parent_path().string();
+ save(scene_fbo_,parent+"/scene.bmp");
+ glBindFramebuffer(GL_FRAMEBUFFER,print_fbo_);glViewport(0,0,width_,height_);glUseProgram(copy_);glDisable(GL_DEPTH_TEST);
+ glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,color_);integer(copy_,"uC",0);
+ glActiveTexture(GL_TEXTURE1);glBindTexture(GL_TEXTURE_2D,depth_);integer(copy_,"uD",1);
+ integer(copy_,"uMode",5);glUniform2f(loc(copy_,"uOutputRes"),width_,height_);glBindVertexArray(fullscreen_vao_);glDrawArrays(GL_TRIANGLES,0,3);gl_check("depth diagnostic");
+ save(print_fbo_,parent+"/depth.bmp");
 }
 Renderer::~Renderer(){
  delete_targets();if(glyph_)glDeleteTextures(1,&glyph_);if(vbo_)glDeleteBuffers(1,&vbo_);if(ibo_)glDeleteBuffers(1,&ibo_);if(vao_)glDeleteVertexArrays(1,&vao_);if(fullscreen_vao_)glDeleteVertexArrays(1,&fullscreen_vao_);

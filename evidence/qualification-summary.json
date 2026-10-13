@@ -1,0 +1,419 @@
+{
+  "scope": "Native fixed-patch graphics qualification only; CPU submission plus swap, not GPU time",
+  "timing_target_ms": 33.3,
+  "cases": [
+    {
+      "name": "baseline-1024",
+      "size": [
+        1024,
+        768
+      ],
+      "cells": 3,
+      "p95_ms": 29.165624,
+      "p99_ms": 29.972979,
+      "build_ms": 57.582561,
+      "peak_rss_kib": 62412,
+      "end_rss_kib": 72984,
+      "frames": 439,
+      "timing_target_met": true,
+      "gl_error": 0,
+      "depth_sampler_highp": true,
+      "rss_samples": [
+        [
+          60,
+          62292
+        ],
+        [
+          120,
+          62400
+        ],
+        [
+          180,
+          62400
+        ],
+        [
+          240,
+          62408
+        ],
+        [
+          300,
+          62408
+        ],
+        [
+          360,
+          62412
+        ],
+        [
+          420,
+          62412
+        ]
+      ]
+    },
+    {
+      "name": "baseline-512",
+      "size": [
+        512,
+        384
+      ],
+      "cells": 3,
+      "p95_ms": 18.076494,
+      "p99_ms": 18.646106,
+      "build_ms": 63.870156,
+      "peak_rss_kib": 59720,
+      "end_rss_kib": 62796,
+      "frames": 713,
+      "timing_target_met": true,
+      "gl_error": 0,
+      "depth_sampler_highp": true,
+      "rss_samples": [
+        [
+          60,
+          57828
+        ],
+        [
+          120,
+          57828
+        ],
+        [
+          180,
+          57828
+        ],
+        [
+          240,
+          57828
+        ],
+        [
+          300,
+          57828
+        ],
+        [
+          360,
+          57828
+        ],
+        [
+          420,
+          57828
+        ],
+        [
+          480,
+          57828
+        ],
+        [
+          540,
+          57828
+        ],
+        [
+          600,
+          57828
+        ],
+        [
+          660,
+          59720
+        ]
+      ]
+    },
+    {
+      "name": "legacy-depth",
+      "size": [
+        512,
+        384
+      ],
+      "cells": 3,
+      "p95_ms": 17.904115,
+      "p99_ms": 18.675844,
+      "build_ms": 66.32968,
+      "peak_rss_kib": 60896,
+      "end_rss_kib": 64628,
+      "frames": 356,
+      "timing_target_met": true,
+      "gl_error": 0,
+      "depth_sampler_highp": false,
+      "rss_samples": [
+        [
+          60,
+          58848
+        ],
+        [
+          120,
+          60896
+        ],
+        [
+          180,
+          60896
+        ],
+        [
+          240,
+          60896
+        ],
+        [
+          300,
+          60896
+        ]
+      ]
+    },
+    {
+      "name": "marker-250",
+      "size": [
+        512,
+        384
+      ],
+      "cells": 3,
+      "p95_ms": 18.133364,
+      "p99_ms": 18.605102,
+      "build_ms": 68.573438,
+      "peak_rss_kib": 60444,
+      "end_rss_kib": 64176,
+      "frames": 595,
+      "timing_target_met": true,
+      "gl_error": 0,
+      "depth_sampler_highp": true,
+      "rss_samples": [
+        [
+          60,
+          60444
+        ],
+        [
+          120,
+          60444
+        ],
+        [
+          180,
+          60444
+        ],
+        [
+          240,
+          60444
+        ],
+        [
+          300,
+          60444
+        ],
+        [
+          360,
+          60444
+        ],
+        [
+          420,
+          60444
+        ],
+        [
+          480,
+          60444
+        ],
+        [
+          540,
+          60444
+        ]
+      ]
+    },
+    {
+      "name": "negative-cell",
+      "size": [
+        512,
+        384
+      ],
+      "cells": 3,
+      "p95_ms": 17.9987,
+      "p99_ms": 18.557436,
+      "build_ms": 52.661678,
+      "peak_rss_kib": 60044,
+      "end_rss_kib": 63780,
+      "frames": 357,
+      "timing_target_met": true,
+      "gl_error": 0,
+      "depth_sampler_highp": true,
+      "rss_samples": [
+        [
+          60,
+          60044
+        ],
+        [
+          120,
+          60044
+        ],
+        [
+          180,
+          60044
+        ],
+        [
+          240,
+          60044
+        ],
+        [
+          300,
+          60044
+        ]
+      ]
+    },
+    {
+      "name": "resize-stress",
+      "size": [
+        512,
+        384
+      ],
+      "cells": 3,
+      "p95_ms": 28.750624,
+      "p99_ms": 29.751974,
+      "build_ms": 55.984542,
+      "peak_rss_kib": 70508,
+      "end_rss_kib": 73728,
+      "frames": 721,
+      "timing_target_met": true,
+      "gl_error": 0,
+      "depth_sampler_highp": true,
+      "rss_samples": [
+        [
+          60,
+          60244
+        ],
+        [
+          120,
+          70436
+        ],
+        [
+          180,
+          69996
+        ],
+        [
+          240,
+          70508
+        ],
+        [
+          300,
+          69996
+        ],
+        [
+          360,
+          70508
+        ],
+        [
+          420,
+          69996
+        ],
+        [
+          480,
+          70508
+        ],
+        [
+          540,
+          69996
+        ],
+        [
+          600,
+          70508
+        ],
+        [
+          660,
+          69996
+        ],
+        [
+          720,
+          70508
+        ]
+      ]
+    },
+    {
+      "name": "seven-cells",
+      "size": [
+        512,
+        384
+      ],
+      "cells": 7,
+      "p95_ms": 17.842537,
+      "p99_ms": 18.513685,
+      "build_ms": 151.50261,
+      "peak_rss_kib": 72300,
+      "end_rss_kib": 73988,
+      "frames": 718,
+      "timing_target_met": true,
+      "gl_error": 0,
+      "depth_sampler_highp": true,
+      "rss_samples": [
+        [
+          60,
+          72300
+        ],
+        [
+          120,
+          72300
+        ],
+        [
+          180,
+          72300
+        ],
+        [
+          240,
+          72300
+        ],
+        [
+          300,
+          72300
+        ],
+        [
+          360,
+          72300
+        ],
+        [
+          420,
+          72300
+        ],
+        [
+          480,
+          72300
+        ],
+        [
+          540,
+          72300
+        ],
+        [
+          600,
+          72300
+        ],
+        [
+          660,
+          72300
+        ]
+      ]
+    },
+    {
+      "name": "signal-palette",
+      "size": [
+        512,
+        384
+      ],
+      "cells": 3,
+      "p95_ms": 18.255856,
+      "p99_ms": 18.854924,
+      "build_ms": 64.46219,
+      "peak_rss_kib": 60580,
+      "end_rss_kib": 64316,
+      "frames": 356,
+      "timing_target_met": true,
+      "gl_error": 0,
+      "depth_sampler_highp": true,
+      "rss_samples": [
+        [
+          60,
+          60580
+        ],
+        [
+          120,
+          60580
+        ],
+        [
+          180,
+          60580
+        ],
+        [
+          240,
+          60580
+        ],
+        [
+          300,
+          60580
+        ]
+      ]
+    }
+  ],
+  "all_normal_cases_within_timing_target": true
+}

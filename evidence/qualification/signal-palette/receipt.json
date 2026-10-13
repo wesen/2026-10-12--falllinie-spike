@@ -1,0 +1,14 @@
+{
+"source_sha256":"cb9b4befd0252859d9c45246f94fbd7dd1662c6d034c6ccb95fbe16947e8b556",
+"seed":42,"cell":2,"cells":3,
+"context":{"version":"OpenGL ES 3.2 v1.g29p1-12eac0.d6e9c0f8499d70cc285f3f0ca2ede780","vendor":"ARM","renderer":"Mali-G52"},
+"render_size":[512,384],"drawable_size":[1024,768],"placement_ok":true,
+"debug_view":0,"palette":1,"depth_sampler_highp":true,"resize_check":false,
+"camera_eye":[13.92589724,-60.0528397,220],"camera_look":[15.48158668,-74.12688337,258],
+"vertices":44619,"indices":263304,"terrain_build_ms":64.46219,
+"frames":356,"warmup_frames":60,"measured_frames":296,
+"frame_ms":{"p50":16.571483,"p95":18.255856,"p99":18.854924},
+"swap_p95_ms":17.110594,"rss_kib":{"start":46664,"peak":60580,"end":64316},
+"timing_scope":"CPU submission plus swap; not GPU timer","timing_target_met":true,
+"rss_samples":[[60,60580],[120,60580],[180,60580],[240,60580],[300,60580]],"gl_error":0
+}

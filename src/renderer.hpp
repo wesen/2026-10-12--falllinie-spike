@@ -16,6 +16,8 @@ public:
  size_t vertex_count()const{return vertices_;}
  size_t index_count()const{return indices_;}
  double build_ms()const{return build_ms_;}
+ int width()const{return width_;}
+ int height()const{return height_;}
  const Camera& camera()const{return camera_;}
 private:
  GLuint scene_=0,post_=0,copy_=0,vao_=0,vbo_=0,ibo_=0,fullscreen_vao_=0;

@@ -1,0 +1,58 @@
+Could not open module param file '/sys/module/bifrost_kbase/parameters/large_page_conf'
+arm_release_ver: g29p1-12eac0, rk_so_ver: 5
+GL_VERSION=OpenGL ES 3.2 v1.g29p1-12eac0.d6e9c0f8499d70cc285f3f0ca2ede780
+GL_RENDERER=Mali-G52
+GL_VENDOR=ARM
+GLSL=OpenGL ES GLSL ES 3.20
+joystick=retrogame_joypad
+program original scene linked
+depth sampler=explicit highp portability override
+program original print linked
+program presentation diagnostic linked
+glyph atlas loaded
+terrain vertices=44619 indices=263304 build_ms=55.8753 targets=512x384 FBOs complete
+PLAY: stick/dpad steer, UP tuck, DOWN brake, hold/release A or SPACE to jump; START/R restart; SELECT+START exits
+terrain patch -1..2
+ride z=4 speed=6 airborne=0 charge=0
+placement=[
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  }
+]
+
+ride z=12.1182 speed=9.58093 airborne=0 charge=0
+ride z=22.1727 speed=12.4953 airborne=0 charge=0.185185
+ride z=32.0922 speed=15.0497 airborne=1 charge=0
+ride z=42.7874 speed=15.3504 airborne=0 charge=0
+ride z=40.8721 speed=7.20893 airborne=0 charge=0
+ride z=37.233 speed=4.20285 airborne=0 charge=0
+ride z=35.6402 speed=2.51908 airborne=0 charge=0.185185
+ride z=36.6757 speed=4.14701 airborne=1 charge=0
+ride z=39.8095 speed=7.01097 airborne=0 charge=0
+ride z=47.2739 speed=10.2739 airborne=0 charge=0
+ride z=58.2028 speed=13.1902 airborne=0 charge=0
+ride z=71.2481 speed=15.8636 airborne=0 charge=0.148148
+ride z=88.0901 speed=19.3851 airborne=1 charge=0
+ride z=107.047 speed=21.8578 airborne=0 charge=0
+terrain patch 0..3
+ride z=119.388 speed=8.28396 airborne=0 charge=0
+ride z=127.526 speed=11.2296 airborne=0 charge=0
+ride z=134.744 speed=12.7792 airborne=0 charge=0.333333
+ride z=143.253 speed=14.8916 airborne=1 charge=0
+ride z=154.327 speed=15.8154 airborne=0 charge=0
+frames=1187 measured=1127 frame_p50_ms=16.6364 frame_p95_ms=18.1288 frame_p99_ms=18.9653 peak_rss_kib=67204 GL_error=0

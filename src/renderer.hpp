@@ -1,5 +1,6 @@
 #pragma once
 #include "terrain.hpp"
+#include "game.hpp"
 #include <GLES3/gl3.h>
 #include <string>
 namespace fl {
@@ -11,6 +12,7 @@ public:
  Renderer(const Renderer&)=delete;Renderer& operator=(const Renderer&)=delete;
  void initialize(uint32_t seed,int first_cell,int cell_count,int width,int height,const std::string& assets,bool precise_depth=true);
  void resize(int width,int height);
+ void update_player(Game& game,double dt);
  void render(int drawable_width,int drawable_height,int debug_view=0,int palette=0);
  void capture(const std::string& path);
  size_t vertex_count()const{return vertices_;}
@@ -21,6 +23,15 @@ public:
  const Camera& camera()const{return camera_;}
 private:
  GLuint scene_=0,post_=0,copy_=0,vao_=0,vbo_=0,ibo_=0,fullscreen_vao_=0;
+ GLuint rider_vao_=0,rider_vbo_=0,rider_ibo_=0;
+ GLsizei rider_indices_=0;
+ std::array<std::vector<Vertex>,3> rider_poses_;
+ std::vector<uint32_t> rider_triangles_;
+ std::vector<std::array<uint32_t,3>> rider_groups_;
+ Vec3 camera_direction_{0,0,1},camera_velocity_{},look_velocity_{};
+ bool following_=false;
+ double fov_=62,game_time_=0;
+ int patch_first_=0,patch_count_=3;
  GLuint scene_fbo_=0,print_fbo_=0,color_=0,depth_=0,printed_=0,glyph_=0;
  int width_=0,height_=0;size_t vertices_=0,indices_=0;double build_ms_=0;
  Camera camera_{};

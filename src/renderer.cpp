@@ -58,6 +58,7 @@ o=vec4(vec3(x),1.);})";
  copy_=program(read_file(assets+"/post_vs.glsl"),copy_fs,"presentation diagnostic");
  for(auto name:{"uVP","uM","uKind"})if(loc(scene_,name)<0)throw std::runtime_error(std::string("missing scene uniform ")+name);
  for(auto name:{"uC","uD","uRes"})if(loc(post_,name)<0)throw std::runtime_error(std::string("missing print uniform ")+name);
+ patch_first_=first_cell;patch_count_=count;
  Terrain terrain(seed);CpuMesh mesh;const auto started=std::chrono::steady_clock::now();
  for(int cell=first_cell;cell<first_cell+count;++cell){auto part=build_terrain(terrain,cell);uint32_t offset=uint32_t(mesh.vertices.size());mesh.vertices.insert(mesh.vertices.end(),part.vertices.begin(),part.vertices.end());for(uint32_t i:part.indices)mesh.indices.push_back(offset+i);}
  build_ms_=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-started).count();vertices_=mesh.vertices.size();indices_=mesh.indices.size();
@@ -66,7 +67,19 @@ o=vec4(vec3(x),1.);})";
  const int sizes[]={3,3,1,2,2},offsets[]={0,12,24,28,36};
  for(int i=0;i<5;++i){glEnableVertexAttribArray(i);glVertexAttribPointer(i,sizes[i],GL_FLOAT,GL_FALSE,sizeof(Vertex),reinterpret_cast<void*>(intptr_t(offsets[i])));}
  glGenVertexArrays(1,&fullscreen_vao_);
- // Complete transparent digit sampler until the original atlas is supplied.
+ glGenVertexArrays(1,&rider_vao_);glBindVertexArray(rider_vao_);glGenBuffers(1,&rider_vbo_);glBindBuffer(GL_ARRAY_BUFFER,rider_vbo_);glGenBuffers(1,&rider_ibo_);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,rider_ibo_);
+ for(int i=0;i<5;++i){glEnableVertexAttribArray(i);glVertexAttribPointer(i,sizes[i],GL_FLOAT,GL_FALSE,sizeof(Vertex),reinterpret_cast<void*>(intptr_t(offsets[i])));}
+ {
+  std::ifstream file(assets+"/../rider-poses.bin",std::ios::binary);
+  uint32_t header[4]{};file.read(reinterpret_cast<char*>(header),sizeof header);
+  if(!file || header[0]!=3 || header[1]>50000 || header[2]>300000 || header[3]>100)throw std::runtime_error("invalid source rider pose asset");
+  rider_triangles_.resize(header[2]);rider_groups_.resize(header[3]);
+  file.read(reinterpret_cast<char*>(rider_triangles_.data()),header[2]*4);
+  file.read(reinterpret_cast<char*>(rider_groups_.data()),header[3]*12);
+  for(auto& pose:rider_poses_){pose.resize(header[1]);file.read(reinterpret_cast<char*>(pose.data()),header[1]*sizeof(Vertex));}
+  if(!file)throw std::runtime_error("truncated source rider pose asset");
+ }
+ // Complete digit sampler before the original atlas upload.
  glyph_=texture(1,1,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);const unsigned char transparent[4]={0,0,0,0};glTexSubImage2D(GL_TEXTURE_2D,0,0,0,1,1,GL_RGBA,GL_UNSIGNED_BYTE,transparent);
  const std::string atlas=assets+"/../glyphs.bmp";
  if(SDL_Surface* loaded=SDL_LoadBMP(atlas.c_str())){
@@ -101,6 +114,7 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
  const float shadows[]={1000000,1000000,1000000,.26f,1000000,1000001,1000000,0,1000002,1000000,1000000,.17f,1000002,1000001,1000000,0,1000004,1000000,1000000,.2f,1000004,1000001,1000000,0};
  glUniform4fv(loc(scene_,"uSeg"),6,shadows);integer(scene_,"uKind",0);scalar(scene_,"uMat",1);scalar(scene_,"uAlbO",-1);scalar(scene_,"uXray",0);
  glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,glyph_);integer(scene_,"uGlyph",0);glBindVertexArray(vao_);glDrawElements(GL_TRIANGLES,GLsizei(indices_),GL_UNSIGNED_INT,nullptr);
+ if(rider_indices_){integer(scene_,"uKind",1);glBindVertexArray(rider_vao_);for(const auto& group:rider_groups_){scalar(scene_,"uMat",float(group[2]));glDrawElements(GL_TRIANGLES,GLsizei(group[1]),GL_UNSIGNED_INT,reinterpret_cast<void*>(uintptr_t(group[0])*4));}}
  glBindFramebuffer(GL_FRAMEBUFFER,print_fbo_);glViewport(0,0,width_,height_);glDisable(GL_DEPTH_TEST);glUseProgram(post_);
  glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,color_);integer(post_,"uC",0);glActiveTexture(GL_TEXTURE1);glBindTexture(GL_TEXTURE_2D,depth_);integer(post_,"uD",1);
  glUniform2f(loc(post_,"uRes"),width_,height_);matrix(post_,"uIVP",camera_.inverse_vp);vec3(post_,"uCamP",camera_.eye);vec3(post_,"uSunG",norm({.42,.14,1}));
@@ -108,7 +122,7 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
  const Vec3 inks[]={{28/255.0,47/255.0,158/255.0},{18/255.0,18/255.0,18/255.0},{17/255.0,17/255.0,18/255.0}};
  const Vec3 spots[]={{1,77/255.0,141/255.0},{227/255.0,18/255.0,11/255.0},{141/255.0,141/255.0,145/255.0}};
  palette=palette%3;vec3(post_,"uPaper",papers[palette]);vec3(post_,"uInk",inks[palette]);vec3(post_,"uGrey",spots[palette]);
- scalar(post_,"uNear",.1);scalar(post_,"uFar",900);scalar(post_,"uPitch",4.4f*width_/1024);scalar(post_,"uInv",0);scalar(post_,"uTime",0);scalar(post_,"uSpeed",0);scalar(post_,"uFlash",0);scalar(post_,"uEW",1);scalar(post_,"uApx",float((62*3.141592653589793/180)/height_*1.2));glUniform2f(loc(post_,"uFogP"),150,380);
+ scalar(post_,"uNear",.1);scalar(post_,"uFar",900);scalar(post_,"uPitch",4.4f*width_/1024);scalar(post_,"uInv",0);scalar(post_,"uTime",float(game_time_));scalar(post_,"uSpeed",0);scalar(post_,"uFlash",0);scalar(post_,"uEW",1);scalar(post_,"uApx",float((fov_*3.141592653589793/180)/height_*1.2));glUniform2f(loc(post_,"uFogP"),150,380);
  Vec3 sun=camera_.eye+norm({.42,.14,1})*800;double clip[4]{};for(int r=0;r<4;++r)clip[r]=camera_.vp[r]*sun.x+camera_.vp[4+r]*sun.y+camera_.vp[8+r]*sun.z+camera_.vp[12+r];
  if(clip[3]>0)glUniform2f(loc(post_,"uSunPx"),(clip[0]/clip[3]*.5+.5)*width_,(clip[1]/clip[3]*.5+.5)*height_);else glUniform2f(loc(post_,"uSunPx"),-9999,-9999);
  scalar(post_,"uSunR",height_*.085);glBindVertexArray(fullscreen_vao_);glDrawArrays(GL_TRIANGLES,0,3);
@@ -133,6 +147,9 @@ void Renderer::capture(const std::string& path){
  save(print_fbo_,parent+"/depth.bmp");
 }
 Renderer::~Renderer(){
+ if(rider_vao_)glDeleteVertexArrays(1,&rider_vao_);
+ if(rider_vbo_)glDeleteBuffers(1,&rider_vbo_);
+ if(rider_ibo_)glDeleteBuffers(1,&rider_ibo_);
  delete_targets();if(glyph_)glDeleteTextures(1,&glyph_);if(vbo_)glDeleteBuffers(1,&vbo_);if(ibo_)glDeleteBuffers(1,&ibo_);if(vao_)glDeleteVertexArrays(1,&vao_);if(fullscreen_vao_)glDeleteVertexArrays(1,&fullscreen_vao_);
  if(scene_) glDeleteProgram(scene_);
  if(post_) glDeleteProgram(post_);

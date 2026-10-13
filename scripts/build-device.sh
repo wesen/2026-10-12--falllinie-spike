@@ -14,6 +14,7 @@ docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/work" falllinie-spike-toolc
   aarch64-linux-gnu-g++ -std=c++17 -O2 -Wall -Wextra -pthread -I/usr/include/SDL2 -I/usr/include/aarch64-linux-gnu \
     src/*.cpp -o build-device/falllinie-spike \
     -Ltarget-libs -Wl,--allow-shlib-undefined -l:libSDL2-2.0.so.0
+  aarch64-linux-gnu-g++ -std=c++17 -O2 -Wall -Wextra -Isrc tests/test_terrain.cpp src/terrain.cpp -o build-device/test-terrain
   aarch64-linux-gnu-readelf -h -l -d build-device/falllinie-spike > build-device/elf.txt
   aarch64-linux-gnu-g++ --version > build-device/compiler.txt
 '

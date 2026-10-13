@@ -25,7 +25,7 @@ inline Mat4 look_at(Vec3 eye,Vec3 center,Vec3 up){
  return {float(x.x),float(y.x),float(z.x),0,float(x.y),float(y.y),float(z.y),0,float(x.z),float(y.z),float(z.z),0,float(-dot(x,eye)),float(-dot(y,eye)),float(-dot(z,eye)),1};
 }
 inline Mat4 multiply(Mat4 a,Mat4 b){
- Mat4 out{};for(int i=0;i<4;++i)for(int j=0;j<4;++j)for(int k=0;k<4;++k)out[i*4+j]+=a[k*4+j]*b[i*4+k];return out;
+ Mat4 out{};for(int i=0;i<4;++i)for(int j=0;j<4;++j){double sum=0;for(int k=0;k<4;++k)sum+=double(a[k*4+j])*b[i*4+k];out[i*4+j]=float(sum);}return out;
 }
 inline Mat4 inverse(Mat4 m){
  // Gauss-Jordan in double precision; input/output storage remains column-major.

@@ -5,33 +5,80 @@
 #include <stdexcept>
 #include <string>
 namespace glapi {
+inline decltype(&::glActiveTexture) glActiveTexture_fn = nullptr;
 inline decltype(&::glAttachShader) glAttachShader_fn = nullptr;
+inline decltype(&::glBindBuffer) glBindBuffer_fn = nullptr;
+inline decltype(&::glBindFramebuffer) glBindFramebuffer_fn = nullptr;
+inline decltype(&::glBindTexture) glBindTexture_fn = nullptr;
 inline decltype(&::glBindVertexArray) glBindVertexArray_fn = nullptr;
+inline decltype(&::glBufferData) glBufferData_fn = nullptr;
+inline decltype(&::glCheckFramebufferStatus) glCheckFramebufferStatus_fn = nullptr;
 inline decltype(&::glClear) glClear_fn = nullptr;
 inline decltype(&::glClearColor) glClearColor_fn = nullptr;
 inline decltype(&::glCompileShader) glCompileShader_fn = nullptr;
 inline decltype(&::glCreateProgram) glCreateProgram_fn = nullptr;
 inline decltype(&::glCreateShader) glCreateShader_fn = nullptr;
+inline decltype(&::glDeleteBuffers) glDeleteBuffers_fn = nullptr;
+inline decltype(&::glDeleteFramebuffers) glDeleteFramebuffers_fn = nullptr;
 inline decltype(&::glDeleteProgram) glDeleteProgram_fn = nullptr;
 inline decltype(&::glDeleteShader) glDeleteShader_fn = nullptr;
+inline decltype(&::glDeleteTextures) glDeleteTextures_fn = nullptr;
 inline decltype(&::glDeleteVertexArrays) glDeleteVertexArrays_fn = nullptr;
+inline decltype(&::glDepthMask) glDepthMask_fn = nullptr;
+inline decltype(&::glDisable) glDisable_fn = nullptr;
 inline decltype(&::glDrawArrays) glDrawArrays_fn = nullptr;
+inline decltype(&::glDrawBuffers) glDrawBuffers_fn = nullptr;
+inline decltype(&::glDrawElements) glDrawElements_fn = nullptr;
+inline decltype(&::glEnable) glEnable_fn = nullptr;
+inline decltype(&::glEnableVertexAttribArray) glEnableVertexAttribArray_fn = nullptr;
+inline decltype(&::glFramebufferTexture2D) glFramebufferTexture2D_fn = nullptr;
+inline decltype(&::glGenBuffers) glGenBuffers_fn = nullptr;
+inline decltype(&::glGenFramebuffers) glGenFramebuffers_fn = nullptr;
+inline decltype(&::glGenTextures) glGenTextures_fn = nullptr;
 inline decltype(&::glGenVertexArrays) glGenVertexArrays_fn = nullptr;
+inline decltype(&::glGenerateMipmap) glGenerateMipmap_fn = nullptr;
 inline decltype(&::glGetError) glGetError_fn = nullptr;
 inline decltype(&::glGetIntegerv) glGetIntegerv_fn = nullptr;
+inline decltype(&::glGetProgramInfoLog) glGetProgramInfoLog_fn = nullptr;
 inline decltype(&::glGetProgramiv) glGetProgramiv_fn = nullptr;
 inline decltype(&::glGetShaderInfoLog) glGetShaderInfoLog_fn = nullptr;
 inline decltype(&::glGetShaderiv) glGetShaderiv_fn = nullptr;
 inline decltype(&::glGetString) glGetString_fn = nullptr;
+inline decltype(&::glGetUniformLocation) glGetUniformLocation_fn = nullptr;
 inline decltype(&::glLinkProgram) glLinkProgram_fn = nullptr;
+inline decltype(&::glPixelStorei) glPixelStorei_fn = nullptr;
+inline decltype(&::glReadPixels) glReadPixels_fn = nullptr;
 inline decltype(&::glShaderSource) glShaderSource_fn = nullptr;
+inline decltype(&::glTexImage2D) glTexImage2D_fn = nullptr;
+inline decltype(&::glTexParameteri) glTexParameteri_fn = nullptr;
+inline decltype(&::glTexSubImage2D) glTexSubImage2D_fn = nullptr;
+inline decltype(&::glUniform1f) glUniform1f_fn = nullptr;
+inline decltype(&::glUniform1i) glUniform1i_fn = nullptr;
+inline decltype(&::glUniform2f) glUniform2f_fn = nullptr;
+inline decltype(&::glUniform3f) glUniform3f_fn = nullptr;
+inline decltype(&::glUniform4fv) glUniform4fv_fn = nullptr;
+inline decltype(&::glUniformMatrix3fv) glUniformMatrix3fv_fn = nullptr;
+inline decltype(&::glUniformMatrix4fv) glUniformMatrix4fv_fn = nullptr;
 inline decltype(&::glUseProgram) glUseProgram_fn = nullptr;
+inline decltype(&::glVertexAttribPointer) glVertexAttribPointer_fn = nullptr;
 inline decltype(&::glViewport) glViewport_fn = nullptr;
 inline void load() {
+  glActiveTexture_fn = reinterpret_cast<decltype(glActiveTexture_fn)>(SDL_GL_GetProcAddress("glActiveTexture"));
+  if (!glActiveTexture_fn) throw std::runtime_error("missing GL entry: glActiveTexture");
   glAttachShader_fn = reinterpret_cast<decltype(glAttachShader_fn)>(SDL_GL_GetProcAddress("glAttachShader"));
   if (!glAttachShader_fn) throw std::runtime_error("missing GL entry: glAttachShader");
+  glBindBuffer_fn = reinterpret_cast<decltype(glBindBuffer_fn)>(SDL_GL_GetProcAddress("glBindBuffer"));
+  if (!glBindBuffer_fn) throw std::runtime_error("missing GL entry: glBindBuffer");
+  glBindFramebuffer_fn = reinterpret_cast<decltype(glBindFramebuffer_fn)>(SDL_GL_GetProcAddress("glBindFramebuffer"));
+  if (!glBindFramebuffer_fn) throw std::runtime_error("missing GL entry: glBindFramebuffer");
+  glBindTexture_fn = reinterpret_cast<decltype(glBindTexture_fn)>(SDL_GL_GetProcAddress("glBindTexture"));
+  if (!glBindTexture_fn) throw std::runtime_error("missing GL entry: glBindTexture");
   glBindVertexArray_fn = reinterpret_cast<decltype(glBindVertexArray_fn)>(SDL_GL_GetProcAddress("glBindVertexArray"));
   if (!glBindVertexArray_fn) throw std::runtime_error("missing GL entry: glBindVertexArray");
+  glBufferData_fn = reinterpret_cast<decltype(glBufferData_fn)>(SDL_GL_GetProcAddress("glBufferData"));
+  if (!glBufferData_fn) throw std::runtime_error("missing GL entry: glBufferData");
+  glCheckFramebufferStatus_fn = reinterpret_cast<decltype(glCheckFramebufferStatus_fn)>(SDL_GL_GetProcAddress("glCheckFramebufferStatus"));
+  if (!glCheckFramebufferStatus_fn) throw std::runtime_error("missing GL entry: glCheckFramebufferStatus");
   glClear_fn = reinterpret_cast<decltype(glClear_fn)>(SDL_GL_GetProcAddress("glClear"));
   if (!glClear_fn) throw std::runtime_error("missing GL entry: glClear");
   glClearColor_fn = reinterpret_cast<decltype(glClearColor_fn)>(SDL_GL_GetProcAddress("glClearColor"));
@@ -42,20 +89,50 @@ inline void load() {
   if (!glCreateProgram_fn) throw std::runtime_error("missing GL entry: glCreateProgram");
   glCreateShader_fn = reinterpret_cast<decltype(glCreateShader_fn)>(SDL_GL_GetProcAddress("glCreateShader"));
   if (!glCreateShader_fn) throw std::runtime_error("missing GL entry: glCreateShader");
+  glDeleteBuffers_fn = reinterpret_cast<decltype(glDeleteBuffers_fn)>(SDL_GL_GetProcAddress("glDeleteBuffers"));
+  if (!glDeleteBuffers_fn) throw std::runtime_error("missing GL entry: glDeleteBuffers");
+  glDeleteFramebuffers_fn = reinterpret_cast<decltype(glDeleteFramebuffers_fn)>(SDL_GL_GetProcAddress("glDeleteFramebuffers"));
+  if (!glDeleteFramebuffers_fn) throw std::runtime_error("missing GL entry: glDeleteFramebuffers");
   glDeleteProgram_fn = reinterpret_cast<decltype(glDeleteProgram_fn)>(SDL_GL_GetProcAddress("glDeleteProgram"));
   if (!glDeleteProgram_fn) throw std::runtime_error("missing GL entry: glDeleteProgram");
   glDeleteShader_fn = reinterpret_cast<decltype(glDeleteShader_fn)>(SDL_GL_GetProcAddress("glDeleteShader"));
   if (!glDeleteShader_fn) throw std::runtime_error("missing GL entry: glDeleteShader");
+  glDeleteTextures_fn = reinterpret_cast<decltype(glDeleteTextures_fn)>(SDL_GL_GetProcAddress("glDeleteTextures"));
+  if (!glDeleteTextures_fn) throw std::runtime_error("missing GL entry: glDeleteTextures");
   glDeleteVertexArrays_fn = reinterpret_cast<decltype(glDeleteVertexArrays_fn)>(SDL_GL_GetProcAddress("glDeleteVertexArrays"));
   if (!glDeleteVertexArrays_fn) throw std::runtime_error("missing GL entry: glDeleteVertexArrays");
+  glDepthMask_fn = reinterpret_cast<decltype(glDepthMask_fn)>(SDL_GL_GetProcAddress("glDepthMask"));
+  if (!glDepthMask_fn) throw std::runtime_error("missing GL entry: glDepthMask");
+  glDisable_fn = reinterpret_cast<decltype(glDisable_fn)>(SDL_GL_GetProcAddress("glDisable"));
+  if (!glDisable_fn) throw std::runtime_error("missing GL entry: glDisable");
   glDrawArrays_fn = reinterpret_cast<decltype(glDrawArrays_fn)>(SDL_GL_GetProcAddress("glDrawArrays"));
   if (!glDrawArrays_fn) throw std::runtime_error("missing GL entry: glDrawArrays");
+  glDrawBuffers_fn = reinterpret_cast<decltype(glDrawBuffers_fn)>(SDL_GL_GetProcAddress("glDrawBuffers"));
+  if (!glDrawBuffers_fn) throw std::runtime_error("missing GL entry: glDrawBuffers");
+  glDrawElements_fn = reinterpret_cast<decltype(glDrawElements_fn)>(SDL_GL_GetProcAddress("glDrawElements"));
+  if (!glDrawElements_fn) throw std::runtime_error("missing GL entry: glDrawElements");
+  glEnable_fn = reinterpret_cast<decltype(glEnable_fn)>(SDL_GL_GetProcAddress("glEnable"));
+  if (!glEnable_fn) throw std::runtime_error("missing GL entry: glEnable");
+  glEnableVertexAttribArray_fn = reinterpret_cast<decltype(glEnableVertexAttribArray_fn)>(SDL_GL_GetProcAddress("glEnableVertexAttribArray"));
+  if (!glEnableVertexAttribArray_fn) throw std::runtime_error("missing GL entry: glEnableVertexAttribArray");
+  glFramebufferTexture2D_fn = reinterpret_cast<decltype(glFramebufferTexture2D_fn)>(SDL_GL_GetProcAddress("glFramebufferTexture2D"));
+  if (!glFramebufferTexture2D_fn) throw std::runtime_error("missing GL entry: glFramebufferTexture2D");
+  glGenBuffers_fn = reinterpret_cast<decltype(glGenBuffers_fn)>(SDL_GL_GetProcAddress("glGenBuffers"));
+  if (!glGenBuffers_fn) throw std::runtime_error("missing GL entry: glGenBuffers");
+  glGenFramebuffers_fn = reinterpret_cast<decltype(glGenFramebuffers_fn)>(SDL_GL_GetProcAddress("glGenFramebuffers"));
+  if (!glGenFramebuffers_fn) throw std::runtime_error("missing GL entry: glGenFramebuffers");
+  glGenTextures_fn = reinterpret_cast<decltype(glGenTextures_fn)>(SDL_GL_GetProcAddress("glGenTextures"));
+  if (!glGenTextures_fn) throw std::runtime_error("missing GL entry: glGenTextures");
   glGenVertexArrays_fn = reinterpret_cast<decltype(glGenVertexArrays_fn)>(SDL_GL_GetProcAddress("glGenVertexArrays"));
   if (!glGenVertexArrays_fn) throw std::runtime_error("missing GL entry: glGenVertexArrays");
+  glGenerateMipmap_fn = reinterpret_cast<decltype(glGenerateMipmap_fn)>(SDL_GL_GetProcAddress("glGenerateMipmap"));
+  if (!glGenerateMipmap_fn) throw std::runtime_error("missing GL entry: glGenerateMipmap");
   glGetError_fn = reinterpret_cast<decltype(glGetError_fn)>(SDL_GL_GetProcAddress("glGetError"));
   if (!glGetError_fn) throw std::runtime_error("missing GL entry: glGetError");
   glGetIntegerv_fn = reinterpret_cast<decltype(glGetIntegerv_fn)>(SDL_GL_GetProcAddress("glGetIntegerv"));
   if (!glGetIntegerv_fn) throw std::runtime_error("missing GL entry: glGetIntegerv");
+  glGetProgramInfoLog_fn = reinterpret_cast<decltype(glGetProgramInfoLog_fn)>(SDL_GL_GetProcAddress("glGetProgramInfoLog"));
+  if (!glGetProgramInfoLog_fn) throw std::runtime_error("missing GL entry: glGetProgramInfoLog");
   glGetProgramiv_fn = reinterpret_cast<decltype(glGetProgramiv_fn)>(SDL_GL_GetProcAddress("glGetProgramiv"));
   if (!glGetProgramiv_fn) throw std::runtime_error("missing GL entry: glGetProgramiv");
   glGetShaderInfoLog_fn = reinterpret_cast<decltype(glGetShaderInfoLog_fn)>(SDL_GL_GetProcAddress("glGetShaderInfoLog"));
@@ -64,35 +141,98 @@ inline void load() {
   if (!glGetShaderiv_fn) throw std::runtime_error("missing GL entry: glGetShaderiv");
   glGetString_fn = reinterpret_cast<decltype(glGetString_fn)>(SDL_GL_GetProcAddress("glGetString"));
   if (!glGetString_fn) throw std::runtime_error("missing GL entry: glGetString");
+  glGetUniformLocation_fn = reinterpret_cast<decltype(glGetUniformLocation_fn)>(SDL_GL_GetProcAddress("glGetUniformLocation"));
+  if (!glGetUniformLocation_fn) throw std::runtime_error("missing GL entry: glGetUniformLocation");
   glLinkProgram_fn = reinterpret_cast<decltype(glLinkProgram_fn)>(SDL_GL_GetProcAddress("glLinkProgram"));
   if (!glLinkProgram_fn) throw std::runtime_error("missing GL entry: glLinkProgram");
+  glPixelStorei_fn = reinterpret_cast<decltype(glPixelStorei_fn)>(SDL_GL_GetProcAddress("glPixelStorei"));
+  if (!glPixelStorei_fn) throw std::runtime_error("missing GL entry: glPixelStorei");
+  glReadPixels_fn = reinterpret_cast<decltype(glReadPixels_fn)>(SDL_GL_GetProcAddress("glReadPixels"));
+  if (!glReadPixels_fn) throw std::runtime_error("missing GL entry: glReadPixels");
   glShaderSource_fn = reinterpret_cast<decltype(glShaderSource_fn)>(SDL_GL_GetProcAddress("glShaderSource"));
   if (!glShaderSource_fn) throw std::runtime_error("missing GL entry: glShaderSource");
+  glTexImage2D_fn = reinterpret_cast<decltype(glTexImage2D_fn)>(SDL_GL_GetProcAddress("glTexImage2D"));
+  if (!glTexImage2D_fn) throw std::runtime_error("missing GL entry: glTexImage2D");
+  glTexParameteri_fn = reinterpret_cast<decltype(glTexParameteri_fn)>(SDL_GL_GetProcAddress("glTexParameteri"));
+  if (!glTexParameteri_fn) throw std::runtime_error("missing GL entry: glTexParameteri");
+  glTexSubImage2D_fn = reinterpret_cast<decltype(glTexSubImage2D_fn)>(SDL_GL_GetProcAddress("glTexSubImage2D"));
+  if (!glTexSubImage2D_fn) throw std::runtime_error("missing GL entry: glTexSubImage2D");
+  glUniform1f_fn = reinterpret_cast<decltype(glUniform1f_fn)>(SDL_GL_GetProcAddress("glUniform1f"));
+  if (!glUniform1f_fn) throw std::runtime_error("missing GL entry: glUniform1f");
+  glUniform1i_fn = reinterpret_cast<decltype(glUniform1i_fn)>(SDL_GL_GetProcAddress("glUniform1i"));
+  if (!glUniform1i_fn) throw std::runtime_error("missing GL entry: glUniform1i");
+  glUniform2f_fn = reinterpret_cast<decltype(glUniform2f_fn)>(SDL_GL_GetProcAddress("glUniform2f"));
+  if (!glUniform2f_fn) throw std::runtime_error("missing GL entry: glUniform2f");
+  glUniform3f_fn = reinterpret_cast<decltype(glUniform3f_fn)>(SDL_GL_GetProcAddress("glUniform3f"));
+  if (!glUniform3f_fn) throw std::runtime_error("missing GL entry: glUniform3f");
+  glUniform4fv_fn = reinterpret_cast<decltype(glUniform4fv_fn)>(SDL_GL_GetProcAddress("glUniform4fv"));
+  if (!glUniform4fv_fn) throw std::runtime_error("missing GL entry: glUniform4fv");
+  glUniformMatrix3fv_fn = reinterpret_cast<decltype(glUniformMatrix3fv_fn)>(SDL_GL_GetProcAddress("glUniformMatrix3fv"));
+  if (!glUniformMatrix3fv_fn) throw std::runtime_error("missing GL entry: glUniformMatrix3fv");
+  glUniformMatrix4fv_fn = reinterpret_cast<decltype(glUniformMatrix4fv_fn)>(SDL_GL_GetProcAddress("glUniformMatrix4fv"));
+  if (!glUniformMatrix4fv_fn) throw std::runtime_error("missing GL entry: glUniformMatrix4fv");
   glUseProgram_fn = reinterpret_cast<decltype(glUseProgram_fn)>(SDL_GL_GetProcAddress("glUseProgram"));
   if (!glUseProgram_fn) throw std::runtime_error("missing GL entry: glUseProgram");
+  glVertexAttribPointer_fn = reinterpret_cast<decltype(glVertexAttribPointer_fn)>(SDL_GL_GetProcAddress("glVertexAttribPointer"));
+  if (!glVertexAttribPointer_fn) throw std::runtime_error("missing GL entry: glVertexAttribPointer");
   glViewport_fn = reinterpret_cast<decltype(glViewport_fn)>(SDL_GL_GetProcAddress("glViewport"));
   if (!glViewport_fn) throw std::runtime_error("missing GL entry: glViewport");
 }
 }
+#define glActiveTexture glapi::glActiveTexture_fn
 #define glAttachShader glapi::glAttachShader_fn
+#define glBindBuffer glapi::glBindBuffer_fn
+#define glBindFramebuffer glapi::glBindFramebuffer_fn
+#define glBindTexture glapi::glBindTexture_fn
 #define glBindVertexArray glapi::glBindVertexArray_fn
+#define glBufferData glapi::glBufferData_fn
+#define glCheckFramebufferStatus glapi::glCheckFramebufferStatus_fn
 #define glClear glapi::glClear_fn
 #define glClearColor glapi::glClearColor_fn
 #define glCompileShader glapi::glCompileShader_fn
 #define glCreateProgram glapi::glCreateProgram_fn
 #define glCreateShader glapi::glCreateShader_fn
+#define glDeleteBuffers glapi::glDeleteBuffers_fn
+#define glDeleteFramebuffers glapi::glDeleteFramebuffers_fn
 #define glDeleteProgram glapi::glDeleteProgram_fn
 #define glDeleteShader glapi::glDeleteShader_fn
+#define glDeleteTextures glapi::glDeleteTextures_fn
 #define glDeleteVertexArrays glapi::glDeleteVertexArrays_fn
+#define glDepthMask glapi::glDepthMask_fn
+#define glDisable glapi::glDisable_fn
 #define glDrawArrays glapi::glDrawArrays_fn
+#define glDrawBuffers glapi::glDrawBuffers_fn
+#define glDrawElements glapi::glDrawElements_fn
+#define glEnable glapi::glEnable_fn
+#define glEnableVertexAttribArray glapi::glEnableVertexAttribArray_fn
+#define glFramebufferTexture2D glapi::glFramebufferTexture2D_fn
+#define glGenBuffers glapi::glGenBuffers_fn
+#define glGenFramebuffers glapi::glGenFramebuffers_fn
+#define glGenTextures glapi::glGenTextures_fn
 #define glGenVertexArrays glapi::glGenVertexArrays_fn
+#define glGenerateMipmap glapi::glGenerateMipmap_fn
 #define glGetError glapi::glGetError_fn
 #define glGetIntegerv glapi::glGetIntegerv_fn
+#define glGetProgramInfoLog glapi::glGetProgramInfoLog_fn
 #define glGetProgramiv glapi::glGetProgramiv_fn
 #define glGetShaderInfoLog glapi::glGetShaderInfoLog_fn
 #define glGetShaderiv glapi::glGetShaderiv_fn
 #define glGetString glapi::glGetString_fn
+#define glGetUniformLocation glapi::glGetUniformLocation_fn
 #define glLinkProgram glapi::glLinkProgram_fn
+#define glPixelStorei glapi::glPixelStorei_fn
+#define glReadPixels glapi::glReadPixels_fn
 #define glShaderSource glapi::glShaderSource_fn
+#define glTexImage2D glapi::glTexImage2D_fn
+#define glTexParameteri glapi::glTexParameteri_fn
+#define glTexSubImage2D glapi::glTexSubImage2D_fn
+#define glUniform1f glapi::glUniform1f_fn
+#define glUniform1i glapi::glUniform1i_fn
+#define glUniform2f glapi::glUniform2f_fn
+#define glUniform3f glapi::glUniform3f_fn
+#define glUniform4fv glapi::glUniform4fv_fn
+#define glUniformMatrix3fv glapi::glUniformMatrix3fv_fn
+#define glUniformMatrix4fv glapi::glUniformMatrix4fv_fn
 #define glUseProgram glapi::glUseProgram_fn
+#define glVertexAttribPointer glapi::glVertexAttribPointer_fn
 #define glViewport glapi::glViewport_fn

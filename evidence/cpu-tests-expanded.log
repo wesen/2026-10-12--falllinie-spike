@@ -1,0 +1,1 @@
+PASS 268 terrain cases; 5 hash cases; 12 RNG values; 6 mesh samples; topology/layout/matrix checks. max_height_error=0 min_normal_dot=1

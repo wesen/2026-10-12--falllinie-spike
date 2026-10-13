@@ -8,6 +8,9 @@ vm.runInContext(mb+'\nfunction upload(m){return m;}\n'+html.slice(html.indexOf('
 const data=vm.runInContext(`(()=>{SEED=42; const hashes=[0,1,0xffffffff,0x80000000,0x12345678].map(n=>[n,hashInt(n)]);const r=rng(12345);const random=Array.from({length:12},()=>r());const P=[],O=[];for(let j=-1;j<=ROWS+1;j++){const row=terrainRow(0,j);P.push(row[0]);O.push(row[1]);}const m=finishTerrain(P,O);return {hashes,random,mesh:{vertices:m.n,indices:m.i.length,samples:[0,53,106,107,7020,m.n-1].map(i=>({i,v:m.v.slice(i*11,i*11+11)}))}};})()`,ctx,{timeout:5000});
 fs.writeFileSync(path.join(root,'fixtures/mesh-and-rng.json'),JSON.stringify(data,null,2)+'\n');
 const golden=JSON.parse(fs.readFileSync(path.join(root,'fixtures/terrain-samples.json')));
+const featureCases=vm.runInContext(`(()=>{const cases=[];for(const seed of [1,42,12345]){SEED=seed;PC.clear();FC.clear();CUM.length=1;CUM[0]=0;for(let cell=1;cell<=16;cell++)for(const f of cellF(cell)){if(f.k===3)continue;const points=f.k===1?[[f.z-.5,f.u],[f.z+1.3,f.u]]:[[f.z-2,0],[f.z+f.face+.1,0]];for(const [z,u] of points){const x=centerX(z)+u,paint={lip:0,stripe:0},h=height(x,z,paint);cases.push({seed,x,z,height:h,normal:normalAt(x,z),paint});}}}return cases;})()`,ctx,{timeout:5000});
+fs.writeFileSync(path.join(root,'fixtures/feature-samples.json'),JSON.stringify(featureCases,null,2)+'\n');
+golden.cases.push(...featureCases);
 let out='// Generated from frozen original JavaScript, not from the C++ port.\n#pragma once\n#include <cstdint>\nstruct Golden {uint32_t seed;double x,z,h,nx,ny,nz,lip,stripe,rel,u;};\ninline const Golden golden[] = {\n';
 for(const c of golden.cases)out+=`{${c.seed},${c.x},${c.z},${c.height},${c.normal.join(',')},${c.paint.lip},${c.paint.stripe},${c.paint.rel},${c.paint.u}},\n`;
 out+='};\ninline const uint32_t hashes[][2]={'+data.hashes.map(x=>'{'+x.map(n=>n+'U').join(',')+'}').join(',')+'};\n';
@@ -15,4 +18,4 @@ out+='inline const double random_values[]={'+data.random.join(',')+'};\n';
 out+='struct MeshGolden {int index;float v[11];};\ninline const MeshGolden mesh_golden[]={\n';
 for(const s of data.mesh.samples)out+='{'+s.i+',{'+s.v.map(x=>Number(x).toPrecision(16)).join(',')+'}},\n';
 out+='};\n';fs.writeFileSync(path.join(root,'tests/golden.hpp'),out);
-console.log('Generated 90 CPU cases, 5 hashes, 12 RNG values, 6 mesh vertex/normal cases; mesh '+data.mesh.vertices+'/'+data.mesh.indices);
+console.log('Generated '+golden.cases.length+' CPU cases ('+featureCases.length+' feature cases), 5 hashes, 12 RNG values, 6 mesh vertex/normal cases; mesh '+data.mesh.vertices+'/'+data.mesh.indices);

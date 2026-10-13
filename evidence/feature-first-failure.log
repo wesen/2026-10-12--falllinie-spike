@@ -1,0 +1,2 @@
+case seed=42 x=35.0104 z=347.743 expected=-104.725 actual=-100.139
+FAIL: height mismatch

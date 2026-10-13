@@ -1,0 +1,56 @@
+Generated 57 GL entry points
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from toolchain.Dockerfile
+#1 transferring dockerfile: 345B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/debian@sha256:88200866dfff7ea7f5cbcb6ec7c8a701889efe6fe859fe64d6990e4b07ea4171
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/3] FROM docker.io/library/debian@sha256:88200866dfff7ea7f5cbcb6ec7c8a701889efe6fe859fe64d6990e4b07ea4171
+#4 DONE 0.0s
+
+#5 [2/3] RUN dpkg --add-architecture arm64 && apt-get update && apt-get install -y --no-install-recommends g++-aarch64-linux-gnu cmake make libsdl2-dev:arm64 libgles-dev:arm64 && rm -rf /var/lib/apt/lists/*
+#5 CACHED
+
+#6 [3/3] WORKDIR /work
+#6 CACHED
+
+#7 exporting to image
+#7 exporting layers done
+#7 writing image sha256:8068d5a56ed677c85ffd8e02f9ee4e88c9804d56d070aead0d598c44eb0f83dd done
+#7 naming to docker.io/library/falllinie-spike-toolchain done
+#7 DONE 0.0s
+
+View build details: docker-desktop://dashboard/build/default/default/rqy7wn52fhxykkm6w53bcmff3
+
+What's Next?
+  1. Sign in to your Docker account → docker login
+  2. View a summary of image vulnerabilities and recommendations → docker scout quickview
+src/main.cpp: In function 'int main(int, char**)':
+src/main.cpp:55:3: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+   55 |   if(!window)throw std::runtime_error(SDL_GetError());context=SDL_GL_CreateContext(window);if(!context)throw std::runtime_error(SDL_GetError());glapi::load();
+      |   ^~
+src/main.cpp:55:55: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
+   55 |   if(!window)throw std::runtime_error(SDL_GetError());context=SDL_GL_CreateContext(window);if(!context)throw std::runtime_error(SDL_GetError());glapi::load();
+      |                                                       ^~~~~~~
+src/renderer.cpp: In member function 'void fl::Renderer::delete_targets()':
+src/renderer.cpp:75:2: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+   75 |  if(scene_fbo_)glDeleteFramebuffers(1,&scene_fbo_);if(print_fbo_)glDeleteFramebuffers(1,&print_fbo_);
+      |  ^~
+src/renderer.cpp:75:52: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
+   75 |  if(scene_fbo_)glDeleteFramebuffers(1,&scene_fbo_);if(print_fbo_)glDeleteFramebuffers(1,&print_fbo_);
+      |                                                    ^~
+src/renderer.cpp: In destructor 'fl::Renderer::~Renderer()':
+src/renderer.cpp:117:2: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+  117 |  if(scene_)glDeleteProgram(scene_);if(post_)glDeleteProgram(post_);if(copy_)glDeleteProgram(copy_);
+      |  ^~
+src/renderer.cpp:117:36: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
+  117 |  if(scene_)glDeleteProgram(scene_);if(post_)glDeleteProgram(post_);if(copy_)glDeleteProgram(copy_);
+      |                                    ^~
+build-device/falllinie-spike: ELF 64-bit LSB pie executable, ARM aarch64, version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, BuildID[sha1]=13d421307709de5bc8908ed5d7de62602e3b912f, for GNU/Linux 3.7.0, not stripped

@@ -1,0 +1,29 @@
+{
+  "reference": "evidence/marker-browser.png",
+  "candidate": "evidence/highp.png",
+  "full_image": {
+    "pixels": 196608,
+    "mean_absolute_channel_error": 6.044974433051215,
+    "fraction_max_channel_error_over_16": 0.0670928955078125,
+    "ink_iou": 0.5855063189889618,
+    "reference_ink_fraction": 0.025278727213541668,
+    "candidate_ink_fraction": 0.0251312255859375
+  },
+  "terrain_lower_half": {
+    "pixels": 98304,
+    "mean_absolute_channel_error": 2.5495741102430554,
+    "fraction_max_channel_error_over_16": 0.0035298665364583335,
+    "ink_iou": 0.9688715953307393,
+    "reference_ink_fraction": 0.01031494140625,
+    "candidate_ink_fraction": 0.010274251302083334
+  },
+  "caveat": "Different ANGLE/Intel and Mali floating-point sin hashes change sky/noise; terrain ROI is a bounded comparison, not whole-game qualification.",
+  "legacy_terrain_lower_half": {
+    "pixels": 98304,
+    "mean_absolute_channel_error": 50.48170640733507,
+    "fraction_max_channel_error_over_16": 0.4190165201822917,
+    "ink_iou": 0.03857365331629597,
+    "reference_ink_fraction": 0.01031494140625,
+    "candidate_ink_fraction": 0.2542622884114583
+  }
+}

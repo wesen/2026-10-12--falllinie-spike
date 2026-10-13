@@ -407,3 +407,52 @@ I implemented a snapped 128 m render origin while preserving absolute coordinate
 ### Technical details
 - Physics/world positions remain double where originally defined. GPU mesh attributes retain their original float storage; rebasing fixes projection cancellation but does not restore information already rounded in extremely distant vertices.
 - `--absolute-render-coordinates` is diagnostic only; the default is camera-relative. Both view passes independently build frames and continue sharing one context/simulation.
+
+## Step 8: Verify the far-cell fix on Mali and restore the interactive prototype
+
+The selected on-device A/B comparison reproduces dense false blue texture/edge speckle at almost 59 km using absolute coordinates and removes that pattern with relative coordinates. Both runs share the same binary, geometry, source shaders and render resolution. I then restored one interactive dual-view instance with the fix and captured a bounded production-interval sample. This verifies the static far-distance rendering defect and confirms that the repair did not upset the measured frame cadence; dynamic physical horizon acceptance and the integrated game's final human playtest are still distinct, pending gates.
+
+### Prompt Context
+- **User prompt:** See Step 6 for the verbatim rendering report and diary/commit instruction.
+- **Assistant interpretation:** Check the concrete defect on the actual GPU before resuming feature integration.
+- **Inferred user intent:** A real fix with reproducible evidence, not a restart that merely hides the distance-dependent fault.
+- **Commit (code):** `7eac73f` — Keep depth and sky projection stable with camera-relative coordinates.
+
+### What I did
+- Gracefully terminated only the owned old PID 210855, atomically replaced the executable, then ran exactly two selected static diagnostics at seed 42/cell 536/four cells/384×288/90 frames: absolute and relative coordinates.
+- Copied each print/scene/depth BMP, log and receipt into the dated investigation folder.
+- Restored the interactive dual-view 384×288/no-vsync/60 FPS prototype; capture-time PID 264668, binary SHA256 `4c997f2f150e80fc3239d58835450e50620693aedfa2f4c580e5f16f575cb4ce`.
+- Copied the first 960 frame rows (60 warmup + 900 measured) and ran the existing topic-local profile analyzer; added reproduction instructions in the evidence README.
+
+### Why
+- A far-cell comparison isolates coordinate precision from camera movement, procedural differences, resolution or an unrelated feature deployment.
+- This is a feature-boundary rendering check, not a repeat of the earlier broad graphics matrix.
+
+### What worked
+- Both Mali-G52 receipts report GL_error=0; camera eye `[81.55062225,-18288.21271,58960]` and look `[83.06030725,-18303.44767,58998]` match between cases.
+- Absolute `print.bmp` visibly contains dense blue speckle on the terrain banks; relative `print.bmp` retains clean banks and legitimate contour/paint/halftone features.
+- Restored live sample: 900 measured frames, 59.999998472 FPS, interval p95=16.736092 ms, zero intervals >18.333 ms and none >33.333 ms. These are production intervals, not physical scanout evidence.
+
+### What didn't work
+- Implementation commit initially reported `precision-probe.cpp:13: new blank line at EOF.` Removed the redundant blank line and committed successfully after repeating the whitespace check.
+- An attempted read of the historical root alias `scripts/analyze-profile.cjs` returned `ENOENT: no such file or directory`; used the actual dated `scripts/2026/10/13/falllinie-performance/analyze-profile.cjs` instead.
+- No GPU/build/runtime failure occurred. Static image evidence cannot independently prove every dynamic mountain movement is gone, and legitimate low-resolution halftone aliasing/animated paper grain remain unchanged.
+
+### What I learned
+- The false texture was a long-distance projection/depth defect, not a reason to alter source palettes or remove source print effects. The selected GPU reproduction validates the direction indicated by the CPU arithmetic probe.
+
+### What was tricky to build
+- Keep one instance during stop/deploy/diagnostic/restore sequencing, preserve the exact far-location evidence before resetting, and leave unmerged source gameplay/audio branches out of the bug comparison.
+
+### What warrants a second pair of eyes
+- Preserve relative scene/post/sun projection in the upcoming source-renderer integration; inspect the actual A/B images rather than infer correctness from GL_error=0 alone.
+
+### What should be done in the future
+- Resume integration/fresh review, qualify the combined gameplay/audio/render workload, and retain the single final physical human playtest after integration.
+
+### Code review instructions
+- Compare `falllinie-far-absolute/print.bmp` with `falllinie-far-relative/print.bmp` and their matching camera receipts; reproduce with the README commands. Review `fixed-live-summary.json` with its production-versus-presentation caveat.
+
+### Technical details
+- Archived shader files are unchanged; the vertex projection substitution is guarded at runtime. Float world-space mesh/shading precision remains a limitation at much more extreme distances.
+- The two diagnostic cases deliberately use normal vsync and are not a 60 FPS performance qualification. The subsequent paced dual-view CSV is the relevant regression sample.

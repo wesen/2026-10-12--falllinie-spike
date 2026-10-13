@@ -1,0 +1,35 @@
+source_read_us=69.408000000000001 source_bytes=21910
+config heap_limit_bytes=33554432 stack_limit_bytes=524288 sustained_blocks=300 heap_limit_is_not_RSS_limit=true
+lifecycle cycle=0 create_us=218.965 compile_us=1636.0840000000001 execute_us=78.567999999999998 dispose_us=115.657 rss_kib=5308
+lifecycle cycle=1 create_us=127.295 compile_us=1566.6179999999999 execute_us=63.338000000000001 dispose_us=115.721 rss_kib=5360
+lifecycle cycle=2 create_us=124.047 compile_us=1549.1959999999999 execute_us=59.421999999999997 dispose_us=106.40000000000001 rss_kib=5392
+lifecycle cycle=3 create_us=127.65300000000001 compile_us=1529.528 execute_us=58.374000000000002 dispose_us=106.76900000000001 rss_kib=5408
+lifecycle cycle=4 create_us=123.508 compile_us=1571.5530000000001 execute_us=60.265999999999998 dispose_us=109.82599999999999 rss_kib=5428
+lifecycle cycle=5 create_us=124.39700000000001 compile_us=1543.4580000000001 execute_us=58.728000000000002 dispose_us=105.804 rss_kib=5436
+lifecycle cycle=6 create_us=122.553 compile_us=1552.491 execute_us=59.520000000000003 dispose_us=109.61799999999999 rss_kib=5440
+lifecycle cycle=7 create_us=123.083 compile_us=1546.251 execute_us=59.597000000000001 dispose_us=107.973 rss_kib=5444
+engine quickjs-ng 0.17.0 commit=6d46d07d04041b40f4f49eaa7fdebe44c314c699 interpreter
+cold noop first_call_us=0.60199999999999998 checksum=1
+bench noop n=120 warmup=30 p50_us=0.070000000000000007 p95_us=0.090999999999999998 p99_us=0.104 max_us=6.883 total_us=15.657999999999998 calls_per_second=7663814.0247796662 checksum=120
+cold batch first_call_us=1258.153 checksum=30360.045279458187
+bench batch n=120 warmup=30 p50_us=1182.3230000000001 p95_us=1479.0360000000001 p99_us=1607.4929999999999 max_us=1689.2809999999999 total_us=145401.65799999994 calls_per_second=825.30008014076463 checksum=3643205.4335349803
+cold sourceRules first_call_us=1981.204 checksum=248097186646.1832
+bench sourceRules n=120 warmup=30 p50_us=1879.9929999999999 p95_us=1968.116 p99_us=2013.3 max_us=2155.6109999999999 total_us=227800.18900000001 calls_per_second=526.77743827508414 checksum=29771662397542.023
+cold scalarBridge first_call_us=34.512999999999998 checksum=280126
+bench scalarBridge n=120 warmup=30 p50_us=32.993000000000002 p95_us=37.722999999999999 p99_us=46.415999999999997 max_us=56.460000000000001 total_us=4055.4569999999985 calls_per_second=29589.760167596411 checksum=33615120
+cold batchedBridge first_call_us=35.329999999999998 checksum=280126
+bench batchedBridge n=120 warmup=30 p50_us=31.579999999999998 p95_us=35.078000000000003 p99_us=47.378 max_us=53.270000000000003 total_us=3879.9149999999995 calls_per_second=30928.512609167989 checksum=33615120
+cold churn first_call_us=491.77800000000002 checksum=1
+bench churn n=120 warmup=30 p50_us=394.58999999999997 p95_us=416.94900000000001 p99_us=431.82799999999997 max_us=461.447 total_us=46970.797000000006 calls_per_second=2554.7788767561256 checksum=120
+oracle {"hashes":[388445122,1852637032,2623512388,2116654401,3790136032],"random":[0.9797282677609473,0.3067522644996643,0.484205421525985,0.817934412509203,0.5094283693470061,0.34747186047025025,0.07375754183158278,0.7663964673411101,0.9968264393974096,0.8250224851071835,0.4599348735064268,0.9458441860042512],"terrain":[{"x":0,"z":4,"h":12.055505421381783,"n":[-0.01221150173264416,0.9472057558104173,0.32039371932834415],"paint":{"lip":0,"stripe":0,"rel":-0.710232298948544,"u":-23.00315141371464}},{"x":12,"z":150,"h":-36.96929557018999,"n":[-0.01976529287120197,0.9997120832087747,0.01360455379964659],"paint":{"lip":0,"stripe":0,"rel":1.727153318392796,"u":-9.819399348692851}},{"x":-25,"z":365,"h":-100.8096294677378,"n":[0.20652640188648874,0.8856252510403028,0.415950429791365],"paint":{"lip":0,"stripe":0,"rel":10.264547121060117,"u":-61.2950595367975}},{"x":60,"z":900,"h":-258.43919932608065,"n":[-0.2606629944533109,0.9553389628374831,0.1392202191035307],"paint":{"lip":0,"stripe":0,"rel":8.425735683309256,"u":49.781527764447404}},{"x":0,"z":-10,"h":16.935691711728786,"n":[0.005341387230046656,0.9423960910150199,0.3344563906132888],"paint":{"lip":0,"stripe":0,"rel":-0.5471903648650425,"u":-19.709524417421562}}],"scores":[{"name":"FS Rodeo 360 · Indy · Helikopter","pts":10260,"ubers":1},{"name":"FS Rodeo 360 · Indy · Helikopter","pts":6155,"ubers":1}],"trees":[{"x":-8.010790018932532,"z":366.3853706466034,"y":-104.46265213387652,"h":5.977854648604989,"r":1.6426332410424949,"g":true},{"x":130.1151116989399,"z":408.36359534878284,"y":-109.39148661426374,"h":6.033417958766222,"r":2.3693085871636868,"g":true}]}
+expected_exception Error: intentional qualification exception
+protocol PASS copy/offset/type/size/nonfinite/malformed-output/exception/jobs/detach
+memory stage=retained used_bytes=382803 allocated_bytes=427448 objects=823 automatic_gc_count=unavailable gc_pause_causality=unavailable rss_kib=6152
+memory stage=sustained used_bytes=503851 allocated_bytes=578744 objects=1363 automatic_gc_count=unavailable gc_pause_causality=unavailable rss_kib=6352
+memory stage=sustained used_bytes=404395 allocated_bytes=454424 objects=919 automatic_gc_count=unavailable gc_pause_causality=unavailable rss_kib=6444
+bench sustained_block_8row_4rules_4churn n=300 warmup=0 p50_us=18222.766 p95_us=23389.708999999999 p99_us=31615.452000000001 max_us=34833.315999999999 total_us=5676137.5010000011 calls_per_second=52.852842262391832 checksum=297716696840719.81
+memory stage=before_explicit_gc used_bytes=224083 allocated_bytes=258496 objects=535 automatic_gc_count=unavailable gc_pause_causality=unavailable rss_kib=6444
+explicit_gc_wall_us=23.029
+memory stage=after_explicit_gc used_bytes=202491 allocated_bytes=231520 objects=439 automatic_gc_count=unavailable gc_pause_causality=unavailable rss_kib=6444
+process peak_rss_kib=6232 elapsed_ms=6244.7691919999997 elapsed_definition=source_read_through_final_gc_excludes_final_dispose_and_platform_init
+PROBE PASS

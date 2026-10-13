@@ -1,0 +1,53 @@
+{
+  "status": "PASS",
+  "comparison": {
+    "native": {
+      "leaves": 85,
+      "max_absolute_float_error": 2.220446049250313e-16
+    },
+    "bellard": {
+      "leaves": 85,
+      "max_absolute_float_error": 0,
+      "workload_checks": [
+        "batch",
+        "sourceRules",
+        "scalarBridge",
+        "batchedBridge",
+        "noop",
+        "churn",
+        "sustained"
+      ],
+      "peak_rss_kib": 5844
+    },
+    "ng": {
+      "leaves": 85,
+      "max_absolute_float_error": 0,
+      "workload_checks": [
+        "batch",
+        "sourceRules",
+        "scalarBridge",
+        "batchedBridge",
+        "noop",
+        "churn",
+        "sustained"
+      ],
+      "peak_rss_kib": 6232
+    },
+    "v8": {
+      "leaves": 85,
+      "max_absolute_float_error": 0,
+      "workload_checks": [
+        "batch",
+        "sourceRules",
+        "scalarBridge",
+        "batchedBridge",
+        "noop",
+        "churn",
+        "sustained"
+      ],
+      "peak_rss_kib": 40552
+    }
+  },
+  "tolerance": "abs1e-9 + rel1e-12; labels/integers exact",
+  "target_execution": "not implied; directory origin must be recorded separately"
+}

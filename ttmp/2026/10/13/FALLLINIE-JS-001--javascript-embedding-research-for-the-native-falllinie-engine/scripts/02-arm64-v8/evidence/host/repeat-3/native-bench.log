@@ -1,0 +1,1 @@
+native row n=300 warmup=30 p50_us=21.106 p95_us=21.24 p99_us=24.076 max_us=34.286 checksum=30360

@@ -1,0 +1,9 @@
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.000s
+
+OK
+PROBE PASS
+PROBE PASS
+PROBE PASS
+VALIDATION PASS: static, comparator, native CPU, sanitized adapters, host runner refusal

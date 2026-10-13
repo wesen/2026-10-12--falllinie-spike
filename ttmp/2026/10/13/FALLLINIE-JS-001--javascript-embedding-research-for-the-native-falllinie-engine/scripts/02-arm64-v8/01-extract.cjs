@@ -1,0 +1,22 @@
+// Preserve original extraction anchors and adapters; new outputs are ticket-local.
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),crypto=require('node:crypto');
+const p=__dirname,w=path.join(p,'.work'),root=path.resolve(p,'../../../../../../..');
+fs.mkdirSync(w,{recursive:true});
+const html=fs.readFileSync(path.join(root,'fixtures/falllinie.html'),'utf8');
+const hash=crypto.createHash('sha256').update(html).digest('hex');
+if(hash!=='cb9b4befd0252859d9c45246f94fbd7dd1662c6d034c6ccb95fbe16947e8b556')throw Error('fixture pin mismatch');
+const cut=(a,b)=>{const i=html.indexOf(a),j=html.indexOf(b,i);if(i<0||j<i)throw Error(`missing anchor ${a}`);return html.slice(i,j);};
+const pure=cut('const TAU =','// WebGL 2 renderer:')+'\n'+cut('const GRABS =','const inp =')+'\nconst G={recent:[]};\n'+cut('function trickName(','function addToCombo(')+'\n'+cut('const UCOLS =','function finishTerrain(');
+const historical=fs.readFileSync(path.join(root,'scripts/2026/10/13/falllinie-js-runtime/probe.js'),'utf8');
+const workloads=fs.readFileSync(path.join(p,'workloads.js'),'utf8');
+fs.writeFileSync(path.join(w,'pure.js'),pure);
+fs.writeFileSync(path.join(w,'probe.js'),historical+'\n'+workloads);
+const ctx=vm.createContext({consume:a=>Array.from(a).reduce((s,n)=>s+n,0),scalar:n=>n});
+vm.runInContext(pure+'\n'+historical+'\n'+workloads,ctx,{timeout:3000});
+fs.writeFileSync(path.join(w,'node-oracle.json'),vm.runInContext('JSON.stringify(oracle())',ctx)+'\n');
+const expected=vm.runInContext('JSON.stringify({batch:batch(),sourceRules:sourceRules(),scalarBridge:scalarBridge(),batchedBridge:batchedBridge(),noop:noop(),churn:churn()})',ctx);
+fs.writeFileSync(path.join(w,'workload-expected.json'),expected+'\n');
+fs.writeFileSync(path.join(w,'fixture-sha256.txt'),hash+'\n');
+console.log('EXTRACT PASS fixture='+hash+' unchanged_pure_bytes='+Buffer.byteLength(pure));
+console.log('Node oracle only:',process.version,process.versions.v8,'not embedding measurement');
+console.log(expected);

@@ -125,6 +125,7 @@ The three ARM64 private bundles resolve all DT_NEEDED libraries and required bun
 **User prompt (verbatim):** See Step 1.
 **Assistant interpretation:** Deliver ready-to-review harnesses/evidence and conservative parent commands, with no production changes or invented hardware results.
 **Inferred user intent:** Make actual target experiments safe and independently reproducible.
+**Commit (code):** 5fbe46a44f8d670e33dcd58be1bf8f623da37621 — "research(js): qualify raw V8 and QuickJS host probes, prepare private ARM64 bundles"
 
 ### What I did
 - Added native numeric callbacks, exact Float64 copy checks (including BigInt/wrong width/offset/nonfinite/oversize/empty/detached), source score output acceptance and malformed/property-get exception rejections.

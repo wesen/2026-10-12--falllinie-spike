@@ -37,7 +37,14 @@ static GLuint texture(int w,int h,GLint internal,GLenum format,GLenum type){
  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);return t;
 }
 void Renderer::initialize(uint32_t seed,int first_cell,int count,int w,int h,const std::string& assets,bool precise_depth,bool stable_sky,bool play_mode){
- scene_=program(read_file(assets+"/scene_vs.glsl"),read_file(assets+"/scene_fs.glsl"),"original scene");
+ std::string scene_source=read_file(assets+"/scene_vs.glsl");
+ const std::string projection="gl_Position=uVP*w;";
+ auto projection_at=scene_source.find(projection);
+ if(projection_at==std::string::npos)throw std::runtime_error("original scene projection expression missing");
+ scene_source.replace(projection_at,projection.size(),"gl_Position=uVP*vec4(w.xyz-uRenderOrigin,1.);");
+ scene_source.insert(scene_source.find("void main(){"),"uniform highp vec3 uRenderOrigin;\n");
+ scene_=program(scene_source,read_file(assets+"/scene_fs.glsl"),"original scene with relative projection");
+ std::cout<<"projection coordinates="<<(relative_coordinates_?"camera-relative":"source absolute (diagnostic)")<<'\n';
  std::string print_source=read_file(assets+"/post_fs.glsl");
  if(precise_depth){
   const std::string original="uniform sampler2D uC, uD;";
@@ -136,8 +143,13 @@ void Renderer::make_targets(){
 }
 void Renderer::resize(int w,int h){if(w==width_ && h==height_)return;delete_targets();width_=w;height_=h;make_targets();gl_check("resize");}
 void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
+ // The existing VP's rotational row is translation-independent and retains the
+ // active view's up vector (including first-person roll). Never invert its large
+ // world translation for sky reconstruction. Both passes build their own frame.
+ Vec3 up=norm({camera_.vp[1],camera_.vp[5],camera_.vp[9]});
+ const auto frame=render_frame(camera_.eye,camera_.look,up,fov_*3.141592653589793/180,double(width_)/height_,relative_coordinates_);
  glBindFramebuffer(GL_FRAMEBUFFER,scene_fbo_);glViewport(0,0,width_,height_);glEnable(GL_DEPTH_TEST);glDisable(GL_BLEND);glDisable(GL_CULL_FACE);glDepthMask(GL_TRUE);glClearColor(1,0,0,0);glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);glUseProgram(scene_);
- matrix(scene_,"uVP",camera_.vp);matrix(scene_,"uM",identity());const float identity3[]={1,0,0,0,1,0,0,0,1};glUniformMatrix3fv(loc(scene_,"uN"),1,GL_FALSE,identity3);
+ matrix(scene_,"uVP",frame.vp);vec3(scene_,"uRenderOrigin",frame.origin);matrix(scene_,"uM",identity());const float identity3[]={1,0,0,0,1,0,0,0,1};glUniformMatrix3fv(loc(scene_,"uN"),1,GL_FALSE,identity3);
  vec3(scene_,"uCam",camera_.eye);vec3(scene_,"uL",norm({0.45,0.78,-0.5}));glUniform2f(loc(scene_,"uFog"),150,400);
  // Three nondegenerate shadow segments, far outside every supported fixed patch.
  const float shadows[]={1000000,1000000,1000000,.26f,1000000,1000001,1000000,0,1000002,1000000,1000000,.17f,1000002,1000001,1000000,0,1000004,1000000,1000000,.2f,1000004,1000001,1000000,0};
@@ -146,13 +158,13 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
  if(rider_indices_){integer(scene_,"uKind",1);glBindVertexArray(rider_vao_);for(const auto& group:rider_groups_){scalar(scene_,"uMat",float(group[2]));glDrawElements(GL_TRIANGLES,GLsizei(group[1]),GL_UNSIGNED_INT,reinterpret_cast<void*>(uintptr_t(group[0])*4));}}
  glBindFramebuffer(GL_FRAMEBUFFER,print_fbo_);glViewport(0,0,width_,height_);glDisable(GL_DEPTH_TEST);glUseProgram(post_);
  glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,color_);integer(post_,"uC",0);glActiveTexture(GL_TEXTURE1);glBindTexture(GL_TEXTURE_2D,depth_);integer(post_,"uD",1);
- glUniform2f(loc(post_,"uRes"),width_,height_);matrix(post_,"uIVP",camera_.inverse_vp);vec3(post_,"uCamP",camera_.eye);vec3(post_,"uSunG",norm({.42,.14,1}));
+ glUniform2f(loc(post_,"uRes"),width_,height_);matrix(post_,"uIVP",frame.inverse_vp);vec3(post_,"uCamP",frame.eye);vec3(post_,"uSunG",norm({.42,.14,1}));
  const Vec3 papers[]={{243/255.0,244/255.0,247/255.0},{244/255.0,244/255.0,245/255.0},{240/255.0,240/255.0,241/255.0}};
  const Vec3 inks[]={{28/255.0,47/255.0,158/255.0},{18/255.0,18/255.0,18/255.0},{17/255.0,17/255.0,18/255.0}};
  const Vec3 spots[]={{1,77/255.0,141/255.0},{227/255.0,18/255.0,11/255.0},{141/255.0,141/255.0,145/255.0}};
  palette=palette%3;vec3(post_,"uPaper",papers[palette]);vec3(post_,"uInk",inks[palette]);vec3(post_,"uGrey",spots[palette]);
  scalar(post_,"uNear",.1);scalar(post_,"uFar",900);scalar(post_,"uPitch",4.4f*width_/1024);scalar(post_,"uInv",0);scalar(post_,"uTime",float(game_time_));scalar(post_,"uSpeed",0);scalar(post_,"uFlash",0);scalar(post_,"uEW",1);scalar(post_,"uApx",float((fov_*3.141592653589793/180)/height_*1.2));glUniform2f(loc(post_,"uFogP"),150,380);
- Vec3 sun=camera_.eye+norm({.42,.14,1})*800;double clip[4]{};for(int r=0;r<4;++r)clip[r]=camera_.vp[r]*sun.x+camera_.vp[4+r]*sun.y+camera_.vp[8+r]*sun.z+camera_.vp[12+r];
+ Vec3 sun=frame.eye+norm({.42,.14,1})*800;double clip[4]{};for(int r=0;r<4;++r)clip[r]=frame.vp[r]*sun.x+frame.vp[4+r]*sun.y+frame.vp[8+r]*sun.z+frame.vp[12+r];
  if(clip[3]>0)glUniform2f(loc(post_,"uSunPx"),(clip[0]/clip[3]*.5+.5)*width_,(clip[1]/clip[3]*.5+.5)*height_);else glUniform2f(loc(post_,"uSunPx"),-9999,-9999);
  scalar(post_,"uSunR",height_*.085);glBindVertexArray(fullscreen_vao_);glDrawArrays(GL_TRIANGLES,0,3);
  glBindFramebuffer(GL_FRAMEBUFFER,0);glViewport(0,0,drawable_w,drawable_h);glUseProgram(copy_);

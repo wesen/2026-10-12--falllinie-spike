@@ -22,6 +22,7 @@ public:
  double build_ms()const{return build_ms_;}
  double stream_ms()const{return stream_ms_;}
  void set_fps(double fps){fps_=fps;}
+ void set_absolute_coordinates(bool absolute){relative_coordinates_=!absolute;}
  int width()const{return width_;}
  int height()const{return height_;}
  const Camera& camera()const{return camera_;}
@@ -40,7 +41,7 @@ private:
  std::vector<uint32_t> rider_triangles_;
  std::vector<std::array<uint32_t,3>> rider_groups_;
  Vec3 camera_direction_{0,0,1},camera_velocity_{},look_velocity_{};
- bool following_=false;
+ bool following_=false,relative_coordinates_=true;
  Vec3 first_person_eye_{},first_person_forward_{0,0,1},first_person_up_{0,1,0};
  double fov_=62,game_time_=0,stream_ms_=0,fps_=0;
  int patch_first_=0,patch_count_=3;

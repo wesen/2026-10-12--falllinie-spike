@@ -40,4 +40,11 @@ inline Mat4 inverse(Mat4 m){
  }
  Mat4 out{};for(int r=0;r<4;++r)for(int c=0;c<4;++c)out[c*4+r]=a[r][c+4];return out;
 }
+struct RenderFrame {Vec3 origin,eye;Mat4 vp,inverse_vp;};
+inline RenderFrame render_frame(Vec3 eye,Vec3 look,Vec3 up,double fovy,double aspect,bool relative=true){
+ // Keep simulation and shading in world space; only projection uses this origin.
+ Vec3 origin=relative?Vec3{std::round(eye.x/128)*128,std::round(eye.y/128)*128,std::round(eye.z/128)*128}:Vec3{};
+ Mat4 vp=multiply(perspective(fovy,aspect,.1,900),look_at(eye-origin,look-origin,up));
+ return {origin,eye-origin,vp,inverse(vp)};
+}
 }

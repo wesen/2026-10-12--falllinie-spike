@@ -356,3 +356,54 @@ The user reported unstable texture/blue lines and distant mountains moving verti
 ### Technical details
 - Both original shaders remain unchanged at this evidence checkpoint.
 - Approximate pixel displacement is ray-vector displacement divided by vertical angular pixel size, not a measured image registration result; float-emulation arithmetic may differ from Mali FMA behavior.
+
+## Step 7: Implement camera-relative projection without changing the world
+
+I implemented a snapped 128 m render origin while preserving absolute coordinates for simulation, geometry storage and source shading. Each view reconstructs its projection/inverse projection with small translations; the scene vertex shader subtracts the same origin only when projecting, and the post shader and sun projection use that relative frame. The original shader files remain byte-identical. Host compilation, the original terrain checks and narrowly targeted sky/boundary probes pass; this checkpoint is not yet a device qualification.
+
+### Prompt Context
+- **User prompt:** See Step 6 for the exact rendering report and diary/commit instruction.
+- **Assistant interpretation:** Fix the numerical cause rather than suppressing effects or altering simulation.
+- **Inferred user intent:** Stable extended runs and traceable fixes.
+- **Commit (code):** Evidence checkpoint `44c841d`; implementation hash will be recorded at the next checkpoint.
+
+### What I did
+- Added `RenderFrame`/`render_frame` in `src/math.hpp` with rounded 128 m origins and matching relative eye/VP/inverse VP.
+- Added a guarded runtime vertex-source substitution for projection only; original `vW` remains absolute for lighting, fog, paint and shadow calculations.
+- Updated `Renderer::render` to preserve the active view's rotational up vector, publish the render origin and use relative post/sun inputs.
+- Added `--absolute-render-coordinates` for bounded A/B diagnostics and expanded diagnostic cell bounds from 64 to 4096 so cell 536 can reproduce the observed location.
+- Extended the CPU probe to exercise production helpers and a snapped-origin boundary with both world-up and rolled first-person up.
+
+### Why
+- Shader depth reconstruction and sky reconstruction need well-conditioned projection matrices. Merely using a highp sampler or double-precision inversion after float truncation does not fix the inputs.
+- Keeping rebasing inside the render pass avoids changing source generation, physics, caches or the shared simulation, and minimizes conflicts with the unmerged gameplay renderer.
+
+### What worked
+- `cmake --build build -j4` passed; `build/test-terrain` passed all 268 terrain cases and existing hash/RNG/mesh/matrix/incremental identity checks.
+- Production-helper probe retained the absolute/relative results in Step 6. Origin-boundary max ray jumps were `3.2737144e-05` (world up) and `3.84849886e-05` (rolled up), both below the `1e-4` regression threshold.
+- ARM64 Docker cross-link passed against the previously captured target SDL library; no dependency installation or direct GLES linkage was required.
+- `node scripts/generate-gl-loader.cjs` reproduced the current 59-entry loader without a change.
+
+### What didn't work
+- Earlier evidence commit check initially reported `reference/01-investigation-diary.md:359: new blank line at EOF.` Removed the redundant final blank line, reran the check and committed `44c841d` successfully.
+- No implementation compile/probe failure occurred. Mali A/B captures and moving dual-view observation are still pending at this checkpoint.
+
+### What I learned
+- Camera-relative rendering can retain source world-space shader inputs; a renderer-only fix need not reset the procedural course or modify deterministic physics.
+
+### What was tricky to build
+- The existing VP rotational row provides the currently active view's up basis, including first-person roll, without relying on a separate mode flag. Its translation must not be reused for inversion.
+- Sun position must be expressed relative to the same origin as VP; otherwise it would drift independently of the background.
+
+### What warrants a second pair of eyes
+- Snapped-origin continuity, GPU float vertex precision at much larger distances, shading/shadow calculations still in absolute space, and preservation of this fix during integration conflict resolution.
+
+### What should be done in the future
+- Run one bounded far-cell absolute/relative comparison on Mali, restore the interactive dual-view build, and measure moving render continuity. Do not call the final gameplay playtest complete on this basis.
+
+### Code review instructions
+- Review `render_frame`, the guarded vertex-source substitution and `Renderer::render`; run the precision probe and `build/test-terrain`. Confirm no archived shader was edited.
+
+### Technical details
+- Physics/world positions remain double where originally defined. GPU mesh attributes retain their original float storage; rebasing fixes projection cancellation but does not restore information already rounded in extremely distant vertices.
+- `--absolute-render-coordinates` is diagnostic only; the default is camera-relative. Both view passes independently build frames and continue sharing one context/simulation.

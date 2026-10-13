@@ -1,0 +1,4 @@
+absolute: max_ray_error=0.0322687073 max_adjacent_ray_jump=0.0617543549 approx_vertical_pixels=16.4358
+relative: max_ray_error=2.96038603e-05 max_adjacent_ray_jump=3.40007826e-05 approx_vertical_pixels=0.00904924
+origin-boundary up=(0.000,1.000,0.000): max_ray_jump=3.2737144e-05
+origin-boundary up=(0.195,0.976,0.098): max_ray_jump=3.84849886e-05

@@ -1,0 +1,21 @@
+GL_VERSION=OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2
+GL_RENDERER=llvmpipe (LLVM 20.1.2, 256 bits)
+GL_VENDOR=Mesa
+GLSL=OpenGL ES GLSL ES 3.20
+warning: swap interval: That operation is not supported
+joystick=none
+program original scene with relative projection linked
+projection coordinates=camera-relative
+sky hash=stable wrapped integer lattice
+depth sampler=explicit highp portability override
+program original print linked
+program presentation diagnostic linked
+program batched native HUD using source font linked
+glyph atlas loaded
+terrain vertices=59492 indices=351072 build_ms=11.4924 targets=384x288 FBOs complete
+SOURCE: A jump / B-X boost / L1-R1-L2-R2 grabs / START pause / SELECT dev / SELECT+Y new seed / SELECT+START quit; keyboard WASD/arrows, SPACE, SHIFT/B, J/K/U/I, P/ESC, R new seed, F2 dev, M, C, F3, F10
+seed=42 best_path=/home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-7c532c54-8195-46ce-a832-0eea5d97d995-s0-0/ttmp/2026/10/13/FALLLINIE-AUDIO-003--buffered-native-audio-worker-and-callback-deadline-qualification/scripts/.work/host-prefs/Falllinie/Falllinie/best-score
+ride z=4 speed=6 airborne=0 charge=0 score=0
+FPS=42.8181 frame_interval_ms=23.3556
+AUDIO driver=dummy rate=48000 buffer=512 mode=direct vinyl=1 callbacks=92 mean_ms=0.521331 max_ms=0.895365 over_budget=0 callback_cpu_samples=92 callback_cpu_mean_ms=0.519631 callback_cpu_max_ms=0.893189 callback_cpu_unavailable=0 producer_blocks=0 producer_mean_ms=n/a producer_max_ms=0 producer_over_budget=0 producer_cpu_samples=0 producer_cpu_mean_ms=n/a producer_cpu_max_ms=n/a producer_cpu_unavailable=0 produced=47104 delivered=47104 pcm_depth=0 pcm_target=0 pcm_capacity=8192 pcm_low=0 pcm_high=0 starved_callbacks=0 missing_frames=0 queue_high=1 drops=0 steals=0 nonfinite=0 budget_counters_not_driver_xruns=1
+frames=43 measured=0 frame_p50_ms=0 frame_p95_ms=0 frame_p99_ms=0 peak_rss_kib=141696 GL_error=0

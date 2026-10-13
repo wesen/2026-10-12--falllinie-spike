@@ -128,3 +128,61 @@ Read the two new tests and host logs, compare timing counters independently. The
 
 ### Follow-up request (deferred)
 Parent relayed a new authored request for a detailed textbook-style technical Obsidian project report (no analogies), commit/push to go-go-parc **after** implementation, independent review and parent integration/qualification. This lane records the follow-up only; no vault edits/push now. Parent will provide finalized native commits/device evidence and scoped authority. The later report must load obsidian-vault-writing and textbook-authoring skills, preserve existing reports/unrelated state, and cover PCM/SPSC publication, DSP/FFT clocks, ownership/lifecycle, tests and measured failures/limits with self-contained figures and code/API references.
+
+## Step 4: Preserve exact source evidence and qualify host bounds/races honestly
+
+Completed source, sanitizer and repeated lifecycle gates without touching parent/native device state. Exact 90-second float PCM and source trace comparison against base0ff0876 succeeded, rather than relying on audible similarity or WAV quantization. The migrated A/B API also recreates both original historical WAV hashes exactly. Generated source copies/binaries/PCM/WAVs stay under locally ignored `.work/`; bounded logs and manifests are intentional evidence.
+
+ASan/UBSan passed all five audio targets. TSan built, but every attempted executable failed before test execution with `FATAL: ThreadSanitizer: unexpected memory mapping ...`. This is an unsupported runtime gate here, **not a race-safety pass**. No ASLR/system/affinity/FIFO changes or execution-mode fallback were attempted.
+
+**Integration commit:** `32fe75cb6c1113fe1f8f9497d038d6895da6d5e0` — Audio: expose worker timing, explicit vinyl preference and deterministic shutdown qualification.
+
+### What I did
+- Added ticket `scripts/render-source-reference.cpp` and `scripts/verify-source-identity.py`, with locally ignored source/render workspace. `python3 <ticket>/scripts/verify-source-identity.py` compiled base and candidate, rendered 90 seconds at 48 kHz/seed19 using identical numeric ride/event controls including source reactions/GROTESK/restart, compared raw float bytes and scheduled trace.
+- Ran `python3 scripts/2026/10/13/audio-crackle-isolation/01-build-matched-probes.py`; only new ticket `scripts/vinyl-probes` logs/manifest were written.
+- ASan/UBSan: `cmake -S . -B build-audio-asan -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined -fno-omit-frame-pointer -O1'`; `cmake --build build-audio-asan --target test-audio test-audio-pcm test-audio-worker test-audio-lifecycle test-audio-diagnostics -j4`; `ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-audio-asan -R '^audio-' --output-on-failure`.
+- TSan: `cmake -S . -B build-audio-tsan -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_FLAGS='-fsanitize=thread -fno-omit-frame-pointer -O1'`; `cmake --build build-audio-tsan --target test-audio-pcm test-audio-worker test-audio-lifecycle -j4`; `TSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-audio-tsan -R '^audio-(pcm|worker|lifecycle)$' --output-on-failure`.
+- Stress: `ctest --test-dir build-audio -R '^audio-(pcm|worker|lifecycle)$' --repeat until-fail:10 --output-on-failure` (30 successful executions, 31.78 s).
+- Rebuilt final main (`cmake --build build-audio --target falllinie-spike -j4`), validated help/invalid-mode parser, `bash -n scripts/falllinie-spike.sh`, and strict existing `bash scripts/2026/10/13/full-gameplay-integration/check-audio.sh` (`-Wall -Wextra -Wpedantic -Werror`).
+- Bounded 1-second CLI smoke with Xvfb/dummy/llvmpipe and `--audio-mode direct --no-vinyl --source-vinyl` verified explicit mode and last-option override: actual mode direct/vinyl1, producer_blocks0, produced=delivered47104. Used ticket `.work/host-prefs` as XDG_DATA_HOME for this smoke; sustained earlier run used ordinary host preferences, not device/native parent state.
+
+### Why
+The architecture must not alter source summation, full convolution or RNG. Raw-float comparison and identical schedule metadata can reject subtle math/clock changes that 16-bit rendering might conceal. Sanitizer runtime failure is separate from algorithm correctness and should not be silently "worked around" with host policy changes.
+
+### What worked
+- **Base→candidate source float PCM is bit-identical**: 34,560,000 bytes, SHA256 `09894bf1acfcb0cfe11e37345cab8dde710beee06a751046e532fb4a9cbd59ac`; trace SHA256 `71c882e340c52ee96946ec31a1fe8a4024db02deec8d7be7fc6c47d5efec731c` (see `source-identity.json/log`).
+- Migrated source WAV SHA256 `b7e9ec292d8c6f96781ec420506854e094e7fe340577995c4a5018758b81830b`, no-vinyl `79d1b0355e852c1dce786a0f80f6c182216f8ea4ac3fd886d4373a3dfb0d00d3`, exactly equal to the original historical manifest. No playback or listening assertion was made by the script.
+- **ASan+UBSan 5/5 passed**, 27.58 s; leak detection and halt-on-UB enabled. Strict source CPU test passes with source IR error `9.28995e-09`, non-impulse error `3.17755e-08`, 20 sections/2434 steps, callback/render allocations0.
+- **Repeated transport/actual worker/dummy lifecycle 30/30 passed**; deterministic stop works while full/empty/paused/refilling. `git diff --check` passed.
+
+### What didn't work
+TSan CTest returned **8**, 0/3 passed, all failed at startup:
+- PCM: `FATAL: ThreadSanitizer: unexpected memory mapping 0x64d83777f000-0x64d837781000`
+- Worker: `FATAL: ThreadSanitizer: unexpected memory mapping 0x5b31f7206000-0x5b31f7209000`
+- Lifecycle: `FATAL: ThreadSanitizer: unexpected memory mapping 0x62b06b131000-0x62b06b134000`
+Exact bounded output is `scripts/tsan.log`. The sustained host zero-starvation failure from Step3 remains open; the subsequent narrow tests do not erase it.
+
+### What I learned
+Supported offline options preserve the original A/B hashes without source copying or literal coefficient editing. Timing changes have no source PCM effect for the exact matched sequence, while scheduling and finite lead remain separately observable runtime limits.
+
+### What was tricky to build
+Compiling the exact base header/DSP/audio against the common reference harness without contaminating current headers; preserving historical manifests; representing unavailable producer CPU in direct-mode logs as n/a rather than a fabricated utilization value.
+
+### What warrants a second pair of eyes
+Independent source diff and acquire/release ownership review remain required because TSan never ran here. Verify source/vinyl hash manifests, actual callback fixture and pause/close ordering; inspect the host starvation failure rather than infer acceptance from 12/12 CPU tests.
+
+### What should be done in the future
+Parent should review exact final patch, qualify supported target scheduling/audio/latency/listening, and consider a supported race-sanitizer environment. Optional ARM cross-link was not attempted; parent owns target toolchain/deployment. No ticket closure or native/vault push in this lane.
+
+### Code review instructions
+Read source API reference03, then exact base→final patch and tests. Source comparison script is replayable; binaries/WAVs/float captures are ignored, hashes/logs committed. Parent owns independent read-only review and the later report authority packet.
+
+### Report-ready evidence outline
+1. Define stereo float frames/sample clock and callback byte/request budget; reference audio.hpp and obtained-device constraints.
+2. Explain the unchanged numerical graph: source scheduler/voices, full stereo partitioned FFT convolution,1024 wet latency, 2x49-tap saturation and RNG; cite 90-second exact hashes and numerical error regressions.
+3. Present main→numeric commands→single DSP worker→PCM ring→SDL ownership diagram, acquire/release pseudocode and frame-cursor wrap/partial-retirement rules.
+4. Derive storage versus target lead and added response latency (48 kHz:2048≈42.7 ms,5120≈106.7 ms), including silence/delivered frontier semantics.
+5. Explain startup transaction, acknowledged pause/retained PCM, mute/restart clock continuity, close/join and caller-owned SDL; use actual worker/dummy tests as executable contracts.
+6. Separate callback wall/CPU, producer wall/CPU, application starvation, block-budget exceedance and actual driver XRUN evidence. Plot only measured host aggregates; preserve the 1/1024 shortage and unsupported TSan failures.
+7. Explain vinyl preference as documented source adaptation and exact historical A/B reproduction, not timing repair.
+8. Append independent reviewer result and parent device comparisons/latency/listening **only after available**; state remaining finite-run limits and no fabricated utilization/60FPS/physical-scanout claims. Vault writing awaits scoped follow-up authorization and required skills.

@@ -1,0 +1,23 @@
+{
+  "base": "0ff0876ef3e0bafbad9a04c3c34b08f76aacc1f8",
+  "candidate_source_commit": "32fe75cb6c1113fe1f8f9497d038d6895da6d5e0",
+  "rate": 48000,
+  "seed": 19,
+  "seconds": 90,
+  "source_vinyl": true,
+  "bit_identical": true,
+  "renders": [
+    {
+      "variant": "base",
+      "float_bytes": 34560000,
+      "pcm_sha256": "09894bf1acfcb0cfe11e37345cab8dde710beee06a751046e532fb4a9cbd59ac",
+      "trace_sha256": "71c882e340c52ee96946ec31a1fe8a4024db02deec8d7be7fc6c47d5efec731c"
+    },
+    {
+      "variant": "candidate",
+      "float_bytes": 34560000,
+      "pcm_sha256": "09894bf1acfcb0cfe11e37345cab8dde710beee06a751046e532fb4a9cbd59ac",
+      "trace_sha256": "71c882e340c52ee96946ec31a1fe8a4024db02deec8d7be7fc6c47d5efec731c"
+    }
+  ]
+}

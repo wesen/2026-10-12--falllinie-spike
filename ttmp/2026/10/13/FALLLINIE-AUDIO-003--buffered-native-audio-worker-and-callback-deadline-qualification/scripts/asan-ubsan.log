@@ -1,0 +1,16 @@
+Internal ctest changing into directory: /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-7c532c54-8195-46ce-a832-0eea5d97d995-s0-0/build-audio-asan
+Test project /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-7c532c54-8195-46ce-a832-0eea5d97d995-s0-0/build-audio-asan
+    Start  8: audio-pcm
+1/5 Test  #8: audio-pcm ........................   Passed    0.02 sec
+    Start  9: audio-worker
+2/5 Test  #9: audio-worker .....................   Passed    1.06 sec
+    Start 10: audio-source
+3/5 Test #10: audio-source .....................   Passed   21.79 sec
+    Start 11: audio-diagnostics
+4/5 Test #11: audio-diagnostics ................   Passed    0.01 sec
+    Start 12: audio-lifecycle
+5/5 Test #12: audio-lifecycle ..................   Passed    4.71 sec
+
+100% tests passed, 0 tests failed out of 5
+
+Total Test time (real) =  27.58 sec

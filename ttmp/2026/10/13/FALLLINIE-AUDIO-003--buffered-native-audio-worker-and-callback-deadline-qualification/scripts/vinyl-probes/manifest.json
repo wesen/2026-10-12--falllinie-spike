@@ -1,0 +1,19 @@
+{
+  "production_modified": false,
+  "difference": "prepare_offline source_vinyl true vs false; generation/filter/RNG retained",
+  "listening_order": "15s reference, 1s silence, 15s no-vinyl; both offline (not played by this script)",
+  "renders": [
+    {
+      "variant": "source",
+      "source_vinyl": true,
+      "source_sha256": "4dc8d1a5217bb755638ff4200231ad2143b1da37ac0e09bbe0224407464d254b",
+      "wav_sha256": "b7e9ec292d8c6f96781ec420506854e094e7fe340577995c4a5018758b81830b"
+    },
+    {
+      "variant": "without-vinyl",
+      "source_vinyl": false,
+      "source_sha256": "4dc8d1a5217bb755638ff4200231ad2143b1da37ac0e09bbe0224407464d254b",
+      "wav_sha256": "79d1b0355e852c1dce786a0f80f6c182216f8ea4ac3fd886d4373a3dfb0d00d3"
+    }
+  ]
+}

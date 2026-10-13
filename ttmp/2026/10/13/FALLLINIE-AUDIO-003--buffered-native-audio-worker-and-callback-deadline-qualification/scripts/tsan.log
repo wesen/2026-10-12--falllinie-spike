@@ -1,0 +1,23 @@
+Internal ctest changing into directory: /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-7c532c54-8195-46ce-a832-0eea5d97d995-s0-0/build-audio-tsan
+Test project /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-7c532c54-8195-46ce-a832-0eea5d97d995-s0-0/build-audio-tsan
+    Start  8: audio-pcm
+1/3 Test  #8: audio-pcm ........................***Failed    0.01 sec
+FATAL: ThreadSanitizer: unexpected memory mapping 0x64d83777f000-0x64d837781000
+
+    Start  9: audio-worker
+2/3 Test  #9: audio-worker .....................***Failed    0.01 sec
+FATAL: ThreadSanitizer: unexpected memory mapping 0x5b31f7206000-0x5b31f7209000
+
+    Start 12: audio-lifecycle
+3/3 Test #12: audio-lifecycle ..................***Failed    0.01 sec
+FATAL: ThreadSanitizer: unexpected memory mapping 0x62b06b131000-0x62b06b134000
+
+
+0% tests passed, 3 tests failed out of 3
+
+Total Test time (real) =   0.03 sec
+
+The following tests FAILED:
+	  8 - audio-pcm (Failed)
+	  9 - audio-worker (Failed)
+	 12 - audio-lifecycle (Failed)

@@ -25,7 +25,7 @@ namespace {
 volatile std::sig_atomic_t termination_requested=0;
 void request_termination(int){termination_requested=1;}
 struct Config {
- bool place=false,resize_check=false,source_sampler_precision=false,play=false,autoplay=false,dual=false,source_sky_hash=false,gpu_profile=false,no_vsync=false,absolute_coordinates=false,muted=false;double seconds=0,fps_cap=0;int frames=0,width=512,height=384,cell=0,cells=3,debug=0,palette=0;uint32_t seed=42;
+ bool place=false,resize_check=false,source_sampler_precision=false,play=false,autoplay=false,dual=false,source_sky_hash=false,gpu_profile=false,no_vsync=false,absolute_coordinates=false,muted=false,dev_overlay=false;double seconds=0,fps_cap=0;int frames=0,width=512,height=384,cell=0,cells=3,debug=0,palette=0;uint32_t seed=42;
  std::string assets="assets/shaders",capture,receipt,profile;
 };
 Config parse(int argc,char** argv){
@@ -37,10 +37,11 @@ Config parse(int argc,char** argv){
   else if(a=="--cell")c.cell=std::stoi(value());else if(a=="--cells")c.cells=std::stoi(value());
   else if(a=="--debug-view")c.debug=std::stoi(value());else if(a=="--palette")c.palette=std::stoi(value());
   else if(a=="--muted")c.muted=true;
+  else if(a=="--dev-overlay"){c.dev_overlay=true;c.play=true;}
   else if(a=="--absolute-render-coordinates")c.absolute_coordinates=true;
   else if(a=="--no-vsync")c.no_vsync=true;else if(a=="--gpu-profile")c.gpu_profile=true;else if(a=="--profile")c.profile=value();else if(a=="--assets")c.assets=value();else if(a=="--capture-dir")c.capture=value();else if(a=="--receipt")c.receipt=value();
   else if(a=="--render-size"){auto size=value();auto x=size.find('x');if(x==std::string::npos)throw std::runtime_error("expected WIDTHxHEIGHT");c.width=std::stoi(size.substr(0,x));c.height=std::stoi(size.substr(x+1));}
-  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..5] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash] [--absolute-render-coordinates] [--muted] [--profile CSV] [--gpu-profile] [--no-vsync] [--fps N]\nF3 cycles debug; C cycles six palettes; A/START or ENTER/SPACE starts; START/P/ESC pauses; SELECT/R new run; M mutes; F10 or SELECT+START quits.\n";std::exit(0);}
+  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..5] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash] [--absolute-render-coordinates] [--muted] [--dev-overlay] [--profile CSV] [--gpu-profile] [--no-vsync] [--fps N]\nF3 cycles debug; C cycles six palettes; A/START or ENTER/SPACE starts; START/P/ESC pauses; SELECT/F2 toggles developer overlay; SELECT+Y/R new run; M mutes; F10 or SELECT+START quits. --dev-overlay starts gameplay title with overlay. SELECT-first chords restore pre-press visibility; F2 is independent.\n";std::exit(0);}
   else throw std::runtime_error("unknown argument "+a);
  }
  if(!std::isfinite(c.fps_cap)||c.fps_cap<0||c.fps_cap>240||c.width<128||c.height<96||c.width>2048||c.height>1536||c.cell< -1||c.cell>4096||c.cells<1||c.cells>7||c.frames<0||c.seconds<0||!std::isfinite(c.seconds)||c.debug<0||c.debug>5||c.palette<0||c.palette>5)throw std::runtime_error("configuration outside bounded spike limits");
@@ -86,13 +87,17 @@ int main(int argc,char** argv){
   fl::Game game(c.seed);fl::NativeFrameClock frame_clock;fl::NativeInputMapper input_mapper;fl::TitleAutopilot autopilot(c.seed);
   fl::AudioEngine audio;bool audio_started=false,muted=c.muted;std::string last_persistence_error;
   fl::Rng run_seeds{c.seed^0x97f4a71bu};
+  bool dev_overlay=c.dev_overlay,select_overlay_saved=dev_overlay;
+  fl::DeveloperOverlayCache overlay_cache;fl::DeveloperFrameWindow overlay_window;
+  fl::DeveloperFrameTimings completed_frame;
+  renderer.set_developer_overlay(dev_overlay);
   if(c.play){
    char* preference=SDL_GetPrefPath("Falllinie","Falllinie");
    if(!preference)throw std::runtime_error(std::string("app best path: ")+SDL_GetError());
    std::string best_path=std::string(preference)+"best-score";SDL_free(preference);game.set_best_path(best_path);
    if(c.autoplay){game.start();audio_started=audio.open();if(!audio_started)std::cerr<<"audio unavailable: "<<SDL_GetError()<<'\n';else audio.set_muted(muted);}
    else game.enter_title();
-   std::cout<<"SOURCE: A jump / B-X boost / L1-R1-L2-R2 grabs / START pause / SELECT new seed / SELECT+START quit; keyboard WASD/arrows, SPACE, SHIFT/B, J/K/U/I, P/ESC, R, M, C, F3, F10\nseed="<<game.seed()<<" best_path="<<best_path<<'\n';
+   std::cout<<"SOURCE: A jump / B-X boost / L1-R1-L2-R2 grabs / START pause / SELECT dev / SELECT+Y new seed / SELECT+START quit; keyboard WASD/arrows, SPACE, SHIFT/B, J/K/U/I, P/ESC, R new seed, F2 dev, M, C, F3, F10\nseed="<<game.seed()<<" best_path="<<best_path<<'\n';
   }
   auto previous_frame=std::chrono::steady_clock::now();
   std::vector<double> times,swaps;
@@ -118,6 +123,9 @@ int main(int argc,char** argv){
     physical.axis_x=SDL_JoystickGetAxis(pad,0)/32767.;physical.axis_y=SDL_JoystickGetAxis(pad,1)/32767.;
    }
    const auto actions=input_mapper.read(physical,game.title());quit=quit||actions.quit;
+   if(actions.dev_overlay_restore)dev_overlay=select_overlay_saved;
+   if(actions.dev_overlay_toggle){if(actions.dev_overlay_select)select_overlay_saved=dev_overlay;dev_overlay=!dev_overlay;}
+   if(actions.dev_overlay_restore||actions.dev_overlay_toggle){renderer.set_developer_overlay(dev_overlay);overlay_cache.invalidate();}
    if(actions.debug)c.debug=(c.debug+1)%6;
    if(actions.palette)c.palette=(c.palette+1)%6;
    if(c.play&&!quit){
@@ -128,10 +136,11 @@ int main(int argc,char** argv){
    }
    auto event_end=std::chrono::steady_clock::now(),physics_end=event_end,player_end=event_end;
    double elapsed=std::min(.05,std::chrono::duration<double>(frame_start-previous_frame).count());previous_frame=frame_start;
+   fl::FrameResult current_frame;
    if(c.play&&!quit){
     fl::Controls input=game.title()||c.autoplay?autopilot.read(game,elapsed):actions.ride;
-    auto frame=frame_clock.advance(game,input,elapsed);
-    physics_end=std::chrono::steady_clock::now();renderer.set_native_feedback(pad!=nullptr,muted);renderer.update_player(game,frame.raw_dt);player_end=std::chrono::steady_clock::now();
+    current_frame=frame_clock.advance(game,input,elapsed);
+    physics_end=std::chrono::steady_clock::now();renderer.set_native_feedback(pad!=nullptr,muted);renderer.update_player(game,current_frame.raw_dt);player_end=std::chrono::steady_clock::now();
     fl::publish_feedback(audio,game,audio_started);
     if(game.persistence_error!=last_persistence_error){last_persistence_error=game.persistence_error;if(!last_persistence_error.empty())std::cerr<<last_persistence_error<<'\n';}
     if(frames%60==0)std::cout<<"ride z="<<game.position.z<<" speed="<<fl::length(game.velocity)<<" airborne="<<game.airborne<<" charge="<<game.charge<<" score="<<game.score<<std::endl;
@@ -141,6 +150,16 @@ int main(int argc,char** argv){
     const bool large=(frames/60)%2==1;
     renderer.resize(large?std::min(2048,c.width*2):c.width,large?std::min(1536,c.height*2):c.height);
    }
+   const double overlay_now=std::chrono::duration<double>(frame_start-start).count();
+   if(dev_overlay&&overlay_cache.due(overlay_now)){
+    fl::DeveloperOverlaySnapshot snapshot;
+    snapshot.frame=completed_frame;snapshot.render=renderer.developer_diagnostics(drawable_w,drawable_h);
+    snapshot.title=game.title();snapshot.paused=game.paused();snapshot.mode=game.mode;snapshot.position=game.position;
+    snapshot.speed=fl::length(game.velocity);snapshot.air_time=game.airborne?game.air_time:0;snapshot.charge=game.charge;snapshot.slowmo=game.slowmo;
+    snapshot.seed=game.seed();snapshot.generation=game.generation();snapshot.rolling_fps=overlay_window.fps();snapshot.rolling_interval_ms=overlay_window.interval_ms();
+    snapshot.audio_open=audio_started;if(audio_started){snapshot.audio=audio.diagnostics();const char* backend=SDL_GetCurrentAudioDriver();snapshot.audio_backend=backend?backend:"n/a";}
+    overlay_cache.refresh(snapshot,overlay_now);renderer.set_developer_overlay_lines(overlay_cache.lines());
+   }
    auto top_start=std::chrono::steady_clock::now();profiler.begin_gpu(frames,0);
    renderer.render(drawable_w,drawable_h,c.debug,c.palette);profiler.end_gpu(frames,0);
    auto swap_start=std::chrono::steady_clock::now();SDL_GL_SwapWindow(window);auto top_swap_end=std::chrono::steady_clock::now(),bottom_submit_end=top_swap_end;
@@ -148,7 +167,10 @@ int main(int argc,char** argv){
    auto swap_end=std::chrono::steady_clock::now();
    if(c.fps_cap>0){auto period=std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(1.0/c.fps_cap));frame_deadline+=period;if(swap_end<frame_deadline)std::this_thread::sleep_until(frame_deadline);else if(swap_end>frame_deadline+period)frame_deadline=swap_end;}
    auto end=std::chrono::steady_clock::now();
-   profiler.cpu(frames,ms(previous_end,end),ms(frame_start,event_end),ms(event_end,physics_end),ms(physics_end,player_end),c.play?renderer.stream_ms():0,ms(top_start,swap_start),ms(swap_start,top_swap_end),ms(top_swap_end,bottom_submit_end),ms(bottom_submit_end,swap_end),ms(swap_end,end));previous_end=end;
+   completed_frame={true,bool(lower_window),ms(previous_end,end),ms(frame_start,event_end),ms(event_end,physics_end),ms(physics_end,player_end),c.play?renderer.stream_ms():0,ms(top_start,swap_start),ms(swap_start,top_swap_end),ms(top_swap_end,bottom_submit_end),ms(bottom_submit_end,swap_end),ms(swap_end,end),current_frame.ticks,current_frame.scale};
+   const auto& t=completed_frame;
+   profiler.cpu(frames,t.interval_ms,t.input_ms,t.physics_ms,t.player_ms,t.stream_ms,t.top_submit_ms,t.top_swap_ms,t.bottom_submit_ms,t.bottom_swap_ms,t.pace_ms);previous_end=end;
+   overlay_window.add(t.interval_ms);
    ++fps_frames;if(ms(fps_epoch,end)>=1000){double fps=fps_frames*1000.0/ms(fps_epoch,end);renderer.set_fps(fps);std::cout<<"FPS="<<fps<<" frame_interval_ms="<<ms(frame_start,end)<<std::endl;fps_epoch=end;fps_frames=0;}
    ++frames;
    if(frames>60){times.push_back(std::chrono::duration<double,std::milli>(end-frame_start).count());swaps.push_back(std::chrono::duration<double,std::milli>(end-swap_start).count());}

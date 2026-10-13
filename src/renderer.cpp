@@ -87,6 +87,7 @@ uniform vec2 uOutputRes;out vec2 vUV;
 void main(){vUV=aUV;gl_Position=vec4(aPosition/uOutputRes*2.-1.,0.,1.);})";
  hud_program_=program(hud_vs,hud_fs,"batched native HUD using source font");
  glGenVertexArrays(1,&hud_vao_);glBindVertexArray(hud_vao_);glGenBuffers(1,&hud_vbo_);glBindBuffer(GL_ARRAY_BUFFER,hud_vbo_);glEnableVertexAttribArray(0);glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,16,nullptr);glEnableVertexAttribArray(1);glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,16,reinterpret_cast<void*>(8));
+ glGenVertexArrays(1,&developer_overlay_vao_);glBindVertexArray(developer_overlay_vao_);glGenBuffers(1,&developer_overlay_vbo_);glBindBuffer(GL_ARRAY_BUFFER,developer_overlay_vbo_);glEnableVertexAttribArray(0);glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,16,nullptr);glEnableVertexAttribArray(1);glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,16,reinterpret_cast<void*>(8));
  SDL_Surface* font=SDL_LoadBMP((assets+"/../hud-font.bmp").c_str());
  if(!font)throw std::runtime_error("missing source HUD font atlas");
  SDL_Surface* font_rgba=SDL_ConvertSurfaceFormat(font,SDL_PIXELFORMAT_ABGR8888,0);SDL_FreeSurface(font);
@@ -182,7 +183,29 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
   glBindVertexArray(hud_vao_);glBindBuffer(GL_ARRAY_BUFFER,hud_vbo_);glBufferData(GL_ARRAY_BUFFER,glyphs.size()*sizeof(HUDVertex),glyphs.data(),GL_DYNAMIC_DRAW);
   glDrawArrays(GL_TRIANGLES,0,primary);vec3(hud_program_,"uInk",spots[palette]);glDrawArrays(GL_TRIANGLES,primary,status_end-primary);vec3(hud_program_,"uInk",inks[palette]);glDrawArrays(GL_TRIANGLES,status_end,GLsizei(glyphs.size())-status_end);glDisable(GL_BLEND);
  }
+ if(developer_overlay_visible_&&!first_person_view_)draw_developer_overlay(drawable_w,drawable_h);
  gl_check("render");
+}
+void Renderer::draw_developer_overlay(int width,int height){
+ if(width<=0||height<=0)return;
+ glBindVertexArray(developer_overlay_vao_);
+ if(developer_overlay_dirty_||width!=developer_overlay_width_||height!=developer_overlay_height_){
+  struct GlyphVertex{float x,y,u,v;};static_assert(sizeof(GlyphVertex)==16);
+  std::vector<GlyphVertex> vertices;vertices.reserve((developer_overlay_rows*developer_overlay_columns+1)*6);
+  const float scale=std::min(width/1024.f,height/768.f);
+  const float left=8*scale,bottom=62*scale,panel_width=1008*scale,panel_height=422*scale;
+  const float corners[6][2]={{0,0},{1,0},{0,1},{0,1},{1,0},{1,1}};
+  auto quad=[&](float x,float y,float w,float h,int character){for(const auto& p:corners)vertices.push_back({x+p[0]*w,y+p[1]*h,character<0?-1.f:(character+p[0])/96.f,character<0?0.f:1.f-p[1]});};
+  quad(left,bottom,panel_width,panel_height,-1);
+  for(size_t row=0;row<developer_overlay_lines_.size();++row){const auto& text=developer_overlay_lines_[row];for(size_t col=0;col<std::min(text.size(),developer_overlay_columns);++col){unsigned char c=text[col];if(c<32||c>127)c='?';quad(left+(8+col*12)*scale,bottom+panel_height-(30+row*22)*scale,12*scale,20*scale,int(c)-32);}}
+  glBindBuffer(GL_ARRAY_BUFFER,developer_overlay_vbo_);glBufferData(GL_ARRAY_BUFFER,vertices.size()*sizeof(GlyphVertex),vertices.data(),GL_DYNAMIC_DRAW);
+  developer_overlay_vertices_=GLsizei(vertices.size());developer_overlay_width_=width;developer_overlay_height_=height;developer_overlay_dirty_=false;
+ }
+ glUseProgram(hud_program_);glUniform2f(loc(hud_program_,"uOutputRes"),width,height);
+ glEnable(GL_BLEND);glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+ glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,hud_font_);integer(hud_program_,"uFont",0);
+ vec3(hud_program_,"uInk",{.05,.08,.12});vec3(hud_program_,"uPaper",{.97,.98,1});
+ glDrawArrays(GL_TRIANGLES,0,developer_overlay_vertices_);glDisable(GL_BLEND);
 }
 void Renderer::capture(const std::string& path){
  auto save=[&](GLuint fbo,const std::string& filename){
@@ -213,6 +236,8 @@ Renderer::~Renderer(){
  for(auto& entry:cell_meshes_)delete_cell(entry.second);
  for(auto& entry:object_meshes_)delete_cell(entry.second);
  delete_cell(particle_mesh_);delete_cell(trail_mesh_);
+ if(developer_overlay_vao_)glDeleteVertexArrays(1,&developer_overlay_vao_);
+ if(developer_overlay_vbo_)glDeleteBuffers(1,&developer_overlay_vbo_);
  if(hud_vao_)glDeleteVertexArrays(1,&hud_vao_);
  if(hud_vbo_)glDeleteBuffers(1,&hud_vbo_);
  if(hud_program_)glDeleteProgram(hud_program_);

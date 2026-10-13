@@ -2,6 +2,7 @@
 #include "terrain.hpp"
 #include "game.hpp"
 #include "pose.hpp"
+#include "developer_overlay.hpp"
 #include <GLES3/gl3.h>
 #include <string>
 #include <memory>
@@ -25,11 +26,20 @@ public:
  void set_fps(double fps){fps_=fps;}
  void set_native_feedback(bool controller,bool muted){controller_=controller;muted_=muted;}
  void set_absolute_coordinates(bool absolute){relative_coordinates_=!absolute;}
+ DeveloperRenderDiagnostics developer_diagnostics(int output_width,int output_height)const;
+ void set_developer_overlay(bool visible){developer_overlay_visible_=visible;}
+ void set_developer_overlay_lines(const DeveloperOverlayLines& lines){developer_overlay_lines_=lines;developer_overlay_dirty_=true;}
  int width()const{return width_;}
  int height()const{return height_;}
  const Camera& camera()const{return camera_;}
 private:
  GLuint hud_program_=0,hud_font_=0,hud_vao_=0,hud_vbo_=0;
+ GLuint developer_overlay_vao_=0,developer_overlay_vbo_=0;
+ DeveloperOverlayLines developer_overlay_lines_{};
+ bool developer_overlay_visible_=false,developer_overlay_dirty_=true,first_person_view_=false;
+ int developer_overlay_width_=0,developer_overlay_height_=0;
+ GLsizei developer_overlay_vertices_=0;
+ void draw_developer_overlay(int width,int height);
  std::string hud_line_,hud_status_,hud_combo_,hud_meter_,hud_banner_,hud_controls_,hud_grade_,hud_points_;
  std::vector<std::string> hud_trick_lines_;
  double hud_meter_fraction_=0,hud_combo_fraction_=0;

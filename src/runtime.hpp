@@ -15,9 +15,12 @@ struct NativeInputSnapshot {
 struct NativeActions {
  Controls ride;
  bool quit=false,start=false,pause=false,new_run=false,mute=false,palette=false,debug=false;
+ bool dev_overlay_toggle=false,dev_overlay_select=false,dev_overlay_restore=false;
 };
 class NativeInputMapper {
  NativeInputSnapshot previous_;
+ // Own only the standalone SELECT press; F2 cancels this rollback token.
+ bool select_overlay_owned_=false;
 public:
  NativeActions read(const NativeInputSnapshot&,bool title);
 };

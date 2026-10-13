@@ -6,11 +6,18 @@ NativeActions NativeInputMapper::read(const NativeInputSnapshot& s,bool title){
  auto edge=[&](SDL_Scancode k){return key(k)&&!previous_.keys[k];};
  auto button_edge=[&](int k){return s.buttons[k]&&!previous_.buttons[k];};
  a.quit=s.quit||key(SDL_SCANCODE_F10)||(s.buttons[8]&&s.buttons[9]);
- // Resolve chord from the final snapshot before either individual button edge.
+ const bool new_run_chord=s.buttons[8]&&s.buttons[3];
+ const bool chord_edge=new_run_chord&&!(previous_.buttons[8]&&previous_.buttons[3]);
+ // Final-snapshot chords precede SELECT. A later chord restores the visibility
+ // saved by this SELECT press; immediate standalone press feedback is transient.
+ if((a.quit||new_run_chord)&&select_overlay_owned_){a.dev_overlay_restore=true;select_overlay_owned_=false;}
+ if(!s.buttons[8])select_overlay_owned_=false;
  if(!a.quit){
+  if(edge(SDL_SCANCODE_F2)){a.dev_overlay_toggle=true;select_overlay_owned_=false;}
+  else if(button_edge(8)&&!new_run_chord){a.dev_overlay_toggle=a.dev_overlay_select=true;select_overlay_owned_=true;}
   a.start=title&&(edge(SDL_SCANCODE_RETURN)||edge(SDL_SCANCODE_SPACE)||button_edge(0)||button_edge(9));
   a.pause=!title&&(edge(SDL_SCANCODE_ESCAPE)||edge(SDL_SCANCODE_P)||button_edge(9)||s.focus_lost);
-  a.new_run=!title&&(edge(SDL_SCANCODE_R)||button_edge(8));
+  a.new_run=!title&&(edge(SDL_SCANCODE_R)||chord_edge);
   a.mute=edge(SDL_SCANCODE_M);a.palette=edge(SDL_SCANCODE_C);a.debug=edge(SDL_SCANCODE_F3);
   a.ride.steer=(key(SDL_SCANCODE_RIGHT)||key(SDL_SCANCODE_D))-(key(SDL_SCANCODE_LEFT)||key(SDL_SCANCODE_A));
   a.ride.drive=(key(SDL_SCANCODE_UP)||key(SDL_SCANCODE_W))-(key(SDL_SCANCODE_DOWN)||key(SDL_SCANCODE_S));

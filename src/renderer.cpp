@@ -79,7 +79,7 @@ o=vec4(vec3(x),1.);})";
  const std::string hud_fs=R"(#version 300 es
 precision highp float;
 uniform highp sampler2D uFont;uniform vec3 uInk,uPaper;in vec2 vUV;out vec4 o;
-void main(){if(vUV.x<0.){o=vec4(uPaper,.92);return;}float alpha=texture(uFont,vUV).a;o=vec4(uInk,alpha);})";
+void main(){if(vUV.x< -1.5){o=vec4(uInk,1.);return;}if(vUV.x<0.){o=vec4(uPaper,.92);return;}float alpha=texture(uFont,vUV).a;o=vec4(uInk,alpha);})";
  const std::string hud_vs=R"(#version 300 es
 precision highp float;
 layout(location=0) in vec2 aPosition;layout(location=1) in vec2 aUV;
@@ -95,26 +95,15 @@ void main(){vUV=aUV;gl_Position=vec4(aPosition/uOutputRes*2.-1.,0.,1.);})";
  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
  for(auto name:{"uVP","uM","uKind"})if(loc(scene_,name)<0)throw std::runtime_error(std::string("missing scene uniform ")+name);
  for(auto name:{"uC","uD","uRes"})if(loc(post_,name)<0)throw std::runtime_error(std::string("missing print uniform ")+name);
- patch_first_=first_cell;patch_count_=count;
- Terrain terrain(seed);CpuMesh mesh;const auto started=std::chrono::steady_clock::now();
- for(int cell=first_cell;cell<first_cell+count;++cell){auto part=build_terrain(terrain,cell);vertices_+=part.vertices.size();indices_+=part.indices.size();if(play_mode)cell_meshes_.emplace(cell,upload_cell(part));else{uint32_t offset=uint32_t(mesh.vertices.size());mesh.vertices.insert(mesh.vertices.end(),part.vertices.begin(),part.vertices.end());for(uint32_t i:part.indices)mesh.indices.push_back(offset+i);}}
+ patch_first_=first_cell;patch_count_=count;world_generation_=1;
+ Terrain terrain(seed);World world(terrain,seed);CpuMesh mesh;const auto started=std::chrono::steady_clock::now();
+ for(int cell=first_cell;cell<first_cell+count;++cell){auto part=build_terrain(terrain,cell);vertices_+=part.vertices.size();indices_+=part.indices.size();if(play_mode){cell_meshes_.emplace(cell,upload_cell(part));object_meshes_.emplace(cell,upload_cell(world.objects(cell)));}else{uint32_t offset=uint32_t(mesh.vertices.size());mesh.vertices.insert(mesh.vertices.end(),part.vertices.begin(),part.vertices.end());for(uint32_t i:part.indices)mesh.indices.push_back(offset+i);}}
  build_ms_=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-started).count();
  const int sizes[]={3,3,1,2,2},offsets[]={0,12,24,28,36};
  if(!play_mode){auto static_mesh=upload_cell(mesh);vao_=static_mesh.vao;vbo_=static_mesh.vbo;ibo_=static_mesh.ibo;}
  glGenVertexArrays(1,&fullscreen_vao_);
  glGenVertexArrays(1,&rider_vao_);glBindVertexArray(rider_vao_);glGenBuffers(1,&rider_vbo_);glBindBuffer(GL_ARRAY_BUFFER,rider_vbo_);glGenBuffers(1,&rider_ibo_);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,rider_ibo_);
  for(int i=0;i<5;++i){glEnableVertexAttribArray(i);glVertexAttribPointer(i,sizes[i],GL_FLOAT,GL_FALSE,sizeof(Vertex),reinterpret_cast<void*>(intptr_t(offsets[i])));}
- {
-  std::ifstream file(assets+"/../rider-poses.bin",std::ios::binary);
-  uint32_t header[4]{};file.read(reinterpret_cast<char*>(header),sizeof header);
-  if(!file || header[0]!=3 || header[1]>50000 || header[2]>300000 || header[3]>100)throw std::runtime_error("invalid source rider pose asset");
-  rider_triangles_.resize(header[2]);rider_groups_.resize(header[3]);
-  file.read(reinterpret_cast<char*>(rider_triangles_.data()),header[2]*4);
-  file.read(reinterpret_cast<char*>(rider_groups_.data()),header[3]*12);
-  for(auto& pose:rider_poses_){pose.resize(header[1]);file.read(reinterpret_cast<char*>(pose.data()),header[1]*sizeof(Vertex));}
-  if(!file)throw std::runtime_error("truncated source rider pose asset");
- }
- glBindVertexArray(rider_vao_);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,rider_ibo_);glBufferData(GL_ELEMENT_ARRAY_BUFFER,rider_triangles_.size()*sizeof(uint32_t),rider_triangles_.data(),GL_STATIC_DRAW);
  // Complete digit sampler before the original atlas upload.
  glyph_=texture(1,1,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);const unsigned char transparent[4]={0,0,0,0};glTexSubImage2D(GL_TEXTURE_2D,0,0,0,1,1,GL_RGBA,GL_UNSIGNED_BYTE,transparent);
  const std::string atlas=assets+"/../glyphs.bmp";
@@ -143,27 +132,36 @@ void Renderer::make_targets(){
 }
 void Renderer::resize(int w,int h){if(w==width_ && h==height_)return;delete_targets();width_=w;height_=h;make_targets();gl_check("resize");}
 void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
- // The existing VP's rotational row is translation-independent and retains the
- // active view's up vector (including first-person roll). Never invert its large
- // world translation for sky reconstruction. Both passes build their own frame.
+ Vec3 eye=camera_.eye+camera_shake_;
+ // Keep the active view's roll; rebase projection only, never world shading.
  Vec3 up=norm({camera_.vp[1],camera_.vp[5],camera_.vp[9]});
- const auto frame=render_frame(camera_.eye,camera_.look,up,fov_*3.141592653589793/180,double(width_)/height_,relative_coordinates_);
+ const auto frame=render_frame(eye,camera_.look+camera_shake_,up,fov_*3.141592653589793/180,double(width_)/height_,relative_coordinates_);
  glBindFramebuffer(GL_FRAMEBUFFER,scene_fbo_);glViewport(0,0,width_,height_);glEnable(GL_DEPTH_TEST);glDisable(GL_BLEND);glDisable(GL_CULL_FACE);glDepthMask(GL_TRUE);glClearColor(1,0,0,0);glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);glUseProgram(scene_);
  matrix(scene_,"uVP",frame.vp);vec3(scene_,"uRenderOrigin",frame.origin);matrix(scene_,"uM",identity());const float identity3[]={1,0,0,0,1,0,0,0,1};glUniformMatrix3fv(loc(scene_,"uN"),1,GL_FALSE,identity3);
- vec3(scene_,"uCam",camera_.eye);vec3(scene_,"uL",norm({0.45,0.78,-0.5}));glUniform2f(loc(scene_,"uFog"),150,400);
- // Three nondegenerate shadow segments, far outside every supported fixed patch.
+ vec3(scene_,"uCam",eye);vec3(scene_,"uL",norm({0.45,0.78,-0.5}));glUniform2f(loc(scene_,"uFog"),150,400);
+ // Static spike has no rider; play uses the original live rig shadow segments.
  const float shadows[]={1000000,1000000,1000000,.26f,1000000,1000001,1000000,0,1000002,1000000,1000000,.17f,1000002,1000001,1000000,0,1000004,1000000,1000000,.2f,1000004,1000001,1000000,0};
- glUniform4fv(loc(scene_,"uSeg"),6,shadows);integer(scene_,"uKind",0);scalar(scene_,"uMat",1);scalar(scene_,"uAlbO",-1);scalar(scene_,"uXray",0);
+ if(rig_valid_){Vec3 bx=qrot(rig_.board_orientation,{1,0,0}),nose=rig_.board_position+bx*.75,tail=rig_.board_position-bx*.75,ankle=(rig_.ankle[0]+rig_.ankle[1])*.5;const float seg[]={float(rig_.pelvis.x),float(rig_.pelvis.y),float(rig_.pelvis.z),.26f,float(rig_.head.x),float(rig_.head.y),float(rig_.head.z),0,float(nose.x),float(nose.y),float(nose.z),.17f,float(tail.x),float(tail.y),float(tail.z),0,float(rig_.pelvis.x),float(rig_.pelvis.y),float(rig_.pelvis.z),.2f,float(ankle.x),float(ankle.y),float(ankle.z),0};glUniform4fv(loc(scene_,"uSeg"),6,seg);}else glUniform4fv(loc(scene_,"uSeg"),6,shadows);integer(scene_,"uKind",0);scalar(scene_,"uMat",1);scalar(scene_,"uAlbO",-1);scalar(scene_,"uXray",(palette%6+6)%6==5?1:0);
  glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,glyph_);integer(scene_,"uGlyph",0);if(cell_meshes_.empty()){glBindVertexArray(vao_);glDrawElements(GL_TRIANGLES,GLsizei(indices_),GL_UNSIGNED_INT,nullptr);}else for(int cell=patch_first_;cell<patch_first_+patch_count_;++cell){auto found=cell_meshes_.find(cell);if(found!=cell_meshes_.end()){glBindVertexArray(found->second.vao);glDrawElements(GL_TRIANGLES,found->second.indices,GL_UNSIGNED_INT,nullptr);}}
+ integer(scene_,"uKind",1);scalar(scene_,"uMat",2);
+ for(int cell=patch_first_;cell<patch_first_+patch_count_;++cell){auto found=object_meshes_.find(cell);if(found!=object_meshes_.end()){glBindVertexArray(found->second.vao);glDrawElements(GL_TRIANGLES,found->second.indices,GL_UNSIGNED_INT,nullptr);}}
+ if(rig_valid_){
+  Vec3 view=norm(camera_.eye-camera_.look),right=source_norm(cross(first_person_up_,view),{1,0,0}),up=cross(view,right);
+  if(following_){right=source_norm(cross({0,1,0},view),{1,0,0});up=cross(view,right);}
+  update_dynamic(particle_mesh_,particles_.snow_mesh(eye,right,up));update_dynamic(trail_mesh_,particles_.trail_mesh(game_time_));
+  if(trail_mesh_.indices){glEnable(GL_POLYGON_OFFSET_FILL);glPolygonOffset(-2,-4);integer(scene_,"uKind",3);scalar(scene_,"uMat",5);glBindVertexArray(trail_mesh_.vao);glDrawElements(GL_TRIANGLES,trail_mesh_.indices,GL_UNSIGNED_INT,nullptr);glDisable(GL_POLYGON_OFFSET_FILL);}
+ }
+ integer(scene_,"uKind",1);
  if(rider_indices_){integer(scene_,"uKind",1);glBindVertexArray(rider_vao_);for(const auto& group:rider_groups_){scalar(scene_,"uMat",float(group[2]));glDrawElements(GL_TRIANGLES,GLsizei(group[1]),GL_UNSIGNED_INT,reinterpret_cast<void*>(uintptr_t(group[0])*4));}}
+ if(particle_mesh_.indices){integer(scene_,"uKind",2);scalar(scene_,"uMat",30);scalar(scene_,"uAlbO",-1);glBindVertexArray(particle_mesh_.vao);glDrawElements(GL_TRIANGLES,particle_mesh_.indices,GL_UNSIGNED_INT,nullptr);}
  glBindFramebuffer(GL_FRAMEBUFFER,print_fbo_);glViewport(0,0,width_,height_);glDisable(GL_DEPTH_TEST);glUseProgram(post_);
  glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,color_);integer(post_,"uC",0);glActiveTexture(GL_TEXTURE1);glBindTexture(GL_TEXTURE_2D,depth_);integer(post_,"uD",1);
  glUniform2f(loc(post_,"uRes"),width_,height_);matrix(post_,"uIVP",frame.inverse_vp);vec3(post_,"uCamP",frame.eye);vec3(post_,"uSunG",norm({.42,.14,1}));
- const Vec3 papers[]={{243/255.0,244/255.0,247/255.0},{244/255.0,244/255.0,245/255.0},{240/255.0,240/255.0,241/255.0}};
- const Vec3 inks[]={{28/255.0,47/255.0,158/255.0},{18/255.0,18/255.0,18/255.0},{17/255.0,17/255.0,18/255.0}};
- const Vec3 spots[]={{1,77/255.0,141/255.0},{227/255.0,18/255.0,11/255.0},{141/255.0,141/255.0,145/255.0}};
- palette=palette%3;vec3(post_,"uPaper",papers[palette]);vec3(post_,"uInk",inks[palette]);vec3(post_,"uGrey",spots[palette]);
- scalar(post_,"uNear",.1);scalar(post_,"uFar",900);scalar(post_,"uPitch",4.4f*width_/1024);scalar(post_,"uInv",0);scalar(post_,"uTime",float(game_time_));scalar(post_,"uSpeed",0);scalar(post_,"uFlash",0);scalar(post_,"uEW",1);scalar(post_,"uApx",float((fov_*3.141592653589793/180)/height_*1.2));glUniform2f(loc(post_,"uFogP"),150,380);
+ const Vec3 papers[]={{243/255.0,244/255.0,247/255.0},{244/255.0,244/255.0,245/255.0},{244/255.0,243/255.0,248/255.0},{238/255.0,244/255.0,246/255.0},{240/255.0,240/255.0,241/255.0},{10/255.0,16/255.0,32/255.0}};
+ const Vec3 inks[]={{28/255.0,47/255.0,158/255.0},{18/255.0,18/255.0,18/255.0},{43/255.0,26/255.0,92/255.0},{11/255.0,42/255.0,58/255.0},{17/255.0,17/255.0,18/255.0},{143/255.0,234/255.0,1}};
+ const Vec3 spots[]={{1,77/255.0,141/255.0},{227/255.0,18/255.0,11/255.0},{1,106/255.0,0},{0,166/255.0,166/255.0},{141/255.0,141/255.0,145/255.0},{74/255.0,99/255.0,1}};
+ palette=(palette%6+6)%6;vec3(post_,"uPaper",papers[palette]);vec3(post_,"uInk",inks[palette]);vec3(post_,"uGrey",spots[palette]);
+ scalar(post_,"uNear",.1);scalar(post_,"uFar",900);scalar(post_,"uPitch",4.4f*width_/1024);scalar(post_,"uInv",float(inversion_));scalar(post_,"uTime",float(game_time_));scalar(post_,"uSpeed",float(speed_effect_));scalar(post_,"uFlash",float(flash_));scalar(post_,"uEW",1);scalar(post_,"uApx",float((fov_*3.141592653589793/180)/height_*1.2));glUniform2f(loc(post_,"uFogP"),150,380);
  Vec3 sun=frame.eye+norm({.42,.14,1})*800;double clip[4]{};for(int r=0;r<4;++r)clip[r]=frame.vp[r]*sun.x+frame.vp[4+r]*sun.y+frame.vp[8+r]*sun.z+frame.vp[12+r];
  if(clip[3]>0)glUniform2f(loc(post_,"uSunPx"),(clip[0]/clip[3]*.5+.5)*width_,(clip[1]/clip[3]*.5+.5)*height_);else glUniform2f(loc(post_,"uSunPx"),-9999,-9999);
  scalar(post_,"uSunR",height_*.085);glBindVertexArray(fullscreen_vao_);glDrawArrays(GL_TRIANGLES,0,3);
@@ -173,11 +171,14 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
   glUseProgram(hud_program_);glUniform2f(loc(hud_program_,"uOutputRes"),drawable_w,drawable_h);glEnable(GL_BLEND);glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,hud_font_);integer(hud_program_,"uFont",0);vec3(hud_program_,"uInk",inks[palette]);vec3(hud_program_,"uPaper",papers[palette]);
   struct HUDVertex{float x,y,u,v;};static_assert(sizeof(HUDVertex)==16);std::vector<HUDVertex> glyphs;glyphs.reserve(1200);
   const float corners[6][2]={{0,0},{1,0},{0,1},{0,1},{1,0},{1,1}};
-  auto quad=[&](float left,float bottom,float width,float height,int character){for(const auto& p:corners)glyphs.push_back({left+p[0]*width,bottom+p[1]*height,character<0?-1.f:(character+p[0])/96.f,character<0?0.f:1.f-p[1]});};
-  auto text=[&](const std::string& value,float left,float bottom,float width,float height){for(size_t i=0;i<value.size();++i)quad(left+i*width,bottom,width,height,int(static_cast<unsigned char>(value[i]))-32);};
-  quad(8,drawable_h-80,drawable_w-16,72,-1);text(hud_line_,16,drawable_h-44,18,30);GLsizei primary=GLsizei(glyphs.size());
-  text(hud_status_,16,drawable_h-74,16,28);GLsizei status_end=GLsizei(glyphs.size());
-  quad(8,8,drawable_w-16,34,-1);text("A: HOLD/RELEASE JUMP   D-PAD: RIDE/TRICKS   START: RESTART",16,10,16,28);
+  auto quad=[&](float left,float bottom,float width,float height,int character){for(const auto& p:corners)glyphs.push_back({left+p[0]*width,bottom+p[1]*height,character<0?float(character):(character+p[0])/96.f,character<0?0.f:1.f-p[1]});};
+  auto text=[&](const std::string& value,float left,float bottom,float width,float height){for(size_t i=0;i<std::min(value.size(),size_t(std::max(0.f,(drawable_w-left-8)/width)));++i)quad(left+i*width,bottom,width,height,int(static_cast<unsigned char>(value[i]))-32);};
+  quad(8,drawable_h-148,drawable_w-16,140,-1);text(hud_line_,16,drawable_h-36,14,26);GLsizei primary=GLsizei(glyphs.size());
+  text(hud_status_,16,drawable_h-64,12,24);text(hud_combo_,16,drawable_h-92,14,24);text(hud_meter_,16,drawable_h-120,12,24);
+  text(hud_grade_,16,drawable_h-190,14,24);for(size_t line=0;line<hud_trick_lines_.size();++line)text(hud_trick_lines_[line],16,drawable_h-220-float(line)*28,16,26);text(hud_points_,16,drawable_h-340,16,26);GLsizei status_end=GLsizei(glyphs.size());
+  if(!hud_banner_.empty())text(hud_banner_,16,drawable_h*.55f,24,42);
+  quad(16,drawable_h-142,200*float(hud_meter_fraction_),6,-2);if(!hud_combo_.empty())quad(250,drawable_h-142,200*float(hud_combo_fraction_),6,-2);
+  quad(8,8,drawable_w-16,34,-1);text(hud_controls_,16,10,12,24);
   glBindVertexArray(hud_vao_);glBindBuffer(GL_ARRAY_BUFFER,hud_vbo_);glBufferData(GL_ARRAY_BUFFER,glyphs.size()*sizeof(HUDVertex),glyphs.data(),GL_DYNAMIC_DRAW);
   glDrawArrays(GL_TRIANGLES,0,primary);vec3(hud_program_,"uInk",spots[palette]);glDrawArrays(GL_TRIANGLES,primary,status_end-primary);vec3(hud_program_,"uInk",inks[palette]);glDrawArrays(GL_TRIANGLES,status_end,GLsizei(glyphs.size())-status_end);glDisable(GL_BLEND);
  }
@@ -203,9 +204,15 @@ Renderer::CellMesh Renderer::upload_cell(const CpuMesh& mesh){
  CellMesh cell;cell.indices=GLsizei(mesh.indices.size());cell.vertices=mesh.vertices.size();glGenVertexArrays(1,&cell.vao);glBindVertexArray(cell.vao);glGenBuffers(1,&cell.vbo);glBindBuffer(GL_ARRAY_BUFFER,cell.vbo);glBufferData(GL_ARRAY_BUFFER,mesh.vertices.size()*sizeof(Vertex),mesh.vertices.data(),GL_STATIC_DRAW);glGenBuffers(1,&cell.ibo);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,cell.ibo);glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh.indices.size()*sizeof(uint32_t),mesh.indices.data(),GL_STATIC_DRAW);
  const int sizes[]={3,3,1,2,2},offsets[]={0,12,24,28,36};for(int i=0;i<5;++i){glEnableVertexAttribArray(i);glVertexAttribPointer(i,sizes[i],GL_FLOAT,GL_FALSE,sizeof(Vertex),reinterpret_cast<void*>(intptr_t(offsets[i])));}return cell;
 }
+void Renderer::update_dynamic(CellMesh& cell,const CpuMesh& mesh){
+ if(!cell.vao){cell=upload_cell(mesh);return;}
+ cell.indices=GLsizei(mesh.indices.size());cell.vertices=mesh.vertices.size();glBindVertexArray(cell.vao);glBindBuffer(GL_ARRAY_BUFFER,cell.vbo);glBufferData(GL_ARRAY_BUFFER,mesh.vertices.size()*sizeof(Vertex),mesh.vertices.data(),GL_STREAM_DRAW);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,cell.ibo);glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh.indices.size()*sizeof(uint32_t),mesh.indices.data(),GL_STREAM_DRAW);
+}
 void Renderer::delete_cell(CellMesh& cell){glDeleteVertexArrays(1,&cell.vao);glDeleteBuffers(1,&cell.vbo);glDeleteBuffers(1,&cell.ibo);cell={};}
 Renderer::~Renderer(){
  for(auto& entry:cell_meshes_)delete_cell(entry.second);
+ for(auto& entry:object_meshes_)delete_cell(entry.second);
+ delete_cell(particle_mesh_);delete_cell(trail_mesh_);
  if(hud_vao_)glDeleteVertexArrays(1,&hud_vao_);
  if(hud_vbo_)glDeleteBuffers(1,&hud_vbo_);
  if(hud_program_)glDeleteProgram(hud_program_);

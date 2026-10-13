@@ -22,7 +22,8 @@ Params Terrain::cell_params(int c){
  if(c<=0)p={46,15,5,false};
  else if(c>2 && r.next()<0.17){p={15+r.next()*4,5.2+r.next()*0.8,6.6,true};}
  else p={34+r.next()*24,11+r.next()*8,3.6+r.next()*4,false};
- params_[c]=p;return p;
+ if(params_.size()>=500){params_.erase(params_order_.front());params_order_.pop_front();}
+ params_[c]=p;params_order_.push_back(c);return p;
 }
 Params Terrain::params(double z){
  int c=int(std::floor(z/CELL));double t=z/CELL-c;Params a=cell_params(c);double k=smooth(0.72,1,t);if(k<=0)return a;
@@ -30,7 +31,10 @@ Params Terrain::params(double z){
 }
 const std::vector<Feature>& Terrain::features(int c){
  auto found=features_.find(c);if(found!=features_.end())return found->second;
- auto& F=features_[c];if(c<1)return F;
+ // FIFO, like original trim(Map,500). Callers doing nested height/feature
+ // queries must copy the tiny definition vector before retaining an iterator.
+ if(features_.size()>=500){features_.erase(features_order_.front());features_order_.pop_front();}
+ auto& F=features_[c];features_order_.push_back(c);if(c<1)return F;
  Rng r{hash_int(uint32_t(c)*104729U+7U,seed_)};Params P=cell_params(c);double z0=c*CELL,half=P.W/2;
  bool cliff=!P.pipe && c>1 && r.next()<0.24;
  for(int s=0;s<3;++s){

@@ -48,6 +48,7 @@ inline decltype(&::glGetString) glGetString_fn = nullptr;
 inline decltype(&::glGetUniformLocation) glGetUniformLocation_fn = nullptr;
 inline decltype(&::glLinkProgram) glLinkProgram_fn = nullptr;
 inline decltype(&::glPixelStorei) glPixelStorei_fn = nullptr;
+inline decltype(&::glPolygonOffset) glPolygonOffset_fn = nullptr;
 inline decltype(&::glReadPixels) glReadPixels_fn = nullptr;
 inline decltype(&::glShaderSource) glShaderSource_fn = nullptr;
 inline decltype(&::glTexImage2D) glTexImage2D_fn = nullptr;
@@ -151,6 +152,8 @@ inline void load() {
   if (!glLinkProgram_fn) throw std::runtime_error("missing GL entry: glLinkProgram");
   glPixelStorei_fn = reinterpret_cast<decltype(glPixelStorei_fn)>(SDL_GL_GetProcAddress("glPixelStorei"));
   if (!glPixelStorei_fn) throw std::runtime_error("missing GL entry: glPixelStorei");
+  glPolygonOffset_fn = reinterpret_cast<decltype(glPolygonOffset_fn)>(SDL_GL_GetProcAddress("glPolygonOffset"));
+  if (!glPolygonOffset_fn) throw std::runtime_error("missing GL entry: glPolygonOffset");
   glReadPixels_fn = reinterpret_cast<decltype(glReadPixels_fn)>(SDL_GL_GetProcAddress("glReadPixels"));
   if (!glReadPixels_fn) throw std::runtime_error("missing GL entry: glReadPixels");
   glShaderSource_fn = reinterpret_cast<decltype(glShaderSource_fn)>(SDL_GL_GetProcAddress("glShaderSource"));
@@ -228,6 +231,7 @@ inline void load() {
 #define glGetUniformLocation glapi::glGetUniformLocation_fn
 #define glLinkProgram glapi::glLinkProgram_fn
 #define glPixelStorei glapi::glPixelStorei_fn
+#define glPolygonOffset glapi::glPolygonOffset_fn
 #define glReadPixels glapi::glReadPixels_fn
 #define glShaderSource glapi::glShaderSource_fn
 #define glTexImage2D glapi::glTexImage2D_fn

@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <map>
 #include <vector>
+#include <deque>
 namespace fl {
 constexpr double CELL=110, ROW=0.8;
 constexpr int ROWS=138;
@@ -20,10 +21,13 @@ public:
  const std::vector<Feature>& features(int cell);
  static double center(double z);
  static double base(double z);
+ size_t parameter_cache_size()const{return params_.size();}
+ size_t feature_cache_size()const{return features_.size();}
 private:
  uint32_t seed_;
  std::map<int,Params> params_;
  std::map<int,std::vector<Feature>> features_;
+ std::deque<int> params_order_,features_order_;
  std::vector<double> cumulative_{0};
  Params cell_params(int cell);
  double h2(int x,int z) const;

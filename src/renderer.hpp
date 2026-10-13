@@ -1,6 +1,7 @@
 #pragma once
 #include "terrain.hpp"
 #include "game.hpp"
+#include "pose.hpp"
 #include <GLES3/gl3.h>
 #include <string>
 #include <memory>
@@ -28,19 +29,28 @@ public:
  const Camera& camera()const{return camera_;}
 private:
  GLuint hud_program_=0,hud_font_=0,hud_vao_=0,hud_vbo_=0;
- std::string hud_line_,hud_status_;
+ std::string hud_line_,hud_status_,hud_combo_,hud_meter_,hud_banner_,hud_controls_,hud_grade_,hud_points_;
+ std::vector<std::string> hud_trick_lines_;
+ double hud_meter_fraction_=0,hud_combo_fraction_=0;
  struct CellMesh{GLuint vao=0,vbo=0,ibo=0;GLsizei indices=0;size_t vertices=0;};
- std::map<int,CellMesh> cell_meshes_;
+ std::map<int,CellMesh> cell_meshes_,object_meshes_;
+ CellMesh particle_mesh_,trail_mesh_;
+ Particles particles_;
+ uint64_t world_generation_=0;
+ RiderGeometry rider_geometry_;RiderMesh rider_mesh_;RiderRig rig_;
+ bool rig_valid_=false;
+ double inversion_=0,flash_=0,speed_effect_=0;
+ Rng camera_rng_{0x821371u};
  std::unique_ptr<TerrainJob> terrain_job_;
  CellMesh upload_cell(const CpuMesh& mesh);
  void delete_cell(CellMesh& cell);
+ void update_dynamic(CellMesh& cell,const CpuMesh& mesh);
  GLuint scene_=0,post_=0,copy_=0,vao_=0,vbo_=0,ibo_=0,fullscreen_vao_=0;
  GLuint rider_vao_=0,rider_vbo_=0,rider_ibo_=0;
  GLsizei rider_indices_=0;
- std::array<std::vector<Vertex>,3> rider_poses_;
- std::vector<uint32_t> rider_triangles_;
+
  std::vector<std::array<uint32_t,3>> rider_groups_;
- Vec3 camera_direction_{0,0,1},camera_velocity_{},look_velocity_{};
+ Vec3 camera_direction_{0,0,1},camera_velocity_{},look_velocity_{},camera_shake_{};
  bool following_=false,relative_coordinates_=true;
  Vec3 first_person_eye_{},first_person_forward_{0,0,1},first_person_up_{0,1,0};
  double fov_=62,game_time_=0,stream_ms_=0,fps_=0;

@@ -54,10 +54,10 @@ inline decltype(&::glTexImage2D) glTexImage2D_fn = nullptr;
 inline decltype(&::glTexParameteri) glTexParameteri_fn = nullptr;
 inline decltype(&::glTexSubImage2D) glTexSubImage2D_fn = nullptr;
 inline decltype(&::glUniform1f) glUniform1f_fn = nullptr;
+inline decltype(&::glUniform1fv) glUniform1fv_fn = nullptr;
 inline decltype(&::glUniform1i) glUniform1i_fn = nullptr;
 inline decltype(&::glUniform2f) glUniform2f_fn = nullptr;
 inline decltype(&::glUniform3f) glUniform3f_fn = nullptr;
-inline decltype(&::glUniform4f) glUniform4f_fn = nullptr;
 inline decltype(&::glUniform4fv) glUniform4fv_fn = nullptr;
 inline decltype(&::glUniformMatrix3fv) glUniformMatrix3fv_fn = nullptr;
 inline decltype(&::glUniformMatrix4fv) glUniformMatrix4fv_fn = nullptr;
@@ -163,14 +163,14 @@ inline void load() {
   if (!glTexSubImage2D_fn) throw std::runtime_error("missing GL entry: glTexSubImage2D");
   glUniform1f_fn = reinterpret_cast<decltype(glUniform1f_fn)>(SDL_GL_GetProcAddress("glUniform1f"));
   if (!glUniform1f_fn) throw std::runtime_error("missing GL entry: glUniform1f");
+  glUniform1fv_fn = reinterpret_cast<decltype(glUniform1fv_fn)>(SDL_GL_GetProcAddress("glUniform1fv"));
+  if (!glUniform1fv_fn) throw std::runtime_error("missing GL entry: glUniform1fv");
   glUniform1i_fn = reinterpret_cast<decltype(glUniform1i_fn)>(SDL_GL_GetProcAddress("glUniform1i"));
   if (!glUniform1i_fn) throw std::runtime_error("missing GL entry: glUniform1i");
   glUniform2f_fn = reinterpret_cast<decltype(glUniform2f_fn)>(SDL_GL_GetProcAddress("glUniform2f"));
   if (!glUniform2f_fn) throw std::runtime_error("missing GL entry: glUniform2f");
   glUniform3f_fn = reinterpret_cast<decltype(glUniform3f_fn)>(SDL_GL_GetProcAddress("glUniform3f"));
   if (!glUniform3f_fn) throw std::runtime_error("missing GL entry: glUniform3f");
-  glUniform4f_fn = reinterpret_cast<decltype(glUniform4f_fn)>(SDL_GL_GetProcAddress("glUniform4f"));
-  if (!glUniform4f_fn) throw std::runtime_error("missing GL entry: glUniform4f");
   glUniform4fv_fn = reinterpret_cast<decltype(glUniform4fv_fn)>(SDL_GL_GetProcAddress("glUniform4fv"));
   if (!glUniform4fv_fn) throw std::runtime_error("missing GL entry: glUniform4fv");
   glUniformMatrix3fv_fn = reinterpret_cast<decltype(glUniformMatrix3fv_fn)>(SDL_GL_GetProcAddress("glUniformMatrix3fv"));
@@ -234,10 +234,10 @@ inline void load() {
 #define glTexParameteri glapi::glTexParameteri_fn
 #define glTexSubImage2D glapi::glTexSubImage2D_fn
 #define glUniform1f glapi::glUniform1f_fn
+#define glUniform1fv glapi::glUniform1fv_fn
 #define glUniform1i glapi::glUniform1i_fn
 #define glUniform2f glapi::glUniform2f_fn
 #define glUniform3f glapi::glUniform3f_fn
-#define glUniform4f glapi::glUniform4f_fn
 #define glUniform4fv glapi::glUniform4fv_fn
 #define glUniformMatrix3fv glapi::glUniformMatrix3fv_fn
 #define glUniformMatrix4fv glapi::glUniformMatrix4fv_fn

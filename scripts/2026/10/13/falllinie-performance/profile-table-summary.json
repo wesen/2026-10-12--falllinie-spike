@@ -154,5 +154,46 @@
       "max": null
     }
   },
-  "limitations": "Application production intervals, not compositor presentation feedback. Submit timing can include driver backpressure. GPU query instrumentation can perturb tile rendering; compare CPU-only control."
+  "limitations": "Application production intervals, not compositor presentation feedback. Submit timing can include driver backpressure. GPU query instrumentation can perturb tile rendering; compare CPU-only control.",
+  "load": {
+    "clk_tck": 100,
+    "clk_tck_evidence": "Verified getconf CLK_TCK on target; process utilization is percent of one core, not percent of all four cores.",
+    "app_percent_one_core": {
+      "p50": 63,
+      "p95": 89,
+      "p99": 89,
+      "max": 89
+    },
+    "system_busy_percent": {
+      "p50": 34.46601941747572,
+      "p95": 40.37122969837586,
+      "p99": 40.37122969837586,
+      "max": 40.37122969837586
+    },
+    "cpu_mhz": {
+      "p50": 1992,
+      "p95": 1992,
+      "p99": 1992,
+      "max": 1992
+    },
+    "gpu_mhz": {
+      "p50": 800,
+      "p95": 800,
+      "p99": 800,
+      "max": 800
+    },
+    "cpu_temperature_c": {
+      "p50": 48.333,
+      "p95": 51.25,
+      "p99": 51.25,
+      "max": 51.25
+    },
+    "gpu_temperature_c": {
+      "p50": 51.25,
+      "p95": 53.75,
+      "p99": 53.75,
+      "max": 53.75
+    },
+    "gpu_utilization": "Not exposed by the sampled sysfs attributes; clock and elapsed queries are not active-cycle utilization."
+  }
 }

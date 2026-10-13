@@ -207,3 +207,54 @@ A lower-resolution control established substantial pixel-work sensitivity: 384×
 - New job budget is checked after a complete row; one row may extend the nominal 1 ms budget. Final GPU upload is included in measured stream work.
 - Initial terrain construction still occurs before first presentation; this is startup work, not an in-ride boundary rebuild.
 - CSV records `pace_wait_ms` separately from lower swap. Full frame intervals include pacing/bookkeeping; CPU stage metrics do not count sleep as rendering.
+
+## Step 4: Deliver report and guide; authorize source-complete integration
+
+The user requested delivery before implementation of the remaining source systems. Both documents have now been uploaded successfully under new names, without overwriting earlier reMarkable documents. The receipts establish cloud delivery, not physical synchronization.
+
+The performance runtime checkpoint is `56d7d9c`; final sampled-GPU and load evidence is preserved in this publication checkpoint. The next work separates the audio engine from the cohesive gameplay/world/pose implementation, using isolated worktrees and a small explicit numeric audio-feedback contract. Integration, review, deployment and acceptance remain parent-owned.
+
+### Prompt Context
+**User prompt (verbatim):** "upload to remarkable, then implement Still missing: original reactive audio, full grabs/combos, objects/rails/tree collisions and complete source feedback. The intern guide is drafted but not yet uploaded to reMarkable.
+
+btw commit at appropriate intervals and keep a detailed diary as you work (using the diary format from the skill)"
+**Assistant interpretation:** Deliver both current documents first; then complete original source systems rather than replace them with generic mechanics/audio, with scoped commits and detailed evidence.
+**Inferred user intent:** A source-faithful complete playable handheld port, not another design-only checkpoint.
+**Commit (prior runtime):** `56d7d9c` — bounded terrain streaming and measured 60 FPS launch mode.
+
+### What I did
+- Uploaded project report and intern guide using `remarquee upload bundle`, `--toc-depth 2`, `--non-interactive`, and no `--force`.
+- Checked guide-delivery task `t9zh`; retained full successful receipts in `report-upload.log` and `guide-upload.log`.
+- Preserved final 16-second telemetry: 59.99988 FPS, p95 16.76143 ms, p99 16.89238 ms, max 18.02486 ms; sparse GPU queries had 32 returned samples, two invalid startup values.
+- Defined `src/feedback.hpp` as the shared event/continuous-audio-state contract. Audio callback transport must exclude text and allocation.
+
+### Why
+- Source gameplay/world/pose are interdependent; audio is independently implementable behind numeric snapshots/events. This avoids concurrent writers on the same renderer or Game class.
+- The currently deployed prototype remains available until the integrated candidate passes its relevant build/performance boundary.
+
+### What worked
+- `OK: uploaded Falllinie Playable Port - Dual Views and Performance Deep Dive.pdf -> /ai/2026/10/13/FALLLINIE-GAME-002`
+- `OK: uploaded Falllinie Source Faithful Gameplay Integration - Intern Guide.pdf -> /ai/2026/10/13/FALLLINIE-GAME-002`
+- Upload logs contain no rendering/auth failure; no unnecessary PDF inspection or cloud listing was added.
+
+### What didn't work
+- No delivery failure observed. The guide reflects the earlier implementation baseline; the separate project report records subsequent cooperative-streaming/performance changes.
+
+### What I learned
+- Final sampled GPU scope medians around 9 ms per view are instrumented elapsed values, not a utilization percentage or values to sum as nonoverlapping work.
+
+### What was tricky to build
+- New implementation contracts must preserve sample-clock music scheduling while gameplay can pause or slow down; one audio engine serves both displays.
+
+### What warrants a second pair of eyes
+- Source-state completeness, real-time callback safety, restart generation invalidation, full pose geometry and control mappings require independent review.
+
+### What should be done in the future
+- Complete source game and audio, integrate once, collect relevant performance evidence, then perform the single final human playtest.
+
+### Code review instructions
+- Read the integration guide, frozen source, `feedback.hpp`, and subsequent lane handoffs. Existing graphics/terrain qualification must not be substituted for new-system acceptance.
+
+### Technical details
+- Shared event kinds distinguish Pop/Land/Bail/Uber/Grotesk/Grind and UI-only combo/recovery events. Audio transfers only numeric payloads through a bounded SPSC queue.
+- Native source, scripts and bounded evidence are committed intentionally; build outputs, shared libraries, secrets and unrelated vault state are excluded.

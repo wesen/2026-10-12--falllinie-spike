@@ -1,0 +1,256 @@
+time 1791857136
+cpu  772092 761 476128 6523316 4650 179929 47096 0 0 0
+process 210454 (falllinie-spike) R 210453 210453 210453 0 -1 4194304 294 0 0 0 0 1 0 0 20 0 1 0 1953091 14290944 1182 18446744073709551615 366698037248 366698173962 549212720464 0 0 0 0 4 16386 0 0 0 17 3 0 0 0 0 0 366698298520 366698300544 367375773696 549212724797 549212724954 549212724954 549212725222 0
+MemAvailable:     462680 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+pswpin 0
+pswpout 0
+pgmajfault 3648
+/proc/pressure/cpu some avg10=2.82 avg60=1.88 avg300=1.78 total=801276126
+/proc/pressure/memory some avg10=0.00 avg60=0.00 avg300=0.00 total=3048176
+/proc/pressure/io some avg10=0.00 avg60=0.00 avg300=0.00 total=14972930
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 1992000
+/sys/class/devfreq/fde60000.gpu/cur_freq 200000000
+/sys/class/thermal/thermal_zone0/temp 40000
+/sys/class/thermal/thermal_zone1/temp 40000
+time 1791857137
+cpu  772183 761 476175 6523600 4650 179939 47099 0 0 0
+process 210454 (falllinie-spike) S 210453 210453 210453 0 -1 4194560 3861 1083 0 0 67 18 1 3 20 0 8 0 1953091 925110272 22467 18446744073709551615 366698037248 366698173962 549212720464 0 0 0 0 4 16386 0 0 0 17 1 0 0 0 0 0 366698298520 366698300544 367375773696 549212724797 549212724954 549212724954 549212725222 0
+MemAvailable:     427204 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+pswpin 0
+pswpout 0
+pgmajfault 3648
+/proc/pressure/cpu some avg10=2.86 avg60=1.92 avg300=1.79 total=801333983
+/proc/pressure/memory some avg10=0.00 avg60=0.00 avg300=0.00 total=3048177
+/proc/pressure/io some avg10=0.00 avg60=0.00 avg300=0.00 total=14972930
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 1800000
+/sys/class/devfreq/fde60000.gpu/cur_freq 800000000
+/sys/class/thermal/thermal_zone0/temp 40625
+/sys/class/thermal/thermal_zone1/temp 43125
+time 1791857138
+cpu  772247 761 476219 6523911 4650 179955 47102 0 0 0
+process 210454 (falllinie-spike) S 210453 210453 210453 0 -1 4194560 3861 1083 0 0 102 25 1 3 20 0 8 0 1953091 925110272 22467 18446744073709551615 366698037248 366698173962 549212720464 0 0 0 0 4 16386 0 0 0 17 1 0 0 0 0 0 366698298520 366698300544 367375773696 549212724797 549212724954 549212724954 549212725222 0
+MemAvailable:     425492 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+pswpin 0
+pswpout 0
+pgmajfault 3648
+/proc/pressure/cpu some avg10=2.86 avg60=1.92 avg300=1.79 total=801418472
+/proc/pressure/memory some avg10=0.00 avg60=0.00 avg300=0.00 total=3048177
+/proc/pressure/io some avg10=0.00 avg60=0.00 avg300=0.00 total=14972930
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 1104000
+/sys/class/devfreq/fde60000.gpu/cur_freq 800000000
+/sys/class/thermal/thermal_zone0/temp 41875
+/sys/class/thermal/thermal_zone1/temp 43750
+time 1791857139
+cpu  772314 761 476271 6524203 4650 179970 47105 0 0 0
+process 210454 (falllinie-spike) S 210453 210453 210453 0 -1 4194560 3862 1083 0 0 139 30 1 3 20 0 8 0 1953091 925110272 22467 18446744073709551615 366698037248 366698173962 549212720464 0 0 0 0 4 16386 0 0 0 17 2 0 0 0 0 0 366698298520 366698300544 367375773696 549212724797 549212724954 549212724954 549212725222 0
+MemAvailable:     424684 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+pswpin 0
+pswpout 0
+pgmajfault 3648
+/proc/pressure/cpu some avg10=3.79 avg60=2.12 avg300=1.83 total=801496693
+/proc/pressure/memory some avg10=0.00 avg60=0.00 avg300=0.00 total=3048177
+/proc/pressure/io some avg10=0.00 avg60=0.00 avg300=0.00 total=14972969
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 1992000
+/sys/class/devfreq/fde60000.gpu/cur_freq 800000000
+/sys/class/thermal/thermal_zone0/temp 42500
+/sys/class/thermal/thermal_zone1/temp 45000
+time 1791857140
+cpu  772396 762 476317 6524486 4650 179987 47107 0 0 0
+process 210454 (falllinie-spike) S 210453 210453 210453 0 -1 4194560 3862 1083 0 0 181 36 1 3 20 0 8 0 1953091 925110272 22467 18446744073709551615 366698037248 366698173962 549212720464 0 0 0 0 4 16386 0 0 0 17 1 0 0 0 0 0 366698298520 366698300544 367375773696 549212724797 549212724954 549212724954 549212725222 0
+MemAvailable:     424484 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+pswpin 0
+pswpout 0
+pgmajfault 3648
+/proc/pressure/cpu some avg10=3.79 avg60=2.12 avg300=1.83 total=801597328
+/proc/pressure/memory some avg10=0.00 avg60=0.00 avg300=0.00 total=3048178
+/proc/pressure/io some avg10=0.00 avg60=0.00 avg300=0.00 total=14972975
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 1992000
+/sys/class/devfreq/fde60000.gpu/cur_freq 800000000
+/sys/class/thermal/thermal_zone0/temp 43125
+/sys/class/thermal/thermal_zone1/temp 45555
+time 1791857141
+cpu  772465 762 476374 6524774 4650 180003 47111 0 0 0
+process 210454 (falllinie-spike) S 210453 210453 210453 0 -1 4194560 3862 1083 0 0 222 44 1 3 20 0 8 0 1953091 925110272 22467 18446744073709551615 366698037248 366698173962 549212720464 0 0 0 0 4 16386 0 0 0 17 2 0 0 0 0 0 366698298520 366698300544 367375773696 549212724797 549212724954 549212724954 549212725222 0
+MemAvailable:     424936 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+pswpin 0
+pswpout 0
+pgmajfault 3648
+/proc/pressure/cpu some avg10=4.55 avg60=2.31 avg300=1.88 total=801687541
+/proc/pressure/memory some avg10=0.00 avg60=0.00 avg300=0.00 total=3048178
+/proc/pressure/io some avg10=0.00 avg60=0.00 avg300=0.00 total=14972975
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 1992000
+/sys/class/devfreq/fde60000.gpu/cur_freq 800000000
+/sys/class/thermal/thermal_zone0/temp 43125
+/sys/class/thermal/thermal_zone1/temp 45555
+time 1791857142
+cpu  772531 762 476420 6525077 4650 180019 47114 0 0 0
+process 210454 (falllinie-spike) S 210453 210453 210453 0 -1 4194560 3862 1083 0 0 260 52 1 3 20 0 8 0 1953091 925110272 22467 18446744073709551615 366698037248 366698173962 549212720464 0 0 0 0 4 16386 0 0 0 17 3 0 0 0 0 0 366698298520 366698300544 367375773696 549212724797 549212724954 549212724954 549212725222 0
+MemAvailable:     424712 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+pswpin 0
+pswpout 0
+pgmajfault 3648
+/proc/pressure/cpu some avg10=4.55 avg60=2.31 avg300=1.88 total=801774124
+/proc/pressure/memory some avg10=0.00 avg60=0.00 avg300=0.00 total=3048178
+/proc/pressure/io some avg10=0.00 avg60=0.00 avg300=0.00 total=14972975
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 1992000
+/sys/class/devfreq/fde60000.gpu/cur_freq 800000000
+/sys/class/thermal/thermal_zone0/temp 44375
+/sys/class/thermal/thermal_zone1/temp 46666
+time 1791857144
+cpu  772606 762 476473 6525357 4650 180036 47117 0 0 0
+process 210454 (falllinie-spike) S 210453 210453 210453 0 -1 4194560 3867 1083 0 0 297 59 1 3 20 0 8 0 1953091 925110272 23715 18446744073709551615 366698037248 366698173962 549212720464 0 0 0 0 4 16386 0 0 0 17 2 0 0 0 0 0 366698298520 366698300544 367375773696 549212724797 549212724954 549212724954 549212725222 0
+MemAvailable:     437132 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+pswpin 0
+pswpout 0
+pgmajfault 3648
+/proc/pressure/cpu some avg10=4.99 avg60=2.47 avg300=1.91 total=801852646
+/proc/pressure/memory some avg10=0.00 avg60=0.00 avg300=0.00 total=3048499
+/proc/pressure/io some avg10=0.00 avg60=0.00 avg300=0.00 total=14972975
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 1416000
+/sys/class/devfreq/fde60000.gpu/cur_freq 800000000
+/sys/class/thermal/thermal_zone0/temp 43750
+/sys/class/thermal/thermal_zone1/temp 46666
+time 1791857145
+cpu  772668 762 476516 6525662 4650 180051 47120 0 0 0
+process 210454 (falllinie-spike) S 210453 210453 210453 0 -1 4194560 3867 1083 0 0 333 66 1 3 20 0 8 0 1953091 925110272 23715 18446744073709551615 366698037248 366698173962 549212720464 0 0 0 0 4 16386 0 0 0 17 3 0 0 0 0 0 366698298520 366698300544 367375773696 549212724797 549212724954 549212724954 549212725222 0
+MemAvailable:     436328 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+pswpin 0
+pswpout 0
+pgmajfault 3648
+/proc/pressure/cpu some avg10=4.99 avg60=2.47 avg300=1.91 total=801929326
+/proc/pressure/memory some avg10=0.00 avg60=0.00 avg300=0.00 total=3048499
+/proc/pressure/io some avg10=0.00 avg60=0.00 avg300=0.00 total=14972975
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 1992000
+/sys/class/devfreq/fde60000.gpu/cur_freq 800000000
+/sys/class/thermal/thermal_zone0/temp 44375
+/sys/class/thermal/thermal_zone1/temp 46666
+time 1791857146
+cpu  772734 762 476567 6525958 4650 180068 47123 0 0 0
+process 210454 (falllinie-spike) S 210453 210453 210453 0 -1 4194560 3867 1083 0 0 369 72 1 3 20 0 8 0 1953091 925110272 23715 18446744073709551615 366698037248 366698173962 549212720464 0 0 0 0 4 16386 0 0 0 17 1 0 0 0 0 0 366698298520 366698300544 367375773696 549212724797 549212724954 549212724954 549212725222 0
+MemAvailable:     434824 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+pswpin 0
+pswpout 0
+pgmajfault 3648
+/proc/pressure/cpu some avg10=5.36 avg60=2.61 avg300=1.95 total=802008001
+/proc/pressure/memory some avg10=0.00 avg60=0.00 avg300=0.00 total=3048499
+/proc/pressure/io some avg10=0.00 avg60=0.00 avg300=0.00 total=14972975
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 1992000
+/sys/class/devfreq/fde60000.gpu/cur_freq 800000000
+/sys/class/thermal/thermal_zone0/temp 45000
+/sys/class/thermal/thermal_zone1/temp 47777
+time 1791857147
+cpu  772794 762 476614 6526269 4650 180083 47126 0 0 0
+process 210454 (falllinie-spike) S 210453 210453 210453 0 -1 4194560 3867 1083 0 0 401 81 1 3 20 0 8 0 1953091 925110272 23715 18446744073709551615 366698037248 366698173962 549212720464 0 0 0 0 4 16386 0 0 0 17 1 0 0 0 0 0 366698298520 366698300544 367375773696 549212724797 549212724954 549212724954 549212725222 0
+MemAvailable:     434132 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+pswpin 0
+pswpout 0
+pgmajfault 3648
+/proc/pressure/cpu some avg10=5.47 avg60=2.72 avg300=1.98 total=802078224
+/proc/pressure/memory some avg10=0.00 avg60=0.00 avg300=0.00 total=3048499
+/proc/pressure/io some avg10=0.00 avg60=0.00 avg300=0.00 total=14972975
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 1992000
+/sys/class/devfreq/fde60000.gpu/cur_freq 800000000
+/sys/class/thermal/thermal_zone0/temp 45555
+/sys/class/thermal/thermal_zone1/temp 47777
+time 1791857148
+cpu  772865 763 476662 6526557 4650 180098 47128 0 0 0
+process 210454 (falllinie-spike) R 210453 210453 210453 0 -1 4194560 3867 1083 0 0 438 88 1 3 20 0 8 0 1953091 925110272 23715 18446744073709551615 366698037248 366698173962 549212720464 0 0 0 0 4 16386 0 0 0 17 3 0 0 0 0 0 366698298520 366698300544 367375773696 549212724797 549212724954 549212724954 549212725222 0
+MemAvailable:     433576 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+pswpin 0
+pswpout 0
+pgmajfault 3648
+/proc/pressure/cpu some avg10=5.47 avg60=2.72 avg300=1.98 total=802165952
+/proc/pressure/memory some avg10=0.00 avg60=0.00 avg300=0.00 total=3048499
+/proc/pressure/io some avg10=0.00 avg60=0.00 avg300=0.00 total=14972975
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 1992000
+/sys/class/devfreq/fde60000.gpu/cur_freq 800000000
+/sys/class/thermal/thermal_zone0/temp 45555
+/sys/class/thermal/thermal_zone1/temp 48333
+time 1791857149
+cpu  772922 763 476711 6526859 4650 180113 47132 0 0 0
+process 210454 (falllinie-spike) S 210453 210453 210453 0 -1 4194560 3867 1083 0 0 474 95 1 3 20 0 8 0 1953091 925110272 23715 18446744073709551615 366698037248 366698173962 549212720464 0 0 0 0 4 16386 0 0 0 17 2 0 0 0 0 0 366698298520 366698300544 367375773696 549212724797 549212724954 549212724954 549212725222 0
+MemAvailable:     429004 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+pswpin 0
+pswpout 0
+pgmajfault 3648
+/proc/pressure/cpu some avg10=5.75 avg60=2.86 avg300=2.01 total=802247966
+/proc/pressure/memory some avg10=0.00 avg60=0.00 avg300=0.00 total=3048499
+/proc/pressure/io some avg10=0.00 avg60=0.00 avg300=0.00 total=14972975
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 1992000
+/sys/class/devfreq/fde60000.gpu/cur_freq 800000000
+/sys/class/thermal/thermal_zone0/temp 45555
+/sys/class/thermal/thermal_zone1/temp 48333
+time 1791857150
+cpu  772987 763 476772 6527150 4650 180129 47135 0 0 0
+process 210454 (falllinie-spike) S 210453 210453 210453 0 -1 4194560 3867 1083 0 0 511 103 1 3 20 0 8 0 1953091 925110272 23715 18446744073709551615 366698037248 366698173962 549212720464 0 0 0 0 4 16386 0 0 0 17 1 0 0 0 0 0 366698298520 366698300544 367375773696 549212724797 549212724954 549212724954 549212725222 0
+MemAvailable:     429004 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+pswpin 0
+pswpout 0
+pgmajfault 3648
+/proc/pressure/cpu some avg10=5.75 avg60=2.86 avg300=2.01 total=802333961
+/proc/pressure/memory some avg10=0.00 avg60=0.00 avg300=0.00 total=3048500
+/proc/pressure/io some avg10=0.00 avg60=0.00 avg300=0.00 total=14972975
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 1992000
+/sys/class/devfreq/fde60000.gpu/cur_freq 800000000
+/sys/class/thermal/thermal_zone0/temp 46111
+/sys/class/thermal/thermal_zone1/temp 48888
+time 1791857151
+cpu  773053 763 476814 6527448 4650 180146 47137 0 0 0
+process 210454 (falllinie-spike) S 210453 210453 210453 0 -1 4194560 3869 1083 0 0 549 110 1 3 20 0 8 0 1953091 924852224 23647 18446744073709551615 366698037248 366698173962 549212720464 0 0 0 0 4 16386 0 0 0 17 3 0 0 0 0 0 366698298520 366698300544 367375773696 549212724797 549212724954 549212724954 549212725222 0
+MemAvailable:     429004 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+pswpin 0
+pswpout 0
+pgmajfault 3648
+/proc/pressure/cpu some avg10=6.16 avg60=3.03 avg300=2.05 total=802418804
+/proc/pressure/memory some avg10=0.00 avg60=0.00 avg300=0.00 total=3048500
+/proc/pressure/io some avg10=0.00 avg60=0.00 avg300=0.00 total=14972975
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 1992000
+/sys/class/devfreq/fde60000.gpu/cur_freq 800000000
+/sys/class/thermal/thermal_zone0/temp 46111
+/sys/class/thermal/thermal_zone1/temp 48888
+time 1791857152
+cpu  773129 763 476880 6527728 4650 180163 47140 0 0 0
+process 210454 (falllinie-spike) S 210453 210453 210453 0 -1 4194560 3869 1083 0 0 586 121 1 3 20 0 8 0 1953091 924852224 23647 18446744073709551615 366698037248 366698173962 549212720464 0 0 0 0 4 16386 0 0 0 17 1 0 0 0 0 0 366698298520 366698300544 367375773696 549212724797 549212724954 549212724954 549212725222 0
+MemAvailable:     429256 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+pswpin 0
+pswpout 0
+pgmajfault 3648
+/proc/pressure/cpu some avg10=6.16 avg60=3.03 avg300=2.05 total=802506184
+/proc/pressure/memory some avg10=0.00 avg60=0.00 avg300=0.00 total=3048500
+/proc/pressure/io some avg10=0.00 avg60=0.00 avg300=0.00 total=14972998
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 1992000
+/sys/class/devfreq/fde60000.gpu/cur_freq 800000000
+/sys/class/thermal/thermal_zone0/temp 46666
+/sys/class/thermal/thermal_zone1/temp 49444

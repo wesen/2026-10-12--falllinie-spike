@@ -206,3 +206,43 @@ Read independent-review.txt, API03, parent-ctest.log and both target AUDIO/frame
 
 ### Technical details
 Nominal callback/block duration1024/48000=21.3333ms;full2048-frame application lead42.6667ms is separate from1024-sample wet delay/backend buffering. No physical end-to-end latency or driver XRUN measurement. No affinity/FIFO change. Finite target results permit further use/reporting, not universal or complete-game acceptance.
+
+## Step 5: Review and verify the worker-authored vault publication
+
+The same implementation session resumed as d6c3bab4 and delivered the append-only report. Parent read the entire report, reran its structural/evidence validator and independently checked remote main. Publication is complete; listening/latency and broader game acceptance are not.
+
+### Prompt Context
+**User prompt (verbatim):** See Step3 for the report/push request.
+**Assistant interpretation:** Accept only the authorized new note/assets and actual successful remote publication.
+**Inferred user intent:** A detailed reusable account grounded in finalized code and hardware evidence.
+**Commit (code):** Reviewed source remains686872c; helper/worker diary8c18d175 was integrated as68825c8. Vault520788f61bff9a1400899121626a192725f357de.
+
+### What I did
+Resumed worker7c532c54 in its original session for scoped vault authoring/push, not a new competing writer. Read the complete382-line report including continuation beyond the read tool50KB boundary. Confirmed exactly seven added vault files, clean status and actual remote main520788f via git ls-remote. Reran validate_report.py: PASS7340substantive words excluding frontmatter/fences,5balanced fences,6resolving local links,5standalone SVGs,source hashes/frontier identity and scope. Integrated only worker helper scripts/receipts/own diary, leaving reviewed audio unchanged. Marked taskmdph complete only after these checks.
+
+### Why
+A worker completion claim is not enough to establish publication. Parent independently checked content/evidence boundaries, linked assets, exact file scope and remote commit.
+
+### What worked
+The note and five original figures plus bounded provenance were pushed as520788f. Figures cover ownership, partial/wrap retirement, convolution, timing aggregates and frame intervals. Source/test/device results remain configuration-labeled; no GPU elapsed samples, driverXRUN or60FPS proof is invented. Prior reports and unrelated state were untouched. Replayable helpers now live on native main under scripts/2026/10/13/buffered-audio-report.
+
+### What didn't work
+No publication or final validation failure. Structural validation is not physical presentation/listening proof. TSan startup failure and historical host shortage remain explicitly unresolved evidence, not converted into passes.
+
+### What I learned
+The report explicitly separates proposed block-slot retirement from actual frame-addressed retirement, and separates queued duration from physical latency. Immutable source provenance686872c remains valid despite later documentation/helper-only commits.
+
+### What was tricky to build
+Scoped publication permission superseded only the earlier vault no-push restriction; native push/device/source edits stayed forbidden. Preserving one author/session and two separate repository commit histories made the final source and publication artifacts unambiguous.
+
+### What warrants a second pair of eyes
+Future latency/listening qualification and longer scheduler-tail trials; no additional source-code defect identified by this report review. Keep target matched configuration distinct from identical live input replay.
+
+### What should be done in the future
+Obtain live no-vinyl human feedback; keep taskr35o and complete-game acceptance open. Do not repeat broad build matrices merely for documentation or claim universal reliability from120seconds.
+
+### Code review instructions
+Open the new Projects/2026/10/13 Falllinie Buffered Audio report in go-go-parc and its _assets/falllinie-buffered-audio-20261013. Compare provenance to committed target logs; rerun the report validator. Inspect vault520788f seven additions and native68825c8 helper-only changes.
+
+### Technical details
+Report title: PROJECT REPORT - Falllinie Buffered Audio - PCM Ownership, Callback Deadlines and Measured Producer Scheduling.md. Worker actual push advanced68f01ce..520788f; parent remote verification independently matched520788f61bff9a1400899121626a192725f357de. Native source remains unpushed. No force/rebase/reset/stash or execution-mode fallback occurred.

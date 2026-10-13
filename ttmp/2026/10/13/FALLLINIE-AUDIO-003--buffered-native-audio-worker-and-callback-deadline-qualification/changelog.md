@@ -15,3 +15,7 @@ User requested worker-authored append-only go-go-parc deep-dive report after com
 ## 2026-10-13
 
 Integrated reviewed PCM-worker source as f1781ed/9780e3f/a8894cc/36879ae; parent12/12 host and ARM64 pass. Target120s direct18 callback overruns vs buffered0, buffered0 starvation with2048 target. Live listening/physical latency still open, renderer~50FPS. Restored buffered/no-vinyl title; original host shortage and unsupportedTSan retained.
+
+## 2026-10-13
+
+Same implementation worker published7340-word append-only vault report/five SVGs/provenance as520788f; parent read full report, reran validator and independently verified remote main. Integrated reproducibility helpers as68825c8. Taskmdph complete; live listening/physical latency and taskr35o still open.

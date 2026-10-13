@@ -73,6 +73,9 @@ public:
  static constexpr size_t command_capacity=256;
  static constexpr size_t reverb_partition=1024;
 private:
+ // Internal transport/lifecycle tests compile audio.cpp in their own executable
+ // to exercise empty/full shutdown and the actual callback without a device.
+ friend struct AudioEngineTestAccess;
  struct Impl;
  std::unique_ptr<Impl> impl_;
 };

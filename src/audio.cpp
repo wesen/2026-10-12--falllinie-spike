@@ -501,7 +501,7 @@ void AudioEngine::trigger(const GameEvent& event) {
 }
 void AudioEngine::set_muted(bool on) { impl_->send({2,0,0,uint8_t(on)}); }
 bool AudioEngine::prepare_offline(int rate,uint32_t seed,bool source_vinyl) { return impl_->prepare(rate,seed,source_vinyl); }
-void AudioEngine::render_offline(float* stereo,size_t frames) { if(!impl_->device && stereo) impl_->render(stereo,frames); }
+void AudioEngine::render_offline(float* stereo,size_t frames) { if(!impl_->device && !impl_->worker.joinable() && stereo) impl_->render(stereo,frames); }
 AudioDiagnostics AudioEngine::diagnostics() const {
  const auto& a=*impl_; AudioDiagnostics d;
  auto get=[&](size_t i) { return a.published[i].load(std::memory_order_relaxed); };
@@ -520,7 +520,7 @@ AudioDiagnostics AudioEngine::diagnostics() const {
  return d;
 }
 size_t AudioEngine::take_trace(AudioTrace* into,size_t capacity) {
- auto& a=*impl_; if(a.device || !into) return 0;
+ auto& a=*impl_; if(a.device || a.worker.joinable() || !into) return 0;
  size_t n=std::min(capacity,a.trace_count); for(size_t i=0;i<n;++i) into[i]=a.trace[(a.trace_begin+i)%a.trace.size()]; a.trace_begin=(a.trace_begin+n)%a.trace.size(); a.trace_count-=n; return n;
 }
 }

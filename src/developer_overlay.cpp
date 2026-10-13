@@ -37,9 +37,23 @@ DeveloperOverlayLines format_developer_overlay(const DeveloperOverlaySnapshot& s
  line("Visible terrain V/I %zu/%zu / objects V/I %zu/%zu",r.terrain_vertices,r.terrain_indices,r.object_vertices,r.object_indices);
  line("Snow %zu / trail points %zu / render %dx%d / output %dx%d",r.snow,r.trail,r.render_width,r.render_height,r.output_width,r.output_height);
  line("%s origin %.1f %.1f %.1f",r.relative_origin?"Camera-relative":"Absolute",r.origin.x,r.origin.y,r.origin.z);
+ if(s.audio_open&&a.sample_rate>0&&a.pcm_target){
+  const double budget=1000.*a.buffer_frames/a.sample_rate;
+  char cb_cpu[24]="n/a",dsp_cpu[24]="n/a";
+  if(a.callback_cpu_count)std::snprintf(cb_cpu,sizeof cb_cpu,"%.3f",double(a.callback_cpu_total_ns)/a.callback_cpu_count/1e6);
+  if(a.producer.cpu_count)std::snprintf(dsp_cpu,sizeof dsp_cpu,"%.3f",double(a.producer.cpu_total_ns)/a.producer.cpu_count/1e6);
+  line("Audio %.16s %dHz buf %d / worker / vinyl %s / %s",s.audio_backend.c_str(),a.sample_rate,a.buffer_frames,a.source_vinyl?"on":"off",a.muted?"muted":"on");
+  if(a.callback_count)line("CB wall mean/max %.3f/%.3f ms / budget %.3f / CPU mean %s ms",double(a.callback_total_ns)/a.callback_count/1e6,double(a.callback_max_ns)/1e6,budget,cb_cpu);
+  else line("CB wall mean/max n/a / budget %.3f ms / CPU mean n/a",budget);
+  line("CB budget misses %llu / starved %llu / missing %llu frames (NOT XRUNs)",(unsigned long long)a.callback_over_budget,(unsigned long long)a.starved_callbacks,(unsigned long long)a.missing_frames);
+  line("PCM %u/%u target low/high %u/%u / produced/delivered %llu/%llu",a.pcm_depth,a.pcm_target,a.pcm_low,a.pcm_high,(unsigned long long)a.frames,(unsigned long long)a.delivered_frames);
+  if(a.producer.count)line("DSP wall mean/max %.2f/%.2f CPU %s ms / late %llu / nonfinite %llu",double(a.producer.total_ns)/a.producer.count/1e6,double(a.producer.max_ns)/1e6,dsp_cpu,(unsigned long long)a.producer.over_budget,(unsigned long long)a.nonfinite_samples);
+  else line("DSP wall/CPU n/a / blocks n/a / nonfinite %llu",(unsigned long long)a.nonfinite_samples);
+  return lines;
+ }
  if(s.audio_open&&a.sample_rate>0){
   const double budget=1000.*a.buffer_frames/a.sample_rate;
-  line("Audio %.24s / %d Hz / actual buffer %d frames / %s",s.audio_backend.c_str(),a.sample_rate,a.buffer_frames,a.muted?"muted":"on");
+  line("Audio %.16s / %d Hz / buffer %d / direct / vinyl %s / %s",s.audio_backend.c_str(),a.sample_rate,a.buffer_frames,a.source_vinyl?"on":"off",a.muted?"muted":"on");
   if(a.callback_count)line("Callback mean %.3f / max %.3f / budget %.3f ms (wall, cumulative)",double(a.callback_total_ns)/a.callback_count/1e6,double(a.callback_max_ns)/1e6,budget);
   else line("Callback mean n/a / max n/a / budget %.3f ms (no callbacks yet)",budget);
   line("Callback budget misses %llu / calls %llu (NOT driver XRUNs)",(unsigned long long)a.callback_over_budget,(unsigned long long)a.callback_count);

@@ -111,7 +111,8 @@ not a claim of complete game parity. Current diary: native ttmp ticket FALLLINIE
 For parent qualification without injected input, use `--dual-screen --dev-overlay`
 with the existing launcher/render-size settings. It does not start the run or open
 audio until the usual A/START/ENTER/SPACE drop-in. The port launcher forwards flags:
-`bash scripts/falllinie-spike.sh --dev-overlay`. No launcher default has changed.
+`bash scripts/falllinie-spike.sh --dev-overlay`. The launcher explicitly selects
+no-vinyl playback; append `--source-vinyl` to restore the authored mix.
 
 Current raw pad map: A0 jump, B1/X2 boost, Y3 in the new-run chord,
 L1/R1/L2/R2 (4–7) grabs, SELECT8 developer overlay, START9 pause/start,
@@ -140,11 +141,14 @@ consuming additional events. It displays:
 - Rider state/position/speed/air/charge/slowmo/ticks, seed and generation;
   resident terrain/object cells, terrain job activity/cell, visible vertex/index
   counts, snow/trail counts, internal/output size and camera-relative origin.
-- Audio backend, actual rate/buffer, cumulative callback mean/max versus computed
-  budget, cumulative budget misses/callbacks, queue depth/high/drops, steals,
-  nonfinite samples and active/peak voices. **Budget misses are CPU callback wall
-  deadline misses, NOT driver XRUN counts.** Closed audio and missing measurements
-  are n/a. Max/miss counters do not reset at each 4 Hz text refresh.
+- Audio backend, actual rate/buffer, worker/direct mode and vinyl preference.
+  Buffered playback shows callback wall mean/max/budget and measured thread CPU
+  mean, PCM depth/target/observed low/high, produced/delivered frontiers, starvation
+  callbacks/missing frames, DSP wall/CPU mean and block-budget exceedances.
+  **Callback wall-budget misses and PCM starvation are NOT driver XRUN counts;
+  producer block-budget exceedances are NOT callback failures.** Direct mode
+  retains the original callback/command/voice rows. Full counters are logged at
+  exit. Closed audio/unavailable clocks are n/a; counters are cumulative.
 - GPU elapsed/utilization and CPU utilization are explicitly **n/a**. The separate
   CSV/GPU profiler remains independent; no utilization estimate is invented.
 
@@ -162,16 +166,49 @@ Detailed implementation/evidence/review diary:
 Host tests do not qualify actual GL linkage, panel legibility, two-screen placement
 or physical audio/presentation performance; the parent owns that gate after DSP repair.
 
-### Audio buffer qualification option
+### Buffered native audio and qualification
+
+Live playback defaults to one same-process DSP worker and a preallocated stereo
+float SPSC ring. SDL's buffered callback only copies available PCM, zero-fills
+shortage and records numeric counters/clocks; it never synthesizes, allocates,
+locks, waits or notifies the producer. `--audio-mode direct` explicitly restores
+the synchronous DSP callback for diagnostics; failure never selects it implicitly.
+Offline rendering uses the same DSP math, mutually exclusive with live owners.
 
 `--audio-buffer N` requests a power-of-two SDL buffer from 256 to 4096 frames.
-The executable/API default remains512; the handheld port launcher currently
-requests1024. At the observed48kHz this increases the buffer duration from10.667ms
-to21.333ms, trading additional latency for callback headroom. The backend's actual
-rate/buffer appears in the overlay. Close/reopen is required to change an already
-open engine; repeated open remains idempotent. This does not shorten the2.6-second
-stereo IR or alter the1024-sample wet latency, arrangement or saturation.
+Executable/API default is 512; the handheld launcher requests 1024. The worker
+renders 1024-frame blocks and targets `ceil(obtained_frames/1024)*1024 + 1024`
+ready frames, not the 8192-frame capacity. At 48 kHz, the usual 2048-frame lead
+is about 42.7 ms; a 4096-frame request targets 5120 (~106.7 ms). Actual queued
+lead varies with callback consumption. This adds event/mute latency on top of
+backend buffering and existing 1024-sample wet latency. The full 2.6-second stereo
+IR, 2x49-tap saturation, sorted mixing/stealing and source RNG remain unchanged.
 
-A55-second muted dual-view overlay run with1024frames recorded3/2574 callback
-budget misses (maximum39.8702ms), about50FPS and GL_error0. This is an improvement,
-**not zero-miss audio or60FPS acceptance**, and not a measured driver-XRUN count.
+Pause quiesces SDL and acknowledges stopped production, retaining unheard PCM
+and freezing the produced musical clock. Resume continues it without sample
+skips; mute/restart do not reset the clock. Close joins both owners. Active open
+is idempotent (ignores new options); close/reopen is required to reconfigure.
+Caller-owned SDL audio initialization survives engine destruction.
+
+Library/executable/offline defaults retain authored vinyl. `--no-vinyl` is a
+preference, not a timing fix: generation/filter/RNG state still runs. The launcher
+explicitly passes it; last option wins, so `--source-vinyl` restores source mix.
+Reproduce matched offline probes with
+`python3 scripts/2026/10/13/audio-crackle-isolation/01-build-matched-probes.py`.
+It now uses the offline preference API, preserves historical logs/manifest and
+writes new evidence under FALLLINIE-AUDIO-003; WAVs/binaries remain ignored.
+
+Host validation: build with CMake and run `ctest --test-dir build-audio
+--output-on-failure`. Audio tests cover source numerics/arrangement/allocation,
+PCM FIFO/stereo/partial/wrap/shortage, actual worker/callback bit identity,
+empty/full shutdown and dummy SDL lifecycle/failure ownership. Sanitizer commands,
+final API and bounded integration evidence are recorded in the ticket's
+`reference/02-buffered-audio-worker-diary.md` and `reference/03-finalized-audio-api.md`.
+Host/dummy evidence is **not physical audio or 60 FPS acceptance**. Parent must
+qualify matched direct/buffered runs on the actual backend/device, producer
+throughput, zero normal-play starvation, response latency and listening.
+
+Historical direct-callback target evidence: a 55-second muted dual-view run with
+1024 frames recorded 3/2574 callback budget misses (max 39.8702 ms), about 50 FPS
+and GL_error 0. This predates buffering; it is neither zero-miss acceptance nor a
+measured driver-XRUN count.

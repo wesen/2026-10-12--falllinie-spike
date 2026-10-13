@@ -1,9 +1,14 @@
 #include "audio.hpp"
 #include "audio_dsp.hpp"
+#include "audio_timing.hpp"
 #include <SDL.h>
 #include <atomic>
 #include <cstring>
 #include <limits>
+#include <chrono>
+#include <condition_variable>
+#include <mutex>
+#include <thread>
 
 namespace fl {
 using namespace audio_detail;
@@ -38,7 +43,20 @@ struct AudioEngine::Impl {
  SDL_AudioDeviceID device=0;
  bool owns_subsystem=false,prepared=false;
  int rate=48000;
- uint64_t perf_frequency=0,callback_count=0,callback_total_ns=0,callback_max_ns=0,callback_over_budget=0;
+ uint64_t perf_frequency=0;
+ static constexpr size_t dsp_block=1024,pcm_capacity=8192;
+ PcmRing<pcm_capacity> pcm;
+ PcmConsumer<pcm_capacity> consumer;
+ AudioTimingCounters producer_timing,direct_timing;
+ std::array<float,dsp_block*2> producer_block{};
+ std::atomic<uint32_t> pcm_high{0};
+ AudioRenderMode mode=AudioRenderMode::BufferedWorker;
+ bool source_vinyl=true;
+ size_t pcm_target=0;
+ std::thread worker;
+ std::mutex worker_mutex;
+ std::condition_variable worker_cv;
+ bool stop_requested=false,pause_requested=false,pause_ack=false;
  Random rng{},noise_rng{};
  Sines sine;
  AudioDiagnostics d{};
@@ -94,8 +112,11 @@ struct AudioEngine::Impl {
   for(size_t i=0;i<18;++i) published[i].store(values[i],std::memory_order_relaxed);
   for(size_t i=0;i<kinds;++i) published[32+i].store(d.voices_started[i],std::memory_order_relaxed);
  }
- bool prepare(int sample_rate,uint32_t seed) {
-  if(sample_rate<8000 || sample_rate>192000 || device) return false;
+ bool prepare(int sample_rate,uint32_t seed,bool vinyl_enabled=true) {
+  if(sample_rate<8000 || sample_rate>192000 || device || worker.joinable()) return false;
+  prepared=false;source_vinyl=vinyl_enabled;
+  pcm.reset();consumer.reset();producer_timing.reset();direct_timing.reset();pcm_high=0;pcm_target=0;
+  stop_requested=pause_requested=pause_ack=false;
   rate=sample_rate; rng.state=seed?seed:1; noise_rng.state=(seed?seed:1)^0xa361b729U;
   if(!noise_rng.state) noise_rng.state=7;
   for(size_t i=18;i<=22;++i)published[i].store(0,std::memory_order_relaxed);
@@ -345,6 +366,7 @@ struct AudioEngine::Impl {
    double common=drums+b.bass*0.85+(b.chop*0.5+delayed*0.35)*pump_gain+acid_shape(b.acid)*0.35;
    double ride=carve_filter.process(noise[(noise_pos+noise_offset[0])%noise.size()])*carve+wind_filter.process(noise[(noise_pos+noise_offset[1])%noise.size()])*wind+grind_filter.process(noise[(noise_pos+noise_offset[2])%noise.size()])*grind_gain;
    noise_pos=(noise_pos+1)%noise.size(); double crackle=vinyl_filter.process(vinyl[vinyl_pos])*0.22; vinyl_pos=(vinyl_pos+1)%vinyl.size();
+   if(!source_vinyl) crackle=0; // preference only: retain generation/filter/RNG state
    double left=music_filter[0].process(common+b.keys[0]*0.55*pump_gain+vl*0.32)*0.7+(b.sfx+ride)*0.9+crackle;
    double right=music_filter[1].process(common+b.keys[1]*0.55*pump_gain+vr*0.32)*0.7+(b.sfx+ride)*0.9+crackle;
    double peak=std::max(std::abs(left),std::abs(right)),coef=peak>comp_envelope?comp_attack:comp_release;
@@ -361,53 +383,102 @@ struct AudioEngine::Impl {
   }
   publish();
  }
+ void produce() {
+  std::unique_lock<std::mutex> lock(worker_mutex);
+  for(;;) {
+   if(stop_requested) return;
+   if(pause_requested) {
+    pause_ack=true;worker_cv.notify_all();
+    worker_cv.wait(lock,[&]{return stop_requested || !pause_requested;});
+    pause_ack=false;continue;
+   }
+   // Do not fill capacity blindly; wait without involving the SDL callback.
+   if(pcm.depth()+dsp_block>pcm_target) {
+    worker_cv.wait_for(lock,std::chrono::milliseconds(1));continue;
+   }
+   lock.unlock();
+   const auto wall=SDL_GetPerformanceCounter(),cpu=thread_cpu_ns();
+   render(producer_block.data(),dsp_block);
+   // Only this producer can publish; a consumer can only increase free space.
+   pcm.push(producer_block.data(),dsp_block);
+   pcm_high.store(std::max(pcm_high.load(std::memory_order_relaxed),uint32_t(pcm.depth())),std::memory_order_relaxed);
+   const auto end_cpu=thread_cpu_ns();producer_timing.record(wall_elapsed_ns(wall,perf_frequency),cpu,end_cpu,dsp_block,rate);
+   lock.lock();worker_cv.notify_all(); // startup/pause acknowledgement only
+  }
+ }
  static void callback(void* userdata,Uint8* stream,int bytes) {
   auto* self=static_cast<Impl*>(userdata);
   if(bytes<=0) return;
+  if(self->mode==AudioRenderMode::BufferedWorker) {
+   self->consumer.callback(self->pcm,stream,size_t(bytes),self->rate,self->perf_frequency);
+   return;
+  }
+  // Explicit diagnostic reference mode: never runs concurrently with worker.
+  const auto wall=SDL_GetPerformanceCounter(),cpu=thread_cpu_ns();
   std::memset(stream,0,size_t(bytes));
   const size_t frames=size_t(bytes)/(sizeof(float)*2);
-  const uint64_t started=SDL_GetPerformanceCounter();
   self->render(reinterpret_cast<float*>(stream),frames);
-  const uint64_t elapsed=SDL_GetPerformanceCounter()-started;
-  const uint64_t ns=uint64_t(double(elapsed)*1e9/double(self->perf_frequency));
-  ++self->callback_count;self->callback_total_ns+=ns;self->callback_max_ns=std::max(self->callback_max_ns,ns);
-  if(double(ns)>double(frames)*1e9/self->rate)++self->callback_over_budget;
-  self->published[18].store(self->callback_count,std::memory_order_relaxed);
-  self->published[19].store(self->callback_total_ns,std::memory_order_relaxed);
-  self->published[20].store(self->callback_max_ns,std::memory_order_relaxed);
-  self->published[21].store(self->callback_over_budget,std::memory_order_relaxed);
+  const auto end_cpu=thread_cpu_ns();self->direct_timing.record(wall_elapsed_ns(wall,self->perf_frequency),cpu,end_cpu,frames,self->rate);
  }
 };
 static_assert(std::atomic<uint64_t>::is_always_lock_free && std::atomic<uint32_t>::is_always_lock_free && std::atomic<bool>::is_always_lock_free,
  "Audio commands and diagnostics require lock-free atomics");
 AudioEngine::AudioEngine():impl_(new Impl) {}
 AudioEngine::~AudioEngine() { close(); }
-bool AudioEngine::open(int buffer_frames) {
- if(buffer_frames<256||buffer_frames>4096||(buffer_frames&(buffer_frames-1)))return false;
- auto& a=*impl_; if(a.device) return true;
+bool AudioEngine::open(int buffer_frames) { return open(AudioOpenOptions{buffer_frames}); }
+bool AudioEngine::open(const AudioOpenOptions& options) {
+ auto& a=*impl_; if(a.device) return true; // active configuration is immutable
+ const int buffer_frames=options.buffer_frames;
+ if(buffer_frames<256||buffer_frames>4096||(buffer_frames&(buffer_frames-1)) ||
+    (options.mode!=AudioRenderMode::BufferedWorker && options.mode!=AudioRenderMode::DirectCallback))return false;
  bool initialized=(SDL_WasInit(SDL_INIT_AUDIO)&SDL_INIT_AUDIO)!=0;
  if(!initialized && SDL_InitSubSystem(SDL_INIT_AUDIO)!=0) return false;
  a.owns_subsystem=!initialized;
  SDL_AudioSpec desired{},obtained{}; desired.freq=48000; desired.format=AUDIO_F32SYS; desired.channels=2; desired.samples=Uint16(buffer_frames); desired.callback=Impl::callback; desired.userdata=&a;
  auto device=SDL_OpenAudioDevice(nullptr,0,&desired,&obtained,SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
  if(!device) { close(); return false; }
- if(obtained.format!=AUDIO_F32SYS || obtained.channels!=2) { SDL_CloseAudioDevice(device); close(); return false; }
- // SDL devices begin paused. All allocation happens before publishing device/unpause.
- if(!a.prepare(obtained.freq,1)) { SDL_CloseAudioDevice(device); close(); return false; }
- a.perf_frequency=SDL_GetPerformanceFrequency();
- a.callback_count=a.callback_total_ns=a.callback_max_ns=a.callback_over_budget=0;
- a.published[22].store(obtained.samples,std::memory_order_relaxed);
- a.device=device; SDL_PauseAudioDevice(device,0); return true;
+ if(obtained.format!=AUDIO_F32SYS || obtained.channels!=2 || obtained.samples<256 || obtained.samples>4096) { SDL_CloseAudioDevice(device); close(); return false; }
+ // SDL begins paused. Initialization and thread creation are transactional.
+ try {
+  if(!a.prepare(obtained.freq,1,options.source_vinyl)) { SDL_CloseAudioDevice(device); close(); return false; }
+  a.mode=options.mode;a.perf_frequency=SDL_GetPerformanceFrequency();
+  a.published[22].store(obtained.samples,std::memory_order_relaxed);
+  a.device=device;
+  if(a.mode==AudioRenderMode::BufferedWorker) {
+   a.pcm_target=((size_t(obtained.samples)+Impl::dsp_block-1)/Impl::dsp_block+1)*Impl::dsp_block;
+   a.worker=std::thread([&a]{a.produce();});
+   std::unique_lock<std::mutex> lock(a.worker_mutex);
+   if(!a.worker_cv.wait_for(lock,std::chrono::seconds(5),[&]{return a.pcm.depth()>=a.pcm_target;})) {
+    lock.unlock();close();return false;
+   }
+  }
+  SDL_PauseAudioDevice(device,0);return true;
+ } catch(...) {
+  if(!a.device)SDL_CloseAudioDevice(device);
+  close();return false;
+ }
 }
 void AudioEngine::close() {
- auto& a=*impl_; if(a.device) { SDL_CloseAudioDevice(a.device); a.device=0; }
+ auto& a=*impl_;
+ if(a.device)SDL_PauseAudioDevice(a.device,1); // quiesce consumer before joining producer
+ if(a.worker.joinable()) {
+  {std::lock_guard<std::mutex> lock(a.worker_mutex);a.stop_requested=true;}
+  a.worker_cv.notify_all();a.worker.join();
+ }
+ if(a.device) { SDL_CloseAudioDevice(a.device); a.device=0; }
  if(a.owns_subsystem) { SDL_QuitSubSystem(SDL_INIT_AUDIO); a.owns_subsystem=false; }
 }
 void AudioEngine::pause(bool on) {
  auto& a=*impl_;
  if(on&&a.device)SDL_PauseAudioDevice(a.device,1); // join active callback first
- a.paused.store(on,std::memory_order_release);
- if(!on&&a.device)SDL_PauseAudioDevice(a.device,0); // publish resume before callback
+ if(a.worker.joinable()) {
+  std::unique_lock<std::mutex> lock(a.worker_mutex);
+  if(!on)a.paused.store(false,std::memory_order_release);
+  a.pause_requested=on;a.worker_cv.notify_all();
+  if(on)a.worker_cv.wait(lock,[&]{return a.pause_ack;});
+ }
+ a.paused.store(on,std::memory_order_release); // worker is now acknowledged, frontier frozen
+ if(!on&&a.device)SDL_PauseAudioDevice(a.device,0); // retained PCM is consumed first
 }
 void AudioEngine::set_ride(const RideSound& ride) {
  // Values are source gains, not raw speed/air_time. Simulation owns the >0.35s test.
@@ -429,13 +500,20 @@ void AudioEngine::trigger(const GameEvent& event) {
  }
 }
 void AudioEngine::set_muted(bool on) { impl_->send({2,0,0,uint8_t(on)}); }
-bool AudioEngine::prepare_offline(int rate,uint32_t seed) { return impl_->prepare(rate,seed); }
+bool AudioEngine::prepare_offline(int rate,uint32_t seed,bool source_vinyl) { return impl_->prepare(rate,seed,source_vinyl); }
 void AudioEngine::render_offline(float* stereo,size_t frames) { if(!impl_->device && stereo) impl_->render(stereo,frames); }
 AudioDiagnostics AudioEngine::diagnostics() const {
  const auto& a=*impl_; AudioDiagnostics d;
  auto get=[&](size_t i) { return a.published[i].load(std::memory_order_relaxed); };
  d.frames=get(0); d.steps=get(1); d.sections=get(2); d.stolen_voices=get(3); d.dropped_notes=get(4); d.nonfinite_samples=get(5); d.peak_voices=uint32_t(get(6)); d.active_voices=uint32_t(get(7)); d.sample_rate=int(get(8)); d.section=AudioSection(get(9)); d.sustained_air=get(10); d.grotesk=get(11); d.muted=get(12); d.drums_gain=number(get(13)); d.music_cutoff=number(get(14)); d.carve_gain=number(get(15)); d.wind_gain=number(get(16)); d.grind_gain=number(get(17));
- d.callback_count=get(18);d.callback_total_ns=get(19);d.callback_max_ns=get(20);d.callback_over_budget=get(21);d.buffer_frames=int(get(22));
+ const auto cb=(a.mode==AudioRenderMode::BufferedWorker?a.consumer.timing.snapshot():a.direct_timing.snapshot());
+ d.callback_count=cb.count;d.callback_total_ns=cb.total_ns;d.callback_max_ns=cb.max_ns;d.callback_over_budget=cb.over_budget;d.buffer_frames=int(get(22));
+ d.callback_cpu_count=cb.cpu_count;d.callback_cpu_total_ns=cb.cpu_total_ns;d.callback_cpu_max_ns=cb.cpu_max_ns;d.callback_cpu_unavailable=cb.cpu_unavailable;
+ d.producer=a.producer_timing.snapshot();d.render_mode=a.mode;d.source_vinyl=a.source_vinyl;
+ d.pcm_depth=uint32_t(a.pcm.depth());d.pcm_target=uint32_t(a.pcm_target);d.pcm_capacity=Impl::pcm_capacity;
+ d.pcm_low=a.consumer.timing.snapshot().count?a.consumer.low():d.pcm_depth;d.pcm_high=a.pcm_high.load();
+ d.delivered_frames=a.mode==AudioRenderMode::BufferedWorker?a.pcm.delivered():d.frames;
+ d.starved_callbacks=a.consumer.starved();d.missing_frames=a.consumer.missing();
  d.queue_depth=a.write.load(std::memory_order_relaxed)-a.read.load(std::memory_order_relaxed);
  d.dropped_commands=a.dropped.load(std::memory_order_relaxed); d.queue_high_water=a.high_water.load(std::memory_order_relaxed);
  for(size_t i=0;i<kinds;++i) d.voices_started[i]=get(32+i);

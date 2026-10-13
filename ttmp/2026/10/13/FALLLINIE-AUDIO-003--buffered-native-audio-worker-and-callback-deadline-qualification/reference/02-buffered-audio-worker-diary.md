@@ -46,3 +46,42 @@ Integrate the actual buffered callback with allocation/timing tests; retain inde
 
 ### Code review instructions
 Start with `PcmRing::push/consume`; run the commands above. Input frames use opposite-sign left/right values, so channel swaps and repeated frames cannot pass silently.
+
+## Step 2: Give the synthesizer one live worker owner
+
+Added one dedicated DSP producer with preallocated 1,024-frame scratch and an 8,192-frame ring. Startup prepares the unchanged DSP, starts the producer and waits for request-aware prefill before unpausing SDL. Ordinary 1,024-frame devices target 2,048 ready frames; 4,096-frame devices target 5,120. No fallback to direct mode occurs on failure. Direct callback remains an explicit diagnostic option; offline and live preparation are mutually exclusive.
+
+Pause first quiesces SDL, then requests/awaits producer acknowledgement after any in-flight block is published. Only then is the source pause flag set. Queued PCM and both frontiers stay intact; resume clears that flag before waking the worker. Stop can interrupt paused and timed-full waits without any callback notification. Device close joins both owners before storage can be destroyed and preserves caller-owned SDL initialization.
+
+**Prior transport commit:** `a71bf65` — Audio: add bounded stereo PCM transport and deterministic FIFO tests.
+
+### What I did
+- Added typed `AudioOpenOptions`, `AudioRenderMode`, source-vinyl offline argument and numeric timing/frontier diagnostics in `src/audio.hpp`.
+- Reused `Impl::render` unchanged except explicit vinyl preference at the mix output (filter/RNG/generation still run). Worker consumes the existing numeric command queue.
+- Added `src/audio_timing.hpp`: exact shared buffered consumer path, allocation-watchable without SDL device timing; Linux thread CPU clock with explicit unavailable counts, independent producer/callback wall-budget counters.
+- Extended source tests with bit-exact offline→buffered stereo identity over variable requests and vinyl/default/RNG trace comparisons. Extended lifecycle tests across 256/512/1024/2048/4096 and explicit direct mode, failure injection, repeated open, mute, frozen/retained pause, reopen, destructor and caller-owned SDL lifetime.
+- Ran `cmake --build build-audio --target test-audio-pcm test-audio test-audio-lifecycle -j4` and `ctest --test-dir build-audio -R 'audio-' --output-on-failure`; bounded evidence in `scripts/worker-boundary.log`.
+
+### Why
+The callback cannot wait for DSP or notify a condition variable. A 1 ms timed producer wait makes refill independent of callback synchronization, while main/worker CV notifications handle startup and lifecycle only. Mute affects future generated PCM after retained lead, not already queued output.
+
+### What worked
+All three audio tests passed (8.28 s total). Existing full source CPU branch ran, not only `--render`. Source transport is bit-identical for 32,768 frames. Callback helper allocation watch includes clocks and atomics; deliberate two shortages produce 2 starved callbacks and 17 missing frames, not synthesized time. Invalid options and injected `std::bad_alloc` unwind device/subsystem and allow retry.
+
+### What didn't work
+No test failures at this boundary. Sanitizer and sustained integration gates are still pending, not implied by Release tests.
+
+### What I learned
+Publication of an in-flight final block must precede pause acknowledgement. Setting the source pause flag before that acknowledgement could publish silent PCM without advancing the clock, violating frontier identity. Active `open` is idempotent even if supplied options differ; actual config remains unchanged.
+
+### What was tricky to build
+Order of SDL pause, producer acknowledgement, source pause flag and resume wake; transactional preparation/thread creation/prefill timeout cleanup; single-writer numeric timing sets; preserving filtered vinyl state despite inaudible mix.
+
+### What warrants a second pair of eyes
+`Impl::produce`, `AudioEngine::open/pause/close`, explicit callback branch and failure paths. The callback's buffered branch invokes only `PcmConsumer::callback` (copies/zero/atomics/clocks), no render/locks/allocations/notifications. Diagnostic snapshots are advisory, while paused frontiers are exact.
+
+### What should be done in the future
+Finish CLI/launcher/main-owned overlay and reproducible A/B helper migration, then sanitizers and sustained host gate. Parent must measure actual PipeWire/device starvation, latency and producer throughput under comparable game workloads; dummy SDL is not physical acceptance.
+
+### Code review instructions
+Run the three audio CTests; inspect the published pause invariant `frames == delivered_frames + pcm_depth`. Direct mode deliberately still performs DSP in callback and is never an automatic recovery path.

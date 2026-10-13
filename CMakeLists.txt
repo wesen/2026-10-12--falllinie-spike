@@ -23,7 +23,7 @@ foreach(name gameplay gameplay_world gameplay_pose integration developer_overlay
 endforeach()
 add_executable(test-audio-pcm tests/test_audio_pcm.cpp)
 target_include_directories(test-audio-pcm PRIVATE src)
-target_link_libraries(test-audio-pcm PRIVATE Threads::Threads)
+target_link_libraries(test-audio-pcm PRIVATE Threads::Threads PkgConfig::SDL2)
 add_test(NAME audio-pcm COMMAND test-audio-pcm)
 set_tests_properties(audio-pcm PROPERTIES TIMEOUT 20)
 add_executable(test-audio tests/test_audio.cpp)

@@ -11,6 +11,16 @@ enum class AudioVoice : uint8_t {
  Kick, KickClick, Snare, SnareTone, Hat, Rhodes, Bass, Pad, Chop,
  Blip, Acid, Pop, Impact, LandNoise, UberNoise, BailNoise, Count
 };
+enum class AudioRenderMode : uint8_t { BufferedWorker, DirectCallback };
+struct AudioOpenOptions {
+ int buffer_frames=512;
+ AudioRenderMode mode=AudioRenderMode::BufferedWorker;
+ bool source_vinyl=true;
+};
+struct AudioTimingDiagnostics {
+ uint64_t count=0,total_ns=0,max_ns=0,over_budget=0;
+ uint64_t cpu_count=0,cpu_total_ns=0,cpu_max_ns=0,cpu_unavailable=0;
+};
 struct AudioDiagnostics {
  uint64_t frames=0, steps=0, sections=0, dropped_commands=0;
  uint64_t stolen_voices=0, dropped_notes=0, nonfinite_samples=0;
@@ -18,6 +28,12 @@ struct AudioDiagnostics {
  int sample_rate=0,buffer_frames=0;
  uint32_t queue_depth=0;
  uint64_t callback_count=0,callback_total_ns=0,callback_max_ns=0,callback_over_budget=0;
+ uint64_t callback_cpu_count=0,callback_cpu_total_ns=0,callback_cpu_max_ns=0,callback_cpu_unavailable=0;
+ AudioTimingDiagnostics producer;
+ uint64_t delivered_frames=0,starved_callbacks=0,missing_frames=0;
+ uint32_t pcm_depth=0,pcm_target=0,pcm_capacity=0,pcm_low=0,pcm_high=0;
+ AudioRenderMode render_mode=AudioRenderMode::BufferedWorker;
+ bool source_vinyl=true;
  AudioSection section=AudioSection::Intro;
  double drums_gain=1, music_cutoff=9000, carve_gain=0, wind_gain=0, grind_gain=0;
  bool sustained_air=false, grotesk=false, muted=false;
@@ -38,7 +54,8 @@ public:
  ~AudioEngine();
  AudioEngine(const AudioEngine&)=delete;
  AudioEngine& operator=(const AudioEngine&)=delete;
- bool open(int buffer_frames=512);    // main thread; reopen to change buffer
+ bool open(int buffer_frames=512);    // buffered, source vinyl enabled
+ bool open(const AudioOpenOptions&);  // main thread; close/reopen to reconfigure
  void close();                        // stops callback before releasing storage
  void pause(bool);
  void set_ride(const RideSound&);
@@ -46,7 +63,7 @@ public:
  void set_muted(bool);                 // source output gain target, not clock stop
  // Closed-device CPU test/evidence mode. Reinitializes the song explicitly;
  // gameplay Restart does not. Stereo interleaved output, no render allocation.
- bool prepare_offline(int sample_rate=48000, uint32_t seed=1);
+ bool prepare_offline(int sample_rate=48000, uint32_t seed=1, bool source_vinyl=true);
  void render_offline(float* stereo, size_t frames);
  AudioDiagnostics diagnostics() const; // lock-free bounded numeric snapshot
  size_t take_trace(AudioTrace* into, size_t capacity); // offline only

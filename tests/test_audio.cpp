@@ -1,5 +1,6 @@
 #include "audio.hpp"
 #include "audio_dsp.hpp"
+#include "audio_timing.hpp"
 #include <algorithm>
 #include <array>
 #include <atomic>
@@ -214,11 +215,36 @@ void test_block_independence() {
  require(x==y,"sample-clock scheduler/DSP independent of callback block size");
  auto d=a.diagnostics(); require(d.sample_rate==44100 && d.frames==5000,"non-default sample rate honored");
 }
+void test_buffered_identity_and_vinyl(){
+ constexpr size_t total=32768;
+ fl::AudioEngine reference,producer,no_vinyl,explicit_source;
+ require(reference.prepare_offline(48000,23)&&producer.prepare_offline(48000,23)&&no_vinyl.prepare_offline(48000,23,false)&&explicit_source.prepare_offline(48000,23,true),"identity preparation");
+ std::vector<float> expected(total*2),actual(total*2),clean(total*2),source(total*2);
+ reference.render_offline(expected.data(),total);no_vinyl.render_offline(clean.data(),total);explicit_source.render_offline(source.data(),total);
+ require(expected==source&&expected!=clean,"source default retained; vinyl preference changes mix");
+ require(!no_vinyl.diagnostics().source_vinyl&&explicit_source.diagnostics().source_vinyl,"vinyl preference observable");
+ std::array<fl::AudioTrace,4096> a{},b{};
+ auto na=reference.take_trace(a.data(),a.size()),nb=no_vinyl.take_trace(b.data(),b.size());require(na==nb,"vinyl retains RNG scheduling");
+ for(size_t i=0;i<na;++i)require(a[i].sample==b[i].sample&&a[i].step==b[i].step&&a[i].voice==b[i].voice&&a[i].note==b[i].note&&a[i].velocity==b[i].velocity,"vinyl source sequence unchanged");
+ fl::audio_detail::PcmRing<8192> ring;fl::audio_detail::PcmConsumer<8192> consumer;
+ std::array<float,2048> block{};std::array<float,8192> request{};
+ size_t produced=0,delivered=0,turn=0;const auto frequency=SDL_GetPerformanceFrequency();
+ constexpr size_t sizes[]={1,137,256,1024,2049,4096,513};
+ while(delivered<total){
+  size_t n=std::min(sizes[turn++%7],total-delivered);
+  while(ring.depth()<n&&produced<total){producer.render_offline(block.data(),1024);require(ring.push(block.data(),1024),"identity publish");produced+=1024;}
+  watch_allocations=true;consumer.callback(ring,request.data(),n*8,48000,frequency);watch_allocations=false;
+  std::copy_n(request.data(),n*2,actual.data()+delivered*2);delivered+=n;
+ }
+ require(actual==expected,"buffered block/partial/wrap PCM is bit-identical to sequential offline");
+ require(consumer.starved()==0&&producer.diagnostics().frames==total&&ring.delivered()==total,"identity frontiers");
+ std::cout<<"buffered transport bit identity: 32768 stereo frames, variable requests; source/no-vinyl RNG trace retained\n";
+}
 void write_u32(std::ostream& out,uint32_t value) { char b[4]; for(int i=0;i<4;++i) b[i]=char(value>>(i*8)); out.write(b,4); }
 void write_u16(std::ostream& out,uint16_t value) { char b[2]={char(value),char(value>>8)}; out.write(b,2); }
-void render_evidence(const char* path,double seconds) {
+void render_evidence(const char* path,double seconds,bool source_vinyl=true) {
  require(seconds>=1 && seconds<=600,"bounded offline evidence duration");
- Harness h(48000,19); std::ofstream wav(path,std::ios::binary); require(bool(wav),"open offline evidence path");
+ Harness h(48000,19); require(h.audio.prepare_offline(48000,19,source_vinyl),"evidence vinyl config"); std::ofstream wav(path,std::ios::binary); require(bool(wav),"open offline evidence path");
  uint32_t frames=uint32_t(seconds*48000),bytes=frames*4;
  wav.write("RIFF",4); write_u32(wav,bytes+36); wav.write("WAVEfmt ",8); write_u32(wav,16); write_u16(wav,1); write_u16(wav,2); write_u32(wav,48000); write_u32(wav,48000*4); write_u16(wav,4); write_u16(wav,16); wav.write("data",4); write_u32(wav,bytes);
  fl::RideSound ride;
@@ -255,8 +281,8 @@ void operator delete[](void* p) noexcept { std::free(p); }
 void operator delete(void* p,std::size_t) noexcept { std::free(p); }
 void operator delete[](void* p,std::size_t) noexcept { std::free(p); }
 int main(int argc,char** argv) {
- if(argc>=3 && std::string(argv[1])=="--render") { render_evidence(argv[2],argc>3?std::stod(argv[3]):90); }
- else { for(double x:{-20.,-3.,-2.,-.5,0.,.5,2.,3.,20.})require(std::abs(fl::audio_detail::acid_shape(x)-std::tanh(std::max(-1.,std::min(1.,x*.5))*3))<1e-12,"acid source endpoint clamp"); test_saturation_2x(); test_fft_and_source_ir(); test_arrangement(); test_reactions(); test_limits_and_spsc(); test_block_independence(); }
+ if(argc>=3 && std::string(argv[1])=="--render") { render_evidence(argv[2],argc>3?std::stod(argv[3]):90,!(argc>4&&std::string(argv[4])=="--no-vinyl")); }
+ else { for(double x:{-20.,-3.,-2.,-.5,0.,.5,2.,3.,20.})require(std::abs(fl::audio_detail::acid_shape(x)-std::tanh(std::max(-1.,std::min(1.,x*.5))*3))<1e-12,"acid source endpoint clamp"); test_saturation_2x(); test_fft_and_source_ir(); test_arrangement(); test_reactions(); test_limits_and_spsc(); test_block_independence(); test_buffered_identity_and_vinyl(); }
  require(allocations.load()==0,"no callback/render allocation after preparation");
  std::cout<<"PASS: source audio CPU checks; callback allocations "<<allocations.load()<<'\n';
 }

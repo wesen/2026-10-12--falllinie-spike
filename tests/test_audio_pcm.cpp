@@ -1,4 +1,5 @@
 #include "audio_pcm.hpp"
+#include "audio_timing.hpp"
 #include <array>
 #include <atomic>
 #include <cstdlib>
@@ -30,6 +31,20 @@ void deterministic(){
  ring.reset();require(ring.depth()==0&&ring.delivered()==0,"reset");
  require(!ring.push(input.data(),9),"oversized producer rejected");
 }
+void callback_safety(){
+ fl::audio_detail::PcmRing<8> ring;fl::audio_detail::PcmConsumer<8> consumer;
+ std::array<float,6> input{1,-1,2,-2,3,-3};std::array<unsigned char,83> output{};
+ require(ring.push(input.data(),3),"callback prefill");
+ const auto frequency=SDL_GetPerformanceFrequency();watch=true;
+ consumer.callback(ring,output.data(),output.size(),48000,frequency);
+ consumer.callback(ring,output.data(),output.size(),48000,frequency);watch=false;
+ require(consumer.starved()==2&&consumer.missing()==17,"distinct callback/missing-frame counts");
+ for(auto b:output)require(b==0,"starved callback initialized bytes");
+ require(ring.delivered()==3,"callback delivers only generated frames");
+ auto timing=consumer.timing.snapshot();require(timing.count==2,"callback wall count");
+ require(timing.cpu_count+timing.cpu_unavailable==2,"CPU clock availability counted");
+ consumer.reset();require(consumer.starved()==0&&consumer.missing()==0,"callback counters reset");
+}
 void stress(){
  fl::audio_detail::PcmRing<1024> ring;constexpr size_t total=500000;
  std::thread producer([&]{std::array<float,62> block{};size_t at=0;while(at<total){size_t n=std::min(size_t(31),total-at);for(size_t i=0;i<n;++i){block[i*2]=float(at+i);block[i*2+1]=-float(at+i);}if(ring.push(block.data(),n))at+=n;else std::this_thread::yield();}});
@@ -42,4 +57,4 @@ void* operator new(std::size_t n){if(watch)allocations.fetch_add(1);if(void* p=s
 void* operator new[](std::size_t n){return ::operator new(n);}
 void operator delete(void* p)noexcept{std::free(p);}void operator delete[](void* p)noexcept{std::free(p);}
 void operator delete(void* p,std::size_t)noexcept{std::free(p);}void operator delete[](void* p,std::size_t)noexcept{std::free(p);}
-int main(){deterministic();stress();require(allocations.load()==0,"consumer allocation");std::cout<<"PCM stereo/partial/wrap/full/empty/malformed shortage/FIFO stress passed; consumer allocations 0\n";}
+int main(){deterministic();callback_safety();stress();require(allocations.load()==0,"consumer allocation");std::cout<<"PCM stereo/partial/wrap/full/empty/malformed shortage/FIFO stress passed; consumer allocations 0\n";}

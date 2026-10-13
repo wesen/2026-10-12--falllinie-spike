@@ -1,5 +1,5 @@
-offline render: 120s, 48000Hz stereo, peak 0.746439, RMS 0.132359
-512-frame cost ms: mean 0.749866, p95 1.24088, max 2.42457, deadline 10.6667 (host only)
+offline render: 120s, 48000Hz stereo, peak 0.746482, RMS 0.132355
+512-frame cost ms: mean 0.747223, p95 1.25212, max 2.26112, deadline 10.6667 (host only)
 diagnostics: steps 689, sections 6, peak voices 42, queue high water 2, command drops 0, note drops 0, steals 0, nonfinite 0
 voice[0]=119
 voice[1]=119

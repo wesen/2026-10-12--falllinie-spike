@@ -275,7 +275,9 @@ struct AudioEngine::Impl {
   case AudioVoice::Hat: bus.drums+=v.filter[0].process(nz())*amp; break;
   case AudioVoice::Rhodes: {
    double mod=osc(2,v.frequency)*v.pitch; if(t<0.5) v.pitch*=v.pitch_mul;
-   x=osc(0,detune(-6)+mod)+osc(1,detune(6)+mod);
+   // WebAudio applies detune to the full frequency AudioParam, including FM.
+   double fm=1+mod/v.frequency;
+   x=osc(0,detune(-6)*fm)+osc(1,detune(6)*fm);
    // Source tine connects through amp (multiplicative amp envelope).
    x+=sine.at(t*v.frequency*4.02)*(t<0.3?v.aux.tick(v.age):0); x*=amp;
    double a=(v.pan+1)*pi/4, left=x*std::cos(a),right=x*std::sin(a);

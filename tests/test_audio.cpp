@@ -36,6 +36,9 @@ struct Harness {
 };
 void test_fft_and_source_ir() {
  using namespace fl::audio_detail;
+ Sines sine; double phase=0;
+ oscillator(phase,-100,0,48000,sine);
+ require(oscillator(phase,-100,0,48000,sine)<0,"negative instantaneous FM frequency reverses phase");
  FFT fft; fft.init(32); std::array<std::complex<float>,32> a{},original{};
  for(size_t i=0;i<a.size();++i) a[i]=original[i]={float(std::sin(i)),float(std::cos(i))};
  fft.run(a.data()); fft.run(a.data(),true);

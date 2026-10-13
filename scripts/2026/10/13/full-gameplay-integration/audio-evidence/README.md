@@ -12,7 +12,7 @@ AUDIO_SANITIZE=1 scripts/2026/10/13/full-gameplay-integration/check-audio.sh
 scripts/2026/10/13/full-gameplay-integration/check-audio.sh --render /tmp/falllinie-source-audio.wav 120
 ```
 
-The script uses the installed SDL2 and C++17 compiler, a temporary build directory, and removes its executable afterwards. It never opens SDL audio/video. WAV rendering is optional PCM16 evidence, not a gameplay asset. The 120-second file is deliberately **not committed** (23,040,044 bytes, SHA256 `44971dfe151c4e724584c69891ebf236730f31f97178a8cca4c4a7a364fde44d`). Timings will vary by host. The WAV is deterministic for the recorded seed/rate/scripted commands, not identical to browser random realizations.
+The script uses the installed SDL2 and C++17 compiler, a temporary build directory, and removes its executable afterwards. It never opens SDL audio/video. WAV rendering is optional PCM16 evidence, not a gameplay asset. The 120-second file is deliberately **not committed** (23,040,044 bytes, SHA256 `aabb21cf8f6fbd2cb1862ce029f6ae548da8f83e79585fef8d3041eec56cc253`). Timings will vary by host. The WAV is deterministic for the recorded seed/rate/scripted commands, not identical to browser random realizations.
 
 Environment: x86_64; g++ Ubuntu 13.3.0; SDL2 2.30.0. Final logs: `cpu-check.log`, `sanitizer-check.log`, `offline-render.log`. `initial-compile-failure.log` retains the test-only missing-GameEvent-text-initializer error before it was corrected. An earlier script root calculation also failed to find `src/audio.cpp`/`tests/test_audio.cpp`; it was corrected from four to five parent directories.
 
@@ -23,8 +23,8 @@ Environment: x86_64; g++ Ubuntu 13.3.0; SDL2 2.30.0. Final logs: `cpu-check.log`
 - Source air/landing/pop/uber/bail/GROTESK/grind responses, carve/wind quantization and smoothing, mute/pause/restart continuity, ignored combo/recovery events.
 - Overflow injection: queue high water 256, exact first 44 drop-newest commands; deterministic voice stealing caps at 128. Concurrent numeric SPSC producer/consumer check (ASan/UBSan, **not** a race-detector proof).
 - 44.1kHz output/block-size identity; 48kHz reactivity and optional render. Zero watched render allocations; no callback locks, strings, I/O, logging or GL/SDL video calls by inspection.
-- 120s / 48kHz stereo render: all 16 instrument/SFX types; 689 steps / 6 sections; peak 42 voices; queue high water 2; no command/note drops, steals or nonfinite samples. Peak 0.746439, RMS 0.132359.
-- External host timing of 512-frame render calls: mean 0.749866ms, p95 1.24088ms, max 2.42457ms; 10.6667ms nominal block interval. This excludes setup/WAV I/O and is **not RG DS profiling** or SDL backend callback qualification.
+- 120s / 48kHz stereo render: all 16 instrument/SFX types; 689 steps / 6 sections; peak 42 voices; queue high water 2; no command/note drops, steals or nonfinite samples. Peak 0.746482, RMS 0.132355.
+- External host timing of 512-frame render calls: mean 0.747223ms, p95 1.25212ms, max 2.26112ms; 10.6667ms nominal block interval. This excludes setup/WAV I/O and is **not RG DS profiling** or SDL backend callback qualification.
 
 ## Integration API and ownership
 

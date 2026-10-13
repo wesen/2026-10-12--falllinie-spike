@@ -570,3 +570,62 @@ A second, muted 15-second diagnostic kept the full synthesis workload while meas
 ### Technical details
 - Actual budget is buffer_frames/sample_rate; callback clocks use SDL_GetPerformanceCounter with cached frequency and publish relaxed atomic counters. The sole audio consumer owns accumulation; all formatting/I/O is main-thread-only.
 - JS research stays isolated and has no device access. Target tests are bounded, not a restart of the earlier broad graphics matrix.
+
+## Step 11: Reduce DSP burst cost, preserve the source response and isolate remaining headroom risk
+
+I optimized the full convolution rather than substituting a smaller reverb: real-signal half spectra, explicit finite complex arithmetic, planar SIMD-friendly storage, and delayed-partition work distributed through the current input block. The newest partition still waits for its completed input, so the original native1024-sample wet latency stays unchanged. Profiling also exposed time in voice_sample; a compact sorted occupied-slot list now avoids calling that large function for every empty slot on every sample while retaining the original summation/stealing order.
+
+The target trend improved substantially, but the512-frame audio gate is still not passed: the latest30-second run recorded19 over-budget callbacks out of2786, with max15.0859 ms against10.6667 ms. These results are intentionally not described as a complete crackle fix. A more conservative buffer option and external review are next; the requested overlay finished separately and still needs review/integration/device legibility checks.
+
+### Prompt Context
+- **User prompt:** See Step10 for the exact crackling and developer-overlay requests, and Step6 for the detailed diary/commit instruction.
+- **Assistant interpretation:** Preserve actual source sound design while reducing computation and make remaining target failures explicit.
+- **Inferred user intent:** Smooth audio with reproducible lower-level evidence rather than unmeasured changes.
+- **Commit (code):** Instrumentation/evidence f1402c7; DSP checkpoint hash follows this entry.
+
+### What I did
+- Stored only1025 independent bins of each2048-point real-signal spectrum; rebuilt the Hermitian half before inverse FFT.
+- Replaced generic complex multiplication with explicit real arithmetic; separated real/imaginary planes for the multiply-accumulate. GCC optimizes only that bounded kernel atO3, without fast-math/reassociation flags; ARM compiler reports16-byte vectorization.
+- Precomputed delayed partitions as their historical inputs are already available, in64-sample work groups. Only current-block FFT/partition0/inverse FFT run at its boundary.
+- Added a sorted occupied-voice-slot list, preserving ascending original mixing order and earliest-ending stealing semantics; expired slots retire without allocating.
+- Added a non-impulse stereo test against direct source-IR convolution, beyond the previous impulse/FFT tests.
+- Ran affected strict CPU/ASan/UBSan gates and selected muted target comparisons; captured a diagnostic perf report and scheduler state.
+
+### Why
+- Average time under budget cannot compensate for an alternating oversized block. Delayed partitions can be computed earlier without changing their input history or adding wet latency.
+- Interleaved generic complex operations inhibit efficient SIMD; independent planar bins reduce memory traffic/shuffling.
+- Calling voice_sample for128 mostly empty slots adds avoidable work and cache pressure; a bounded active list retains the same finite resource limits.
+
+### What worked
+- All affected strict CPU and ASan/UBSan runs pass, watched render allocations=0, source arrangement/reactions/rate/block identity intact.
+- Full20800-tap/channel8kHz IR reference error remains9.28995e-09; non-impulse stereo convolution max error3.17755e-08 versus direct source response. Tail beyond2 seconds and24-sample2x saturation latency remain tested.
+- Recorded target stages at48kHz/512: first half-spectrum run mean6.67424 ms/max19.0377/178of1320 over budget; spread run mean7.61094/max17.6165/112of2754; planar run mean7.73134/max15.5368/99of2752; active/locality run mean6.34155/max15.0859/19of2786. Durations/game states differ, so these are observed diagnostic trends, not controlled equal-work benchmark percentages.
+- Latest combined run GL_error=0, frame p50=19.1291 ms/p95=21.0531 ms; production FPS remains around52, not the earlier prototype's60.
+- Diagnostic perf recorded1673 samples/no lost samples; voice_sample and planar accumulation were substantial audio-thread hotspots. SDLAudioP2 runs normal time-sharing at nice-20, not realtime; no scheduler/governor policy was changed.
+
+### What didn't work
+- The latest512-frame callback test still has19 budget misses; max15.0859 ms exceeds10.6667 ms. No audible success claim or final acceptance is made.
+- First spreading reduced deadline misses but did not reduce average cost consistently; smaller work groups disturb voice/cache locality.64-sample groups and occupied slots improve that tradeoff.
+- A convenience SCP loop used inferred paths that did not exist; explicit copies from audio-planar/perf-report.txt and audio-active/scheduler.txt succeeded. Only successful evidence copies are retained.
+
+### What I learned
+- Both numerical kernels and data-access scheduling matter; spreading work too finely can exchange peak reduction for cache overhead.
+- SDL's current audio thread already has nice-20. Avoid blaming low nice priority or changing global scheduling/CPU governors without evidence.
+
+### What was tricky to build
+- Tail history excludes the ring slot that will hold the unfinished current block; partitions1..P-1 are valid to precompute, partition0 is not. Restart/init clear all tail accumulators and phase state.
+- Active slots remain sorted so different caller block sizes do not change summation order; voice stealing reuses an occupied slot without duplicating its index.
+
+### What warrants a second pair of eyes
+- Ring indices, delayed-partition phase, restrict non-alias guarantees, active-list insertion/retirement/stealing and finite-range assumptions need external review despite passing sanitizers/oracles.
+
+### What should be done in the future
+- Test a conservative explicit audio-buffer option, review DSP/overlay, integrate the overlay and qualify readability plus audio before asking for the final human playtest.
+- Separately address the combined graphics52FPS load without hiding it as an audio fix.
+
+### Code review instructions
+- Start with Reverb::process/planar_accumulate, Impl::add/render active-slot loop and test_fft_and_source_ir. Inspect all target-evidence audio-budget-* logs; perf instrumentation run is diagnostic only and not acceptance evidence.
+
+### Technical details
+- Full2.6-second stereo response, sample rate, musical arrangement, native wet latency and bounded128voice/256command/64pump limits are unchanged.
+- Callback over-budget is wall time versus buffer duration, not actual PipeWire/ALSA XRUN count; prepared-render allocations/nonfinite/drop/steal metrics remain separately reported.

@@ -1,0 +1,139 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 1K of event 'armv8_cortex_a55/cycles/P'
+# Event count (approx.): 29460657932
+#
+# Overhead  Command          Shared Object                Symbol                                                                                                                                                                                                                                                                                                IPC   [IPC Coverage]
+# ........  ...............  ...........................  ....................................................................................................................................................................................................................................................................................................  ....................
+#
+    17.45%  SDLAudioP2       falllinie-spike              [.] fl::AudioEngine::Impl::voice_sample(fl::AudioEngine::Impl::Voice&, fl::AudioEngine::Impl::Buses&, double)                                                                                                                                                                                         -      -
+            |
+            ---fl::AudioEngine::Impl::voice_sample(fl::AudioEngine::Impl::Voice&, fl::AudioEngine::Impl::Buses&, double)
+               fl::AudioEngine::Impl::render(float*, unsigned long)
+               fl::AudioEngine::Impl::callback(void*, unsigned char*, int)
+               0x7fbe6e19ff
+               0x7fbe7430e7
+               0x7fbe7d04e7
+               0x7fbe1ca247
+               0x7fbe24d61b
+
+    11.45%  SDLAudioP2       falllinie-spike              [.] fl::audio_detail::planar_accumulate(float*, float*, float const*, float const*, float const*, float const*, unsigned long) [clone .constprop.0]                                                                                                                                                   -      -
+            |
+            ---fl::audio_detail::planar_accumulate(float*, float*, float const*, float const*, float const*, float const*, unsigned long) [clone .constprop.0]
+               fl::audio_detail::Reverb::process(double, double, double&, double&)
+               fl::AudioEngine::Impl::render(float*, unsigned long)
+               fl::AudioEngine::Impl::callback(void*, unsigned char*, int)
+               0x7fbe6e19ff
+               0x7fbe7430e7
+               0x7fbe7d04e7
+               0x7fbe1ca247
+               0x7fbe24d61b
+
+     4.54%  SDLAudioP2       falllinie-spike              [.] fl::AudioEngine::Impl::render(float*, unsigned long)                                                                                                                                                                                                                                              -      -
+            |
+            ---fl::AudioEngine::Impl::render(float*, unsigned long)
+               fl::AudioEngine::Impl::callback(void*, unsigned char*, int)
+               0x7fbe6e19ff
+               0x7fbe7430e7
+               0x7fbe7d04e7
+               0x7fbe1ca247
+               0x7fbe24d61b
+
+     3.84%  falllinie-spike  libmali.so.1.10.0            [.] 0x000000000042d6dc                                                                                                                                                                                                                                                                                -      -
+            |
+            ---0x7fba6ed6dc
+               0x7fba6d03ef
+
+     3.20%  SDLAudioP2       falllinie-spike              [.] fl::audio_detail::Reverb::process(double, double, double&, double&)                                                                                                                                                                                                                               -      -
+            |
+            ---fl::audio_detail::Reverb::process(double, double, double&, double&)
+               fl::AudioEngine::Impl::render(float*, unsigned long)
+               fl::AudioEngine::Impl::callback(void*, unsigned char*, int)
+               0x7fbe6e19ff
+               0x7fbe7430e7
+               0x7fbe7d04e7
+               0x7fbe1ca247
+               0x7fbe24d61b
+
+     3.15%  SDLAudioP2       falllinie-spike              [.] fl::audio_detail::Saturation2x::process(double)                                                                                                                                                                                                                                                   -      -
+            |
+            ---fl::audio_detail::Saturation2x::process(double)
+               fl::AudioEngine::Impl::render(float*, unsigned long)
+               fl::AudioEngine::Impl::callback(void*, unsigned char*, int)
+               0x7fbe6e19ff
+               0x7fbe7430e7
+               0x7fbe7d04e7
+               0x7fbe1ca247
+               0x7fbe24d61b
+
+     1.38%  falllinie-spike  libc.so.6                    [.] pthread_mutex_lock                                                                                                                                                                                                                                                                                -      -
+            |
+            ---pthread_mutex_lock
+
+     1.20%  falllinie-spike  libmali.so.1.10.0            [.] 0x000000000195cb00                                                                                                                                                                                                                                                                                -      -
+            |
+            ---0x7fbbc1cb00
+               0x7fbbc1dcaf
+               0x7fbbc03ad7
+               0x7fbbc03f4b
+               0x7fbbc053af
+               0x7fbbc0b087
+               0x7fba6d2997
+               0x7fba70d3e7
+               eglSwapBuffers
+               0x7fbe7ab2ff
+               main
+               0x7fbe162b4b
+
+     1.08%  PulseMainloop    [kernel.kallsyms]            [k] memcg_rstat_updated.part.0                                                                                                                                                                                                                                                                        -      -
+            |
+            ---memcg_rstat_updated.part.0
+               |
+                --1.02%--__mod_memcg_lruvec_state
+                          __account_obj_stock.constprop.0
+                          __memcg_slab_free_hook
+                          kfree
+                          skb_free_head
+                          skb_release_data
+                          sk_skb_reason_drop
+                          unix_stream_read_generic
+                          unix_stream_recvmsg
+                          ____sys_recvmsg
+                          ___sys_recvmsg
+                          __sys_recvmsg
+                          __arm64_sys_recvmsg
+                          el0_svc_common.constprop.0
+                          do_el0_svc
+                          el0_svc
+                          el0t_64_sync_handler
+                          el0t_64_sync
+                          0x7fbe1d1a6c
+                          0x7fbe1c6e7f
+                          recvmsg
+                          pa_iochannel_read_with_ancil_data
+                          0x7fb6860347
+                          0x7fb6861a17
+                          pa_mainloop_dispatch
+                          pa_mainloop_iterate
+                          pa_mainloop_run
+                          0x7fb68c2917
+                          0x7fb6868fe7
+                          0x7fbe1ca247
+                          0x7fbe24d61b
+
+     1.06%  SDLAudioP2       libm.so.6                    [.] tanhf32x                                                                                                                                                                                                                                                                                          -      -
+            |
+            ---tanhf32x
+
+     1.01%  SDLAudioP2       libm.so.6                    [.] sincosf32x                                                                                                                                                                                                                                                                                        -      -
+            |
+            ---sincosf32x
+
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

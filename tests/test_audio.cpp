@@ -86,6 +86,14 @@ void test_fft_and_source_ir() {
  }
  require(error<1e-6,"partition convolution retains all 2.6s source-shaped taps with fixed latency");
  require(late>1e-8,"IR tail retained past two seconds");
+ // Non-impulse inputs exercise the complex cross terms and Hermitian rebuild.
+ seed.state=7;verb.init(8000,seed);std::array<double,127> signal{};
+ for(size_t i=0;i<signal.size();++i)signal[i]=std::sin(i*.173)*.3+std::cos(i*.071)*.1;
+ double signal_error=0;
+ for(size_t i=0;i<5000;++i){double l=0,r=0;verb.process(i<signal.size()?signal[i]:0,i<signal.size()?-signal[i]*.7:0,l,r);double want_l=0,want_r=0;if(i>=Reverb::block){size_t t=i-Reverb::block;for(size_t j=0;j<signal.size()&&j<=t;++j){want_l+=signal[j]*ir[0][t-j]*scale;want_r-=signal[j]*.7*ir[1][t-j]*scale;}}signal_error=std::max(signal_error,std::max(std::abs(l-want_l),std::abs(r-want_r)));}
+ require(signal_error<1e-6,"half-spectrum convolution matches direct source IR for non-impulse stereo signal");
+ require(verb.impulse_real[0].size()==verb.partitions*Reverb::bins,"only independent real-signal bins stored");
+ std::cout<<"convolution signal max error "<<signal_error<<'\n';
  std::cout<<"source IR: 20800 taps/channel, max error "<<error<<", late energy "<<late<<'\n';
 }
 void test_arrangement() {

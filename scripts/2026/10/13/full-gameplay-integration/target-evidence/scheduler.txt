@@ -1,0 +1,12 @@
+    PID     TID COMMAND         CLS RTPRIO  NI
+ 321283  321283 falllinie-spike  TS      -   0
+ 321283  321292 mali-mem-purge   TS      -   0
+ 321283  321293 mali-utility-wo  TS      -   0
+ 321283  321294 mali-utility-wo  TS      -   0
+ 321283  321295 mali-utility-wo  TS      -   0
+ 321283  321296 mali-utility-wo  TS      -   0
+ 321283  321297 mali-cmar-backe  TS      -   0
+ 321283  321298 mali-compiler    TS      -   0
+ 321283  321307 PulseMainloop    TS      -   0
+ 321283  321308 PulseHotplug     TS      -  19
+ 321283  321309 SDLAudioP2       TS      - -20

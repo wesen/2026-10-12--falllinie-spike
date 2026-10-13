@@ -112,6 +112,19 @@ struct Envelope {
   reset(); point(0,0.0001,false,rate); point(attack,std::max(peak,0.0002),true,rate); point(attack+decay,0.0001,true,rate);
  }
 };
+// Numeric FFT inputs are finite and bounded. Explicit real arithmetic avoids
+// general-purpose complex overflow recovery and permits SIMD in convolution.
+inline std::complex<float> complex_product(std::complex<float> a,std::complex<float> b){
+ return {a.real()*b.real()-a.imag()*b.imag(),a.real()*b.imag()+a.imag()*b.real()};
+}
+#if defined(__GNUC__) && !defined(__clang__)
+__attribute__((optimize("O3")))
+#endif
+inline void planar_accumulate(float* __restrict out_r,float* __restrict out_i,const float* __restrict ar,const float* __restrict ai,const float* __restrict br,const float* __restrict bi,size_t count){
+ // Separate planes let ARM NEON process four independent bins per vector,
+ // without interleaved complex shuffles. No fast-math/reassociation required.
+ for(size_t j=0;j<count;++j){out_r[j]+=ar[j]*br[j]-ai[j]*bi[j];out_i[j]+=ar[j]*bi[j]+ai[j]*br[j];}
+}
 struct FFT {
  size_t n=0;
  std::vector<size_t> reverse;
@@ -125,7 +138,7 @@ struct FFT {
   for(size_t i=0;i<n;++i) if(i<reverse[i]) std::swap(x[i],x[reverse[i]]);
   for(size_t len=2;len<=n;len*=2) for(size_t base=0;base<n;base+=len) for(size_t j=0;j<len/2;++j) {
    auto root=roots[j*n/len]; if(inverse) root=std::conj(root);
-   auto a=x[base+j],b=x[base+j+len/2]*root; x[base+j]=a+b; x[base+j+len/2]=a-b;
+   auto a=x[base+j],b=complex_product(x[base+j+len/2],root); x[base+j]=a+b; x[base+j+len/2]=a-b;
   }
   if(inverse) for(size_t i=0;i<n;++i) x[i]/=float(n);
  }
@@ -133,38 +146,48 @@ struct FFT {
 // Uniform partitioned overlap-add, stereo IR / stereo input. One partition of
 // explicit wet latency; O(partitions * FFT-size) per block, not per sample.
 struct Reverb {
- static constexpr size_t block=1024, n=block*2;
+ static constexpr size_t block=1024, n=block*2, bins=n/2+1;
  FFT fft;
- size_t partitions=0,head=0,pos=0;
- std::vector<std::complex<float>> impulse[2],history[2];
+ size_t partitions=0,head=0,pos=0,next_tail=1;
+ std::vector<float> impulse_real[2],impulse_imag[2],history_real[2],history_imag[2];
  std::array<std::complex<float>,n> scratch{},acc{};
+ std::array<float,bins> tail_real[2]{},tail_imag[2]{};
  std::array<float,block> input[2]{},output[2]{},overlap[2]{};
  void init(int rate,Random& rng) {
   fft.init(n); size_t length=static_cast<size_t>(rate*2.6); partitions=(length+block-1)/block;
-  for(int ch=0;ch<2;++ch) { history[ch].assign(partitions*n,{}); input[ch].fill(0); }
-  head=pos=0;
+  for(int ch=0;ch<2;++ch) { history_real[ch].assign(partitions*bins,0);history_imag[ch].assign(partitions*bins,0); input[ch].fill(0); }
+  head=pos=0;next_tail=1;for(auto& t:tail_real)t.fill(0);for(auto& t:tail_imag)t.fill(0);
   std::vector<float> ir[2]; double power=0;
   for(int ch=0;ch<2;++ch) { ir[ch].resize(length); for(size_t i=0;i<length;++i) { double v=(rng.next()*2-1)*std::pow(1-double(i)/length,3.4); ir[ch][i]=float(v); power+=v*v; } }
   // WebAudio ConvolverNode normalize default: RMS calibration and sample-rate correction.
   double scale=0.00125/std::max(0.000125,std::sqrt(power/(length*2)))*44100/rate;
   for(int ch=0;ch<2;++ch) {
-   output[ch].fill(0); overlap[ch].fill(0); impulse[ch].resize(partitions*n);
-   for(size_t p=0;p<partitions;++p) { scratch.fill({}); for(size_t j=0;j<block && p*block+j<length;++j) scratch[j]=ir[ch][p*block+j]*float(scale); fft.run(scratch.data()); std::copy(scratch.begin(),scratch.end(),impulse[ch].begin()+p*n); }
+   output[ch].fill(0); overlap[ch].fill(0); impulse_real[ch].resize(partitions*bins);impulse_imag[ch].resize(partitions*bins);
+   for(size_t p=0;p<partitions;++p) { scratch.fill({}); for(size_t j=0;j<block && p*block+j<length;++j) scratch[j]=ir[ch][p*block+j]*float(scale); fft.run(scratch.data()); for(size_t j=0;j<bins;++j){impulse_real[ch][p*bins+j]=scratch[j].real();impulse_imag[ch][p*bins+j]=scratch[j].imag();} }
   }
  }
  void process(double in_left,double in_right,double& left,double& right) {
   left=output[0][pos]; right=output[1][pos]; input[0][pos]=float(in_left); input[1][pos]=float(in_right);
-  if(++pos<block) return;
+  ++pos;
+  // All delayed partitions depend only on already complete history blocks.
+  // Spread that work across this block instead of bursting every other SDL
+  // callback. Only the newest partition/FFT must wait for the final sample.
+  // 64-sample groups retain locality for voices between convolution batches.
+  const size_t due=(pos/64)*(partitions-1)/(block/64);
+  while(next_tail<=due){size_t p=next_tail++;for(int ch=0;ch<2;++ch){size_t old=((head+partitions-p)%partitions)*bins;planar_accumulate(tail_real[ch].data(),tail_imag[ch].data(),impulse_real[ch].data()+p*bins,impulse_imag[ch].data()+p*bins,history_real[ch].data()+old,history_imag[ch].data()+old,bins);}}
+  if(pos<block)return;
   pos=0;
   for(int ch=0;ch<2;++ch) {
    scratch.fill({}); for(size_t j=0;j<block;++j) scratch[j]=input[ch][j]; fft.run(scratch.data());
-   std::copy(scratch.begin(),scratch.end(),history[ch].begin()+head*n);
-   acc.fill({});
-   for(size_t p=0;p<partitions;++p) { const auto* h=impulse[ch].data()+p*n; const auto* in=history[ch].data()+((head+partitions-p)%partitions)*n; for(size_t j=0;j<n;++j) acc[j]+=h[j]*in[j]; }
+   for(size_t j=0;j<bins;++j){history_real[ch][head*bins+j]=scratch[j].real();history_imag[ch][head*bins+j]=scratch[j].imag();}
+   planar_accumulate(tail_real[ch].data(),tail_imag[ch].data(),impulse_real[ch].data(),impulse_imag[ch].data(),history_real[ch].data()+head*bins,history_imag[ch].data()+head*bins,bins);
+   for(size_t j=0;j<bins;++j)acc[j]={tail_real[ch][j],tail_imag[ch][j]};
+   // Real input/IR spectra are Hermitian: the other half carries no new data.
+   for(size_t j=1;j<n/2;++j)acc[n-j]=std::conj(acc[j]);
    fft.run(acc.data(),true);
    for(size_t j=0;j<block;++j) { output[ch][j]=acc[j].real()+overlap[ch][j]; overlap[ch][j]=acc[j+block].real(); }
   }
-  head=(head+1)%partitions;
+  head=(head+1)%partitions;next_tail=1;for(auto& t:tail_real)t.fill(0);for(auto& t:tail_imag)t.fill(0);
  }
 };
 }

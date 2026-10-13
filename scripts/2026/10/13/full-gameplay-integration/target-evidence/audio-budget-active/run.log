@@ -1,0 +1,115 @@
+Could not open module param file '/sys/module/bifrost_kbase/parameters/large_page_conf'
+arm_release_ver: g29p1-12eac0, rk_so_ver: 5
+GL_VERSION=OpenGL ES 3.2 v1.g29p1-12eac0.d6e9c0f8499d70cc285f3f0ca2ede780
+GL_RENDERER=Mali-G52
+GL_VENDOR=ARM
+GLSL=OpenGL ES GLSL ES 3.20
+joystick=retrogame_joypad
+program original scene with relative projection linked
+projection coordinates=camera-relative
+sky hash=stable wrapped integer lattice
+depth sampler=explicit highp portability override
+program original print linked
+program presentation diagnostic linked
+program batched native HUD using source font linked
+glyph atlas loaded
+terrain vertices=59492 indices=351072 build_ms=64.9598 targets=384x288 FBOs complete
+GPU queries disabled for unperturbed CPU timing
+SOURCE: A jump / B-X boost / L1-R1-L2-R2 grabs / START pause / SELECT new seed / SELECT+START quit; keyboard WASD/arrows, SPACE, SHIFT/B, J/K/U/I, P/ESC, R, M, C, F3, F10
+seed=42 best_path=/storage/.local/share/Falllinie/Falllinie/best-score
+ride z=4 speed=6 airborne=0 charge=0 score=0
+placement=[
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  }
+]
+
+FPS=48.8086 frame_interval_ms=19.3754
+ride z=12.5548 speed=9.66623 airborne=0 charge=0 score=0
+FPS=51.7764 frame_interval_ms=19.0195
+ride z=24.4971 speed=12.9348 airborne=0 charge=0 score=0
+FPS=51.6066 frame_interval_ms=18.1684
+ride z=40.8744 speed=16.6881 airborne=1 charge=0 score=0
+FPS=50.9539 frame_interval_ms=20.1321
+ride z=60.6566 speed=20.6528 airborne=0 charge=0 score=0
+FPS=50.893 frame_interval_ms=17.5279
+ride z=84.5962 speed=23.075 airborne=0 charge=0 score=0
+FPS=51.6534 frame_interval_ms=20.5601
+FPS=52.0908 frame_interval_ms=20.0667
+ride z=110.492 speed=25.0438 airborne=0 charge=0 score=460
+FPS=51.2531 frame_interval_ms=19.5188
+ride z=138.398 speed=26.5612 airborne=0 charge=0.981481 score=460
+FPS=52.311 frame_interval_ms=19.6691
+ride z=169.485 speed=31.3702 airborne=1 charge=0 score=460
+FPS=52.4977 frame_interval_ms=18.5741
+ride z=202.486 speed=29.5098 airborne=1 charge=0 score=460
+FPS=53.9952 frame_interval_ms=17.8027
+ride z=233.594 speed=32.3162 airborne=1 charge=0 score=460
+FPS=52.2041 frame_interval_ms=21.1616
+ride z=269.332 speed=34.2406 airborne=0 charge=0 score=460
+FPS=51.419 frame_interval_ms=18.3771
+ride z=304.763 speed=33.038 airborne=0 charge=0 score=460
+FPS=52.316 frame_interval_ms=18.7811
+ride z=340.697 speed=33.8031 airborne=1 charge=0 score=2445
+FPS=51.6884 frame_interval_ms=20.4739
+FPS=48.8364 frame_interval_ms=21.0264
+ride z=380.744 speed=36.2351 airborne=0 charge=0 score=2445
+FPS=50.3394 frame_interval_ms=19.0119
+ride z=421.063 speed=39.7434 airborne=1 charge=0 score=2445
+FPS=50.5868 frame_interval_ms=24.2293
+ride z=462.926 speed=37.507 airborne=0 charge=0 score=2445
+FPS=50.3747 frame_interval_ms=20.0289
+ride z=504.355 speed=36.2587 airborne=0 charge=0.907407 score=2445
+FPS=49.5241 frame_interval_ms=19.0464
+ride z=547.854 speed=41.0745 airborne=1 charge=0 score=2445
+FPS=49.4762 frame_interval_ms=19.8385
+FPS=51.6773 frame_interval_ms=15.4727
+ride z=590.553 speed=36.9329 airborne=1 charge=0 score=2445
+FPS=53.6271 frame_interval_ms=16.5861
+ride z=630.499 speed=39.5771 airborne=1 charge=0 score=2445
+FPS=54.9973 frame_interval_ms=20.2614
+ride z=669.684 speed=41.2283 airborne=0 charge=0 score=2445
+FPS=52.2718 frame_interval_ms=18.1465
+ride z=712.018 speed=36.2391 airborne=0 charge=0 score=2445
+FPS=52.7906 frame_interval_ms=19.4466
+ride z=748.551 speed=31.8641 airborne=1 charge=0 score=2445
+FPS=52.6922 frame_interval_ms=18.5328
+ride z=785.558 speed=34.3194 airborne=1 charge=0 score=2445
+FPS=51.7815 frame_interval_ms=18.7948
+ride z=820.324 speed=32.6004 airborne=0 charge=0 score=2445
+FPS=54.5208 frame_interval_ms=17.6465
+AUDIO driver=pulseaudio rate=48000 buffer=512 callbacks=2786 mean_ms=6.34155 max_ms=15.0859 over_budget=19 queue_high=2 drops=0 steals=0 nonfinite=0
+frames=1553 measured=1493 frame_p50_ms=19.1291 frame_p95_ms=21.0531 frame_p99_ms=22.4959 peak_rss_kib=115096 GL_error=0

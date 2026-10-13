@@ -73,6 +73,7 @@ struct AudioEngine::Impl {
   Biquad filter[3];
  };
  std::array<Voice,voice_capacity> voices{};
+ std::array<size_t,voice_capacity> active_slots{};size_t active_count=0;
  struct Pump { bool active=false; uint64_t sample=0; double depth=0; };
  std::array<Pump,64> pumps{};
  bool send(Command command) {
@@ -102,7 +103,7 @@ struct AudioEngine::Impl {
   prog=chop_pattern=vowel_set=chop_offset=0; air=grot=grind=muted=false;
   drum=1; cutoff=9000; carve=wind=grind_gain=carve_target=wind_target=0; out_gain=0.85;
   pump_gain=1; pump_delta=0; pump_end=0; bail_start=-1; lfo_phase=0; comp_envelope=0;
-  voices={}; pumps={}; noise_pos=vinyl_pos=delay_pos=0; trace_begin=trace_count=0;
+  voices={};active_count=0; pumps={}; noise_pos=vinyl_pos=delay_pos=0; trace_begin=trace_count=0;
   read.store(0); write.store(0); dropped.store(0); high_water.store(0); paused.store(false);last_ride={};ride_sent=false;
   noise.resize(rate*2); for(auto& x:noise) x=float(noise_rng.next()*2-1);
   vinyl.assign(rate*6,0);
@@ -129,6 +130,7 @@ struct AudioEngine::Impl {
   Voice* v=nullptr;
   for(auto& candidate:voices) if(!candidate.active) { v=&candidate; break; }
   if(!v) { v=&voices[0]; for(auto& candidate:voices) if(candidate.begin+candidate.length<v->begin+v->length) v=&candidate; ++d.stolen_voices; }
+  if(!v->active){size_t slot=size_t(v-voices.data()),at=0;while(at<active_count&&active_slots[at]<slot)++at;for(size_t i=active_count;i>at;--i)active_slots[i]=active_slots[i-1];active_slots[at]=slot;++active_count;}
   *v={}; v->active=true; v->kind=kind; v->begin=uint64_t(std::max(now(),t)*rate+0.5); v->note=note; v->duration=dur; v->velocity=velocity; v->vowel=vowel; v->crushed=special; v->frequency=mtof(note); v->noise_begin=size_t(rng.next()*1.5*rate);
   auto length=[&](double seconds) { v->length=uint64_t(seconds*rate+0.5); };
   auto filter=[&](int slot,FilterType type,double f,double q=1) { v->filter[slot].set(type,f,q,rate); };
@@ -334,7 +336,8 @@ struct AudioEngine::Impl {
    carve+=(carve_target-carve)*carve_s; wind+=(wind_target-wind)*wind_s; grind_gain+=((grind?0.09:0)-grind_gain)*grind_s;
    out_gain+=((muted?0:0.85)-out_gain)*out_s;
    Buses b; double lfo=std::pow(2.0,oscillator(lfo_phase,0.43,0,rate,sine)*8/1200);
-   for(auto& v:voices) voice_sample(v,b,lfo);
+   // Visit only occupied slots, in the original ascending summation order.
+   for(size_t i=0;i<active_count;){auto& v=voices[active_slots[i]];voice_sample(v,b,lfo);if(v.active){++i;}else{for(size_t j=i+1;j<active_count;++j)active_slots[j-1]=active_slots[j];--active_count;}}
    double delayed=delay[delay_pos]; delay[delay_pos]=float(b.delay+delay_filter.process(delayed)*0.38); delay_pos=(delay_pos+1)%delay.size();
    double vl=0,vr=0; reverb.process(b.verb[0],b.verb[1],vl,vr);
    // Preserve branch gains and sends from Music.init(); sfx/vinyl bypass music master.

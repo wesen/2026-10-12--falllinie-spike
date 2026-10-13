@@ -512,3 +512,61 @@ The integration workflow and independent read-only review finished successfully 
 ### Technical details
 - The first full candidate includes source gameplay/world/pose/particles/audio/runtime/main/CMake, native title/autopilot, app-owned persistence, bounded SPSC transport, full 2.6-second partitioned IR and preallocated final 2x saturation.
 - Native/WebAudio numeric and presentation adaptations remain documented; no waveform identity, browser DOM/touch equivalence or final physical acceptance is claimed. The currently installed binary is still the old prototype with the coordinate fix, not this new executable.
+
+## Step 10: First combined target run exposes an audio deadline failure
+
+The user reopened the handheld and authorized testing. SSH was reachable and no emulator/game process was running, so I atomically deployed the integrated build and ran a bounded 20-second dual-view source-autopilot test. Graphics completed without a GL error, but production cadence was around 50 FPS and the user heard crackling. This is a failed combined qualification, not a successful release or a claim that crackles are intended source glitch sounds.
+
+A second, muted 15-second diagnostic kept the full synthesis workload while measuring actual SDL callback wall time. About half the callbacks exceeded their 512-frame/48 kHz budget, strongly implicating the alternating 1024-frame partitioned convolution burst. I added advisory lock-free callback counters and a muted diagnostic switch; the next step is an affected-path DSP optimization and requested developer overlay.
+
+### Prompt Context
+- **User prompt (verbatim):** "I reopened the DS so you can test things"
+- **User prompt (verbatim):** "audio is all crackly though"
+- **User prompt (verbatim):** "also allow for a dev overlay to be shown (when say, pressing select), with lower level data"
+- **Assistant interpretation:** Diagnose real target crackling, expose lower-level telemetry, and add an input-accessible developer overlay without changing source sound design.
+- **Inferred user intent:** Smooth audio/rendering and inspectable runtime behavior during handheld testing.
+- **Commit (code):** Baseline 24b50d8; instrumentation checkpoint hash follows this entry.
+
+### What I did
+- Verified connectivity, ARM64 platform, available storage and absence of emulator/Falllinie processes before deployment.
+- Ran integrated --autoplay/dual-screen/384x288/no-vsync/fps60 for 20 seconds with CPU CSV, capture and receipt; copied evidence into target-evidence/initial-run.
+- Added AudioDiagnostics callback count/total/max wall time/over-budget count, actual buffer frames and live queue depth through lock-free numeric publication. Clock frequency is cached before callback startup; no callback strings/logging/allocation was added.
+- Added --muted for silent full-DSP workload checks and one final main-thread audio diagnostics log line.
+- Ran a 15-second muted combined test and copied its evidence into target-evidence/audio-budget-before.
+
+### Why
+- x86 callback costs did not qualify this ARM target. Real callback wall time against negotiated sample/buffer sizes directly tests whether DSP can finish within its available interval.
+- A muted test avoids repeatedly exposing the user to crackling while preserving instrument/convolver computation.
+- Developer telemetry must distinguish measured callback budget misses from actual backend-reported XRUNs; they are not the same counter.
+
+### What worked
+- Initial combined run: 926 frames, 866 measured; frame p50=19.8396 ms/p95=22.1455 ms/p99=24.3633 ms, peak RSS=113928 KiB, GL_error=0. Source autopilot produced actual scores/landings and advanced beyond 400 m.
+- Instrumentation builds and all six host CTest gates passed; ARM64 cross-link passed.
+- Muted target: PulseAudio on PipeWire1.2.6, float32 stereo48kHz, SDL buffer512 (10.6667 ms interval); 1053 callbacks, mean8.84164 ms/max23.9911 ms, 521 over-budget. Queue high2, command drops0, voice steals0, nonfinite samples0.
+- Second GPU run also ended GL_error=0; frame p50=19.2869 ms/p95=21.3023 ms. No continuing audible test was left running.
+
+### What didn't work
+- User report: "audio is all crackly though". Measured callback maxima exceed the available buffer interval by more than2x; audio acceptance fails.
+- Target rendering no longer meets the old prototype's60FPS qualification; source objects/rig/full audio add a material combined workload.
+- An initial atomic main.cpp exact-edit call failed because `bool muted=false` was not a standalone declaration; the file actually has a combined declaration. No edits were applied by that failed call; corrected exact matches compiled successfully.
+
+### What I learned
+- Bounded, allocation-free audio is necessary but not sufficient: an infrequent large convolution burst can miss deadlines even when average work is under budget.
+- Nearly every second callback is over budget, consistent with reverb's1024-frame partition and512-frame callback; further isolation/optimization must verify this mechanism rather than assume it solely from averages.
+
+### What was tricky to build
+- Preserve actual source2.6-second stereo IR and music/effect graph while removing computational burst cost; increasing a buffer alone would trade latency without proving adequate headroom.
+- SELECT currently means new-run. The requested overlay must rebind it explicitly, retain quit chord precedence and provide a separate new-run action.
+
+### What warrants a second pair of eyes
+- Callback timing overhead, advisory snapshot consistency/reset on reopen, source impulse-response preservation and numerical regression if FFT/convolution arithmetic is optimized.
+
+### What should be done in the future
+- Optimize and isolate partitioned DSP, rerun one narrow muted target comparison, add developer overlay, then repeat combined qualification before the final human playtest.
+
+### Code review instructions
+- Read initial-run/audio-budget-before logs/CSV/receipt, AudioDiagnostics and Impl::callback. Over-budget counters measure callback wall duration, not driver XRUN reports. Check source shapes/oracle and finite/allocation tests after optimization.
+
+### Technical details
+- Actual budget is buffer_frames/sample_rate; callback clocks use SDL_GetPerformanceCounter with cached frequency and publish relaxed atomic counters. The sole audio consumer owns accumulation; all formatting/I/O is main-thread-only.
+- JS research stays isolated and has no device access. Target tests are bounded, not a restart of the earlier broad graphics matrix.

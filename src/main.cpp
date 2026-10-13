@@ -25,7 +25,7 @@ namespace {
 volatile std::sig_atomic_t termination_requested=0;
 void request_termination(int){termination_requested=1;}
 struct Config {
- bool place=false,resize_check=false,source_sampler_precision=false,play=false,autoplay=false,dual=false,source_sky_hash=false,gpu_profile=false,no_vsync=false,absolute_coordinates=false;double seconds=0,fps_cap=0;int frames=0,width=512,height=384,cell=0,cells=3,debug=0,palette=0;uint32_t seed=42;
+ bool place=false,resize_check=false,source_sampler_precision=false,play=false,autoplay=false,dual=false,source_sky_hash=false,gpu_profile=false,no_vsync=false,absolute_coordinates=false,muted=false;double seconds=0,fps_cap=0;int frames=0,width=512,height=384,cell=0,cells=3,debug=0,palette=0;uint32_t seed=42;
  std::string assets="assets/shaders",capture,receipt,profile;
 };
 Config parse(int argc,char** argv){
@@ -36,10 +36,11 @@ Config parse(int argc,char** argv){
   else if(a=="--seed"){auto n=std::stoull(value());if(n>UINT32_MAX)throw std::runtime_error("seed out of range");c.seed=uint32_t(n);}
   else if(a=="--cell")c.cell=std::stoi(value());else if(a=="--cells")c.cells=std::stoi(value());
   else if(a=="--debug-view")c.debug=std::stoi(value());else if(a=="--palette")c.palette=std::stoi(value());
+  else if(a=="--muted")c.muted=true;
   else if(a=="--absolute-render-coordinates")c.absolute_coordinates=true;
   else if(a=="--no-vsync")c.no_vsync=true;else if(a=="--gpu-profile")c.gpu_profile=true;else if(a=="--profile")c.profile=value();else if(a=="--assets")c.assets=value();else if(a=="--capture-dir")c.capture=value();else if(a=="--receipt")c.receipt=value();
   else if(a=="--render-size"){auto size=value();auto x=size.find('x');if(x==std::string::npos)throw std::runtime_error("expected WIDTHxHEIGHT");c.width=std::stoi(size.substr(0,x));c.height=std::stoi(size.substr(x+1));}
-  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..5] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash] [--absolute-render-coordinates] [--profile CSV] [--gpu-profile] [--no-vsync] [--fps N]\nF3 cycles debug; C cycles six palettes; A/START or ENTER/SPACE starts; START/P/ESC pauses; SELECT/R new run; M mutes; F10 or SELECT+START quits.\n";std::exit(0);}
+  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..5] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash] [--absolute-render-coordinates] [--muted] [--profile CSV] [--gpu-profile] [--no-vsync] [--fps N]\nF3 cycles debug; C cycles six palettes; A/START or ENTER/SPACE starts; START/P/ESC pauses; SELECT/R new run; M mutes; F10 or SELECT+START quits.\n";std::exit(0);}
   else throw std::runtime_error("unknown argument "+a);
  }
  if(!std::isfinite(c.fps_cap)||c.fps_cap<0||c.fps_cap>240||c.width<128||c.height<96||c.width>2048||c.height>1536||c.cell< -1||c.cell>4096||c.cells<1||c.cells>7||c.frames<0||c.seconds<0||!std::isfinite(c.seconds)||c.debug<0||c.debug>5||c.palette<0||c.palette>5)throw std::runtime_error("configuration outside bounded spike limits");
@@ -83,13 +84,13 @@ int main(int argc,char** argv){
   fl::Renderer renderer;renderer.set_absolute_coordinates(c.absolute_coordinates);renderer.initialize(c.seed,c.play?-1:c.cell,c.play?4:c.cells,c.width,c.height,c.assets,!c.source_sampler_precision,!c.source_sky_hash,c.play);
   fl::Profiler profiler(c.profile,c.gpu_profile);
   fl::Game game(c.seed);fl::NativeFrameClock frame_clock;fl::NativeInputMapper input_mapper;fl::TitleAutopilot autopilot(c.seed);
-  fl::AudioEngine audio;bool audio_started=false,muted=false;std::string last_persistence_error;
+  fl::AudioEngine audio;bool audio_started=false,muted=c.muted;std::string last_persistence_error;
   fl::Rng run_seeds{c.seed^0x97f4a71bu};
   if(c.play){
    char* preference=SDL_GetPrefPath("Falllinie","Falllinie");
    if(!preference)throw std::runtime_error(std::string("app best path: ")+SDL_GetError());
    std::string best_path=std::string(preference)+"best-score";SDL_free(preference);game.set_best_path(best_path);
-   if(c.autoplay){game.start();audio_started=audio.open();if(!audio_started)std::cerr<<"audio unavailable: "<<SDL_GetError()<<'\n';}
+   if(c.autoplay){game.start();audio_started=audio.open();if(!audio_started)std::cerr<<"audio unavailable: "<<SDL_GetError()<<'\n';else audio.set_muted(muted);}
    else game.enter_title();
    std::cout<<"SOURCE: A jump / B-X boost / L1-R1-L2-R2 grabs / START pause / SELECT new seed / SELECT+START quit; keyboard WASD/arrows, SPACE, SHIFT/B, J/K/U/I, P/ESC, R, M, C, F3, F10\nseed="<<game.seed()<<" best_path="<<best_path<<'\n';
   }
@@ -163,6 +164,7 @@ int main(int argc,char** argv){
    });}
    if((c.frames && frames>=c.frames) || (c.seconds && std::chrono::duration<double>(end-start).count()>=c.seconds))quit=true;
   }
+  if(audio_started){auto a=audio.diagnostics();std::cout<<"AUDIO driver="<<(SDL_GetCurrentAudioDriver()?SDL_GetCurrentAudioDriver():"none")<<" rate="<<a.sample_rate<<" buffer="<<a.buffer_frames<<" callbacks="<<a.callback_count<<" mean_ms="<<(a.callback_count?double(a.callback_total_ns)/a.callback_count/1e6:0)<<" max_ms="<<double(a.callback_max_ns)/1e6<<" over_budget="<<a.callback_over_budget<<" queue_high="<<a.queue_high_water<<" drops="<<a.dropped_commands<<" steals="<<a.stolen_voices<<" nonfinite="<<a.nonfinite_samples<<std::endl;}
   audio.close();
   stop=true;if(placement.joinable())placement.join();
   if(c.place && !placed)throw std::runtime_error("placement did not succeed");

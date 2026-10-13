@@ -15,7 +15,9 @@ struct AudioDiagnostics {
  uint64_t frames=0, steps=0, sections=0, dropped_commands=0;
  uint64_t stolen_voices=0, dropped_notes=0, nonfinite_samples=0;
  uint32_t queue_high_water=0, peak_voices=0, active_voices=0;
- int sample_rate=0;
+ int sample_rate=0,buffer_frames=0;
+ uint32_t queue_depth=0;
+ uint64_t callback_count=0,callback_total_ns=0,callback_max_ns=0,callback_over_budget=0;
  AudioSection section=AudioSection::Intro;
  double drums_gain=1, music_cutoff=9000, carve_gain=0, wind_gain=0, grind_gain=0;
  bool sustained_air=false, grotesk=false, muted=false;

@@ -1,0 +1,90 @@
+Could not open module param file '/sys/module/bifrost_kbase/parameters/large_page_conf'
+arm_release_ver: g29p1-12eac0, rk_so_ver: 5
+GL_VERSION=OpenGL ES 3.2 v1.g29p1-12eac0.d6e9c0f8499d70cc285f3f0ca2ede780
+GL_RENDERER=Mali-G52
+GL_VENDOR=ARM
+GLSL=OpenGL ES GLSL ES 3.20
+joystick=retrogame_joypad
+program original scene with relative projection linked
+projection coordinates=camera-relative
+sky hash=stable wrapped integer lattice
+depth sampler=explicit highp portability override
+program original print linked
+program presentation diagnostic linked
+program batched native HUD using source font linked
+glyph atlas loaded
+terrain vertices=59492 indices=351072 build_ms=65.2511 targets=384x288 FBOs complete
+GPU queries disabled for unperturbed CPU timing
+SOURCE: A jump / B-X boost / L1-R1-L2-R2 grabs / START pause / SELECT new seed / SELECT+START quit; keyboard WASD/arrows, SPACE, SHIFT/B, J/K/U/I, P/ESC, R, M, C, F3, F10
+seed=42 best_path=/storage/.local/share/Falllinie/Falllinie/best-score
+ride z=4 speed=6 airborne=0 charge=0 score=0
+placement=[
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  }
+]
+
+FPS=47.9748 frame_interval_ms=20.2844
+ride z=12.5543 speed=9.66603 airborne=0 charge=0 score=0
+FPS=51.7965 frame_interval_ms=18.8973
+ride z=24.4966 speed=12.9347 airborne=0 charge=0 score=0
+FPS=51.5779 frame_interval_ms=17.8248
+ride z=40.856 speed=16.6939 airborne=1 charge=0 score=0
+FPS=51.0657 frame_interval_ms=19.5608
+ride z=60.6368 speed=20.6624 airborne=0 charge=0 score=0
+FPS=50.8404 frame_interval_ms=18.8083
+ride z=84.5814 speed=23.0812 airborne=0 charge=0 score=0
+FPS=51.4456 frame_interval_ms=21.0156
+FPS=52.3315 frame_interval_ms=18.0541
+ride z=110.481 speed=25.0487 airborne=0 charge=0 score=445
+FPS=50.998 frame_interval_ms=20.4874
+new_run seed=780832048 (--seed 780832048) generation=3
+ride z=4.86243 speed=6.50983 airborne=0 charge=0.333333 score=0
+FPS=51.9027 frame_interval_ms=21.7494
+new_run seed=953465042 (--seed 953465042) generation=4
+ride z=5.57921 speed=6.89754 airborne=0 charge=0 score=0
+FPS=52.3603 frame_interval_ms=19.9571
+ride z=14.8379 speed=10.7927 airborne=0 charge=0 score=0
+FPS=50.6392 frame_interval_ms=20.8514
+ride z=29.0004 speed=14.7685 airborne=0 charge=0 score=0
+FPS=50.9733 frame_interval_ms=18.6383
+ride z=48.1891 speed=19.0424 airborne=1 charge=0 score=0
+FPS=51.3204 frame_interval_ms=19.3517
+new_run seed=1304098880 (--seed 1304098880) generation=5
+ride z=7.965 speed=8.05024 airborne=0 charge=0 score=0
+FPS=52.7607 frame_interval_ms=20.8875
+AUDIO driver=pulseaudio rate=48000 buffer=512 callbacks=1053 mean_ms=8.84164 max_ms=23.9911 over_budget=521 queue_high=2 drops=0 steals=0 nonfinite=0
+frames=769 measured=709 frame_p50_ms=19.2869 frame_p95_ms=21.3023 frame_p99_ms=22.5795 peak_rss_kib=115464 GL_error=0

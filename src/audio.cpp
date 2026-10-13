@@ -38,6 +38,7 @@ struct AudioEngine::Impl {
  SDL_AudioDeviceID device=0;
  bool owns_subsystem=false,prepared=false;
  int rate=48000;
+ uint64_t perf_frequency=0,callback_count=0,callback_total_ns=0,callback_max_ns=0,callback_over_budget=0;
  Random rng{},noise_rng{};
  Sines sine;
  AudioDiagnostics d{};
@@ -96,6 +97,7 @@ struct AudioEngine::Impl {
   if(sample_rate<8000 || sample_rate>192000 || device) return false;
   rate=sample_rate; rng.state=seed?seed:1; noise_rng.state=(seed?seed:1)^0xa361b729U;
   if(!noise_rng.state) noise_rng.state=7;
+  for(size_t i=18;i<=22;++i)published[i].store(0,std::memory_order_relaxed);
   d={}; clock=step=section_index=0; next_time=0.1; section=AudioSection::Intro;
   prog=chop_pattern=vowel_set=chop_offset=0; air=grot=grind=muted=false;
   drum=1; cutoff=9000; carve=wind=grind_gain=carve_target=wind_target=0; out_gain=0.85;
@@ -360,7 +362,17 @@ struct AudioEngine::Impl {
   auto* self=static_cast<Impl*>(userdata);
   if(bytes<=0) return;
   std::memset(stream,0,size_t(bytes));
-  self->render(reinterpret_cast<float*>(stream),size_t(bytes)/(sizeof(float)*2));
+  const size_t frames=size_t(bytes)/(sizeof(float)*2);
+  const uint64_t started=SDL_GetPerformanceCounter();
+  self->render(reinterpret_cast<float*>(stream),frames);
+  const uint64_t elapsed=SDL_GetPerformanceCounter()-started;
+  const uint64_t ns=uint64_t(double(elapsed)*1e9/double(self->perf_frequency));
+  ++self->callback_count;self->callback_total_ns+=ns;self->callback_max_ns=std::max(self->callback_max_ns,ns);
+  if(double(ns)>double(frames)*1e9/self->rate)++self->callback_over_budget;
+  self->published[18].store(self->callback_count,std::memory_order_relaxed);
+  self->published[19].store(self->callback_total_ns,std::memory_order_relaxed);
+  self->published[20].store(self->callback_max_ns,std::memory_order_relaxed);
+  self->published[21].store(self->callback_over_budget,std::memory_order_relaxed);
  }
 };
 static_assert(std::atomic<uint64_t>::is_always_lock_free && std::atomic<uint32_t>::is_always_lock_free && std::atomic<bool>::is_always_lock_free,
@@ -378,6 +390,9 @@ bool AudioEngine::open() {
  if(obtained.format!=AUDIO_F32SYS || obtained.channels!=2) { SDL_CloseAudioDevice(device); close(); return false; }
  // SDL devices begin paused. All allocation happens before publishing device/unpause.
  if(!a.prepare(obtained.freq,1)) { SDL_CloseAudioDevice(device); close(); return false; }
+ a.perf_frequency=SDL_GetPerformanceFrequency();
+ a.callback_count=a.callback_total_ns=a.callback_max_ns=a.callback_over_budget=0;
+ a.published[22].store(obtained.samples,std::memory_order_relaxed);
  a.device=device; SDL_PauseAudioDevice(device,0); return true;
 }
 void AudioEngine::close() {
@@ -416,6 +431,8 @@ AudioDiagnostics AudioEngine::diagnostics() const {
  const auto& a=*impl_; AudioDiagnostics d;
  auto get=[&](size_t i) { return a.published[i].load(std::memory_order_relaxed); };
  d.frames=get(0); d.steps=get(1); d.sections=get(2); d.stolen_voices=get(3); d.dropped_notes=get(4); d.nonfinite_samples=get(5); d.peak_voices=uint32_t(get(6)); d.active_voices=uint32_t(get(7)); d.sample_rate=int(get(8)); d.section=AudioSection(get(9)); d.sustained_air=get(10); d.grotesk=get(11); d.muted=get(12); d.drums_gain=number(get(13)); d.music_cutoff=number(get(14)); d.carve_gain=number(get(15)); d.wind_gain=number(get(16)); d.grind_gain=number(get(17));
+ d.callback_count=get(18);d.callback_total_ns=get(19);d.callback_max_ns=get(20);d.callback_over_budget=get(21);d.buffer_frames=int(get(22));
+ d.queue_depth=a.write.load(std::memory_order_relaxed)-a.read.load(std::memory_order_relaxed);
  d.dropped_commands=a.dropped.load(std::memory_order_relaxed); d.queue_high_water=a.high_water.load(std::memory_order_relaxed);
  for(size_t i=0;i<kinds;++i) d.voices_started[i]=get(32+i);
  return d;

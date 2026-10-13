@@ -1,15 +1,18 @@
 #include "renderer.hpp"
 #include "gl_api.hpp"
 #include <iostream>
+#include <chrono>
 namespace fl {
 void Renderer::update_player(Game& game,double dt){
- hud_line_="SPEED "+std::to_string(int(length(game.velocity)*3.6))+" KM/H   DIST "+std::to_string(int(game.distance))+" M   SCORE "+std::to_string(game.score);
+ hud_line_="FPS "+std::to_string(int(fps_+.5))+"   SPEED "+std::to_string(int(length(game.velocity)*3.6))+" KM/H   DIST "+std::to_string(int(game.distance))+" M   SCORE "+std::to_string(game.score);
  hud_status_=game.bail_time>0?"BAIL - RECOVERING":game.airborne?"AIR: LEFT/RIGHT SPIN, UP/DOWN FLIP; RELEASE TO COMPLETE":"RIDE: UP TUCK, DOWN BRAKE; LAST LANDING +"+std::to_string(game.last_points);
+ stream_ms_=0;auto stream_start=std::chrono::steady_clock::now();
  int cell=int(std::floor(game.position.z/CELL));
  if(cell!=patch_first_+1){
   patch_first_=cell-1;patch_count_=4;CpuMesh mesh;
   for(int c=patch_first_;c<patch_first_+patch_count_;++c){auto part=build_terrain(game.terrain,c);uint32_t offset=uint32_t(mesh.vertices.size());mesh.vertices.insert(mesh.vertices.end(),part.vertices.begin(),part.vertices.end());for(auto i:part.indices)mesh.indices.push_back(offset+i);}
   vertices_=mesh.vertices.size();indices_=mesh.indices.size();glBindVertexArray(vao_);glBindBuffer(GL_ARRAY_BUFFER,vbo_);glBufferData(GL_ARRAY_BUFFER,mesh.vertices.size()*sizeof(Vertex),mesh.vertices.data(),GL_STATIC_DRAW);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,ibo_);glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh.indices.size()*4,mesh.indices.data(),GL_STATIC_DRAW);
+  stream_ms_=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-stream_start).count();
   std::cout<<"terrain patch "<<patch_first_<<".."<<patch_first_+3<<'\n';
  }
  Vec3 f{std::sin(game.yaw),0,std::cos(game.yaw)};

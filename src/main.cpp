@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include "gl_api.hpp"
 #include "renderer.hpp"
+#include "profiler.hpp"
 #include <atomic>
 #include <chrono>
 #include <cstdio>
@@ -14,11 +15,17 @@
 #include <thread>
 #include <vector>
 #include <algorithm>
+#include <csignal>
+#include <fcntl.h>
+#include <sys/file.h>
+#include <unistd.h>
 
 namespace {
+volatile std::sig_atomic_t termination_requested=0;
+void request_termination(int){termination_requested=1;}
 struct Config {
- bool place=false,resize_check=false,source_sampler_precision=false,play=false,autoplay=false,dual=false,source_sky_hash=false;double seconds=0;int frames=0,width=512,height=384,cell=0,cells=3,debug=0,palette=0;uint32_t seed=42;
- std::string assets="assets/shaders",capture,receipt;
+ bool place=false,resize_check=false,source_sampler_precision=false,play=false,autoplay=false,dual=false,source_sky_hash=false,gpu_profile=false;double seconds=0;int frames=0,width=512,height=384,cell=0,cells=3,debug=0,palette=0;uint32_t seed=42;
+ std::string assets="assets/shaders",capture,receipt,profile;
 };
 Config parse(int argc,char** argv){
  Config c;
@@ -28,9 +35,9 @@ Config parse(int argc,char** argv){
   else if(a=="--seed"){auto n=std::stoull(value());if(n>UINT32_MAX)throw std::runtime_error("seed out of range");c.seed=uint32_t(n);}
   else if(a=="--cell")c.cell=std::stoi(value());else if(a=="--cells")c.cells=std::stoi(value());
   else if(a=="--debug-view")c.debug=std::stoi(value());else if(a=="--palette")c.palette=std::stoi(value());
-  else if(a=="--assets")c.assets=value();else if(a=="--capture-dir")c.capture=value();else if(a=="--receipt")c.receipt=value();
+  else if(a=="--gpu-profile")c.gpu_profile=true;else if(a=="--profile")c.profile=value();else if(a=="--assets")c.assets=value();else if(a=="--capture-dir")c.capture=value();else if(a=="--receipt")c.receipt=value();
   else if(a=="--render-size"){auto size=value();auto x=size.find('x');if(x==std::string::npos)throw std::runtime_error("expected WIDTHxHEIGHT");c.width=std::stoi(size.substr(0,x));c.height=std::stoi(size.substr(x+1));}
-  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..2] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash]\nD cycles final/luminance/paint/material/contour/depth; C cycles palette; ESC or SELECT+START quits.\n";std::exit(0);}
+  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..2] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash] [--profile CSV] [--gpu-profile]\nD cycles final/luminance/paint/material/contour/depth; C cycles palette; ESC or SELECT+START quits.\n";std::exit(0);}
   else throw std::runtime_error("unknown argument "+a);
  }
  if(c.width<128||c.height<96||c.width>2048||c.height>1536||c.cell< -1||c.cell>64||c.cells<1||c.cells>7||c.frames<0||c.seconds<0||!std::isfinite(c.seconds)||c.debug<0||c.debug>5||c.palette<0||c.palette>2)throw std::runtime_error("configuration outside bounded spike limits");
@@ -44,9 +51,12 @@ size_t rss_kib(){std::ifstream in("/proc/self/status");std::string line;while(st
 double percentile(std::vector<double> values,double p){if(values.empty())return 0;std::sort(values.begin(),values.end());return values[size_t(std::ceil(p*values.size()))-1];}
 }
 int main(int argc,char** argv){
- SDL_Window* window=nullptr;SDL_Window* lower_window=nullptr;SDL_GLContext context=nullptr;SDL_Joystick* pad=nullptr;std::thread placement;std::atomic<bool> stop{false},placed{false};int result=0;
+ SDL_Window* window=nullptr;SDL_Window* lower_window=nullptr;SDL_GLContext context=nullptr;SDL_Joystick* pad=nullptr;std::thread placement;std::atomic<bool> stop{false},placed{false};int result=0,instance_lock=-1;
  try{
   Config c=parse(argc,argv);
+  instance_lock=open("/tmp/falllinie-spike.lock",O_CREAT|O_RDWR|O_CLOEXEC|O_NOFOLLOW,0600);
+  if(instance_lock<0 || flock(instance_lock,LOCK_EX|LOCK_NB)!=0)throw std::runtime_error("another Falllinie instance is running, or the instance lock is unavailable");
+  std::signal(SIGINT,request_termination);std::signal(SIGTERM,request_termination);
   if(c.place){setenv("XDG_RUNTIME_DIR","/run/0-runtime-dir",0);setenv("WAYLAND_DISPLAY","wayland-1",0);setenv("SWAYSOCK","/run/0-runtime-dir/sway-ipc.0.sock",0);}
   SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS,"1");
   if(SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS|SDL_INIT_JOYSTICK)!=0)throw std::runtime_error(SDL_GetError());
@@ -69,19 +79,24 @@ int main(int argc,char** argv){
   pad=SDL_NumJoysticks()>0?SDL_JoystickOpen(0):nullptr;
   std::cout<<"joystick="<<(pad?SDL_JoystickName(pad):"none")<<'\n';
   fl::Renderer renderer;renderer.initialize(c.seed,c.cell,c.cells,c.width,c.height,c.assets,!c.source_sampler_precision,!c.source_sky_hash);
+  fl::Profiler profiler(c.profile,c.gpu_profile);
   fl::Game game(c.seed);double accumulator=0;auto previous_frame=std::chrono::steady_clock::now();
   if(c.play)std::cout<<"PLAY: stick/dpad steer, UP tuck, DOWN brake, hold/release A or SPACE to jump; START/R restart; SELECT+START exits\n";
   std::vector<double> times,swaps;
   std::vector<std::pair<int,size_t>> rss_samples;size_t start_rss=rss_kib(),peak_rss=start_rss;
-  auto start=std::chrono::steady_clock::now();int frames=0,drawable_w=0,drawable_h=0;bool quit=false;
-  while(!quit){auto frame_start=std::chrono::steady_clock::now();SDL_Event e;
+  auto start=std::chrono::steady_clock::now();auto previous_end=start,fps_epoch=start;int fps_frames=0;
+  auto ms=[](auto a,auto b){return std::chrono::duration<double,std::milli>(b-a).count();};
+  int frames=0,drawable_w=0,drawable_h=0;bool quit=false;
+  while(!quit && !termination_requested){auto frame_start=std::chrono::steady_clock::now();SDL_Event e;
    if(lower_window){if(SDL_GL_MakeCurrent(window,context)!=0)throw std::runtime_error(SDL_GetError());SDL_GL_SetSwapInterval(1);}
+   profiler.poll();
    while(SDL_PollEvent(&e)){
     if(e.type==SDL_QUIT || (e.type==SDL_KEYDOWN && e.key.keysym.sym==SDLK_ESCAPE))quit=true;
     if(e.type==SDL_KEYDOWN && !e.key.repeat){if(e.key.keysym.sym==SDLK_d && !c.play)c.debug=(c.debug+1)%6;if(e.key.keysym.sym==SDLK_c)c.palette=(c.palette+1)%3;if(c.play && e.key.keysym.sym==SDLK_r)game.reset();}
     if(e.type==SDL_JOYBUTTONDOWN){if(e.jbutton.button==2)c.debug=(c.debug+1)%6;if(e.jbutton.button==3)c.palette=(c.palette+1)%3;if(c.play && e.jbutton.button==9)game.reset();}
    }
    if(pad && SDL_JoystickGetButton(pad,8) && SDL_JoystickGetButton(pad,9))quit=true;
+   auto event_end=std::chrono::steady_clock::now(),physics_end=event_end,player_end=event_end;
    double elapsed=std::min(.1,std::chrono::duration<double>(frame_start-previous_frame).count());previous_frame=frame_start;
    if(c.play){
     auto keys=SDL_GetKeyboardState(nullptr);fl::Controls input;
@@ -92,7 +107,7 @@ int main(int argc,char** argv){
     if(c.autoplay){input.steer=.35*std::sin(game.time*.55);input.drive=.6;input.jump=std::fmod(game.time,5)>2 && std::fmod(game.time,5)<2.65;if(game.airborne){input.drive=0;input.steer=game.air_time>.12&&game.air_time<.38?.65:0;}}
     input.steer=fl::clamp(input.steer,-1,1);input.drive=fl::clamp(input.drive,-1,1);accumulator+=elapsed;
     while(accumulator>=1.0/120){game.step(input,1.0/120);accumulator-=1.0/120;}
-    renderer.update_player(game,elapsed);
+    physics_end=std::chrono::steady_clock::now();renderer.update_player(game,elapsed);player_end=std::chrono::steady_clock::now();
     if(frames%60==0)std::cout<<"ride z="<<game.position.z<<" speed="<<fl::length(game.velocity)<<" airborne="<<game.airborne<<" charge="<<game.charge<<" score="<<game.score<<std::endl;
    }
    SDL_GL_GetDrawableSize(window,&drawable_w,&drawable_h);
@@ -100,10 +115,14 @@ int main(int argc,char** argv){
     const bool large=(frames/60)%2==1;
     renderer.resize(large?std::min(2048,c.width*2):c.width,large?std::min(1536,c.height*2):c.height);
    }
-   renderer.render(drawable_w,drawable_h,c.debug,c.palette);
-   auto swap_start=std::chrono::steady_clock::now();SDL_GL_SwapWindow(window);
-   if(lower_window){if(SDL_GL_MakeCurrent(lower_window,context)!=0)throw std::runtime_error(SDL_GetError());SDL_GL_SetSwapInterval(0);int lw=0,lh=0;SDL_GL_GetDrawableSize(lower_window,&lw,&lh);renderer.render_first_person(lw,lh,c.palette);SDL_GL_SwapWindow(lower_window);}
-   auto end=std::chrono::steady_clock::now();++frames;
+   auto top_start=std::chrono::steady_clock::now();profiler.begin_gpu(frames,0);
+   renderer.render(drawable_w,drawable_h,c.debug,c.palette);profiler.end_gpu(frames,0);
+   auto swap_start=std::chrono::steady_clock::now();SDL_GL_SwapWindow(window);auto top_swap_end=std::chrono::steady_clock::now(),bottom_submit_end=top_swap_end;
+   if(lower_window){if(SDL_GL_MakeCurrent(lower_window,context)!=0)throw std::runtime_error(SDL_GetError());SDL_GL_SetSwapInterval(0);int lw=0,lh=0;SDL_GL_GetDrawableSize(lower_window,&lw,&lh);profiler.begin_gpu(frames,1);renderer.render_first_person(lw,lh,c.palette);profiler.end_gpu(frames,1);bottom_submit_end=std::chrono::steady_clock::now();SDL_GL_SwapWindow(lower_window);}
+   auto end=std::chrono::steady_clock::now();
+   profiler.cpu(frames,ms(previous_end,end),ms(frame_start,event_end),ms(event_end,physics_end),ms(physics_end,player_end),c.play?renderer.stream_ms():0,ms(top_start,swap_start),ms(swap_start,top_swap_end),ms(top_swap_end,bottom_submit_end),ms(bottom_submit_end,end));previous_end=end;
+   ++fps_frames;if(ms(fps_epoch,end)>=1000){double fps=fps_frames*1000.0/ms(fps_epoch,end);renderer.set_fps(fps);std::cout<<"FPS="<<fps<<" frame_interval_ms="<<ms(frame_start,end)<<std::endl;fps_epoch=end;fps_frames=0;}
+   ++frames;
    if(frames>60){times.push_back(std::chrono::duration<double,std::milli>(end-frame_start).count());swaps.push_back(std::chrono::duration<double,std::milli>(end-swap_start).count());}
    if(frames%60==0){size_t rss=rss_kib();peak_rss=std::max(peak_rss,rss);rss_samples.emplace_back(frames,rss);}
    if(c.place && frames==1){placement=std::thread([&stop,&placed,dual=c.dual]{
@@ -130,5 +149,5 @@ int main(int argc,char** argv){
    out<<"],\"gl_error\":0\n}\n";
   }
  }catch(const std::exception& e){std::cerr<<"fatal: "<<e.what()<<'\n';result=1;}
- stop=true;if(placement.joinable())placement.join();if(pad)SDL_JoystickClose(pad);if(context)SDL_GL_DeleteContext(context);if(lower_window)SDL_DestroyWindow(lower_window);if(window)SDL_DestroyWindow(window);SDL_Quit();return result;
+ stop=true;if(placement.joinable())placement.join();if(pad)SDL_JoystickClose(pad);if(context)SDL_GL_DeleteContext(context);if(lower_window)SDL_DestroyWindow(lower_window);if(window)SDL_DestroyWindow(window);SDL_Quit();if(instance_lock>=0)close(instance_lock);return result;
 }

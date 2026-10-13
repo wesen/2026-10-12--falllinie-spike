@@ -1,0 +1,290 @@
+#           time             counts unit events
+     1.003081414            1032.71 msec task-clock                                                            
+     1.003081414         1920856127      cycles                                                                
+     1.003081414    <not supported>      rockchip_ddr/cycles/                                                  
+     1.003081414          724360721      instructions                                                          
+     1.003081414            5270738      cache-misses                                                          
+     1.003081414                560      context-switches                                                      
+     1.003081414                 30      cpu-migrations                                                        
+     1.003081414               7952      page-faults                                                           
+     2.005065577             360.46 msec task-clock                                                            
+     2.005065577          548692713      cycles                                                                
+     2.005065577    <not supported>      rockchip_ddr/cycles/                                                  
+     2.005065577          180700775      instructions                                                          
+     2.005065577            1766126      cache-misses                                                          
+     2.005065577                459      context-switches                                                      
+     2.005065577                 92      cpu-migrations                                                        
+     2.005065577                450      page-faults                                                           
+     3.006078278             204.78 msec task-clock                                                            
+     3.006078278          301808421      cycles                                                                
+     3.006078278    <not supported>      rockchip_ddr/cycles/                                                  
+     3.006078278           55977352      instructions                                                          
+     3.006078278            1256281      cache-misses                                                          
+     3.006078278                418      context-switches                                                      
+     3.006078278                 70      cpu-migrations                                                        
+     3.006078278                 25      page-faults                                                           
+     4.007547081             204.18 msec task-clock                                                            
+     4.007547081          293946642      cycles                                                                
+     4.007547081    <not supported>      rockchip_ddr/cycles/                                                  
+     4.007547081           55301192      instructions                                                          
+     4.007547081            1266760      cache-misses                                                          
+     4.007547081                370      context-switches                                                      
+     4.007547081                 91      cpu-migrations                                                        
+     4.007547081                 35      page-faults                                                           
+     5.008569705             227.64 msec task-clock                                                            
+     5.008569705          307056829      cycles                                                                
+     5.008569705    <not supported>      rockchip_ddr/cycles/                                                  
+     5.008569705           60596506      instructions                                                          
+     5.008569705            1432111      cache-misses                                                          
+     5.008569705                403      context-switches                                                      
+     5.008569705                 78      cpu-migrations                                                        
+     5.008569705                  1      page-faults                                                           
+     6.009838933             226.00 msec task-clock                                                            
+     6.009838933          290515580      cycles                                                                
+     6.009838933    <not supported>      rockchip_ddr/cycles/                                                  
+     6.009838933           58088346      instructions                                                          
+     6.009838933            1340218      cache-misses                                                          
+     6.009838933                435      context-switches                                                      
+     6.009838933                 79      cpu-migrations                                                        
+     6.009838933                  0      page-faults                                                           
+     7.011198018             212.84 msec task-clock                                                            
+     7.011198018          285985885      cycles                                                                
+     7.011198018    <not supported>      rockchip_ddr/cycles/                                                  
+     7.011198018           57276607      instructions                                                          
+     7.011198018            1348594      cache-misses                                                          
+     7.011198018                380      context-switches                                                      
+     7.011198018                 91      cpu-migrations                                                        
+     7.011198018                 17      page-faults                                                           
+     8.012712332             247.00 msec task-clock                                                            
+     8.012712332          307593093      cycles                                                                
+     8.012712332    <not supported>      rockchip_ddr/cycles/                                                  
+     8.012712332           60159027      instructions                                                          
+     8.012712332            1365056      cache-misses                                                          
+     8.012712332                431      context-switches                                                      
+     8.012712332                 99      cpu-migrations                                                        
+     8.012712332                 18      page-faults                                                           
+     9.014284168             221.65 msec task-clock                                                            
+     9.014284168          271505017      cycles                                                                
+     9.014284168    <not supported>      rockchip_ddr/cycles/                                                  
+     9.014284168           53788012      instructions                                                          
+     9.014284168            1232244      cache-misses                                                          
+     9.014284168                386      context-switches                                                      
+     9.014284168                 83      cpu-migrations                                                        
+     9.014284168                  0      page-faults                                                           
+    10.015490369             206.32 msec task-clock                                                            
+    10.015490369          266689677      cycles                                                                
+    10.015490369    <not supported>      rockchip_ddr/cycles/                                                  
+    10.015490369           56118750      instructions                                                          
+    10.015490369            1286851      cache-misses                                                          
+    10.015490369                367      context-switches                                                      
+    10.015490369                 86      cpu-migrations                                                        
+    10.015490369                  0      page-faults                                                           
+    11.017256793             203.19 msec task-clock                                                            
+    11.017256793          283751028      cycles                                                                
+    11.017256793    <not supported>      rockchip_ddr/cycles/                                                  
+    11.017256793           55283141      instructions                                                          
+    11.017256793            1254645      cache-misses                                                          
+    11.017256793                371      context-switches                                                      
+    11.017256793                 81      cpu-migrations                                                        
+    11.017256793                  0      page-faults                                                           
+    12.018184255             227.95 msec task-clock                                                            
+    12.018184255          295756203      cycles                                                                
+    12.018184255    <not supported>      rockchip_ddr/cycles/                                                  
+    12.018184255           58331534      instructions                                                          
+    12.018184255            1346134      cache-misses                                                          
+    12.018184255                439      context-switches                                                      
+    12.018184255                 90      cpu-migrations                                                        
+    12.018184255                  0      page-faults                                                           
+    13.019463736             223.77 msec task-clock                                                            
+    13.019463736          321405060      cycles                                                                
+    13.019463736    <not supported>      rockchip_ddr/cycles/                                                  
+    13.019463736           60630585      instructions                                                          
+    13.019463736            1369139      cache-misses                                                          
+    13.019463736                466      context-switches                                                      
+    13.019463736                 82      cpu-migrations                                                        
+    13.019463736                  0      page-faults                                                           
+    14.020252124             350.83 msec task-clock                                                            
+    14.020252124          537075551      cycles                                                                
+    14.020252124    <not supported>      rockchip_ddr/cycles/                                                  
+    14.020252124          166487668      instructions                                                          
+    14.020252124            1679159      cache-misses                                                          
+    14.020252124                533      context-switches                                                      
+    14.020252124                 85      cpu-migrations                                                        
+    14.020252124               2172      page-faults                                                           
+    15.022080937             201.94 msec task-clock                                                            
+    15.022080937          258666493      cycles                                                                
+    15.022080937    <not supported>      rockchip_ddr/cycles/                                                  
+    15.022080937           52920290      instructions                                                          
+    15.022080937            1212902      cache-misses                                                          
+    15.022080937                384      context-switches                                                      
+    15.022080937                 92      cpu-migrations                                                        
+    15.022080937                  0      page-faults                                                           
+    16.024146978             229.76 msec task-clock                                                            
+    16.024146978          325525770      cycles                                                                
+    16.024146978    <not supported>      rockchip_ddr/cycles/                                                  
+    16.024146978           63161668      instructions                                                          
+    16.024146978            1448528      cache-misses                                                          
+    16.024146978                449      context-switches                                                      
+    16.024146978                 80      cpu-migrations                                                        
+    16.024146978                  0      page-faults                                                           
+    17.025049728             230.59 msec task-clock                                                            
+    17.025049728          263661125      cycles                                                                
+    17.025049728    <not supported>      rockchip_ddr/cycles/                                                  
+    17.025049728           53711139      instructions                                                          
+    17.025049728            1214056      cache-misses                                                          
+    17.025049728                370      context-switches                                                      
+    17.025049728                 84      cpu-migrations                                                        
+    17.025049728                  0      page-faults                                                           
+    18.026701699             228.49 msec task-clock                                                            
+    18.026701699          271690971      cycles                                                                
+    18.026701699    <not supported>      rockchip_ddr/cycles/                                                  
+    18.026701699           53438602      instructions                                                          
+    18.026701699            1234386      cache-misses                                                          
+    18.026701699                421      context-switches                                                      
+    18.026701699                 92      cpu-migrations                                                        
+    18.026701699                  0      page-faults                                                           
+    19.027660164             241.66 msec task-clock                                                            
+    19.027660164          301043548      cycles                                                                
+    19.027660164    <not supported>      rockchip_ddr/cycles/                                                  
+    19.027660164           58251409      instructions                                                          
+    19.027660164            1383023      cache-misses                                                          
+    19.027660164                407      context-switches                                                      
+    19.027660164                 90      cpu-migrations                                                        
+    19.027660164                  0      page-faults                                                           
+    20.029093397             244.52 msec task-clock                                                            
+    20.029093397          307981920      cycles                                                                
+    20.029093397    <not supported>      rockchip_ddr/cycles/                                                  
+    20.029093397           61799545      instructions                                                          
+    20.029093397            1457059      cache-misses                                                          
+    20.029093397                434      context-switches                                                      
+    20.029093397                 79      cpu-migrations                                                        
+    20.029093397                  0      page-faults                                                           
+    21.030492405             200.98 msec task-clock                                                            
+    21.030492405          277791362      cycles                                                                
+    21.030492405    <not supported>      rockchip_ddr/cycles/                                                  
+    21.030492405           55023395      instructions                                                          
+    21.030492405            1260991      cache-misses                                                          
+    21.030492405                390      context-switches                                                      
+    21.030492405                 83      cpu-migrations                                                        
+    21.030492405                  0      page-faults                                                           
+    22.031458735             193.63 msec task-clock                                                            
+    22.031458735          293065643      cycles                                                                
+    22.031458735    <not supported>      rockchip_ddr/cycles/                                                  
+    22.031458735           56007358      instructions                                                          
+    22.031458735            1272197      cache-misses                                                          
+    22.031458735                385      context-switches                                                      
+    22.031458735                 86      cpu-migrations                                                        
+    22.031458735                  0      page-faults                                                           
+    23.032928916             211.43 msec task-clock                                                            
+    23.032928916          281694812      cycles                                                                
+    23.032928916    <not supported>      rockchip_ddr/cycles/                                                  
+    23.032928916           53649854      instructions                                                          
+    23.032928916            1220354      cache-misses                                                          
+    23.032928916                383      context-switches                                                      
+    23.032928916                 85      cpu-migrations                                                        
+    23.032928916                  0      page-faults                                                           
+    24.034583118             314.13 msec task-clock                                                            
+    24.034583118          510941840      cycles                                                                
+    24.034583118    <not supported>      rockchip_ddr/cycles/                                                  
+    24.034583118          165525014      instructions                                                          
+    24.034583118            1538407      cache-misses                                                          
+    24.034583118                485      context-switches                                                      
+    24.034583118                 82      cpu-migrations                                                        
+    24.034583118               1824      page-faults                                                           
+    25.035549189             230.50 msec task-clock                                                            
+    25.035549189          304625815      cycles                                                                
+    25.035549189    <not supported>      rockchip_ddr/cycles/                                                  
+    25.035549189           59692274      instructions                                                          
+    25.035549189            1413324      cache-misses                                                          
+    25.035549189                415      context-switches                                                      
+    25.035549189                 82      cpu-migrations                                                        
+    25.035549189                  0      page-faults                                                           
+    26.036509743             225.54 msec task-clock                                                            
+    26.036509743          287663955      cycles                                                                
+    26.036509743    <not supported>      rockchip_ddr/cycles/                                                  
+    26.036509743           60352962      instructions                                                          
+    26.036509743            1376983      cache-misses                                                          
+    26.036509743                395      context-switches                                                      
+    26.036509743                 78      cpu-migrations                                                        
+    26.036509743                  0      page-faults                                                           
+#           time             counts unit events
+    27.038273351             249.56 msec task-clock                                                            
+    27.038273351          329410115      cycles                                                                
+    27.038273351    <not supported>      rockchip_ddr/cycles/                                                  
+    27.038273351           63280609      instructions                                                          
+    27.038273351            1468051      cache-misses                                                          
+    27.038273351                415      context-switches                                                      
+    27.038273351                 99      cpu-migrations                                                        
+    27.038273351                  0      page-faults                                                           
+    28.039488784             212.13 msec task-clock                                                            
+    28.039488784          263825699      cycles                                                                
+    28.039488784    <not supported>      rockchip_ddr/cycles/                                                  
+    28.039488784           52482759      instructions                                                          
+    28.039488784            1204825      cache-misses                                                          
+    28.039488784                352      context-switches                                                      
+    28.039488784                 85      cpu-migrations                                                        
+    28.039488784                  0      page-faults                                                           
+    29.041224692             350.35 msec task-clock                                                            
+    29.041224692          542928683      cycles                                                                
+    29.041224692    <not supported>      rockchip_ddr/cycles/                                                  
+    29.041224692          173563391      instructions                                                          
+    29.041224692            1743544      cache-misses                                                          
+    29.041224692                442      context-switches                                                      
+    29.041224692                 72      cpu-migrations                                                        
+    29.041224692               1823      page-faults                                                           
+    30.042836543             209.67 msec task-clock                                                            
+    30.042836543          286404956      cycles                                                                
+    30.042836543    <not supported>      rockchip_ddr/cycles/                                                  
+    30.042836543           57427570      instructions                                                          
+    30.042836543            1387189      cache-misses                                                          
+    30.042836543                377      context-switches                                                      
+    30.042836543                 87      cpu-migrations                                                        
+    30.042836543                  0      page-faults                                                           
+    31.043509976             216.65 msec task-clock                                                            
+    31.043509976          284505818      cycles                                                                
+    31.043509976    <not supported>      rockchip_ddr/cycles/                                                  
+    31.043509976           58569829      instructions                                                          
+    31.043509976            1384865      cache-misses                                                          
+    31.043509976                430      context-switches                                                      
+    31.043509976                 78      cpu-migrations                                                        
+    31.043509976                  0      page-faults                                                           
+    32.044969380             204.01 msec task-clock                                                            
+    32.044969380          296062485      cycles                                                                
+    32.044969380    <not supported>      rockchip_ddr/cycles/                                                  
+    32.044969380           55994875      instructions                                                          
+    32.044969380            1291848      cache-misses                                                          
+    32.044969380                448      context-switches                                                      
+    32.044969380                 82      cpu-migrations                                                        
+    32.044969380                  0      page-faults                                                           
+    33.046992591             220.72 msec task-clock                                                            
+    33.046992591          276202138      cycles                                                                
+    33.046992591    <not supported>      rockchip_ddr/cycles/                                                  
+    33.046992591           56565727      instructions                                                          
+    33.046992591            1297001      cache-misses                                                          
+    33.046992591                393      context-switches                                                      
+    33.046992591                 74      cpu-migrations                                                        
+    33.046992591                  0      page-faults                                                           
+    34.048217215             196.78 msec task-clock                                                            
+    34.048217215          282604469      cycles                                                                
+    34.048217215    <not supported>      rockchip_ddr/cycles/                                                  
+    34.048217215           52819668      instructions                                                          
+    34.048217215            1219297      cache-misses                                                          
+    34.048217215                340      context-switches                                                      
+    34.048217215                 83      cpu-migrations                                                        
+    34.048217215                  0      page-faults                                                           
+    35.049076078             210.38 msec task-clock                                                            
+    35.049076078          287470862      cycles                                                                
+    35.049076078    <not supported>      rockchip_ddr/cycles/                                                  
+    35.049076078           55769370      instructions                                                          
+    35.049076078            1296633      cache-misses                                                          
+    35.049076078                357      context-switches                                                      
+    35.049076078                 72      cpu-migrations                                                        
+    35.049076078                  0      page-faults                                                           
+    36.052275304             310.26 msec task-clock                                                            
+    36.052275304          453328378      cycles                                                                
+    36.052275304    <not supported>      rockchip_ddr/cycles/                                                  
+    36.052275304          164148645      instructions                                                          
+    36.052275304            1411798      cache-misses                                                          
+    36.052275304                345      context-switches                                                      
+    36.052275304                 69      cpu-migrations                                                        
+    36.052275304                  2      page-faults                                                           

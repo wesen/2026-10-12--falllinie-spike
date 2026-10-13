@@ -1,0 +1,115 @@
+#           time             counts unit events
+     1.001271397            1014.22 msec task-clock                                                            
+     1.001271397          647023010      instructions                                                          
+     1.001271397            5009497      cache-misses                                                          
+     1.001271397                359      context-switches                                                      
+     1.001271397                 19      cpu-migrations                                                        
+     1.001271397               8030      page-faults                                                           
+     2.002796527             283.41 msec task-clock                                                            
+     2.002796527           75135433      instructions                                                          
+     2.002796527            1455879      cache-misses                                                          
+     2.002796527                511      context-switches                                                      
+     2.002796527                 92      cpu-migrations                                                        
+     2.002796527                793      page-faults                                                           
+     3.004817679             194.04 msec task-clock                                                            
+     3.004817679           50100030      instructions                                                          
+     3.004817679            1094910      cache-misses                                                          
+     3.004817679                325      context-switches                                                      
+     3.004817679                 80      cpu-migrations                                                        
+     3.004817679                  2      page-faults                                                           
+     4.006362536             170.88 msec task-clock                                                            
+     4.006362536           47776050      instructions                                                          
+     4.006362536            1062435      cache-misses                                                          
+     4.006362536                311      context-switches                                                      
+     4.006362536                 65      cpu-migrations                                                        
+     4.006362536                  0      page-faults                                                           
+     5.007177396             168.55 msec task-clock                                                            
+     5.007177396           48039118      instructions                                                          
+     5.007177396            1100841      cache-misses                                                          
+     5.007177396                262      context-switches                                                      
+     5.007177396                 67      cpu-migrations                                                        
+     5.007177396                  0      page-faults                                                           
+     6.008579609             178.96 msec task-clock                                                            
+     6.008579609           50062539      instructions                                                          
+     6.008579609            1106471      cache-misses                                                          
+     6.008579609                293      context-switches                                                      
+     6.008579609                 68      cpu-migrations                                                        
+     6.008579609                  2      page-faults                                                           
+     7.009951645             190.24 msec task-clock                                                            
+     7.009951645           53565391      instructions                                                          
+     7.009951645            1218459      cache-misses                                                          
+     7.009951645                306      context-switches                                                      
+     7.009951645                 82      cpu-migrations                                                        
+     7.009951645                  0      page-faults                                                           
+     8.011383793             194.60 msec task-clock                                                            
+     8.011383793           54206983      instructions                                                          
+     8.011383793            1203789      cache-misses                                                          
+     8.011383793                305      context-switches                                                      
+     8.011383793                 81      cpu-migrations                                                        
+     8.011383793                 16      page-faults                                                           
+     9.012832388             178.94 msec task-clock                                                            
+     9.012832388           49529499      instructions                                                          
+     9.012832388            1098468      cache-misses                                                          
+     9.012832388                309      context-switches                                                      
+     9.012832388                 75      cpu-migrations                                                        
+     9.012832388                  0      page-faults                                                           
+    10.014248015             205.81 msec task-clock                                                            
+    10.014248015           54718129      instructions                                                          
+    10.014248015            1230974      cache-misses                                                          
+    10.014248015                299      context-switches                                                      
+    10.014248015                 91      cpu-migrations                                                        
+    10.014248015                  0      page-faults                                                           
+    11.015192056             188.20 msec task-clock                                                            
+    11.015192056           51497999      instructions                                                          
+    11.015192056            1129814      cache-misses                                                          
+    11.015192056                327      context-switches                                                      
+    11.015192056                 72      cpu-migrations                                                        
+    11.015192056                  0      page-faults                                                           
+    12.016603327             171.81 msec task-clock                                                            
+    12.016603327           48732225      instructions                                                          
+    12.016603327            1069696      cache-misses                                                          
+    12.016603327                300      context-switches                                                      
+    12.016603327                 64      cpu-migrations                                                        
+    12.016603327                  0      page-faults                                                           
+    13.018197667             209.49 msec task-clock                                                            
+    13.018197667           54946525      instructions                                                          
+    13.018197667            1211655      cache-misses                                                          
+    13.018197667                319      context-switches                                                      
+    13.018197667                 87      cpu-migrations                                                        
+    13.018197667                  0      page-faults                                                           
+    14.019787705             197.33 msec task-clock                                                            
+    14.019787705           54760853      instructions                                                          
+    14.019787705            1230606      cache-misses                                                          
+    14.019787705                303      context-switches                                                      
+    14.019787705                 65      cpu-migrations                                                        
+    14.019787705                  0      page-faults                                                           
+    15.021688308             187.77 msec task-clock                                                            
+    15.021688308           51085331      instructions                                                          
+    15.021688308            1167786      cache-misses                                                          
+    15.021688308                313      context-switches                                                      
+    15.021688308                 79      cpu-migrations                                                        
+    15.021688308                  1      page-faults                                                           
+    16.022730918             174.85 msec task-clock                                                            
+    16.022730918           50988217      instructions                                                          
+    16.022730918            1125798      cache-misses                                                          
+    16.022730918                303      context-switches                                                      
+    16.022730918                 63      cpu-migrations                                                        
+    16.022730918                  0      page-faults                                                           
+    17.023197110             209.71 msec task-clock                                                            
+    17.023197110           56753409      instructions                                                          
+    17.023197110            1251264      cache-misses                                                          
+    17.023197110                372      context-switches                                                      
+    17.023197110                 82      cpu-migrations                                                        
+    17.023197110                  0      page-faults                                                           
+    18.024695564             308.41 msec task-clock                                                            
+    18.024695564          160298313      instructions                                                          
+    18.024695564            1468891      cache-misses                                                          
+    18.024695564                319      context-switches                                                      
+    18.024695564                 69      cpu-migrations                                                        
+    18.024695564               2173      page-faults                                                           
+    19.026316255             167.87 msec task-clock                                                            
+    19.026316255           45659984      instructions                                                          
+    19.026316255            1019511      cache-misses                                                          
+    19.026316255                309      context-switches                                                      
+    19.026316255                 74      cpu-migrations                                                        
+    19.026316255                  0      page-faults                                                           

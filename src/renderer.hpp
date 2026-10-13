@@ -19,6 +19,8 @@ public:
  size_t vertex_count()const{return vertices_;}
  size_t index_count()const{return indices_;}
  double build_ms()const{return build_ms_;}
+ double stream_ms()const{return stream_ms_;}
+ void set_fps(double fps){fps_=fps;}
  int width()const{return width_;}
  int height()const{return height_;}
  const Camera& camera()const{return camera_;}
@@ -34,7 +36,7 @@ private:
  Vec3 camera_direction_{0,0,1},camera_velocity_{},look_velocity_{};
  bool following_=false;
  Vec3 first_person_eye_{},first_person_forward_{0,0,1},first_person_up_{0,1,0};
- double fov_=62,game_time_=0;
+ double fov_=62,game_time_=0,stream_ms_=0,fps_=0;
  int patch_first_=0,patch_count_=3;
  GLuint scene_fbo_=0,print_fbo_=0,color_=0,depth_=0,printed_=0,glyph_=0;
  int width_=0,height_=0;size_t vertices_=0,indices_=0;double build_ms_=0;

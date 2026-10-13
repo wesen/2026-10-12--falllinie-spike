@@ -1,0 +1,49 @@
+tests/test_audio.cpp: In function ‘void {anonymous}::test_reactions()’:
+tests/test_audio.cpp:114:17: error: missing initializer for member ‘fl::GameEvent::text’ [-Werror=missing-field-initializers]
+  114 |  h.audio.trigger({fl::GameEventKind::Pop});
+      |  ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/test_audio.cpp:115:17: error: missing initializer for member ‘fl::GameEvent::text’ [-Werror=missing-field-initializers]
+  115 |  h.audio.trigger({fl::GameEventKind::Land,0.6,true}); h.seconds(0.5);
+      |  ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/test_audio.cpp:118:17: error: missing initializer for member ‘fl::GameEvent::text’ [-Werror=missing-field-initializers]
+  118 |  h.audio.trigger({fl::GameEventKind::Uber}); h.audio.trigger({fl::GameEventKind::Bail}); h.seconds(0.35);
+      |  ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/test_audio.cpp:118:61: error: missing initializer for member ‘fl::GameEvent::text’ [-Werror=missing-field-initializers]
+  118 |  h.audio.trigger({fl::GameEventKind::Uber}); h.audio.trigger({fl::GameEventKind::Bail}); h.seconds(0.35);
+      |                                              ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/test_audio.cpp:122:17: error: missing initializer for member ‘fl::GameEvent::text’ [-Werror=missing-field-initializers]
+  122 |  h.audio.trigger({fl::GameEventKind::GroteskOn}); h.seconds(2);
+      |  ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/test_audio.cpp:124:17: error: missing initializer for member ‘fl::GameEvent::text’ [-Werror=missing-field-initializers]
+  124 |  h.audio.trigger({fl::GameEventKind::GroteskOff}); h.audio.trigger({fl::GameEventKind::GrindOff}); h.seconds(0.5);
+      |  ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/test_audio.cpp:124:67: error: missing initializer for member ‘fl::GameEvent::text’ [-Werror=missing-field-initializers]
+  124 |  h.audio.trigger({fl::GameEventKind::GroteskOff}); h.audio.trigger({fl::GameEventKind::GrindOff}); h.seconds(0.5);
+      |                                                    ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/test_audio.cpp:127:150: error: missing initializer for member ‘fl::GameEvent::text’ [-Werror=missing-field-initializers]
+  127 |  for(auto kind:{fl::GameEventKind::ComboAdded,fl::GameEventKind::ComboBanked,fl::GameEventKind::Recovery,fl::GameEventKind::Restart}) h.audio.trigger({kind,1,true});
+      |                                                                                                                                       ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+tests/test_audio.cpp: In function ‘void {anonymous}::test_limits_and_spsc()’:
+tests/test_audio.cpp:141:43: error: missing initializer for member ‘fl::GameEvent::text’ [-Werror=missing-field-initializers]
+  141 |  for(size_t i=0;i<300;++i) h.audio.trigger({fl::GameEventKind::Pop});
+      |                            ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/test_audio.cpp: In function ‘void {anonymous}::render_evidence(const char*, double)’:
+tests/test_audio.cpp:175:34: error: missing initializer for member ‘fl::GameEvent::text’ [-Werror=missing-field-initializers]
+  175 |   if(crossed(12)) h.audio.trigger({fl::GameEventKind::Pop});
+      |                   ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/test_audio.cpp:176:34: error: missing initializer for member ‘fl::GameEvent::text’ [-Werror=missing-field-initializers]
+  176 |   if(crossed(18)) h.audio.trigger({fl::GameEventKind::Land,0.7,true});
+      |                   ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/test_audio.cpp:177:34: error: missing initializer for member ‘fl::GameEvent::text’ [-Werror=missing-field-initializers]
+  177 |   if(crossed(30)) h.audio.trigger({fl::GameEventKind::Bail});
+      |                   ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/test_audio.cpp:178:34: error: missing initializer for member ‘fl::GameEvent::text’ [-Werror=missing-field-initializers]
+  178 |   if(crossed(50)) h.audio.trigger({fl::GameEventKind::Uber});
+      |                   ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/test_audio.cpp:179:34: error: missing initializer for member ‘fl::GameEvent::text’ [-Werror=missing-field-initializers]
+  179 |   if(crossed(65)) h.audio.trigger({fl::GameEventKind::GroteskOn});
+      |                   ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/test_audio.cpp:180:34: error: missing initializer for member ‘fl::GameEvent::text’ [-Werror=missing-field-initializers]
+  180 |   if(crossed(80)) h.audio.trigger({fl::GameEventKind::GroteskOff});
+      |                   ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cc1plus: all warnings being treated as errors

@@ -1,0 +1,20 @@
+offline render: 120s, 48000Hz stereo, peak 0.746439, RMS 0.132359
+512-frame cost ms: mean 0.749866, p95 1.24088, max 2.42457, deadline 10.6667 (host only)
+diagnostics: steps 689, sections 6, peak voices 42, queue high water 2, command drops 0, note drops 0, steals 0, nonfinite 0
+voice[0]=119
+voice[1]=119
+voice[2]=262
+voice[3]=262
+voice[4]=667
+voice[5]=324
+voice[6]=93
+voice[7]=32
+voice[8]=47
+voice[9]=28
+voice[10]=50
+voice[11]=1
+voice[12]=2
+voice[13]=2
+voice[14]=1
+voice[15]=1
+PASS: source audio CPU checks; callback allocations 0

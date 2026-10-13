@@ -258,3 +258,101 @@ btw commit at appropriate intervals and keep a detailed diary as you work (using
 ### Technical details
 - Shared event kinds distinguish Pop/Land/Bail/Uber/Grotesk/Grind and UI-only combo/recovery events. Audio transfers only numeric payloads through a bounded SPSC queue.
 - Native source, scripts and bounded evidence are committed intentionally; build outputs, shared libraries, secrets and unrelated vault state are excluded.
+
+## Step 5: Recover the gameplay timeout without losing the implementation
+
+The first implementation workflow stopped because the gameplay child reached its exact 1,800,000 ms timeout before committing or producing its handoff. Audio completed, but integration and fresh review did not launch. I preserved the staged patch and repository identity, then resumed the same child through the supported recovery protocol. Both implementation worktrees are now clean and committed; none of those changes has been deployed or accepted as an integrated port.
+
+### Prompt Context
+- **User prompt:** Continuing the source-complete implementation authorization recorded in Step 4; the original authored text is not reconstructed here from the compacted summary.
+- **Assistant interpretation:** Preserve partially completed work, finish its evidence/handoff, and keep the independent integration/review gates intact.
+- **Inferred user intent:** Reliable progress rather than silent loss or an execution-mode workaround.
+- **Commit (code):** Gameplay `a30784e`, diary `c2f82da`; audio `d03b756`, `6d75082`, `bcd7704`, `c14eba0`. These remain isolated lane commits.
+
+### What I did
+- Inspected workflow `5dc015a1-c84c-4616-b9d6-c77b91669238`, the timeout metadata, worktree refs/HEADs and staged inventory.
+- Captured the full staged-inclusive `git diff HEAD --binary` and status under `scripts/2026/10/13/full-gameplay-integration/recovery/`.
+- Resumed child `3dc4c461-36f4-4457-ad18-03bf42ca5dc7` through `subagent action=resume`, producing recovery run `d98aab64-fe44-40bb-bf57-a08f4cee96c0`.
+- Read both durable handoffs and verified both worktrees are clean.
+
+### Why
+- A timeout is an infrastructure blocker, not permission to launch an unmanaged replacement or silently skip acceptance.
+
+### What worked
+- Recovery produced two gameplay commits and its detailed diary/handoff; the audio lane supplied four scoped commits and CPU/sanitizer/offline evidence.
+- Parent main stayed at `c99143e` while the isolated implementations completed.
+
+### What didn't work
+- Exact failure: `Subagent timed out after 1800000ms.` The required gameplay handoff was missing at the initial timeout; integration/review were not launched.
+- An initial unstaged-only diff was empty because changes were staged. The subsequent `git diff HEAD --binary` is the complete capture, including staged additions.
+
+### What I learned
+- The runtime deadline can interrupt finalization even after tests pass. Earlier coherent implementation checkpoints would reduce recovery overhead.
+
+### What was tricky to build
+- Dependent stages must not mistake the recovered child for completion of the already-terminal original workflow.
+
+### What warrants a second pair of eyes
+- Gameplay bail/GROTESK snapshot behavior, restart/recovery transient differences, omitted browser UI branches and audio saturation oversampling remain explicitly reported integration/review topics.
+
+### What should be done in the future
+- Integrate exact lane commits, review the candidate independently, then qualify the combined target workload. User-reported rendering instability now takes priority before that integration.
+
+### Code review instructions
+- Inspect lane diaries `02-source-gameplay-integration-diary.md` and `03-source-audio-integration-diary.md` at their recorded refs; neither host evidence nor a clean worktree proves physical acceptance.
+
+### Technical details
+- Gameplay ref `pi-subagents/source-gameplay-3dc4c46-aa40-s0-t0`, HEAD `c2f82da466f53780628fef4e451e54d1f1e48221`.
+- Audio ref `pi-subagents/source-audio-29dd4e5-e6b1-s0-t0`, HEAD `c14eba08453700f86f5d9de76c636968e533d548`.
+
+## Step 6: Reproduce long-run rendering precision loss
+
+The user reported unstable texture/blue lines and distant mountains moving vertically. I paused feature integration and captured the running prototype before changing it. Its rider had reached approximately 58.6 km; it was still the pre-integration process, producing about 60 frames/sec. A controlled CPU emulation of shader float arithmetic isolates a serious translation-dependent sky reconstruction error, rather than simply blaming deliberate animated grain or the low render resolution.
+
+### Prompt Context
+- **User prompt (verbatim):** "all of a sudden there's a lot of \"jitteriness\" in the texture and lbluelines that appear and disappear. something is off in the rendering..."
+- **User prompt (verbatim):** "and the mountains in the back \"jitter\" up and down"
+- **User prompt (verbatim):** "btw commit at appropriate intervals and keep a detailed diary as you work (using the diary format from the skill)"
+- **Assistant interpretation:** Diagnose and correct rendering instability, preserve evidence, and record substantive debugging in the full investigation format.
+- **Inferred user intent:** Stable visuals during extended play, not a cosmetic workaround that masks a numerical defect.
+- **Commit (code):** Fix not yet implemented at this checkpoint.
+
+### What I did
+- Captured DSI-2/DSI-1 screenshots, process identity, binary SHA256 and a bounded log tail into `scripts/2026/10/13/render-jitter-investigation/`.
+- Inspected `math.hpp`, camera matrix creation in both renderer files and the unmodified original vertex/post shaders.
+- Added `precision-probe.cpp`: constant camera orientation, 512 offsets spaced 0.001 m around `(0,-60000,60000)`, explicit float multiply/add emulating GLSL without FMA. Compared absolute coordinates with a 128 m snapped render origin.
+- Ran `c++ -std=c++17 -O2 -ffp-contract=off -Isrc scripts/2026/10/13/render-jitter-investigation/precision-probe.cpp -o build/jitter/precision-probe` and saved its output.
+
+### Why
+- The current matrices are stored/uploaded as float. Large world translations damage both clip-space depth and inverse-VP sky reconstruction; inverting the already-rounded matrix in double does not recover lost information.
+- A camera-relative render origin preserves absolute simulation/terrain/source texture coordinates and makes projection arithmetic well-conditioned. Smoothing or disabling grain would not repair depth reconstruction.
+
+### What worked
+- Live process was PID 210855; binary SHA256 `908c64d2c0db9662ad5dcd0ee5ceccf6118937dfc56405ded89b38e748928b9a`.
+- Log showed rider z=58537.4 through 58645.7 and roughly 60 FPS, distinguishing this report from the earlier contention/stall incident.
+- Absolute probe: max ray error `0.0322687073`, adjacent ray jump `0.0617543549`, angular displacement equivalent about `16.4358` pixels at 288 px/62 degrees.
+- Relative probe: max ray error `2.96038603e-05`, adjacent jump `3.40007826e-05`, about `0.00904924` pixels.
+
+### What didn't work
+- No tool failure occurred in this investigation checkpoint. Existing absolute-coordinate float projection demonstrably fails translation invariance in the CPU reproduction.
+- This is CPU arithmetic evidence, not yet a Mali capture or proof that every visible texture artifact shares this cause.
+
+### What I learned
+- Short qualification runs near the origin did not exercise the distance-dependent precision failure. The original highp depth-sampler correction cannot fix inaccuracies introduced before rasterization.
+
+### What was tricky to build
+- Scene position, post-process camera position, inverse VP and sun projection must use the same render coordinate system. Original world coordinates still feed shading, object models, procedural generation and physics.
+- Both displays must independently choose a valid origin and restore the chase camera after the first-person pass.
+
+### What warrants a second pair of eyes
+- Origin-boundary continuity, first-person up vector, source shader preservation, depth-space consistency and integration with the unmerged object/pose renderer.
+
+### What should be done in the future
+- Implement render rebasing, add targeted depth/sky/boundary tests, capture a far-cell comparison on Mali, then resume source-system integration. Physical confirmation remains pending.
+
+### Code review instructions
+- Start with the probe, `math.hpp`, `Renderer::render`, `make_targets`, `update_player` and `render_first_person`. Inspect source shader expressions before modifying runtime source strings.
+
+### Technical details
+- Both original shaders remain unchanged at this evidence checkpoint.
+- Approximate pixel displacement is ray-vector displacement divided by vertical angular pixel size, not a measured image registration result; float-emulation arithmetic may differ from Mali FMA behavior.

@@ -1,0 +1,20 @@
+210855 falllinie-spike
+908c64d2c0db9662ad5dcd0ee5ceccf6118937dfc56405ded89b38e748928b9a  /storage/apps/falllinie-spike/falllinie-spike
+LAND spin=0 flip=0 points=0 score=19675
+cell ready 535
+FPS=59.9862 frame_interval_ms=16.5891
+ride z=58537.4 speed=25.2147 airborne=1 charge=0 score=19675
+FPS=60.0175 frame_interval_ms=16.4742
+ride z=58562 speed=29.0902 airborne=1 charge=0 score=19675
+LAND spin=0 flip=0 points=0 score=19675
+FPS=60.0005 frame_interval_ms=16.5832
+ride z=58588.2 speed=28.1087 airborne=0 charge=0 score=19675
+FPS=59.9971 frame_interval_ms=16.6381
+ride z=58614.6 speed=6.62972 airborne=0 charge=0 score=19675
+FPS=60.0025 frame_interval_ms=16.6229
+ride z=58622.1 speed=10.1294 airborne=0 charge=0 score=19675
+FPS=59.9997 frame_interval_ms=16.6107
+ride z=58632.5 speed=13.2584 airborne=0 charge=0 score=19675
+cell ready 536
+FPS=59.9994 frame_interval_ms=16.62
+ride z=58645.7 speed=15.6166 airborne=0 charge=0 score=19675

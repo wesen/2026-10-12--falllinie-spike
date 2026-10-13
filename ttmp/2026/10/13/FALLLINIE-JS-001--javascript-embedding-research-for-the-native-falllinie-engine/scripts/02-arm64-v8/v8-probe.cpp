@@ -69,6 +69,7 @@ public:
  }
  V8Probe(const V8Probe&)=delete;V8Probe& operator=(const V8Probe&)=delete;
  std::string version(){return std::string("v8 ")+v8::V8::GetVersion()+" Debian-libnode108 Node18.20.4+dfsg-1~deb12u2 raw-C++-API default-JIT not-interpreter standalone-build=false";}
+ const CopyState& copyState() const{return copied;} // qualification-only native state observation
  static std::string configuration(){return "old_generation_limit_bytes=25165824 young_generation_limit_bytes=8388608 flags=--expose-gc,--stack-size=512 microtasks=explicit";}
  void compile(const std::string& source){v8::Isolate::Scope enter(isolate);v8::HandleScope handles(isolate);auto c=context.Get(isolate);v8::Context::Scope realm(c);v8::TryCatch tc(isolate);v8::Local<v8::Script> s;v8::ScriptOrigin origin(isolate,str(isolate,"fixture-and-adapters.js"));if(!v8::Script::Compile(c,str(isolate,source),&origin).ToLocal(&s))throw std::runtime_error(error(tc));compiled.Reset(isolate,s);}
  void execute(){v8::Isolate::Scope enter(isolate);v8::HandleScope handles(isolate);auto c=context.Get(isolate);v8::Context::Scope realm(c);v8::TryCatch tc(isolate);v8::Local<v8::Value> v;if(!compiled.Get(isolate)->Run(c).ToLocal(&v))throw std::runtime_error(error(tc));compiled.Reset();}

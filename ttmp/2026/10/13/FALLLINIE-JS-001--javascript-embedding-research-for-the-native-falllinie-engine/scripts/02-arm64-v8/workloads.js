@@ -24,13 +24,17 @@ function protocolTests(){
  if(consume(new Float64Array([99,1,2,3]).subarray(1))!==6)throw Error('offset');
  const cp=new Float64Array([1,2,3]);if(consume(cp)!==6)throw Error('copy');cp[0]=500;
  if(copiedSum()!==6)throw Error('native copy changed');
+ let overflowRejected=false;
+ try{consume(new Float64Array([Number.MAX_VALUE,Number.MAX_VALUE]));}catch(e){overflowRejected=true;}
+ if(!overflowRejected)throw Error('native sum overflow accepted');
+ if(copiedSum()!==6)throw Error('overflow mutated copied sum');
  try{scalar('1');throw Error('accepted string');}catch(e){if(e.message==='accepted string')throw e;}
  rejected=0;
  for(const r of [null,{pts:NaN,name:'x',ubers:1},{pts:1.2,name:'x',ubers:1},{pts:-1,name:'x',ubers:1},{pts:1,name:7,ubers:1},{pts:1,name:'x'.repeat(257),ubers:1},{pts:1,name:'x',ubers:NaN},{pts:1,name:'x',ubers:17},{get pts(){throw Error('getter exception');},name:'x',ubers:1}]){try{acceptScore(r);}catch(e){rejected++;}}
  if(rejected!==9)throw Error('malformed output rejection');
  if(acceptScore({pts:10260,name:'FS Rodeo 360 · Indy · Helikopter',ubers:1})!==10260)throw Error('valid output');
  G.recent=[];if(acceptScore(scoreAir(scoringInput,true))!==10260)throw Error('source output');G.recent=[];
- return rejected+9;
+ return rejected+10;
 }
 let jobCount=0;
 function scheduleJob(){Promise.resolve().then(()=>jobCount++);return jobCount;}

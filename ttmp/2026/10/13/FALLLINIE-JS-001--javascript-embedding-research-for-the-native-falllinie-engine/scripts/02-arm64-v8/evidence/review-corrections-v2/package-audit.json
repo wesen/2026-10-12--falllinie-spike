@@ -1,0 +1,644 @@
+{
+  "target_execution": "PENDING: cross-linked, NEVER run by worker",
+  "system_dependencies": [
+    "ld-linux-aarch64.so.1",
+    "libc.so.6",
+    "libm.so.6"
+  ],
+  "engines": {
+    "bellard": {
+      "archive": ".work/packages/bellard-arm64.tar.gz",
+      "sha256": "4a00559d1299eac38310fea8aa27ed809356366c5bba9b31aa3c0e747a84514b",
+      "archive_bytes": 1288713,
+      "dependency_audit": [
+        {
+          "file": "probe",
+          "needed": [
+            "libstdc++.so.6",
+            "libm.so.6",
+            "libgcc_s.so.1",
+            "libc.so.6"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17",
+            "GLIBC_2.29",
+            "GLIBC_2.34",
+            "GLIBC_2.35"
+          ],
+          "version_requirements": {
+            "libgcc_s.so.1": [
+              "GCC_3.0"
+            ],
+            "libm.so.6": [
+              "GLIBC_2.29",
+              "GLIBC_2.35",
+              "GLIBC_2.17"
+            ],
+            "libc.so.6": [
+              "GLIBC_2.34",
+              "GLIBC_2.17"
+            ],
+            "libstdc++.so.6": [
+              "GLIBCXX_3.4.19",
+              "GLIBCXX_3.4.11",
+              "CXXABI_1.3.9",
+              "GLIBCXX_3.4.29",
+              "GLIBCXX_3.4.9",
+              "CXXABI_1.3",
+              "GLIBCXX_3.4.21",
+              "GLIBCXX_3.4"
+            ]
+          }
+        },
+        {
+          "file": "lib/libgcc_s.so.1",
+          "needed": [
+            "libc.so.6"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.0",
+            "GLIBC_2.17",
+            "GLIBC_2.34",
+            "GLIBC_2.35"
+          ],
+          "version_requirements": {
+            "libc.so.6": [
+              "GLIBC_2.35",
+              "GLIBC_2.34",
+              "GLIBC_2.17"
+            ]
+          }
+        },
+        {
+          "file": "lib/libstdc++.so.6",
+          "needed": [
+            "libm.so.6",
+            "libc.so.6",
+            "libgcc_s.so.1"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17",
+            "GLIBC_2.18",
+            "GLIBC_2.25",
+            "GLIBC_2.32",
+            "GLIBC_2.33",
+            "GLIBC_2.34",
+            "GLIBC_2.36"
+          ],
+          "version_requirements": {
+            "libm.so.6": [
+              "GLIBC_2.17"
+            ],
+            "libc.so.6": [
+              "GLIBC_2.33",
+              "GLIBC_2.25",
+              "GLIBC_2.18",
+              "GLIBC_2.32",
+              "GLIBC_2.36",
+              "GLIBC_2.17",
+              "GLIBC_2.34"
+            ],
+            "libgcc_s.so.1": [
+              "GCC_4.2.0",
+              "GCC_3.3",
+              "GCC_3.0",
+              "GCC_4.5.0"
+            ]
+          }
+        }
+      ]
+    },
+    "ng": {
+      "archive": ".work/packages/ng-arm64.tar.gz",
+      "sha256": "bf6416eb3933e5385ab2042d034b64a94b711c446ab1353da96426ed47713f85",
+      "archive_bytes": 1401469,
+      "dependency_audit": [
+        {
+          "file": "probe",
+          "needed": [
+            "libstdc++.so.6",
+            "libm.so.6",
+            "libgcc_s.so.1",
+            "libc.so.6"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17",
+            "GLIBC_2.29",
+            "GLIBC_2.34",
+            "GLIBC_2.35"
+          ],
+          "version_requirements": {
+            "libgcc_s.so.1": [
+              "GCC_3.0"
+            ],
+            "libc.so.6": [
+              "GLIBC_2.34",
+              "GLIBC_2.17"
+            ],
+            "libm.so.6": [
+              "GLIBC_2.29",
+              "GLIBC_2.35",
+              "GLIBC_2.17"
+            ],
+            "libstdc++.so.6": [
+              "GLIBCXX_3.4.19",
+              "GLIBCXX_3.4.11",
+              "CXXABI_1.3.9",
+              "GLIBCXX_3.4.29",
+              "GLIBCXX_3.4.9",
+              "CXXABI_1.3",
+              "GLIBCXX_3.4.21",
+              "GLIBCXX_3.4"
+            ]
+          }
+        },
+        {
+          "file": "lib/libgcc_s.so.1",
+          "needed": [
+            "libc.so.6"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.0",
+            "GLIBC_2.17",
+            "GLIBC_2.34",
+            "GLIBC_2.35"
+          ],
+          "version_requirements": {
+            "libc.so.6": [
+              "GLIBC_2.35",
+              "GLIBC_2.34",
+              "GLIBC_2.17"
+            ]
+          }
+        },
+        {
+          "file": "lib/libstdc++.so.6",
+          "needed": [
+            "libm.so.6",
+            "libc.so.6",
+            "libgcc_s.so.1"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17",
+            "GLIBC_2.18",
+            "GLIBC_2.25",
+            "GLIBC_2.32",
+            "GLIBC_2.33",
+            "GLIBC_2.34",
+            "GLIBC_2.36"
+          ],
+          "version_requirements": {
+            "libm.so.6": [
+              "GLIBC_2.17"
+            ],
+            "libc.so.6": [
+              "GLIBC_2.33",
+              "GLIBC_2.25",
+              "GLIBC_2.18",
+              "GLIBC_2.32",
+              "GLIBC_2.36",
+              "GLIBC_2.17",
+              "GLIBC_2.34"
+            ],
+            "libgcc_s.so.1": [
+              "GCC_4.2.0",
+              "GCC_3.3",
+              "GCC_3.0",
+              "GCC_4.5.0"
+            ]
+          }
+        }
+      ]
+    },
+    "v8": {
+      "archive": ".work/packages/v8-arm64.tar.gz",
+      "sha256": "df7d4c3b1c9ac9d8231703663c234019c518b9f9093ad4769c91e1df1aa94a87",
+      "archive_bytes": 31920672,
+      "dependency_audit": [
+        {
+          "file": "probe",
+          "needed": [
+            "libnode.so.108",
+            "libstdc++.so.6",
+            "libgcc_s.so.1",
+            "libc.so.6"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17",
+            "GLIBC_2.32",
+            "GLIBC_2.34"
+          ],
+          "version_requirements": {
+            "libgcc_s.so.1": [
+              "GCC_3.0"
+            ],
+            "libc.so.6": [
+              "GLIBC_2.34",
+              "GLIBC_2.32",
+              "GLIBC_2.17"
+            ],
+            "libstdc++.so.6": [
+              "GLIBCXX_3.4.29",
+              "GLIBCXX_3.4.19",
+              "GLIBCXX_3.4.9",
+              "GLIBCXX_3.4.11",
+              "GLIBCXX_3.4.21",
+              "CXXABI_1.3.9",
+              "CXXABI_1.3",
+              "GLIBCXX_3.4"
+            ]
+          }
+        },
+        {
+          "file": "lib/libbrotlicommon.so.1",
+          "needed": [
+            "libc.so.6"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17"
+          ],
+          "version_requirements": {
+            "libc.so.6": [
+              "GLIBC_2.17"
+            ]
+          }
+        },
+        {
+          "file": "lib/libbrotlidec.so.1",
+          "needed": [
+            "libbrotlicommon.so.1",
+            "libc.so.6",
+            "ld-linux-aarch64.so.1"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17"
+          ],
+          "version_requirements": {
+            "ld-linux-aarch64.so.1": [
+              "GLIBC_2.17"
+            ],
+            "libc.so.6": [
+              "GLIBC_2.17"
+            ]
+          }
+        },
+        {
+          "file": "lib/libbrotlienc.so.1",
+          "needed": [
+            "libm.so.6",
+            "libbrotlicommon.so.1",
+            "libc.so.6",
+            "ld-linux-aarch64.so.1"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17",
+            "GLIBC_2.29"
+          ],
+          "version_requirements": {
+            "ld-linux-aarch64.so.1": [
+              "GLIBC_2.17"
+            ],
+            "libm.so.6": [
+              "GLIBC_2.29"
+            ],
+            "libc.so.6": [
+              "GLIBC_2.17"
+            ]
+          }
+        },
+        {
+          "file": "lib/libcares.so.2",
+          "needed": [
+            "libc.so.6",
+            "ld-linux-aarch64.so.1"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17"
+          ],
+          "version_requirements": {
+            "ld-linux-aarch64.so.1": [
+              "GLIBC_2.17"
+            ],
+            "libc.so.6": [
+              "GLIBC_2.17"
+            ]
+          }
+        },
+        {
+          "file": "lib/libcrypto.so.3",
+          "needed": [
+            "libc.so.6",
+            "ld-linux-aarch64.so.1"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17",
+            "GLIBC_2.25",
+            "GLIBC_2.33",
+            "GLIBC_2.34"
+          ],
+          "version_requirements": {
+            "ld-linux-aarch64.so.1": [
+              "GLIBC_2.17"
+            ],
+            "libc.so.6": [
+              "GLIBC_2.25",
+              "GLIBC_2.33",
+              "GLIBC_2.34",
+              "GLIBC_2.17"
+            ]
+          }
+        },
+        {
+          "file": "lib/libgcc_s.so.1",
+          "needed": [
+            "libc.so.6"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.0",
+            "GLIBC_2.17",
+            "GLIBC_2.34",
+            "GLIBC_2.35"
+          ],
+          "version_requirements": {
+            "libc.so.6": [
+              "GLIBC_2.35",
+              "GLIBC_2.34",
+              "GLIBC_2.17"
+            ]
+          }
+        },
+        {
+          "file": "lib/libicudata.so.72",
+          "needed": [],
+          "glibc_requirements": [],
+          "version_requirements": {}
+        },
+        {
+          "file": "lib/libicui18n.so.72",
+          "needed": [
+            "libicuuc.so.72",
+            "libstdc++.so.6",
+            "libm.so.6",
+            "libgcc_s.so.1",
+            "libc.so.6",
+            "ld-linux-aarch64.so.1"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17",
+            "GLIBC_2.29"
+          ],
+          "version_requirements": {
+            "libgcc_s.so.1": [
+              "GCC_3.0"
+            ],
+            "libstdc++.so.6": [
+              "CXXABI_1.3.8",
+              "GLIBCXX_3.4",
+              "CXXABI_1.3"
+            ],
+            "ld-linux-aarch64.so.1": [
+              "GLIBC_2.17"
+            ],
+            "libm.so.6": [
+              "GLIBC_2.29",
+              "GLIBC_2.17"
+            ],
+            "libc.so.6": [
+              "GLIBC_2.17"
+            ]
+          }
+        },
+        {
+          "file": "lib/libicuuc.so.72",
+          "needed": [
+            "libicudata.so.72",
+            "libstdc++.so.6",
+            "libm.so.6",
+            "libgcc_s.so.1",
+            "libc.so.6",
+            "ld-linux-aarch64.so.1"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17",
+            "GLIBC_2.27",
+            "GLIBC_2.29",
+            "GLIBC_2.33",
+            "GLIBC_2.34"
+          ],
+          "version_requirements": {
+            "libgcc_s.so.1": [
+              "GCC_3.0"
+            ],
+            "ld-linux-aarch64.so.1": [
+              "GLIBC_2.17"
+            ],
+            "libstdc++.so.6": [
+              "CXXABI_1.3.8",
+              "GLIBCXX_3.4",
+              "CXXABI_1.3",
+              "GLIBCXX_3.4.11",
+              "GLIBCXX_3.4.30"
+            ],
+            "libm.so.6": [
+              "GLIBC_2.27",
+              "GLIBC_2.29",
+              "GLIBC_2.17"
+            ],
+            "libc.so.6": [
+              "GLIBC_2.33",
+              "GLIBC_2.34",
+              "GLIBC_2.17"
+            ]
+          }
+        },
+        {
+          "file": "lib/libnghttp2.so.14",
+          "needed": [
+            "libc.so.6",
+            "ld-linux-aarch64.so.1"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17"
+          ],
+          "version_requirements": {
+            "ld-linux-aarch64.so.1": [
+              "GLIBC_2.17"
+            ],
+            "libc.so.6": [
+              "GLIBC_2.17"
+            ]
+          }
+        },
+        {
+          "file": "lib/libnode.so.108",
+          "needed": [
+            "libz.so.1",
+            "libuv.so.1",
+            "libbrotlidec.so.1",
+            "libbrotlienc.so.1",
+            "libcares.so.2",
+            "libnghttp2.so.14",
+            "libcrypto.so.3",
+            "libssl.so.3",
+            "libicui18n.so.72",
+            "libicuuc.so.72",
+            "libstdc++.so.6",
+            "libm.so.6",
+            "libc.so.6",
+            "ld-linux-aarch64.so.1"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17",
+            "GLIBC_2.29",
+            "GLIBC_2.32",
+            "GLIBC_2.33",
+            "GLIBC_2.34"
+          ],
+          "version_requirements": {
+            "ld-linux-aarch64.so.1": [
+              "GLIBC_2.17"
+            ],
+            "libssl.so.3": [
+              "OPENSSL_3.0.0"
+            ],
+            "libstdc++.so.6": [
+              "GLIBCXX_3.4.29",
+              "GLIBCXX_3.4.14",
+              "CXXABI_1.3",
+              "GLIBCXX_3.4.18",
+              "CXXABI_1.3.5",
+              "GLIBCXX_3.4.11",
+              "GLIBCXX_3.4.9",
+              "CXXABI_1.3.7",
+              "GLIBCXX_3.4.15",
+              "GLIBCXX_3.4.26",
+              "GLIBCXX_3.4.20",
+              "CXXABI_1.3.9",
+              "GLIBCXX_3.4",
+              "GLIBCXX_3.4.21"
+            ],
+            "libm.so.6": [
+              "GLIBC_2.29",
+              "GLIBC_2.17"
+            ],
+            "libc.so.6": [
+              "GLIBC_2.34",
+              "GLIBC_2.32",
+              "GLIBC_2.33",
+              "GLIBC_2.17"
+            ],
+            "libcrypto.so.3": [
+              "OPENSSL_3.0.0"
+            ]
+          }
+        },
+        {
+          "file": "lib/libssl.so.3",
+          "needed": [
+            "libcrypto.so.3",
+            "libc.so.6",
+            "ld-linux-aarch64.so.1"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17",
+            "GLIBC_2.33"
+          ],
+          "version_requirements": {
+            "ld-linux-aarch64.so.1": [
+              "GLIBC_2.17"
+            ],
+            "libc.so.6": [
+              "GLIBC_2.33",
+              "GLIBC_2.17"
+            ],
+            "libcrypto.so.3": [
+              "OPENSSL_3.0.3",
+              "OPENSSL_3.0.0"
+            ]
+          }
+        },
+        {
+          "file": "lib/libstdc++.so.6",
+          "needed": [
+            "libm.so.6",
+            "libc.so.6",
+            "libgcc_s.so.1"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17",
+            "GLIBC_2.18",
+            "GLIBC_2.25",
+            "GLIBC_2.32",
+            "GLIBC_2.33",
+            "GLIBC_2.34",
+            "GLIBC_2.36"
+          ],
+          "version_requirements": {
+            "libm.so.6": [
+              "GLIBC_2.17"
+            ],
+            "libc.so.6": [
+              "GLIBC_2.33",
+              "GLIBC_2.25",
+              "GLIBC_2.18",
+              "GLIBC_2.32",
+              "GLIBC_2.36",
+              "GLIBC_2.17",
+              "GLIBC_2.34"
+            ],
+            "libgcc_s.so.1": [
+              "GCC_4.2.0",
+              "GCC_3.3",
+              "GCC_3.0",
+              "GCC_4.5.0"
+            ]
+          }
+        },
+        {
+          "file": "lib/libuv.so.1",
+          "needed": [
+            "libc.so.6",
+            "ld-linux-aarch64.so.1"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17",
+            "GLIBC_2.28",
+            "GLIBC_2.32",
+            "GLIBC_2.33",
+            "GLIBC_2.34"
+          ],
+          "version_requirements": {
+            "ld-linux-aarch64.so.1": [
+              "GLIBC_2.17"
+            ],
+            "libc.so.6": [
+              "GLIBC_2.28",
+              "GLIBC_2.32",
+              "GLIBC_2.33",
+              "GLIBC_2.34",
+              "GLIBC_2.17"
+            ]
+          }
+        },
+        {
+          "file": "lib/libz.so.1",
+          "needed": [
+            "libc.so.6",
+            "ld-linux-aarch64.so.1"
+          ],
+          "glibc_requirements": [
+            "GLIBC_2.17"
+          ],
+          "version_requirements": {
+            "ld-linux-aarch64.so.1": [
+              "GLIBC_2.17"
+            ],
+            "libc.so.6": [
+              "GLIBC_2.17"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

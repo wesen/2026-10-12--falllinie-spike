@@ -1,0 +1,36 @@
+source_read_us=235.67500000000001 source_bytes=22173
+timing_contract=operation_end_before_logging_v2
+config old_generation_limit_bytes=25165824 young_generation_limit_bytes=8388608 flags=--expose-gc,--stack-size=512 microtasks=explicit sustained_blocks=20 heap_limit_is_not_RSS_limit=true
+lifecycle cycle=0 create_us=4786.6490000000003 compile_us=1260.2670000000001 execute_us=370.78300000000002 dispose_us=363.03899999999999 rss_kib=41672
+lifecycle cycle=1 create_us=2732.77 compile_us=1104.7909999999999 execute_us=229.995 dispose_us=235.37 rss_kib=43444
+lifecycle cycle=2 create_us=2562.277 compile_us=1116.3889999999999 execute_us=223.124 dispose_us=211.05699999999999 rss_kib=45292
+lifecycle cycle=3 create_us=2477.3029999999999 compile_us=1121.6020000000001 execute_us=202.96199999999999 dispose_us=209.27000000000001 rss_kib=46940
+lifecycle cycle=4 create_us=2533.0619999999999 compile_us=1166.125 execute_us=257.19400000000002 dispose_us=233.643 rss_kib=48604
+lifecycle cycle=5 create_us=2680.3850000000002 compile_us=1111.5440000000001 execute_us=231.643 dispose_us=236.39099999999999 rss_kib=50332
+lifecycle cycle=6 create_us=2769.3620000000001 compile_us=1120.1769999999999 execute_us=260.85700000000003 dispose_us=241.74600000000001 rss_kib=52020
+lifecycle cycle=7 create_us=2768.3139999999999 compile_us=1121.962 execute_us=253.32499999999999 dispose_us=238.13800000000001 rss_kib=53760
+engine v8 10.2.154.26-node.37 Debian-libnode108 Node18.20.4+dfsg-1~deb12u2 raw-C++-API default-JIT not-interpreter standalone-build=false
+cold noop first_call_us=56.402999999999999 checksum=1
+bench noop n=120 warmup=30 p50_us=2.4220000000000002 p95_us=5.1859999999999999 p99_us=5.9939999999999998 max_us=6.7210000000000001 total_us=296.93599999999986 calls_per_second=404127.48875178507 checksum=120
+cold batch first_call_us=4344.4679999999998 checksum=30360.045279458187
+bench batch n=120 warmup=30 p50_us=119.956 p95_us=285.40100000000001 p99_us=308.63 max_us=419.19799999999998 total_us=17465.153999999999 calls_per_second=6870.8240419752392 checksum=3643205.4335349803
+cold sourceRules first_call_us=2113.4920000000002 checksum=248097186646.1832
+bench sourceRules n=120 warmup=30 p50_us=366.43099999999998 p95_us=676.39099999999996 p99_us=784.87800000000004 max_us=925.75099999999998 total_us=54530.272999999986 calls_per_second=2200.612492807436 checksum=29771662397542.023
+cold scalarBridge first_call_us=222.977 checksum=280126
+bench scalarBridge n=120 warmup=30 p50_us=54.965000000000003 p95_us=59.728000000000002 p99_us=64.206999999999994 max_us=66.093000000000004 total_us=6696.2169999999978 calls_per_second=17920.566194315394 checksum=33615120
+cold batchedBridge first_call_us=100.264 checksum=280126
+bench batchedBridge n=120 warmup=30 p50_us=4.6989999999999998 p95_us=22.053000000000001 p99_us=24.509 max_us=66.164000000000001 total_us=1079.175 calls_per_second=111196.05254013483 checksum=33615120
+cold churn first_call_us=311.06700000000001 checksum=1
+bench churn n=120 warmup=30 p50_us=26.079999999999998 p95_us=73.400000000000006 p99_us=97.671000000000006 max_us=227.84899999999999 total_us=4209.8490000000011 calls_per_second=28504.585318855847 checksum=120
+oracle {"hashes":[388445122,1852637032,2623512388,2116654401,3790136032],"random":[0.9797282677609473,0.3067522644996643,0.484205421525985,0.817934412509203,0.5094283693470061,0.34747186047025025,0.07375754183158278,0.7663964673411101,0.9968264393974096,0.8250224851071835,0.4599348735064268,0.9458441860042512],"terrain":[{"x":0,"z":4,"h":12.055505421381783,"n":[-0.01221150173264416,0.9472057558104173,0.32039371932834415],"paint":{"lip":0,"stripe":0,"rel":-0.710232298948544,"u":-23.00315141371464}},{"x":12,"z":150,"h":-36.96929557018999,"n":[-0.01976529287120197,0.9997120832087747,0.01360455379964659],"paint":{"lip":0,"stripe":0,"rel":1.727153318392796,"u":-9.819399348692851}},{"x":-25,"z":365,"h":-100.8096294677378,"n":[0.20652640188648874,0.8856252510403028,0.415950429791365],"paint":{"lip":0,"stripe":0,"rel":10.264547121060117,"u":-61.2950595367975}},{"x":60,"z":900,"h":-258.43919932608065,"n":[-0.2606629944533109,0.9553389628374831,0.1392202191035307],"paint":{"lip":0,"stripe":0,"rel":8.425735683309256,"u":49.781527764447404}},{"x":0,"z":-10,"h":16.935691711728786,"n":[0.005341387230046656,0.9423960910150199,0.3344563906132888],"paint":{"lip":0,"stripe":0,"rel":-0.5471903648650425,"u":-19.709524417421562}}],"scores":[{"name":"FS Rodeo 360 · Indy · Helikopter","pts":10260,"ubers":1},{"name":"FS Rodeo 360 · Indy · Helikopter","pts":6155,"ubers":1}],"trees":[{"x":-8.010790018932532,"z":366.3853706466034,"y":-104.46265213387652,"h":5.977854648604989,"r":1.6426332410424949,"g":true},{"x":130.1151116989399,"z":408.36359534878284,"y":-109.39148661426374,"h":6.033417958766222,"r":2.3693085871636868,"g":true}]}
+expected_exception Error: intentional qualification exception
+protocol PASS copy/offset/type/size/nonfinite/malformed-output/exception/jobs/detach/overflow-state-preserved checks=19 copied_count=3 copied_sum=6 copied_values_preserved=true
+memory stage=retained used_heap_bytes=1644584 total_heap_bytes=3436544 heap_size_limit_bytes=37748736 external_bytes=143181 gc_prologue_observed=144 explicit_gc_requests=0 gc_pause_causality=unavailable rss_kib=92104
+memory stage=sustained used_heap_bytes=1586424 total_heap_bytes=3698688 heap_size_limit_bytes=37748736 external_bytes=137085 gc_prologue_observed=149 explicit_gc_requests=0 gc_pause_causality=unavailable rss_kib=92604
+memory stage=sustained used_heap_bytes=1948848 total_heap_bytes=3698688 heap_size_limit_bytes=37748736 external_bytes=137085 gc_prologue_observed=213 explicit_gc_requests=0 gc_pause_causality=unavailable rss_kib=96068
+bench sustained_block_8row_4rules_4churn n=20 warmup=0 p50_us=2445.3130000000001 p95_us=4913.634 p99_us=4913.634 max_us=5157.1450000000004 total_us=56046.585999999996 calls_per_second=356.84599950476917 checksum=19847779789381.914
+memory stage=before_explicit_gc used_heap_bytes=1948960 total_heap_bytes=3698688 heap_size_limit_bytes=37748736 external_bytes=137085 gc_prologue_observed=213 explicit_gc_requests=0 gc_pause_causality=unavailable rss_kib=96092
+explicit_gc_wall_us=946.28200000000004
+memory stage=after_explicit_gc used_heap_bytes=746368 total_heap_bytes=3698688 heap_size_limit_bytes=37748736 external_bytes=137085 gc_prologue_observed=214 explicit_gc_requests=1 gc_pause_causality=unavailable rss_kib=96260
+process peak_rss_kib=96060 elapsed_ms=240.51658699999999 elapsed_definition=source_read_through_final_checks_includes_logging_excludes_final_dispose_and_platform_init
+PROBE PASS

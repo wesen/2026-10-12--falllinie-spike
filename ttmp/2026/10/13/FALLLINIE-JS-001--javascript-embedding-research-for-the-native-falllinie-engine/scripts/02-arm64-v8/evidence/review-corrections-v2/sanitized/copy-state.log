@@ -1,0 +1,1 @@
+COPY STATE PASS overflow rejected; all values/count/sum preserved; finite limit accepted

@@ -177,7 +177,7 @@ The three ARM64 private bundles resolve all DT_NEEDED libraries and required bun
 - Parent reviews exact candidate patch, then transfers/runs/collects each engine sequentially. Preserve existing target results before any rerun. Do not stop desktop/game processes or rely on old preflight headroom.
 
 ### Code review instructions
-- Begin at scripts/02-arm64-v8/README.md and quickjs-probe.cpp/v8-probe.cpp/probe-common.hpp/workloads.js.
+- Begin at scripts/02-arm64-v8/README.txt (raw operational guide, renamed after reviewer follow-up) and quickjs-probe.cpp/v8-probe.cpp/probe-common.hpp/workloads.js.
 - Reproduce host commands and package checks; inspect evidence/results-summary.json and individual run logs. Require target execution evidence separately.
 - Verify production/history diff is empty and git index clean before applying candidate.
 
@@ -185,3 +185,63 @@ The three ARM64 private bundles resolve all DT_NEEDED libraries and required bun
 - Archive hashes/bytes and full dependency audits are in evidence/package-audit.json and evidence/results-summary.json; source/artifact SHA256SUMS are in ignored packages.
 - Fixtures are pinned, all new useful commands live in this ticket, no third-party source/binaries or credentials are committed. Parent diary01/tasks/changelog/index remain untouched.
 - No production graphics/audio feature changed, so graphics/device gate is explicitly deferred to parent rather than claimed run by this worker.
+
+## Step 4: Accepted reviewer corrections before parent device execution
+
+The parent accepted both reviewer P2 findings: three short timing fields sampled their endpoint during output formatting, and finite Float64 inputs could overflow the copied native sum to infinity. I read the complete independent review and am fixing these exact boundaries before rebuilding target packages. Both fixes now pass native/helper regressions, nine corrected real embedding runs and sanitized adapter/helper comparisons. Historical host receipts remain unchanged; corrected evidence is retained under scripts/02-arm64-v8/evidence/review-corrections-v2.
+
+The requested ticket doctor also exposed the raw harness README.md as invalid frontmatter, alongside downloaded QuickJS-ng Markdown inside ignored .work and existing research vocabulary warnings. The raw operational README will become README.txt, with worker-owned references updated. The documented ignore flags were attempted but did not suppress initial parsing of those downloaded Markdown files. Final doctor therefore still fails with six downloaded frontmatter errors plus existing vocabulary warnings; before/final/ignore-attempt receipts are retained honestly. No downloaded source, parent doc or vocabulary was changed.
+
+### Prompt Context
+**User prompt (verbatim):** See Step 1. The parent follow-up accepts both reviewer P2 findings and requests corrections before any parent ARM64 execution.
+**Assistant interpretation:** Correct measurement endpoints and atomic finite-sum validation, prove preservation in native/helper and all real embeddings, regenerate clearly separated evidence/packages, run honest docmgr checks and commit a scoped checkpoint.
+**Inferred user intent:** Make the already-reviewed research candidate safe and accurately measured before hardware qualification.
+
+### What I did
+- Read full independent review at implementation run d80ad95c's review/arm64-v8-probes.md.
+- Confirmed clean starting head684c2d34d08bf403436d624931b3416fe6f2d651 and inspected every duration site and copied-buffer boundary.
+- Ran initial doctor with --fail-on error; retained exact diagnostic receipt and subsequent ignore-dir/glob/final attempts.
+- Captured source-read, first-call and explicit-GC elapsed immediately after operations, before stream insertion/precision formatting. Reviewed lifecycle/warm/block endpoints (already before output); total internal elapsed is now captured before final status output and explicitly includes preceding logging/final checks.
+- Reject nonfinite accumulated CopyState sum before values/count/sum commit. Added test-copy-state.cpp for overflow rejection/all-slot state preservation/finite maximum acceptance, plus sanitized helper build.
+- Added real JS regression with two Number.MAX_VALUE elements. JS verifies exception and sum6; both native adapters expose const qualification state so the driver compares every slot, count3 and sum6 against the prior accepted [1,2,3] copy. Protocol is19 checks; comparator requires v2 timing/full overflow-preservation marker.
+- Expanded comparator regressions from7 to11; ran corrected-v2-1/2/3 sequentially, plus sanitized adapter/helper and85-leaf/workload comparisons. Native CPU suite12/12 repeated.
+- Rebuilt three ARM64 executables and packages using final corrected C++/JS. Rechecked library/provider-version/GLIBC closures, SHA256SUMS, archive hashes and package-manifest source hashes against current files. ARM binaries never executed.
+- Renamed raw operational README.md to README.txt and updated own references/reproduction commands. Preserved all original committed evidence; added only clearly named corrected receipts/audits/summary.
+
+### Why
+- Stream insertion order makes logging/flush time observable in short timings unless elapsed is captured before any output.
+- A batch is accepted only if both input elements and its returned accumulated result are finite; failed validation must not mutate previously accepted copied state.
+
+### What worked
+- Existing source fixtures, historical receipts and private pinned dependencies were reused without downloading/installing anything.
+- Nine corrected host runs:85 leaves each with engine max delta0; native delta2.220446049250313e-16; first-call/warm/sustained checksums all pass. All show checks19/count3/sum6/every copied slot preserved.
+- Direct and ASan/UBSan CopyState helper pass; three sanitized actual embeddings independently pass oracle/workload/protocol comparisons. Comparator11/11 and native CPU12/12 pass; shell/JS/Python checks pass.
+- Corrected row p50 ranges (ms): Bellard0.960–1.474,ng0.985–1.332,V80.107–0.267. SourceRules128-pair p50(ms):1.816–1.902,1.696–2.050,0.303–0.752. Host conditions are not locked; no causal performance comparison with old runs or ARM prediction is made.
+- External peakRSS KiB: Bellard6144–6356,ng6360–6616,V840344–40708; process wall seconds5.12–7.11,7.33–10.23,0.71–1.46. Exact short-stage endpoints/rates/percentiles/GC data are in corrected logs/summary.
+- Corrected ARM64 cross-link/dependency/version/source-hash/package integrity checks pass, actual target execution still PENDING. Original receipt paths are byte-identical to correction base.
+
+### What didn't work
+- Red native helper run before fix returned1: `FAIL finite input sum overflow accepted`. All three old actual host binaries running the new regression returned1: `FAIL Error: native sum overflow accepted`. Exact red receipts are retained in corrected evidence/before-fix, not relabeled successes.
+- Initial doctor reported8 findings:7 invalid_frontmatter errors (raw harness README plus6 downloaded ng Markdown files) and one aggregated unknown_topics warning affecting5 existing docs. Exact raw README diagnostic: `frontmatter delimiters '---' not found`. Doctor with --fail-on error returned1. These are actual findings, not a fabricated clean ticket result.
+- After raw README.txt rename, final `docmgr doctor --ticket FALLLINIE-JS-001 --stale-after 30 --fail-on error` returns1 for six downloaded ng Markdown frontmatter errors plus existing research warnings. `--ignore-dir .work` and additional `--ignore-glob '**/.work/**'` each still return1. No raw harness README error remains. Doctor defaults can exit0 despite findings; only strict statuses/findings are used here.
+- One new blank line at test_compare.py EOF was caught by git diff --check and removed; generated readelf retention trims trailing whitespace only, preserving its original .work output.
+
+### What I learned
+- Doctor does not infer .gitignore exclusions, and this installed tool still parses generated Markdown even with documented ignore flags. A clean ticket doctor success cannot be claimed from this populated research worktree.
+
+### What was tricky to build
+- New regression must verify every copied slot, count and sum, not merely observe a thrown JS exception or unchanged aggregate.
+
+### What warrants a second pair of eyes
+- Timing endpoints precede formatting; current comparator intentionally rejects old contracts lacking corrected markers. Rebuilt ARM64 package source hashes match corrected final code. No ARM64 run is authorized here. Remaining doctor findings are environmental imported-source/vocabulary diagnostics, not silently fixed outside scope.
+
+### What should be done in the future
+- Parent reviewer rechecks these exact corrections, then parent owns bounded device gates.
+
+### Code review instructions
+- Begin at probe-common.hpp, workloads.js, test-copy-state.cpp and test_compare.py; follow README.txt commands and corrected evidence/review-corrections-v2. All historical receipts are preserved without overwrite.
+
+### Technical details
+- Correction base684c2d34d08bf403436d624931b3416fe6f2d651; original candidate basee1a80c3a32d6d0568bc4f9d1ac0824a51dc6bc04.
+
+- Corrected archive hashes/bytes are retained in corrected package-audit.json/results-summary.json. Parent must use these fresh packages rather than historical hashes. Strict doctor status1 is retained as an open environmental limitation, not passed off as clean.

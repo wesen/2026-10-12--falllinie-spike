@@ -1,0 +1,875 @@
+{
+  "target_execution": "PENDING",
+  "timing_contract": "operation_end_before_logging_v2",
+  "protocol_checks": 19,
+  "native_overflow_state_preservation": "passed",
+  "historical_receipts": "evidence/host and original summary preserved; not rewritten",
+  "host_runs": {
+    "corrected-v2-1": {
+      "started_at": "2026-10-13T23:41:06Z",
+      "engines": {
+        "bellard": {
+          "engine": "quickjs-bellard 2026-06-04 archive=b376e839b322978313d929fd20663b11ba58b75df5a46c126dd19ea2fa70ad2a interpreter",
+          "source_read_us": 68.998,
+          "cold_first_call_us": {
+            "noop": 0.642,
+            "batch": 1082.138,
+            "sourceRules": 3358.732,
+            "scalarBridge": 41.866,
+            "batchedBridge": 41.913,
+            "churn": 683.524
+          },
+          "internal_elapsed_definition": "source_read_through_final_checks_includes_logging_excludes_final_dispose_and_platform_init",
+          "process_elapsed_seconds": 5.12,
+          "process_max_rss_kib": 6144,
+          "benches": {
+            "noop": {
+              "p50_us": 0.06,
+              "p95_us": 0.073,
+              "p99_us": 0.076,
+              "max_us": 0.151,
+              "calls_per_second": 16214025.131738966,
+              "checksum": 120.0
+            },
+            "batch": {
+              "p50_us": 1474.259,
+              "p95_us": 2267.488,
+              "p99_us": 2700.474,
+              "max_us": 6075.702,
+              "calls_per_second": 671.1285755171828,
+              "checksum": 3643205.4335349803
+            },
+            "sourceRules": {
+              "p50_us": 1818.654,
+              "p95_us": 2761.109,
+              "p99_us": 2831.202,
+              "max_us": 2927.307,
+              "calls_per_second": 516.0742373822625,
+              "checksum": 29771662397542.023
+            },
+            "scalarBridge": {
+              "p50_us": 40.927,
+              "p95_us": 42.241,
+              "p99_us": 44.534,
+              "max_us": 45.773,
+              "calls_per_second": 24415.145365740904,
+              "checksum": 33615120.0
+            },
+            "batchedBridge": {
+              "p50_us": 23.554,
+              "p95_us": 24.687,
+              "p99_us": 27.938,
+              "max_us": 57.644,
+              "calls_per_second": 41819.35085912632,
+              "checksum": 33615120.0
+            },
+            "churn": {
+              "p50_us": 308.486,
+              "p95_us": 374.749,
+              "p99_us": 496.84,
+              "max_us": 597.932,
+              "calls_per_second": 3151.0090358072525,
+              "checksum": 120.0
+            },
+            "sustained_block_8row_4rules_4churn": {
+              "p50_us": 13568.863,
+              "p95_us": 23311.099,
+              "p99_us": 25993.825,
+              "max_us": 29718.039,
+              "calls_per_second": 66.49953060342081,
+              "checksum": 297716696840719.8
+            }
+          },
+          "explicit_gc_wall_us": 53.137
+        },
+        "ng": {
+          "engine": "quickjs-ng 0.17.0 commit=6d46d07d04041b40f4f49eaa7fdebe44c314c699 interpreter",
+          "source_read_us": 55.134,
+          "cold_first_call_us": {
+            "noop": 0.338,
+            "batch": 1086.192,
+            "sourceRules": 1608.286,
+            "scalarBridge": 31.289,
+            "batchedBridge": 54.16,
+            "churn": 445.765
+          },
+          "internal_elapsed_definition": "source_read_through_final_checks_includes_logging_excludes_final_dispose_and_platform_init",
+          "process_elapsed_seconds": 7.59,
+          "process_max_rss_kib": 6612,
+          "benches": {
+            "noop": {
+              "p50_us": 0.054,
+              "p95_us": 0.062,
+              "p99_us": 0.067,
+              "max_us": 0.111,
+              "calls_per_second": 18250950.57034222,
+              "checksum": 120.0
+            },
+            "batch": {
+              "p50_us": 984.76,
+              "p95_us": 1234.043,
+              "p99_us": 1372.9,
+              "max_us": 1499.286,
+              "calls_per_second": 983.6634405374837,
+              "checksum": 3643205.4335349803
+            },
+            "sourceRules": {
+              "p50_us": 1696.267,
+              "p95_us": 2695.596,
+              "p99_us": 2820.877,
+              "max_us": 3125.635,
+              "calls_per_second": 535.2241494206667,
+              "checksum": 29771662397542.023
+            },
+            "scalarBridge": {
+              "p50_us": 31.136,
+              "p95_us": 64.867,
+              "p99_us": 65.859,
+              "max_us": 69.369,
+              "calls_per_second": 26214.64463646186,
+              "checksum": 33615120.0
+            },
+            "batchedBridge": {
+              "p50_us": 29.254,
+              "p95_us": 48.992,
+              "p99_us": 50.287,
+              "max_us": 53.639,
+              "calls_per_second": 29853.375147960785,
+              "checksum": 33615120.0
+            },
+            "churn": {
+              "p50_us": 335.262,
+              "p95_us": 415.068,
+              "p99_us": 455.746,
+              "max_us": 544.166,
+              "calls_per_second": 2930.7304278983656,
+              "checksum": 120.0
+            },
+            "sustained_block_8row_4rules_4churn": {
+              "p50_us": 22518.992,
+              "p95_us": 29470.11,
+              "p99_us": 42010.719,
+              "max_us": 48070.324,
+              "calls_per_second": 42.449857589345115,
+              "checksum": 297716696840719.8
+            }
+          },
+          "explicit_gc_wall_us": 49.7
+        },
+        "v8": {
+          "engine": "v8 10.2.154.26-node.37 Debian-libnode108 Node18.20.4+dfsg-1~deb12u2 raw-C++-API default-JIT not-interpreter standalone-build=false",
+          "source_read_us": 85.281,
+          "cold_first_call_us": {
+            "noop": 16.03,
+            "batch": 2786.094,
+            "sourceRules": 2904.428,
+            "scalarBridge": 129.019,
+            "batchedBridge": 71.531,
+            "churn": 194.801
+          },
+          "internal_elapsed_definition": "source_read_through_final_checks_includes_logging_excludes_final_dispose_and_platform_init",
+          "process_elapsed_seconds": 0.72,
+          "process_max_rss_kib": 40708,
+          "benches": {
+            "noop": {
+              "p50_us": 0.352,
+              "p95_us": 0.369,
+              "p99_us": 0.37,
+              "max_us": 0.472,
+              "calls_per_second": 2826122.795035447,
+              "checksum": 120.0
+            },
+            "batch": {
+              "p50_us": 144.057,
+              "p95_us": 254.887,
+              "p99_us": 330.191,
+              "max_us": 373.971,
+              "calls_per_second": 6056.4301825832,
+              "checksum": 3643205.4335349803
+            },
+            "sourceRules": {
+              "p50_us": 426.676,
+              "p95_us": 763.023,
+              "p99_us": 988.036,
+              "max_us": 1157.147,
+              "calls_per_second": 2148.013410692127,
+              "checksum": 29771662397542.023
+            },
+            "scalarBridge": {
+              "p50_us": 8.248,
+              "p95_us": 9.261,
+              "p99_us": 9.293,
+              "max_us": 12.84,
+              "calls_per_second": 117992.47601311284,
+              "checksum": 33615120.0
+            },
+            "batchedBridge": {
+              "p50_us": 2.69,
+              "p95_us": 19.946,
+              "p99_us": 22.54,
+              "max_us": 68.031,
+              "calls_per_second": 161585.9118629644,
+              "checksum": 33615120.0
+            },
+            "churn": {
+              "p50_us": 26.513,
+              "p95_us": 55.64,
+              "p99_us": 97.708,
+              "max_us": 1676.886,
+              "calls_per_second": 21423.269169451996,
+              "checksum": 120.0
+            },
+            "sustained_block_8row_4rules_4churn": {
+              "p50_us": 1634.944,
+              "p95_us": 2581.766,
+              "p99_us": 4033.482,
+              "max_us": 4749.039,
+              "calls_per_second": 558.7261932286486,
+              "checksum": 297716696840719.8
+            }
+          },
+          "explicit_gc_wall_us": 683.604
+        }
+      },
+      "comparison": {
+        "status": "PASS",
+        "comparison": {
+          "native": {
+            "leaves": 85,
+            "max_absolute_float_error": 2.220446049250313e-16
+          },
+          "bellard": {
+            "leaves": 85,
+            "max_absolute_float_error": 0,
+            "workload_checks": [
+              "batch",
+              "sourceRules",
+              "scalarBridge",
+              "batchedBridge",
+              "noop",
+              "churn",
+              "sustained"
+            ],
+            "peak_rss_kib": 6016
+          },
+          "ng": {
+            "leaves": 85,
+            "max_absolute_float_error": 0,
+            "workload_checks": [
+              "batch",
+              "sourceRules",
+              "scalarBridge",
+              "batchedBridge",
+              "noop",
+              "churn",
+              "sustained"
+            ],
+            "peak_rss_kib": 6228
+          },
+          "v8": {
+            "leaves": 85,
+            "max_absolute_float_error": 0,
+            "workload_checks": [
+              "batch",
+              "sourceRules",
+              "scalarBridge",
+              "batchedBridge",
+              "noop",
+              "churn",
+              "sustained"
+            ],
+            "peak_rss_kib": 40708
+          }
+        },
+        "tolerance": "abs1e-9 + rel1e-12; labels/integers exact",
+        "target_execution": "not implied; directory origin must be recorded separately"
+      }
+    },
+    "corrected-v2-2": {
+      "started_at": "2026-10-13T23:41:20Z",
+      "engines": {
+        "bellard": {
+          "engine": "quickjs-bellard 2026-06-04 archive=b376e839b322978313d929fd20663b11ba58b75df5a46c126dd19ea2fa70ad2a interpreter",
+          "source_read_us": 68.323,
+          "cold_first_call_us": {
+            "noop": 0.561,
+            "batch": 1040.149,
+            "sourceRules": 1826.588,
+            "scalarBridge": 29.603,
+            "batchedBridge": 20.784,
+            "churn": 498.667
+          },
+          "internal_elapsed_definition": "source_read_through_final_checks_includes_logging_excludes_final_dispose_and_platform_init",
+          "process_elapsed_seconds": 6.1,
+          "process_max_rss_kib": 6356,
+          "benches": {
+            "noop": {
+              "p50_us": 0.068,
+              "p95_us": 0.072,
+              "p99_us": 0.086,
+              "max_us": 0.146,
+              "calls_per_second": 14385039.558858791,
+              "checksum": 120.0
+            },
+            "batch": {
+              "p50_us": 960.206,
+              "p95_us": 1530.027,
+              "p99_us": 1637.26,
+              "max_us": 1658.569,
+              "calls_per_second": 951.6424098964152,
+              "checksum": 3643205.4335349803
+            },
+            "sourceRules": {
+              "p50_us": 1901.526,
+              "p95_us": 2717.455,
+              "p99_us": 3249.534,
+              "max_us": 3412.094,
+              "calls_per_second": 494.80854502854453,
+              "checksum": 29771662397542.023
+            },
+            "scalarBridge": {
+              "p50_us": 28.141,
+              "p95_us": 36.066,
+              "p99_us": 36.572,
+              "max_us": 38.912,
+              "calls_per_second": 35082.067187420966,
+              "checksum": 33615120.0
+            },
+            "batchedBridge": {
+              "p50_us": 17.643,
+              "p95_us": 17.828,
+              "p99_us": 17.852,
+              "max_us": 22.478,
+              "calls_per_second": 56362.87546481758,
+              "checksum": 33615120.0
+            },
+            "churn": {
+              "p50_us": 397.784,
+              "p95_us": 477.1,
+              "p99_us": 678.73,
+              "max_us": 741.035,
+              "calls_per_second": 2455.3030494618347,
+              "checksum": 120.0
+            },
+            "sustained_block_8row_4rules_4churn": {
+              "p50_us": 17578.633,
+              "p95_us": 24224.926,
+              "p99_us": 32149.78,
+              "max_us": 34244.199,
+              "calls_per_second": 54.22900284593679,
+              "checksum": 297716696840719.8
+            }
+          },
+          "explicit_gc_wall_us": 98.717
+        },
+        "ng": {
+          "engine": "quickjs-ng 0.17.0 commit=6d46d07d04041b40f4f49eaa7fdebe44c314c699 interpreter",
+          "source_read_us": 95.24,
+          "cold_first_call_us": {
+            "noop": 0.432,
+            "batch": 1411.492,
+            "sourceRules": 2260.789,
+            "scalarBridge": 35.832,
+            "batchedBridge": 39.348,
+            "churn": 490.588
+          },
+          "internal_elapsed_definition": "source_read_through_final_checks_includes_logging_excludes_final_dispose_and_platform_init",
+          "process_elapsed_seconds": 7.33,
+          "process_max_rss_kib": 6360,
+          "benches": {
+            "noop": {
+              "p50_us": 0.072,
+              "p95_us": 0.086,
+              "p99_us": 0.097,
+              "max_us": 0.151,
+              "calls_per_second": 13458950.20188424,
+              "checksum": 120.0
+            },
+            "batch": {
+              "p50_us": 1331.609,
+              "p95_us": 1654.684,
+              "p99_us": 1779.43,
+              "max_us": 1833.174,
+              "calls_per_second": 728.2716820908641,
+              "checksum": 3643205.4335349803
+            },
+            "sourceRules": {
+              "p50_us": 2050.473,
+              "p95_us": 2843.637,
+              "p99_us": 3091.758,
+              "max_us": 3521.651,
+              "calls_per_second": 462.87904649199965,
+              "checksum": 29771662397542.023
+            },
+            "scalarBridge": {
+              "p50_us": 34.542,
+              "p95_us": 38.695,
+              "p99_us": 45.513,
+              "max_us": 46.374,
+              "calls_per_second": 28258.419478340158,
+              "checksum": 33615120.0
+            },
+            "batchedBridge": {
+              "p50_us": 36.823,
+              "p95_us": 38.746,
+              "p99_us": 41.641,
+              "max_us": 49.251,
+              "calls_per_second": 26949.250518885354,
+              "checksum": 33615120.0
+            },
+            "churn": {
+              "p50_us": 376.175,
+              "p95_us": 422.195,
+              "p99_us": 475.737,
+              "max_us": 645.43,
+              "calls_per_second": 2646.4924546846055,
+              "checksum": 120.0
+            },
+            "sustained_block_8row_4rules_4churn": {
+              "p50_us": 21289.666,
+              "p95_us": 31115.774,
+              "p99_us": 34846.474,
+              "max_us": 39767.292,
+              "calls_per_second": 44.973342465008606,
+              "checksum": 297716696840719.8
+            }
+          },
+          "explicit_gc_wall_us": 50.297
+        },
+        "v8": {
+          "engine": "v8 10.2.154.26-node.37 Debian-libnode108 Node18.20.4+dfsg-1~deb12u2 raw-C++-API default-JIT not-interpreter standalone-build=false",
+          "source_read_us": 91.505,
+          "cold_first_call_us": {
+            "noop": 11.345,
+            "batch": 2731.611,
+            "sourceRules": 1784.15,
+            "scalarBridge": 114.088,
+            "batchedBridge": 72.884,
+            "churn": 170.655
+          },
+          "internal_elapsed_definition": "source_read_through_final_checks_includes_logging_excludes_final_dispose_and_platform_init",
+          "process_elapsed_seconds": 0.71,
+          "process_max_rss_kib": 40344,
+          "benches": {
+            "noop": {
+              "p50_us": 0.346,
+              "p95_us": 0.361,
+              "p99_us": 0.362,
+              "max_us": 0.828,
+              "calls_per_second": 2847785.846504343,
+              "checksum": 120.0
+            },
+            "batch": {
+              "p50_us": 106.67,
+              "p95_us": 175.845,
+              "p99_us": 213.786,
+              "max_us": 253.704,
+              "calls_per_second": 8514.6715951478,
+              "checksum": 3643205.4335349803
+            },
+            "sourceRules": {
+              "p50_us": 303.433,
+              "p95_us": 720.037,
+              "p99_us": 905.624,
+              "max_us": 1257.982,
+              "calls_per_second": 2397.7890945874437,
+              "checksum": 29771662397542.023
+            },
+            "scalarBridge": {
+              "p50_us": 8.598,
+              "p95_us": 8.701,
+              "p99_us": 8.747,
+              "max_us": 13.835,
+              "calls_per_second": 117610.50732272418,
+              "checksum": 33615120.0
+            },
+            "batchedBridge": {
+              "p50_us": 1.948,
+              "p95_us": 30.163,
+              "p99_us": 32.861,
+              "max_us": 1077.212,
+              "calls_per_second": 70238.3244881821,
+              "checksum": 33615120.0
+            },
+            "churn": {
+              "p50_us": 25.229,
+              "p95_us": 48.386,
+              "p99_us": 52.287,
+              "max_us": 74.104,
+              "calls_per_second": 36026.05043707103,
+              "checksum": 120.0
+            },
+            "sustained_block_8row_4rules_4churn": {
+              "p50_us": 1586.246,
+              "p95_us": 2345.697,
+              "p99_us": 6661.414,
+              "max_us": 8563.379,
+              "calls_per_second": 558.698062478325,
+              "checksum": 297716696840719.8
+            }
+          },
+          "explicit_gc_wall_us": 653.548
+        }
+      },
+      "comparison": {
+        "status": "PASS",
+        "comparison": {
+          "native": {
+            "leaves": 85,
+            "max_absolute_float_error": 2.220446049250313e-16
+          },
+          "bellard": {
+            "leaves": 85,
+            "max_absolute_float_error": 0,
+            "workload_checks": [
+              "batch",
+              "sourceRules",
+              "scalarBridge",
+              "batchedBridge",
+              "noop",
+              "churn",
+              "sustained"
+            ],
+            "peak_rss_kib": 6228
+          },
+          "ng": {
+            "leaves": 85,
+            "max_absolute_float_error": 0,
+            "workload_checks": [
+              "batch",
+              "sourceRules",
+              "scalarBridge",
+              "batchedBridge",
+              "noop",
+              "churn",
+              "sustained"
+            ],
+            "peak_rss_kib": 6104
+          },
+          "v8": {
+            "leaves": 85,
+            "max_absolute_float_error": 0,
+            "workload_checks": [
+              "batch",
+              "sourceRules",
+              "scalarBridge",
+              "batchedBridge",
+              "noop",
+              "churn",
+              "sustained"
+            ],
+            "peak_rss_kib": 40344
+          }
+        },
+        "tolerance": "abs1e-9 + rel1e-12; labels/integers exact",
+        "target_execution": "not implied; directory origin must be recorded separately"
+      }
+    },
+    "corrected-v2-3": {
+      "started_at": "2026-10-13T23:41:34Z",
+      "engines": {
+        "bellard": {
+          "engine": "quickjs-bellard 2026-06-04 archive=b376e839b322978313d929fd20663b11ba58b75df5a46c126dd19ea2fa70ad2a interpreter",
+          "source_read_us": 77.604,
+          "cold_first_call_us": {
+            "noop": 0.708,
+            "batch": 1264.296,
+            "sourceRules": 1851.086,
+            "scalarBridge": 29.668,
+            "batchedBridge": 20.94,
+            "churn": 507.627
+          },
+          "internal_elapsed_definition": "source_read_through_final_checks_includes_logging_excludes_final_dispose_and_platform_init",
+          "process_elapsed_seconds": 7.11,
+          "process_max_rss_kib": 6356,
+          "benches": {
+            "noop": {
+              "p50_us": 0.071,
+              "p95_us": 0.088,
+              "p99_us": 0.1,
+              "max_us": 0.163,
+              "calls_per_second": 13658092.419758696,
+              "checksum": 120.0
+            },
+            "batch": {
+              "p50_us": 973.678,
+              "p95_us": 1386.702,
+              "p99_us": 1623.417,
+              "max_us": 1636.128,
+              "calls_per_second": 973.9244945719413,
+              "checksum": 3643205.4335349803
+            },
+            "sourceRules": {
+              "p50_us": 1816.418,
+              "p95_us": 2418.292,
+              "p99_us": 2554.14,
+              "max_us": 2605.113,
+              "calls_per_second": 532.9614068077718,
+              "checksum": 29771662397542.023
+            },
+            "scalarBridge": {
+              "p50_us": 28.6,
+              "p95_us": 36.47,
+              "p99_us": 40.947,
+              "max_us": 43.639,
+              "calls_per_second": 34151.061528829174,
+              "checksum": 33615120.0
+            },
+            "batchedBridge": {
+              "p50_us": 17.6,
+              "p95_us": 17.722,
+              "p99_us": 25.805,
+              "max_us": 28.822,
+              "calls_per_second": 55745.63267808988,
+              "checksum": 33615120.0
+            },
+            "churn": {
+              "p50_us": 392.082,
+              "p95_us": 427.068,
+              "p99_us": 465.69,
+              "max_us": 496.559,
+              "calls_per_second": 2555.729709603934,
+              "checksum": 120.0
+            },
+            "sustained_block_8row_4rules_4churn": {
+              "p50_us": 18946.639,
+              "p95_us": 38111.805,
+              "p99_us": 41655.931,
+              "max_us": 48327.046,
+              "calls_per_second": 45.66535374121869,
+              "checksum": 297716696840719.8
+            }
+          },
+          "explicit_gc_wall_us": 72.791
+        },
+        "ng": {
+          "engine": "quickjs-ng 0.17.0 commit=6d46d07d04041b40f4f49eaa7fdebe44c314c699 interpreter",
+          "source_read_us": 81.349,
+          "cold_first_call_us": {
+            "noop": 0.44,
+            "batch": 1532.002,
+            "sourceRules": 2112.249,
+            "scalarBridge": 35.914,
+            "batchedBridge": 36.529,
+            "churn": 655.942
+          },
+          "internal_elapsed_definition": "source_read_through_final_checks_includes_logging_excludes_final_dispose_and_platform_init",
+          "process_elapsed_seconds": 10.23,
+          "process_max_rss_kib": 6616,
+          "benches": {
+            "noop": {
+              "p50_us": 0.075,
+              "p95_us": 0.081,
+              "p99_us": 0.094,
+              "max_us": 0.145,
+              "calls_per_second": 13165112.452002214,
+              "checksum": 120.0
+            },
+            "batch": {
+              "p50_us": 1319.528,
+              "p95_us": 1504.828,
+              "p99_us": 1532.92,
+              "max_us": 1830.154,
+              "calls_per_second": 740.8002334014599,
+              "checksum": 3643205.4335349803
+            },
+            "sourceRules": {
+              "p50_us": 2031.798,
+              "p95_us": 2304.278,
+              "p99_us": 2432.952,
+              "max_us": 2875.71,
+              "calls_per_second": 482.2555574678328,
+              "checksum": 29771662397542.023
+            },
+            "scalarBridge": {
+              "p50_us": 34.74,
+              "p95_us": 42.996,
+              "p99_us": 62.881,
+              "max_us": 74.205,
+              "calls_per_second": 27514.10097675057,
+              "checksum": 33615120.0
+            },
+            "batchedBridge": {
+              "p50_us": 33.268,
+              "p95_us": 43.441,
+              "p99_us": 49.618,
+              "max_us": 53.809,
+              "calls_per_second": 28899.973098941708,
+              "checksum": 33615120.0
+            },
+            "churn": {
+              "p50_us": 376.533,
+              "p95_us": 453.182,
+              "p99_us": 553.905,
+              "max_us": 617.961,
+              "calls_per_second": 2610.940379785648,
+              "checksum": 120.0
+            },
+            "sustained_block_8row_4rules_4churn": {
+              "p50_us": 30238.539,
+              "p95_us": 49307.509,
+              "p99_us": 55244.377,
+              "max_us": 56235.847,
+              "calls_per_second": 31.236285786816016,
+              "checksum": 297716696840719.8
+            }
+          },
+          "explicit_gc_wall_us": 97.804
+        },
+        "v8": {
+          "engine": "v8 10.2.154.26-node.37 Debian-libnode108 Node18.20.4+dfsg-1~deb12u2 raw-C++-API default-JIT not-interpreter standalone-build=false",
+          "source_read_us": 100.834,
+          "cold_first_call_us": {
+            "noop": 27.889,
+            "batch": 4817.516,
+            "sourceRules": 4255.55,
+            "scalarBridge": 198.763,
+            "batchedBridge": 134.717,
+            "churn": 404.029
+          },
+          "internal_elapsed_definition": "source_read_through_final_checks_includes_logging_excludes_final_dispose_and_platform_init",
+          "process_elapsed_seconds": 1.46,
+          "process_max_rss_kib": 40480,
+          "benches": {
+            "noop": {
+              "p50_us": 0.999,
+              "p95_us": 1.095,
+              "p99_us": 1.137,
+              "max_us": 1.244,
+              "calls_per_second": 1129581.8664457703,
+              "checksum": 120.0
+            },
+            "batch": {
+              "p50_us": 266.657,
+              "p95_us": 435.781,
+              "p99_us": 494.781,
+              "max_us": 633.361,
+              "calls_per_second": 3910.3935915427046,
+              "checksum": 3643205.4335349803
+            },
+            "sourceRules": {
+              "p50_us": 751.629,
+              "p95_us": 1573.492,
+              "p99_us": 1681.322,
+              "max_us": 1950.907,
+              "calls_per_second": 1113.9538284518346,
+              "checksum": 29771662397542.023
+            },
+            "scalarBridge": {
+              "p50_us": 11.624,
+              "p95_us": 19.843,
+              "p99_us": 20.862,
+              "max_us": 24.347,
+              "calls_per_second": 76639.21705375858,
+              "checksum": 33615120.0
+            },
+            "batchedBridge": {
+              "p50_us": 3.456,
+              "p95_us": 31.218,
+              "p99_us": 34.538,
+              "max_us": 1877.166,
+              "calls_per_second": 37177.18584813244,
+              "checksum": 33615120.0
+            },
+            "churn": {
+              "p50_us": 56.863,
+              "p95_us": 150.459,
+              "p99_us": 169.861,
+              "max_us": 235.116,
+              "calls_per_second": 15812.274568025132,
+              "checksum": 120.0
+            },
+            "sustained_block_8row_4rules_4churn": {
+              "p50_us": 3707.72,
+              "p95_us": 5246.359,
+              "p99_us": 10278.731,
+              "max_us": 10766.875,
+              "calls_per_second": 266.7376501788319,
+              "checksum": 297716696840719.8
+            }
+          },
+          "explicit_gc_wall_us": 1131.48
+        }
+      },
+      "comparison": {
+        "status": "PASS",
+        "comparison": {
+          "native": {
+            "leaves": 85,
+            "max_absolute_float_error": 2.220446049250313e-16
+          },
+          "bellard": {
+            "leaves": 85,
+            "max_absolute_float_error": 0,
+            "workload_checks": [
+              "batch",
+              "sourceRules",
+              "scalarBridge",
+              "batchedBridge",
+              "noop",
+              "churn",
+              "sustained"
+            ],
+            "peak_rss_kib": 6228
+          },
+          "ng": {
+            "leaves": 85,
+            "max_absolute_float_error": 0,
+            "workload_checks": [
+              "batch",
+              "sourceRules",
+              "scalarBridge",
+              "batchedBridge",
+              "noop",
+              "churn",
+              "sustained"
+            ],
+            "peak_rss_kib": 6360
+          },
+          "v8": {
+            "leaves": 85,
+            "max_absolute_float_error": 0,
+            "workload_checks": [
+              "batch",
+              "sourceRules",
+              "scalarBridge",
+              "batchedBridge",
+              "noop",
+              "churn",
+              "sustained"
+            ],
+            "peak_rss_kib": 40480
+          }
+        },
+        "tolerance": "abs1e-9 + rel1e-12; labels/integers exact",
+        "target_execution": "not implied; directory origin must be recorded separately"
+      }
+    }
+  },
+  "packages": {
+    "bellard": {
+      "archive": ".work/packages/bellard-arm64.tar.gz",
+      "sha256": "4a00559d1299eac38310fea8aa27ed809356366c5bba9b31aa3c0e747a84514b",
+      "archive_bytes": 1288713
+    },
+    "ng": {
+      "archive": ".work/packages/ng-arm64.tar.gz",
+      "sha256": "bf6416eb3933e5385ab2042d034b64a94b711c446ab1353da96426ed47713f85",
+      "archive_bytes": 1401469
+    },
+    "v8": {
+      "archive": ".work/packages/v8-arm64.tar.gz",
+      "sha256": "df7d4c3b1c9ac9d8231703663c234019c518b9f9093ad4769c91e1df1aa94a87",
+      "archive_bytes": 31920672
+    }
+  },
+  "limits": {
+    "target_rss_threshold_kib": 196608,
+    "target_current_memavailable_min_kib": 262144,
+    "target_timeout_seconds": 180,
+    "default_sustained_blocks": 300,
+    "automatic_quickjs_gc_count": "unavailable",
+    "gc_pause_causality": "unavailable",
+    "prebuilt_v8_library_compiler_and_flags": "unavailable"
+  }
+}

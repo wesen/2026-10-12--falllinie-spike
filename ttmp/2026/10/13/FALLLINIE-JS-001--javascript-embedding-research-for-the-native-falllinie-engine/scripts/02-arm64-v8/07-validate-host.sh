@@ -11,11 +11,16 @@ cmake -S "$ROOT" -B "$W/native-tests" -DCMAKE_BUILD_TYPE=Release > "$W/native-co
 cmake --build "$W/native-tests" -j2 > "$W/native-build.log" 2>&1
 ctest --test-dir "$W/native-tests" --output-on-failure > "$W/native-tests.log" 2>&1
 mkdir -p "$W/sanitized"
+c++ -std=c++17 -O2 -fno-fast-math "$P/test-copy-state.cpp" -o "$W/test-copy-state"
+"$W/test-copy-state" > "$W/copy-state.log" 2>&1
+cat "$W/copy-state.log"
 flags=(-std=c++17 -O1 -g -fno-fast-math -fno-omit-frame-pointer "-fsanitize=address,undefined")
 for engine in bellard ng; do
  if [[ $engine == bellard ]]; then INC="$W/quickjs-2026-06-04"; LIB="$INC/libquickjs.a"; else INC="$W/quickjs-ng"; LIB="$W/ng-host/libqjs.a"; fi
  c++ "${flags[@]}" -I"$INC" "$P/quickjs-probe.cpp" "$LIB" -lm -ldl -pthread -o "$W/sanitized/$engine-probe"
 done
+c++ "${flags[@]}" "$P/test-copy-state.cpp" -o "$W/sanitized/test-copy-state"
+ASAN_OPTIONS=detect_leaks=1:quarantine_size_mb=16:thread_local_quarantine_size_kb=256 UBSAN_OPTIONS=halt_on_error=1 timeout 30 "$W/sanitized/test-copy-state" > "$W/sanitized/copy-state.log" 2>&1
 L="$W/host/lib"
 # Debian V8 has no exported C++ RTTI; UBSan vptr requires unavailable typeinfo.
 c++ "${flags[@]}" -fno-sanitize=vptr -I"$W/debian-amd64/usr/include/node" "$P/v8-probe.cpp" "$L/libnode.so.108" -Wl,-rpath,"$L" -Wl,-rpath-link,"$L" -pthread -ldl -o "$W/sanitized/v8-probe"
@@ -23,8 +28,11 @@ for engine in bellard ng v8; do
  ASAN_OPTIONS=detect_leaks=1:quarantine_size_mb=16:thread_local_quarantine_size_kb=256 UBSAN_OPTIONS=halt_on_error=1 LD_LIBRARY_PATH="$L" timeout 120 "$W/sanitized/$engine-probe" "$W/pure.js" "$W/probe.js" 20 > "$W/sanitized/$engine.log" 2>&1
  grep '^PROBE PASS$' "$W/sanitized/$engine.log"
 done
+cp "$W"/{node-oracle.json,workload-expected.json} "$W/sanitized/"
+timeout 30 "$W/host/native-oracle" > "$W/sanitized/native-oracle.json"
+python3 "$P/04-compare.py" "$W/sanitized" > "$W/sanitized/comparison.json"
 set +e
 bash "$P/run-target.sh" > "$W/runner-host-refusal.log" 2>&1; rc=$?
 set -e
 [[ $rc == 2 ]] && grep -q 'target must be aarch64' "$W/runner-host-refusal.log"
-echo 'VALIDATION PASS: static, comparator, native CPU, sanitized adapters, host runner refusal'
+echo 'VALIDATION PASS: static, comparator, native CPU/copy helper, sanitized adapters/helper, host runner refusal'

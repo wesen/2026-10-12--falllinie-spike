@@ -1,0 +1,109 @@
+1) [warning] Unknown vocabulary value for Topics
+File: /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/design-doc/01-javascript-runtime-research-and-integration-design.md
+Field: Topics
+Value: "research"
+Known values: audio, performance
+Actions:
+- Add to vocabulary: docmgr vocab add --category topics --slug research --description "TODO"
+- List vocabulary: docmgr vocab list
+
+2) [warning] Unknown vocabulary value for Topics
+File: /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/index.md
+Field: Topics
+Value: "research"
+Known values: audio, performance
+Actions:
+- Add to vocabulary: docmgr vocab add --category topics --slug research --description "TODO"
+- List vocabulary: docmgr vocab list
+
+3) [warning] Unknown vocabulary value for Topics
+File: /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/reference/01-investigation-diary.md
+Field: Topics
+Value: "research"
+Known values: audio, performance
+Actions:
+- Add to vocabulary: docmgr vocab add --category topics --slug research --description "TODO"
+- List vocabulary: docmgr vocab list
+
+4) [warning] Unknown vocabulary value for Topics
+File: /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/reference/02-arm64-v8-qualification-diary.md
+Field: Topics
+Value: "research"
+Known values: audio, performance
+Actions:
+- Add to vocabulary: docmgr vocab add --category topics --slug research --description "TODO"
+- List vocabulary: docmgr vocab list
+
+5) [warning] Unknown vocabulary value for Topics
+File: /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/scripts/01-research-script-index.md
+Field: Topics
+Value: "research"
+Known values: audio, performance
+Actions:
+- Add to vocabulary: docmgr vocab add --category topics --slug research --description "TODO"
+- List vocabulary: docmgr vocab list
+
+6) [error] YAML/frontmatter syntax error
+File: /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/scripts/02-arm64-v8/.work/quickjs-ng/README.md
+Problem: frontmatter delimiters '---' not found
+
+For more guidance, run: docmgr help yaml-frontmatter-validation
+Actions:
+- Validate frontmatter: docmgr validate frontmatter --doc /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/scripts/02-arm64-v8/.work/quickjs-ng/README.md
+- Help: yaml-frontmatter-validation: docmgr help yaml-frontmatter-validation
+
+7) [error] YAML/frontmatter syntax error
+File: /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/scripts/02-arm64-v8/.work/quickjs-ng/SECURITY.md
+Problem: frontmatter delimiters '---' not found
+
+For more guidance, run: docmgr help yaml-frontmatter-validation
+Actions:
+- Validate frontmatter: docmgr validate frontmatter --doc /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/scripts/02-arm64-v8/.work/quickjs-ng/SECURITY.md
+- Help: yaml-frontmatter-validation: docmgr help yaml-frontmatter-validation
+
+8) [error] YAML/frontmatter syntax error
+File: /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/scripts/02-arm64-v8/.work/quickjs-ng/docs/docs/developer-guide/api.md
+Problem: frontmatter delimiters '---' not found
+
+For more guidance, run: docmgr help yaml-frontmatter-validation
+Actions:
+- Validate frontmatter: docmgr validate frontmatter --doc /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/scripts/02-arm64-v8/.work/quickjs-ng/docs/docs/developer-guide/api.md
+- Help: yaml-frontmatter-validation: docmgr help yaml-frontmatter-validation
+
+9) [error] YAML/frontmatter syntax error
+File: /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/scripts/02-arm64-v8/.work/quickjs-ng/docs/docs/developer-guide/internals.md
+Problem: frontmatter delimiters '---' not found
+
+For more guidance, run: docmgr help yaml-frontmatter-validation
+Actions:
+- Validate frontmatter: docmgr validate frontmatter --doc /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/scripts/02-arm64-v8/.work/quickjs-ng/docs/docs/developer-guide/internals.md
+- Help: yaml-frontmatter-validation: docmgr help yaml-frontmatter-validation
+
+10) [error] YAML/frontmatter syntax error
+File: /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/scripts/02-arm64-v8/.work/quickjs-ng/docs/docs/diff.md
+Problem: frontmatter delimiters '---' not found
+
+For more guidance, run: docmgr help yaml-frontmatter-validation
+Actions:
+- Validate frontmatter: docmgr validate frontmatter --doc /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/scripts/02-arm64-v8/.work/quickjs-ng/docs/docs/diff.md
+- Help: yaml-frontmatter-validation: docmgr help yaml-frontmatter-validation
+
+11) [error] YAML/frontmatter syntax error
+File: /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/scripts/02-arm64-v8/.work/quickjs-ng/docs/docs/projects.md
+Problem: frontmatter delimiters '---' not found
+
+For more guidance, run: docmgr help yaml-frontmatter-validation
+Actions:
+- Validate frontmatter: docmgr validate frontmatter --doc /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/scripts/02-arm64-v8/.work/quickjs-ng/docs/docs/projects.md
+- Help: yaml-frontmatter-validation: docmgr help yaml-frontmatter-validation
+
+12) [error] YAML/frontmatter syntax error
+File: /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/scripts/02-arm64-v8/README.md
+Problem: frontmatter delimiters '---' not found
+
+For more guidance, run: docmgr help yaml-frontmatter-validation
+Actions:
+- Validate frontmatter: docmgr validate frontmatter --doc /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-83a51971-65bf-46a8-bc57-03a46c439b5a-s0-0/ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/scripts/02-arm64-v8/README.md
+- Help: yaml-frontmatter-validation: docmgr help yaml-frontmatter-validation
+
+Error: doctor failed: severity >= error

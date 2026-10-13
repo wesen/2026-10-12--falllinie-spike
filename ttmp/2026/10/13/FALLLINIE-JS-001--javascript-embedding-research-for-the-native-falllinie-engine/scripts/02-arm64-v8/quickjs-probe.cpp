@@ -66,6 +66,7 @@ public:
   return "quickjs-bellard 2026-06-04 archive=b376e839b322978313d929fd20663b11ba58b75df5a46c126dd19ea2fa70ad2a interpreter";
 #endif
  }
+ const CopyState& copyState() const{return copied;} // qualification-only native state observation
  static std::string configuration(){return "heap_limit_bytes=33554432 stack_limit_bytes=524288";}
  void compile(const std::string& s){compiled=checked(JS_Eval(ctx,s.data(),s.size(),"fixture-and-adapters.js",JS_EVAL_TYPE_GLOBAL|JS_EVAL_FLAG_COMPILE_ONLY));}
  void execute(){auto v=compiled;compiled=JS_UNDEFINED;v=checked(JS_EvalFunction(ctx,v));JS_FreeValue(ctx,v);}

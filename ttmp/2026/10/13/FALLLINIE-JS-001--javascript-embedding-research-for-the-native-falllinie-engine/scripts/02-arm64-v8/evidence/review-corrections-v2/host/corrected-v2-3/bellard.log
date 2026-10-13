@@ -1,0 +1,36 @@
+source_read_us=77.603999999999999 source_bytes=22173
+timing_contract=operation_end_before_logging_v2
+config heap_limit_bytes=33554432 stack_limit_bytes=524288 sustained_blocks=300 heap_limit_is_not_RSS_limit=true
+lifecycle cycle=0 create_us=239.952 compile_us=1925.2090000000001 execute_us=112.20699999999999 dispose_us=121.89400000000001 rss_kib=5188
+lifecycle cycle=1 create_us=125.767 compile_us=1946.848 execute_us=98.227000000000004 dispose_us=127.09699999999999 rss_kib=5228
+lifecycle cycle=2 create_us=151.12899999999999 compile_us=1909.386 execute_us=108.361 dispose_us=121.851 rss_kib=5240
+lifecycle cycle=3 create_us=123.286 compile_us=1868.1949999999999 execute_us=91.227999999999994 dispose_us=122.182 rss_kib=5256
+lifecycle cycle=4 create_us=122.152 compile_us=1878.059 execute_us=92.067999999999998 dispose_us=123.03100000000001 rss_kib=5264
+lifecycle cycle=5 create_us=119.583 compile_us=1865.4290000000001 execute_us=101.261 dispose_us=128.08699999999999 rss_kib=5268
+lifecycle cycle=6 create_us=119.762 compile_us=1879.7280000000001 execute_us=97.980999999999995 dispose_us=122.006 rss_kib=5280
+lifecycle cycle=7 create_us=118.54300000000001 compile_us=1799.2729999999999 execute_us=89.582999999999998 dispose_us=122.376 rss_kib=5288
+engine quickjs-bellard 2026-06-04 archive=b376e839b322978313d929fd20663b11ba58b75df5a46c126dd19ea2fa70ad2a interpreter
+cold noop first_call_us=0.70799999999999996 checksum=1
+bench noop n=120 warmup=30 p50_us=0.070999999999999994 p95_us=0.087999999999999995 p99_us=0.10000000000000001 max_us=0.16300000000000001 total_us=8.7860000000000067 calls_per_second=13658092.419758696 checksum=120
+cold batch first_call_us=1264.296 checksum=30360.045279458187
+bench batch n=120 warmup=30 p50_us=973.678 p95_us=1386.702 p99_us=1623.4169999999999 max_us=1636.1279999999999 total_us=123212.83700000001 calls_per_second=973.9244945719413 checksum=3643205.4335349803
+cold sourceRules first_call_us=1851.086 checksum=248097186646.1832
+bench sourceRules n=120 warmup=30 p50_us=1816.4179999999999 p95_us=2418.2919999999999 p99_us=2554.1399999999999 max_us=2605.1129999999998 total_us=225157.016 calls_per_second=532.96140680777182 checksum=29771662397542.023
+cold scalarBridge first_call_us=29.667999999999999 checksum=280126
+bench scalarBridge n=120 warmup=30 p50_us=28.600000000000001 p95_us=36.469999999999999 p99_us=40.947000000000003 max_us=43.639000000000003 total_us=3513.8000000000011 calls_per_second=34151.061528829174 checksum=33615120
+cold batchedBridge first_call_us=20.940000000000001 checksum=280126
+bench batchedBridge n=120 warmup=30 p50_us=17.600000000000001 p95_us=17.722000000000001 p99_us=25.805 max_us=28.821999999999999 total_us=2152.6349999999998 calls_per_second=55745.632678089882 checksum=33615120
+cold churn first_call_us=507.62700000000001 checksum=1
+bench churn n=120 warmup=30 p50_us=392.08199999999999 p95_us=427.06799999999998 p99_us=465.69 max_us=496.55900000000003 total_us=46953.321999999993 calls_per_second=2555.7297096039342 checksum=120
+oracle {"hashes":[388445122,1852637032,2623512388,2116654401,3790136032],"random":[0.9797282677609473,0.3067522644996643,0.484205421525985,0.817934412509203,0.5094283693470061,0.34747186047025025,0.07375754183158278,0.7663964673411101,0.9968264393974096,0.8250224851071835,0.4599348735064268,0.9458441860042512],"terrain":[{"x":0,"z":4,"h":12.055505421381783,"n":[-0.01221150173264416,0.9472057558104173,0.32039371932834415],"paint":{"lip":0,"stripe":0,"rel":-0.710232298948544,"u":-23.00315141371464}},{"x":12,"z":150,"h":-36.96929557018999,"n":[-0.01976529287120197,0.9997120832087747,0.01360455379964659],"paint":{"lip":0,"stripe":0,"rel":1.727153318392796,"u":-9.819399348692851}},{"x":-25,"z":365,"h":-100.8096294677378,"n":[0.20652640188648874,0.8856252510403028,0.415950429791365],"paint":{"lip":0,"stripe":0,"rel":10.264547121060117,"u":-61.2950595367975}},{"x":60,"z":900,"h":-258.43919932608065,"n":[-0.2606629944533109,0.9553389628374831,0.1392202191035307],"paint":{"lip":0,"stripe":0,"rel":8.425735683309256,"u":49.781527764447404}},{"x":0,"z":-10,"h":16.935691711728786,"n":[0.005341387230046656,0.9423960910150199,0.3344563906132888],"paint":{"lip":0,"stripe":0,"rel":-0.5471903648650425,"u":-19.709524417421562}}],"scores":[{"name":"FS Rodeo 360 · Indy · Helikopter","pts":10260,"ubers":1},{"name":"FS Rodeo 360 · Indy · Helikopter","pts":6155,"ubers":1}],"trees":[{"x":-8.010790018932532,"z":366.3853706466034,"y":-104.46265213387652,"h":5.977854648604989,"r":1.6426332410424949,"g":true},{"x":130.1151116989399,"z":408.36359534878284,"y":-109.39148661426374,"h":6.033417958766222,"r":2.3693085871636868,"g":true}]}
+expected_exception Error: intentional qualification exception
+protocol PASS copy/offset/type/size/nonfinite/malformed-output/exception/jobs/detach/overflow-state-preserved checks=19 copied_count=3 copied_sum=6 copied_values_preserved=true
+memory stage=retained used_bytes=357555 allocated_bytes=501008 objects=802 automatic_gc_count=unavailable gc_pause_causality=unavailable rss_kib=6000
+memory stage=sustained used_bytes=544699 allocated_bytes=739232 objects=1668 automatic_gc_count=unavailable gc_pause_causality=unavailable rss_kib=6268
+memory stage=sustained used_bytes=469531 allocated_bytes=639872 objects=1320 automatic_gc_count=unavailable gc_pause_causality=unavailable rss_kib=6248
+bench sustained_block_8row_4rules_4churn n=300 warmup=0 p50_us=18946.638999999999 p95_us=38111.805 p99_us=41655.930999999997 max_us=48327.046000000002 total_us=6569531.9409999996 calls_per_second=45.665353741218688 checksum=297716696840719.81
+memory stage=before_explicit_gc used_bytes=292291 allocated_bytes=463600 objects=936 automatic_gc_count=unavailable gc_pause_causality=unavailable rss_kib=6248
+explicit_gc_wall_us=72.790999999999997
+memory stage=after_explicit_gc used_bytes=180315 allocated_bytes=324720 objects=418 automatic_gc_count=unavailable gc_pause_causality=unavailable rss_kib=6248
+process peak_rss_kib=6228 elapsed_ms=7116.2290219999995 elapsed_definition=source_read_through_final_checks_includes_logging_excludes_final_dispose_and_platform_init
+PROBE PASS

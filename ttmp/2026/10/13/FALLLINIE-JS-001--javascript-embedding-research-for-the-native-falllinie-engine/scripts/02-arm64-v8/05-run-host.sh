@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 P=$(cd -- "$(dirname -- "$0")" && pwd); W="$P/.work"
-tag=${1:-host-results}; [[ $tag =~ ^[A-Za-z0-9_-]+$ ]] || exit 2
+tag=${1:-corrected-v2-1}; [[ $tag =~ ^[A-Za-z0-9_-]+$ ]] || exit 2
 R="$W/$tag"; mkdir -p "$R"
 cp "$W"/{node-oracle.json,workload-expected.json,fixture-sha256.txt} "$R/"
 { date -u +%FT%TZ; uname -sm; lscpu; awk '/^model name|^cpu MHz/ {print; if(++n==16)exit}' /proc/cpuinfo; echo 'sequential=true timeout_per_probe_seconds=120 external_process_elapsed=/usr/bin/time'; } > "$R/environment.log"

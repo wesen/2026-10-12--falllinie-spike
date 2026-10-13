@@ -19,6 +19,10 @@ def compare(a,b,path='oracle'):
   return 1,0
  return sum(x[0] for x in children),max((x[1] for x in children),default=0)
 
+def check_probe_contract(text,engine):
+ assert re.search(r'^timing_contract=operation_end_before_logging_v2$',text,re.M),(engine,'missing corrected timing contract')
+ assert re.search(r'^protocol PASS copy/offset/type/size/nonfinite/malformed-output/exception/jobs/detach/overflow-state-preserved checks=19 copied_count=3 copied_sum=6 copied_values_preserved=true$',text,re.M),(engine,'missing overflow/state-preservation regression')
+
 def validate(directory,engines):
  expected=json.loads((directory/'node-oracle.json').read_text());work=json.loads((directory/'workload-expected.json').read_text());results={}
  native=directory/'native-oracle.json'
@@ -28,7 +32,7 @@ def validate(directory,engines):
  for engine in engines:
   text=(directory/f'{engine}.log').read_text()
   assert text.rstrip().endswith('PROBE PASS'),(engine,'missing complete status')
-  assert 'protocol PASS copy/offset/type/size/nonfinite/malformed-output/exception/jobs/detach' in text
+  check_probe_contract(text,engine)
   assert len(re.findall(r'^lifecycle cycle=',text,re.M))==8
   oracle=json.loads(next(s[7:] for s in text.splitlines() if s.startswith('oracle ')))
   count,error=compare(expected,oracle);assert count==85

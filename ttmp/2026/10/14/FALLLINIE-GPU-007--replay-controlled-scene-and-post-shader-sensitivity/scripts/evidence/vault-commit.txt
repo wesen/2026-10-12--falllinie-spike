@@ -1,0 +1,9 @@
+[main 17ce2ad] Record measured scene and post shader sensitivity in Falllinie GPU report
+ 9 files changed, 1561 insertions(+), 5 deletions(-)
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shader-sensitivity/analysis-provenance.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shader-sensitivity/asset-manifest.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shader-sensitivity/endpoint-comparison.png
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shader-sensitivity/figure-provenance.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shader-sensitivity/publication-provenance.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shader-sensitivity/sensitivity.svg
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shader-sensitivity/summary.json

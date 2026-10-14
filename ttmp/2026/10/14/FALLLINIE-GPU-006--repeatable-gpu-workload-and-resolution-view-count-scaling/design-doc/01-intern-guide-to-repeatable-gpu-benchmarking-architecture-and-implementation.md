@@ -2,10 +2,23 @@
 Title: Intern guide to repeatable GPU benchmarking architecture and implementation
 Ticket: FALLLINIE-GPU-006
 Status: active
-Topics: [performance]
+Topics:
+    - performance
 DocType: design-doc
 Intent: long-term
+Owners: []
+RelatedFiles:
+    - Path: repo://src/game_renderer.cpp
+      Note: Deterministic streaming and camera updates
+    - Path: repo://src/main.cpp
+      Note: Replay policy and actual measurement loop
+    - Path: repo://src/terrain.cpp
+      Note: Shared terrain row algorithm
+ExternalSources: []
 Summary: Build a frame-indexed representative rendering workload and use controlled resolution/view scaling to investigate GPU limits.
+LastUpdated: 0001-01-01T00:00:00Z
+WhatFor: ""
+WhenToUse: ""
 ---
 
 # Repeatable GPU benchmarking: an implementation guide

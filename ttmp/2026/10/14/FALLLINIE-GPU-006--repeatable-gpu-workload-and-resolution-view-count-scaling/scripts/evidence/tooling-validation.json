@@ -1,0 +1,8 @@
+{
+  "python_syntax_pass": [
+    "04-analyze.py",
+    "05-qualify-build.py"
+  ],
+  "actual_gpu006_analysis_run": false,
+  "reason": "SSH credential environment missing; no target measurement data"
+}

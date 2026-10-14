@@ -15,7 +15,7 @@ Created a new ticket rather than extending the CPU attribution ticket indefinite
 Uploaded the guide before implementation as requested. The retained result is `OK: uploaded FALLLINIE GPU 006 Intern Guide.pdf -> /ai/2026/10/14/FALLLINIE-GPU-006`. This proves cloud delivery, not physicaldevice synchronization, and is not evidence that the designed feature is already implemented.
 
 ### Prompt Context
-**User prompt (verbatim):** "Ok, create a new docmgr ticket, Create  a detailed analysis / design / implementation guide that is for a new intern, explaining all the parts of the system needed to understand what it is, with prose paragraphs and bullet point sand pseudocode and diagrams and api references and file references. It should be very clear and technical. Store in the ticket and the nupload to remarkable.\n\n\nThen implement, don't overcautiously test, this is optimization work after all, not production software. \n\ncommit at appropriate intervals and keep a detailed diary as you work (using the diary format from the skill)"
+**User request (summary from compacted history; original wording unavailable):** Create a new docmgr ticket with a detailed, technically clear intern-facing analysis/design/implementation guide using prose, bullets, pseudocode, diagrams and API/file references. Upload it to reMarkable, then implement with proportionate testing, meaningful commits and the detailed diary format. Attribution correction at Step3: the earlier checkpoint incorrectly labeled a reconstruction as verbatim; no verbatim claim is supported.
 **Assistant interpretation:** Deliver the technical design first, then implement and run a focused replay/scaling experiment with meaningful feature-boundary validation.
 **Inferred user intent:** Give an intern enough architecture and concrete contracts to reproduce and extend GPU measurements, while continuing practical optimization work.
 
@@ -89,3 +89,55 @@ Inspect main.cpp benchmarkguards, game_renderer.cpp TerrainJob call, TerrainJob:
 
 ### Technical details
 Simulation updatefixed1/60, original120Hzphysics internal;32sampling/emissionworkunits perframe. Frame/CPUclocks remainreal. Actualfingerprint processing is outside profiledrender scopes and its small fixed workload still contributes to loop timing. Private targetdeployment only.
+
+## Step 3: Preserve the authentication blocker and prepare measurement analysis
+
+The attempted actualdevice campaign stopped before deployment. SSH rejected authentication because the external helper's ROCKNIX_PW variable is absent from this agent environment. No GPU006target workload launched and no target scaling result exists. I did not guess credentials or search for secrets; the user needs to restore the external credential environment.
+
+Completed the bounded analyzer and build-source qualification helper while preserving the failed attempt. The analyzer requires the complete eightcase matrix,600frames/case, matching tracked replay trajectories, same-resolution endpointimage equality, healthy pairedrecords and validcounter completion. It reports actual frame distributions, scopedCPU/wall means and whole-device counter rates using contained hostpoll intervals. Its syntax is checked; actualGPU006data validation is deferred because of authentication.
+
+### Prompt Context
+**User prompt:** SeeStep1.
+**Implementation commit:**32b8bfd640f44c465d3f8b6311400f35eac07e81.
+**Assistant interpretation:** Retain an honest blocked checkpoint rather than inventing benchmarkresults or silently weakening qualification.
+
+### What I did
+Ran `SSH_ASKPASS=/tmp/askpass.sh bash <ticket>/scripts/03-campaign.sh`, redirecting stdout/stderr to scripts/evidence/campaign-launch.txt. Checked only helper variable names and whether their environmentvalues were present. Added scripts/04-analyze.py,05-qualify-build.py and a resumableREADME. Added docmgr file relations and ran doctor successfully.
+
+### Why
+The prior captures cannot replace the new deterministic workload. Hostimage equality and CPUtests establish a feature boundary, not target GPU scaling. Counterselection must not mix unknown backendtimestamps with hostframe timestamps.
+
+### What worked
+Guide delivery, host/ARMbuilds and replaychecks remain valid. The source manifest can be verified against the implementationcommit even though compilation preceded that commit. docmgr doctor passed.
+
+### What didn't work
+Campaign exit255, before anytargetworkload:
+```text
+Permission denied, please try again.
+Permission denied, please try again.
+Received disconnect from 192.168.0.202 port 22:2: Too many authentication failures
+Disconnected from 192.168.0.202 port 22
+```
+A first ad-hoc sourcequalification command also failed because manifest paths are absolute and were passed unchanged into `git show revision:path`:
+```text
+fatal: path '/home/manuel/code/wesen/2026-10-12--falllinie-spike/src/audio.cpp' exists on disk, but not in '32b8bfd640f44c465d3f8b6311400f35eac07e81'
+```
+Corrected the reusable helper to convert absolute manifest paths to repositoryrelative paths. This was a provenance-script failure, not a compile/runtime failure.
+
+### What I learned
+Credential environment does not necessarily survive session continuation. Check credentialpresence without exposing values; preserve failed preflight evidence separately from actualmeasurementdata.
+
+### What was tricky to build
+Do not normalize missingcounter values over a fullwindow as though they were zero; the analyzer returns null rates for incomplete countercoverage. Compare endpointimages only within one internalresolution. Reject incomplete campaign directories rather than emitting empty success summaries.
+
+### What warrants a second pair of eyes
+Actual targetcampaign, analyzer end-to-end validation and source-faithful integrated/audio acceptance remain unperformed. Eightcases are exploratory scaling, not repeated statistics for each configuration. Repeatedreferencebrackets detect some drift, not every confounder.
+
+### What should be done in the future
+Restore ROCKNIX_PW outside chat, rerun scripts/03-campaign.sh, analyze the resulting complete directory and interpret resolution/viewcount sensitivity. Leave the measurementtask unchecked until those results exist.
+
+### Code review instructions
+Check scripts/README.md and evidence/target-20261014T174658Z/BLOCKED.md first. Then review analyzerwindow selection, finalrecord checks and signature/image assertions. No productiondeployment, nativepush or vaultpublication was performed in this ticket.
+
+### Technical details
+Native changes are committed locally. The failedattempt had no remote run; targetcredential remains the only known blocker to the next measurement step. Sourcequalification is explicitly buildidentity only and does not claim deviceacceptance.

@@ -10,6 +10,8 @@ SSH=(setsid -w ssh -n -o IdentitiesOnly=yes root@192.168.0.202);SCP=(setsid -w s
 "${SSH[@]}" "set -e; if pgrep -af '[f]alllinie-(spike|trace005|pmu|ranges|gpu006)( |$)|[m]ali-counters( |$)|[p]erf (record|stat)'; then exit 2; fi; mkdir '$REMOTE'; mkdir '$REMOTE/evidence'"
 "${SCP[@]}" "$R/build-device/falllinie-gpu006" "$C/.work/build-arm/mali-counters" "$P/02-target-case.sh" "root@192.168.0.202:$REMOTE/"
 "${SSH[@]}" "chmod +x '$REMOTE/falllinie-gpu006' '$REMOTE/mali-counters'; sha256sum '$REMOTE/falllinie-gpu006' '$REMOTE/mali-counters'" > "$OUT/deployed.sha256"
+sha256sum "$R/build-device/falllinie-gpu006" > "$OUT/local-binary.sha256"
+[ "$(awk 'NR==1 {print $1}' "$OUT/local-binary.sha256")" = "$(awk 'NR==1 {print $1}' "$OUT/deployed.sha256")" ]
 printf 'source=%s\nremote=%s\n' "$(git -C "$R" rev-parse HEAD)" "$REMOTE" > "$OUT/campaign.txt"
 n=0
 for spec in 384x288:2:0 256x192:1:0 256x192:2:0 384x288:1:0 512x384:1:0 512x384:2:0 384x288:2:0 384x288:2:60; do

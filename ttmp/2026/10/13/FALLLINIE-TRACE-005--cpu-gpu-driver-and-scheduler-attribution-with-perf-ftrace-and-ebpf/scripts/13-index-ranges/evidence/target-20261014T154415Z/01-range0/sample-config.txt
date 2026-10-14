@@ -1,0 +1,3 @@
+event=armv8_cortex_a55/cpu_cycles/
+frequency=199
+main_tid=850600

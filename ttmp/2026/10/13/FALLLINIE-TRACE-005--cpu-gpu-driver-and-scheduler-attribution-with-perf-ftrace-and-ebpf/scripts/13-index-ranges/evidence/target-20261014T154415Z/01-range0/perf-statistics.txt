@@ -1,0 +1,17 @@
+
+Aggregated stats:
+               TOTAL events:       2096
+                COMM events:          2  ( 0.1%)
+              SAMPLE events:       2011  (95.9%)
+               MMAP2 events:         41  ( 2.0%)
+             KSYMBOL events:         17  ( 0.8%)
+           BPF_EVENT events:         17  ( 0.8%)
+      FINISHED_ROUND events:          2  ( 0.1%)
+            ID_INDEX events:          1  ( 0.0%)
+          THREAD_MAP events:          1  ( 0.0%)
+             CPU_MAP events:          1  ( 0.0%)
+        EVENT_UPDATE events:          1  ( 0.0%)
+           TIME_CONV events:          1  ( 0.0%)
+       FINISHED_INIT events:          1  ( 0.0%)
+armv8_cortex_a55/cpu_cycles/ stats:
+              SAMPLE events:       2011

@@ -232,3 +232,44 @@ Inspect renderer::draw_indexed, all six indexed call sites, main.cpp flag/receip
 
 ### Technical details
 Candidate source checkpoint precedes target qualification. Build uses existing offlineARMtoolchain,O2,debug/framepointers; full target receipts will follow. No renderer work is delegated to another thread and no audio is reenabled.
+
+## Step 6: Qualify the range-draw result without claiming a frame-rate win
+
+The four-case range-draw ABBAcampaign completed successfully. The same binary with flagoff/on preserves all three fixed-fixture buffers byte-for-byte. TopsceneCPU falls from2.44–2.91ms to1.42–1.59ms, and unfiltered candidate profiles contain no sampledPC in the identified min/max helper, while both baselines restore its roughly17%cycleweight. This is concrete CPU-side progress.
+
+End-to-end frame performance did not clearly improve. The closing baseline is faster than the opening baseline and the pooled candidate mean is slightly higher. Later output scopes absorb more wall time in these selected records. Keep the candidate opt-in and document the distinction between removing CPU work and meeting the frame target; do not reinterpret wall residual as proven GPUwait.
+
+### Prompt Context
+**User prompt:** SeeStep5.
+**Assistant interpretation:** Complete the controlled candidate experiment, retain both its benefit and limits, and update the living report as requested.
+**Commit (candidate):**487492c — Attribute driver scan hotspot and add opt-in indexed draw ranges.
+
+### What I did
+Ran13-index-ranges/02-campaign.sh once: same-device seven-cellcapture pair, then baseline/ranges/ranges/baseline32s games with20scyclesprofiles. Added03-analyze.py for receipt/identity/pairedcount/loss validation, scopedCPUmeans, frame distributions and full-symbol helper-range inspection. Decoded unfiltered symbol reports from the existing recordings without recapturing. Verified buildsource hashes against487492c and local/deployed candidateSHA256b2d88ab072e888be4315173ab75af4a17325f2c03581c9d00e625f5d6113837c. Added analysis/03 with detailed interpretation.
+
+### Why
+The earlier0.5%display cutoff could hide small residual scan activity. Full symbol reports establish no observed candidate samples in[0x42d6c4,0x42d758), not a proven zero callcount. Sampled scopeCPU supplies an independent time-domain observation alongside relative profile weights.
+
+### What worked
+FourcasesGL_error0;receiptflags match;pairedcountscomplete;7336cyclesamples/0reportedlost. Scene/depth/print BMPs identical acrossstaticfixture. Baselinehelper roundedweights17.12%/16.76%, candidate no sampledhelperoffsets. Top/lower summedviewCPU averages approximately7.012msbaseline versus5.889mscandidate across equally sized selected groups. No shaders or indexdata changed.
+
+### What didn't work
+The proposed CPU reduction did not translate into a demonstrated end-to-end improvement: pooled framemeans18.071014msbaseline versus18.224560mscandidate, with meaningful baseline drift. No runtime or collection failure occurred. CandidatepeakRSS122804/119788KiB exceeded baseline113732/112340KiB; retain this observation without assigning an unmeasured cause.
+
+### What I learned
+A strongly sampled CPUhotspot can be removed from observed execution while frame tails remain. The outputscope's walltime can grow after earlier CPU submissionwork decreases. Broad legal riderbounds could be worth tightening, but neither increasedGPUwork nor that explanation forRSS has been measured.
+
+### What was tricky to build
+Keep one exactbinary for both flags, maintain source/binary receipts despite precommit builds, and avoid summing nested CPUscopes. Report selected20scopegroups perview separately from whole-run frame>=60statistics. No transition to an audio-enabled workload occurred.
+
+### What warrants a second pair of eyes
+The main benefit is CPU-side in a finite reduced workload. Staticfixtureidentity is bounded, frequency and trajectories are uncontrolled, and sampleabsence is not exhaustive execution tracing. GLDrawRangeElements bounds are broadlegal domains, not exact rider-subgroup extrema.
+
+### What should be done in the future
+Leave --draw-ranges opt-in. Consider tighter subgroupbounds and output/GPUdependency evidence before further changes; eventually restore audio for integrated acceptance. Publish this checkpoint to the living report, not as a claim of stable60FPS.
+
+### Code review instructions
+Read analysis/03,13-index-ranges/evidence/summary.json and the full-symbol reports. The analyzer can reproduce all displayed aggregates without another target run. Build tests were already run atStep5; no redundant rebuild/testmatrix was run solely for this commit.
+
+### Technical details
+Target/storage/apps/falllinie-ranges-20261014T154415Z;6808postwarmupframes,3417baseline/3391candidate;7336samples. No backgroundcapture remains. Source candidate and production deployment are distinct; productionlauncher/default unchanged.

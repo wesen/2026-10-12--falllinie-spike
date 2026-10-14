@@ -1,0 +1,33 @@
+01-range0 mean/p95 18.264040027218936 28.0707007 driver% 72.23 hotspot% 16.68
+render/0/scene {'n': 20, 'wall_ms': 3.3152797, 'cpu_ms': 2.9099018500000002}
+render/0/output {'n': 20, 'wall_ms': 3.1854445, 'cpu_ms': 1.06691905}
+render/0/view {'n': 20, 'wall_ms': 7.09050145, 'cpu_ms': 4.53186265}
+render/1/scene {'n': 20, 'wall_ms': 1.45908725, 'cpu_ms': 1.3506497}
+render/1/output {'n': 20, 'wall_ms': 5.68993735, 'cpu_ms': 0.8149166}
+render/1/view {'n': 20, 'wall_ms': 7.7703456, 'cpu_ms': 2.7363289}
+02-range1 mean/p95 18.207474479363206 28.26083675 driver% 63.78 hotspot% None
+render/0/scene {'n': 20, 'wall_ms': 1.616395, 'cpu_ms': 1.4193231}
+render/0/output {'n': 20, 'wall_ms': 5.0569232, 'cpu_ms': 1.21991055}
+render/0/view {'n': 20, 'wall_ms': 7.29587815, 'cpu_ms': 3.2071377}
+render/1/scene {'n': 20, 'wall_ms': 1.14668255, 'cpu_ms': 1.02672495}
+render/1/output {'n': 20, 'wall_ms': 6.01237625, 'cpu_ms': 0.82321465}
+render/1/view {'n': 20, 'wall_ms': 7.85281405, 'cpu_ms': 2.4369478}
+03-range1 mean/p95 18.24165622359882 28.4221148 driver% 65.0 hotspot% None
+render/0/scene {'n': 20, 'wall_ms': 1.7744024, 'cpu_ms': 1.59276235}
+render/0/output {'n': 20, 'wall_ms': 3.94667125, 'cpu_ms': 1.21234195}
+render/0/view {'n': 20, 'wall_ms': 6.3998802, 'cpu_ms': 3.39148565}
+render/1/scene {'n': 20, 'wall_ms': 1.3265968, 'cpu_ms': 1.1669875}
+render/1/output {'n': 20, 'wall_ms': 6.5240695, 'cpu_ms': 0.90722945}
+render/1/view {'n': 20, 'wall_ms': 8.61949515, 'cpu_ms': 2.74278975}
+04-range0 mean/p95 17.882124162130864 27.5795224 driver% 73.14 hotspot% 16.24
+render/0/scene {'n': 20, 'wall_ms': 2.6340528, 'cpu_ms': 2.439544}
+render/0/output {'n': 20, 'wall_ms': 3.96599775, 'cpu_ms': 1.0852335}
+render/0/view {'n': 20, 'wall_ms': 7.2361275, 'cpu_ms': 4.0940524}
+render/1/scene {'n': 20, 'wall_ms': 1.46132745, 'cpu_ms': 1.33982915}
+render/1/output {'n': 20, 'wall_ms': 6.36736265, 'cpu_ms': 0.7839144}
+render/1/view {'n': 20, 'wall_ms': 8.43032125, 'cpu_ms': 2.6607892}
+pooled means {'frame_pooled_mean_ms': 18.07101436172081} {'frame_pooled_mean_ms': 18.224560311412564}
+helper 01-range0 [{'offset': '0x42d6dc', 'weight_percent': 16.68}, {'offset': '0x42d714', 'weight_percent': 0.24}, {'offset': '0x42d6d4', 'weight_percent': 0.06}, {'offset': '0x42d6c4', 'weight_percent': 0.05}, {'offset': '0x42d6e0', 'weight_percent': 0.05}, {'offset': '0x42d6e4', 'weight_percent': 0.04}]
+helper 02-range1 []
+helper 03-range1 []
+helper 04-range0 [{'offset': '0x42d6dc', 'weight_percent': 16.24}, {'offset': '0x42d714', 'weight_percent': 0.24}, {'offset': '0x42d6ec', 'weight_percent': 0.09}, {'offset': '0x42d6f0', 'weight_percent': 0.06}, {'offset': '0x42d6d8', 'weight_percent': 0.05}, {'offset': '0x42d6e4', 'weight_percent': 0.04}, {'offset': '0x42d6f8', 'weight_percent': 0.04}]

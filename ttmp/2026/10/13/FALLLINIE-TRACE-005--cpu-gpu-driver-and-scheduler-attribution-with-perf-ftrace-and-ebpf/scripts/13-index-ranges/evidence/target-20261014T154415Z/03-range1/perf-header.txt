@@ -1,0 +1,49 @@
+# ========
+# captured on    : Wed Oct 14 11:46:17 2026
+# header version : 1
+# data offset    : 296
+# data size      : 188896
+# feat offset    : 189192
+# hostname : RK3566
+# os release : 7.2.7
+# perf version : 7.2.7
+# arch : aarch64
+# nrcpus online : 4
+# nrcpus avail : 4
+# cpuid : 0x00000000412fd050
+# total memory : 998480 kB
+# cmdline : /usr/bin/perf 
+# event : name = armv8_cortex_a55/cpu_cycles/, , id = { 1442, 1443, 1444, 1445 }, type = 9 (armv8_cortex_a55), size = 144, config = 0x11 (cpu_cycles), { sample_period, sample_freq } = 199, sample_type = IP|TID|TIME|CALLCHAIN|PERIOD|REGS_USER, read_format = ID|LOST, disabled = 1, mmap = 1, comm = 1, freq = 1, task = 1, sample_id_all = 1, mmap2 = 1, comm_exec = 1, ksymbol = 1, bpf_event = 1, build_id = 1, sample_regs_user = 0x40000000
+# CPU_TOPOLOGY info available, use -I to display
+# pmu mappings: armv8_cortex_a55 = 9, breakpoint = 5, hwmon_battery = 4294901760, hwmon_charger = 4294901761, hwmon_cpu_thermal = 4294901762, hwmon_gpu_thermal = 4294901763, rockchip_ddr = 8, software = 1, tool = 4294967294
+# CACHE info available, use -I to display
+# time of first sample : 0.000000
+# time of last sample : 0.000000
+# sample duration :      0.000 ms
+# bpf_prog_info 19: bpf_prog_772db7720b2728e9_sd_fw_egress addr 0xffffffc080247c10 size 96
+# bpf_prog_info 20: bpf_prog_772db7720b2728e9_sd_fw_ingress addr 0xffffffc080247c88 size 96
+# bpf_prog_info 39: bpf_prog_3d73ffa3f79a4bb3_sd_devices addr 0xffffffc080245f18 size 656
+# bpf_prog_info 40: bpf_prog_772db7720b2728e9_sd_fw_egress addr 0xffffffc0802461d0 size 96
+# bpf_prog_info 41: bpf_prog_772db7720b2728e9_sd_fw_ingress addr 0xffffffc080246250 size 96
+# bpf_prog_info 42: bpf_prog_5e74ecbe3c463f4a_sd_devices addr 0xffffffc080246588 size 408
+# bpf_prog_info 43: bpf_prog_1fd65e04c6f752cb_sd_devices addr 0xffffffc080248ef0 size 440
+# bpf_prog_info 44: bpf_prog_772db7720b2728e9_sd_fw_egress addr 0xffffffc0802462c8 size 96
+# bpf_prog_info 45: bpf_prog_772db7720b2728e9_sd_fw_ingress addr 0xffffffc080246348 size 96
+# bpf_prog_info 46: bpf_prog_a97c143260cd9940_sd_devices addr 0xffffffc0802487d8 size 376
+# bpf_prog_info 47: bpf_prog_772db7720b2728e9_sd_fw_egress addr 0xffffffc080246750 size 96
+# bpf_prog_info 48: bpf_prog_772db7720b2728e9_sd_fw_ingress addr 0xffffffc0802467c8 size 96
+# bpf_prog_info 49: bpf_prog_c9206473219a41ab_sd_devices addr 0xffffffc080248990 size 416
+# bpf_prog_info 50: bpf_prog_5e74ecbe3c463f4a_sd_devices addr 0xffffffc0802490d8 size 408
+# bpf_prog_info 51: bpf_prog_5e74ecbe3c463f4a_sd_devices addr 0xffffffc0802463d0 size 408
+# bpf_prog_info 52: bpf_prog_772db7720b2728e9_sd_fw_egress addr 0xffffffc080246d50 size 96
+# bpf_prog_info 53: bpf_prog_772db7720b2728e9_sd_fw_ingress addr 0xffffffc080247088 size 96
+# btf info empty
+# cpu pmu capabilities: slots=0x00000000, threshold_max=0x00000000, bus_slots=0x00000000, bus_width=0x00000000
+# armv8_cortex_a55 pmu capabilities: slots=0x00000000, threshold_max=0x00000000, bus_slots=0x00000000, bus_width=0x00000000
+# CPU_DOMAIN_INFO info available, use -I to display
+# e_machine : 183
+#   e_flags : 0
+# cacheline size: 64
+# missing features: TRACING_DATA BUILD_ID CPUDESC NUMA_TOPOLOGY BRANCH_STACK GROUP_DESC AUXTRACE STAT MEM_TOPOLOGY CLOCKID DIR_FORMAT COMPRESSED CLOCK_DATA HYBRID_TOPOLOGY 
+# ========
+#

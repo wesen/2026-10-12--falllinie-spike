@@ -1,0 +1,17 @@
+{
+"draw_ranges":true,
+"audio_disabled":true,
+"measurement":{"fixture":"live-or-default","second_view":"first-person","post_bypass":false,"gpu_mode":"off","cadence":60,"static_exclusions":"none"},
+"source_sha256":"cb9b4befd0252859d9c45246f94fbd7dd1662c6d034c6ccb95fbe16947e8b556",
+"seed":42,"cell":0,"cells":3,
+"context":{"version":"OpenGL ES 3.2 v1.g29p1-12eac0.d6e9c0f8499d70cc285f3f0ca2ede780","vendor":"ARM","renderer":"Mali-G52"},
+"render_size":[384,288],"drawable_size":[1024,768],"placement_ok":true,
+"debug_view":0,"palette":0,"dual_screen":true,"stable_sky":true,"depth_sampler_highp":true,"resize_check":false,
+"camera_eye":[46.88221028,-243.897597,813.5666607],"camera_look":[43.75256365,-245.4105194,823.6642711],
+"vertices":104111,"indices":614376,"terrain_build_ms":68.75141,
+"frames":1756,"warmup_frames":60,"measured_frames":1696,
+"frame_ms":{"p50":16.656727,"p95":28.166715,"p99":29.720745},
+"swap_p95_ms":14.863276,"rss_kib":{"start":56416,"peak":122804,"end":122300},
+"timing_scope":"CPU submission plus swap; not GPU timer","timing_target_met":true,
+"rss_samples":[[60,107632],[120,114380],[180,113876],[240,114456],[300,113900],[360,114920],[420,115872],[480,115872],[540,115880],[600,115888],[660,112024],[720,113164],[780,113168],[840,114196],[900,116844],[960,119260],[1020,120620],[1080,119764],[1140,119916],[1200,122596],[1260,121060],[1320,121224],[1380,121224],[1440,121224],[1500,121528],[1560,122804],[1620,122292],[1680,122804],[1740,122300]],"gl_error":0
+}

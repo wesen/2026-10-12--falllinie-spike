@@ -28,3 +28,7 @@ Implemented --no-audio diagnostic and qualified actual Cortex-A55 main-thread PM
 ## 2026-10-14
 
 Published living CPU PMU technical report:3815prosewords,3actual-data figures,2diagrams,worked counter interval and build provenance; MOC updated. Vault commit e649de9b0c6d9ae878944ddd6a08576d4f1e5089 pushed and remote verified. Follow-up driver copy/hash/disassembly remains preliminary; no new event-location profile run.
+
+## 2026-10-14
+
+Completed9895-sample event attribution and7336-sample same-binary range-draw ABBA. Verified min/max helper mapping/caller; no candidate samples in helper, top sceneCPU1.42–1.59ms vs2.44–2.91ms baseline. Fixed scene/depth/print identical; no convincing frame improvement and higher candidateRSS observed. Keep --draw-ranges opt-in; shader/indexdata/default launcher unchanged.

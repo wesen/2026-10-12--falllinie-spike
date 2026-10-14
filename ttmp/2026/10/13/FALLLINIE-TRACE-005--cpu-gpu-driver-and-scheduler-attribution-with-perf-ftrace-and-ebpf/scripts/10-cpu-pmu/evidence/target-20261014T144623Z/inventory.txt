@@ -1,0 +1,107 @@
+Linux RK3566 7.2.7 #1 SMP PREEMPT Sat Oct 10 05:42:23 UTC 2026 aarch64 GNU/Linux
+perf version 7.2.7
+2
+armv8_cortex_a55
+breakpoint
+rockchip_ddr
+software
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/type
+9
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/br_immed_retired
+event=0x000d
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/br_mis_pred
+event=0x0010
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/br_mis_pred_retired
+event=0x0022
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/br_pred
+event=0x0012
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/br_retired
+event=0x0021
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/br_return_retired
+event=0x000e
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/bus_access
+event=0x0019
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/bus_cycles
+event=0x001d
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/cid_write_retired
+event=0x000b
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/cpu_cycles
+event=0x0011
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/dtlb_walk
+event=0x0034
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/exc_return
+event=0x000a
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/exc_taken
+event=0x0009
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/inst_retired
+event=0x0008
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/inst_spec
+event=0x001b
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/itlb_walk
+event=0x0035
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/l1d_cache
+event=0x0004
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/l1d_cache_refill
+event=0x0003
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/l1d_cache_wb
+event=0x0015
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/l1d_tlb
+event=0x0025
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/l1d_tlb_refill
+event=0x0005
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/l1i_cache
+event=0x0014
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/l1i_cache_refill
+event=0x0001
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/l1i_tlb
+event=0x0026
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/l1i_tlb_refill
+event=0x0002
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/l2d_cache
+event=0x0016
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/l2d_cache_allocate
+event=0x0020
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/l2d_cache_refill
+event=0x0017
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/l2d_tlb
+event=0x002f
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/l2d_tlb_refill
+event=0x002d
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/ld_retired
+event=0x0006
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/ll_cache_miss_rd
+event=0x0037
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/ll_cache_rd
+event=0x0036
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/mem_access
+event=0x0013
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/memory_error
+event=0x001a
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/pc_write_retired
+event=0x000c
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/remote_access_rd
+event=0x0038
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/st_retired
+event=0x0007
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/stall_backend
+event=0x0024
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/stall_frontend
+event=0x0023
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/ttbr_write_retired
+event=0x001c
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/events/unaligned_ldst_retired
+event=0x000f
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/format/event
+config:0-15
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/format/long
+config1:0
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/format/rdpmc
+config1:1
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/format/threshold
+config1:5-16
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/format/threshold_compare
+config1:3-4
+FILE /sys/bus/event_source/devices/armv8_cortex_a55/format/threshold_count
+config1:2
+3867908,,armv8_cortex_a55/cpu_cycles/,2049834,100.00,,
+945011,,armv8_cortex_a55/inst_retired/,2049834,100.00,,

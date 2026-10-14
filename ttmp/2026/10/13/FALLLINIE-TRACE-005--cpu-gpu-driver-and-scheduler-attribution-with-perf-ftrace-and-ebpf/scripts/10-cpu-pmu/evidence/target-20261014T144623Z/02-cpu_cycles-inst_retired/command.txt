@@ -1,0 +1,1 @@
+perf stat --no-inherit -t 813027 -I 1000 -x , -e {armv8_cortex_a55/cpu_cycles/,armv8_cortex_a55/inst_retired/} -- sleep 20

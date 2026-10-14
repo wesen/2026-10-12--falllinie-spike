@@ -1,0 +1,1 @@
+perf stat --no-inherit -t 813871 -I 1000 -x , -e {armv8_cortex_a55/l2d_cache/,armv8_cortex_a55/l2d_cache_refill/} -- sleep 20

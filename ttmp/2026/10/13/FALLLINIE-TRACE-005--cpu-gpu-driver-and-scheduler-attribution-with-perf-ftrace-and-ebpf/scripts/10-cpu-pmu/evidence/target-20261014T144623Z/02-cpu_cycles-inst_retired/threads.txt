@@ -1,0 +1,16 @@
+/proc/813027/task/813027/comm
+falllinie-pmu
+/proc/813027/task/813036/comm
+mali-mem-purge
+/proc/813027/task/813037/comm
+mali-utility-wo
+/proc/813027/task/813038/comm
+mali-utility-wo
+/proc/813027/task/813039/comm
+mali-utility-wo
+/proc/813027/task/813040/comm
+mali-utility-wo
+/proc/813027/task/813041/comm
+mali-cmar-backe
+/proc/813027/task/813042/comm
+mali-compiler

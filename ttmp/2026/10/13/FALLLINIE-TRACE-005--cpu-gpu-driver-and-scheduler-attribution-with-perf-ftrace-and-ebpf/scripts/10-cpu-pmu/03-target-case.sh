@@ -38,6 +38,7 @@ if [ "$PAIR" = sample ] && [ "$status" = 0 ]; then
  perf report -i "$OUT/perf.data" --stdio --header-only > "$OUT/perf-header.txt" 2>&1
  perf report -i "$OUT/perf.data" --stdio --no-inline -g none --no-children --sort pid,comm,dso,symbol --percent-limit 0.5 > "$OUT/perf-report.txt" 2>&1
  perf report -i "$OUT/perf.data" --stdio --no-inline -g none --stats > "$OUT/perf-statistics.txt" 2>&1
+ perf report -i "$OUT/perf.data" --stdio --no-inline -g none --no-children --sort pid,dso --percent-limit 0 > "$OUT/perf-dso.txt" 2>&1
  # Bounded raw data stays on device; preserve reports and byte hash locally.
  sha256sum "$OUT/perf.data" > "$OUT/perf-data.sha256"
 fi

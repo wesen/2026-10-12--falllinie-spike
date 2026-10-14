@@ -1,0 +1,1 @@
+perf stat --no-inherit -t 814697 -I 1000 -x , -e {armv8_cortex_a55/l1d_tlb/,armv8_cortex_a55/l1d_tlb_refill/} -- sleep 20

@@ -1,0 +1,64 @@
+01-none frames 1679 mean_ms 18.267517 p95_ms 28.147277
+02-cpu_cycles-inst_retired frames 1696 mean_ms 18.199694 p95_ms 28.013003
+{
+  "event_totals": {
+    "armv8_cortex_a55/cpu_cycles/": 14300334687,
+    "armv8_cortex_a55/inst_retired/": 2078852033
+  },
+  "intervals": 20,
+  "perf_elapsed_s": 20.006157158,
+  "time_running_s": 10.01362088,
+  "min_running_percent": 100.0,
+  "ratio_second_over_first": 0.1453708656825928
+}
+03-l1d_cache-l1d_cache_refill frames 1694 mean_ms 18.225572 p95_ms 27.954602
+{
+  "event_totals": {
+    "armv8_cortex_a55/l1d_cache/": 695609378,
+    "armv8_cortex_a55/l1d_cache_refill/": 31780725
+  },
+  "intervals": 20,
+  "perf_elapsed_s": 20.004666193,
+  "time_running_s": 10.442155062,
+  "min_running_percent": 100.0,
+  "ratio_second_over_first": 0.04568760284885061
+}
+04-l2d_cache-l2d_cache_refill frames 1691 mean_ms 18.260685 p95_ms 28.214238
+{
+  "event_totals": {
+    "armv8_cortex_a55/l2d_cache/": 164525671,
+    "armv8_cortex_a55/l2d_cache_refill/": 40142728
+  },
+  "intervals": 20,
+  "perf_elapsed_s": 20.005605088,
+  "time_running_s": 10.175562443,
+  "min_running_percent": 100.0,
+  "ratio_second_over_first": 0.24399066574844724
+}
+05-br_retired-br_mis_pred_retired frames 1692 mean_ms 18.254118 p95_ms 27.992026
+{
+  "event_totals": {
+    "armv8_cortex_a55/br_retired/": 367486825,
+    "armv8_cortex_a55/br_mis_pred_retired/": 35451416
+  },
+  "intervals": 20,
+  "perf_elapsed_s": 20.004874688,
+  "time_running_s": 10.127448816,
+  "min_running_percent": 100.0,
+  "ratio_second_over_first": 0.09646989657384315
+}
+06-l1d_tlb-l1d_tlb_refill frames 1687 mean_ms 18.303829 p95_ms 28.049142
+{
+  "event_totals": {
+    "armv8_cortex_a55/l1d_tlb/": 690887026,
+    "armv8_cortex_a55/l1d_tlb_refill/": 32798337
+  },
+  "intervals": 20,
+  "perf_elapsed_s": 20.00659219,
+  "time_running_s": 10.29750503,
+  "min_running_percent": 100.0,
+  "ratio_second_over_first": 0.04747279333046848
+}
+07-sample frames 1716 mean_ms 17.991269 p95_ms 27.646532
+samples 1873 lost 0 dso {'libmali.so.1.10.0': 71.81, 'falllinie-pmu': 10.65, 'libc.so.6': 6.99, '[kernel.kallsyms]': 4.79, 'libwayland-client.so.0.26.0': 1.91, 'libSDL2-2.0.so.0.3200.10': 1.5, 'libm.so.6': 1.4, 'libstdc++.so.6.0.36': 0.8, '[vdso]': 0.16}
+08-none frames 1689 mean_ms 18.275653 p95_ms 28.038546

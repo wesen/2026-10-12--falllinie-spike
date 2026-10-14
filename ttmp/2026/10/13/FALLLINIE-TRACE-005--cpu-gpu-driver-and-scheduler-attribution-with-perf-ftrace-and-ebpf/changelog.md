@@ -20,3 +20,7 @@ Integrated paired clocks in209a6d0; committed eight actual live runs, five repro
 
 - /home/manuel/code/wesen/2026-10-12--falllinie-spike/src/paired_clocks.cpp — Paired thread CPU and monotonic scope implementation
 - /home/manuel/code/wesen/2026-10-12--falllinie-spike/ttmp/2026/10/13/FALLLINIE-TRACE-005--cpu-gpu-driver-and-scheduler-attribution-with-perf-ftrace-and-ebpf/scripts/evidence/campaign-summary.json — Actual target metrics and timing limitations
+
+## 2026-10-14
+
+Implemented --no-audio diagnostic and qualified actual Cortex-A55 main-thread PMU collection. Five grouped pairs each20intervals/100%running coverage;1873cycles-profile samples/0reportedlost. IPC0.14537, driver cycleweight71.81%; cache/TLB/branch ratios documented without causal overclaim. Eight bounded target cases succeed,15CPUtests pass; source/binary identity and detailed diary retained.

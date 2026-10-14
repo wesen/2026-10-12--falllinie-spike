@@ -1,0 +1,9 @@
+01-none status=0
+02-cpu_cycles-inst_retired status=0
+03-l1d_cache-l1d_cache_refill status=0
+04-l2d_cache-l2d_cache_refill status=0
+05-br_retired-br_mis_pred_retired status=0
+06-l1d_tlb-l1d_tlb_refill status=0
+07-sample status=0
+08-none status=0
+/home/manuel/code/wesen/2026-10-12--falllinie-spike/ttmp/2026/10/13/FALLLINIE-TRACE-005--cpu-gpu-driver-and-scheduler-attribution-with-perf-ftrace-and-ebpf/scripts/10-cpu-pmu/evidence/target-20261014T144623Z

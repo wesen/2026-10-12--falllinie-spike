@@ -1,0 +1,1 @@
+perf stat --no-inherit -t 814285 -I 1000 -x , -e {armv8_cortex_a55/br_retired/,armv8_cortex_a55/br_mis_pred_retired/} -- sleep 20

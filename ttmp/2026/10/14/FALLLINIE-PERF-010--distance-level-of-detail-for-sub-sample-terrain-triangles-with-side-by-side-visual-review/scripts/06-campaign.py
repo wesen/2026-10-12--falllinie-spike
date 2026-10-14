@@ -32,6 +32,11 @@ PLANS={
  'accept60':{'baseline':DEFAULTS,'visual':{},'timed':
   [(n,'384x288','base',60,f) for n,f in [('01-previous-audio',['--terrain-lod','off']+AUDIO),('02-lod60-audio',AUDIO),('03-lod60-audio',AUDIO),('04-previous-audio',['--terrain-lod','off']+AUDIO),('05-lod60-audio',AUDIO),('06-previous-audio',['--terrain-lod','off']+AUDIO)]]+
   [(n,'live','base',60,f) for n,f in [('07-previous-live',['--terrain-lod','off']),('08-lod60-live',[]),('09-lod60-live',[]),('10-previous-live',['--terrain-lod','off'])]]},
+ # Internal resolution choice with 60 m LOD: 384x288 (2.67x stretch) vs 512x384 (exact 2x).
+ # Visual candidates override the capture size with a later --render-size flag.
+ 'res512':{'baseline':DEFAULTS,'visual':{'r512':['--render-size','512x384']},'timed':
+  [(n,sz,'base',60,AUDIO) for n,sz in [('01-r384-audio','384x288'),('02-r512-audio','512x384'),('03-r512-audio','512x384'),('04-r384-audio','384x288')]]+
+  [(n,'live','base',60,f) for n,f in [('05-r384-live',[]),('06-r512-live',['--render-size','512x384']),('07-r512-live',['--render-size','512x384']),('08-r384-live',[])]]},
 }
 plan_name=sys.argv[1];plan=PLANS[plan_name]
 stamp=datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ');remote='/storage/apps/falllinie-perf010-'+stamp;out=P/('evidence/'+plan_name+'-'+stamp);out.mkdir(parents=True)

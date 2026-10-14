@@ -25,14 +25,15 @@ namespace {
 volatile std::sig_atomic_t termination_requested=0;
 void request_termination(int){termination_requested=1;}
 struct Config {
- bool place=false,resize_check=false,source_sampler_precision=false,play=false,autoplay=false,dual=false,source_sky_hash=false,gpu_profile=false,no_vsync=false,absolute_coordinates=false,muted=false,dev_overlay=false;double seconds=0,fps_cap=0;int frames=0,width=512,height=384,cell=0,cells=3,debug=0,palette=0,audio_buffer=512;uint32_t seed=42;
+ bool freeze_scene=false,post_bypass=false;fl::GpuMode gpu_mode=fl::GpuMode::Off;unsigned profile_cadence=60;
+ bool place=false,resize_check=false,source_sampler_precision=false,play=false,autoplay=false,dual=false,source_sky_hash=false,no_vsync=false,absolute_coordinates=false,muted=false,dev_overlay=false;double seconds=0,fps_cap=0;int frames=0,width=512,height=384,cell=0,cells=3,debug=0,palette=0,audio_buffer=512;uint32_t seed=42;
  fl::AudioRenderMode audio_mode=fl::AudioRenderMode::BufferedWorker;bool source_vinyl=true;
  std::string assets="assets/shaders",capture,receipt,profile;
 };
 Config parse(int argc,char** argv){
- Config c;
+ Config c;bool explicit_play=false;
  for(int i=1;i<argc;++i){std::string a=argv[i];auto value=[&](){if(i+1>=argc)throw std::runtime_error("missing value for "+a);return std::string(argv[++i]);};
-  if(a=="--place")c.place=true;else if(a=="--dual-screen"){c.dual=true;c.play=true;}else if(a=="--source-sky-hash")c.source_sky_hash=true;else if(a=="--play")c.play=true;else if(a=="--autoplay"){c.play=true;c.autoplay=true;}else if(a=="--resize-check")c.resize_check=true;else if(a=="--source-sampler-precision")c.source_sampler_precision=true;
+  if(a=="--place")c.place=true;else if(a=="--dual-screen"){c.dual=true;c.play=true;}else if(a=="--source-sky-hash")c.source_sky_hash=true;else if(a=="--play"){c.play=true;explicit_play=true;}else if(a=="--autoplay"){c.play=true;c.autoplay=true;}else if(a=="--resize-check")c.resize_check=true;else if(a=="--source-sampler-precision")c.source_sampler_precision=true;
   else if(a=="--fps")c.fps_cap=std::stod(value());else if(a=="--seconds")c.seconds=std::stod(value());else if(a=="--frames")c.frames=std::stoi(value());
   else if(a=="--seed"){auto n=std::stoull(value());if(n>UINT32_MAX)throw std::runtime_error("seed out of range");c.seed=uint32_t(n);}
   else if(a=="--cell")c.cell=std::stoi(value());else if(a=="--cells")c.cells=std::stoi(value());
@@ -44,12 +45,17 @@ Config parse(int argc,char** argv){
   else if(a=="--muted")c.muted=true;
   else if(a=="--dev-overlay"){c.dev_overlay=true;c.play=true;}
   else if(a=="--absolute-render-coordinates")c.absolute_coordinates=true;
-  else if(a=="--no-vsync")c.no_vsync=true;else if(a=="--gpu-profile")c.gpu_profile=true;else if(a=="--profile")c.profile=value();else if(a=="--assets")c.assets=value();else if(a=="--capture-dir")c.capture=value();else if(a=="--receipt")c.receipt=value();
+  else if(a=="--no-vsync")c.no_vsync=true;else if(a=="--gpu-profile")c.gpu_mode=fl::GpuMode::View;else if(a=="--gpu-profile-mode"){auto mode=value();if(mode=="off")c.gpu_mode=fl::GpuMode::Off;else if(mode=="view")c.gpu_mode=fl::GpuMode::View;else if(mode=="passes")c.gpu_mode=fl::GpuMode::Passes;else throw std::runtime_error("GPU profile mode must be off, view or passes");}else if(a=="--profile-cadence"){auto text=value();size_t consumed=0;int n=std::stoi(text,&consumed);if(consumed!=text.size()||n<1||n>3600)throw std::runtime_error("profile cadence must be 1..3600");c.profile_cadence=unsigned(n);}else if(a=="--freeze-scene")c.freeze_scene=true;else if(a=="--post-bypass")c.post_bypass=true;else if(a=="--profile")c.profile=value();else if(a=="--assets")c.assets=value();else if(a=="--capture-dir")c.capture=value();else if(a=="--receipt")c.receipt=value();
   else if(a=="--render-size"){auto size=value();auto x=size.find('x');if(x==std::string::npos)throw std::runtime_error("expected WIDTHxHEIGHT");c.width=std::stoi(size.substr(0,x));c.height=std::stoi(size.substr(x+1));}
-  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..5] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash] [--absolute-render-coordinates] [--muted] [--audio-buffer 256..4096 power-of-two] [--audio-mode buffered|direct] [--no-vinyl|--source-vinyl] [--dev-overlay] [--profile CSV] [--gpu-profile] [--no-vsync] [--fps N]\nF3 cycles debug; C cycles six palettes; A/START or ENTER/SPACE starts; START/P/ESC pauses; SELECT/F2 toggles developer overlay; SELECT+Y/R new run; M mutes; F10 or SELECT+START quits. --dev-overlay starts gameplay title with overlay. SELECT-first chords restore pre-press visibility; F2 is independent.\n";std::exit(0);}
+  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..5] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash] [--absolute-render-coordinates] [--muted] [--audio-buffer 256..4096 power-of-two] [--audio-mode buffered|direct] [--no-vinyl|--source-vinyl] [--dev-overlay] [--profile CSV] [--gpu-profile (view)] [--gpu-profile-mode off|view|passes] [--profile-cadence 1..3600] [--freeze-scene (static terrain; dual uses same camera; overrides dual implicit play)] [--post-bypass (non-parity)] [--no-vsync] [--fps N]\nF3 cycles debug; C cycles six palettes; A/START or ENTER/SPACE starts; START/P/ESC pauses; SELECT/F2 toggles developer overlay; SELECT+Y/R new run; M mutes; F10 or SELECT+START quits. --dev-overlay starts gameplay title with overlay. SELECT-first chords restore pre-press visibility; F2 is independent.\n";std::exit(0);}
   else throw std::runtime_error("unknown argument "+a);
  }
  if(!std::isfinite(c.fps_cap)||c.fps_cap<0||c.fps_cap>240||c.width<128||c.height<96||c.width>2048||c.height>1536||c.cell< -1||c.cell>4096||c.cells<1||c.cells>7||c.frames<0||c.seconds<0||!std::isfinite(c.seconds)||c.debug<0||c.debug>5||c.palette<0||c.palette>5||c.audio_buffer<256||c.audio_buffer>4096||(c.audio_buffer&(c.audio_buffer-1)))throw std::runtime_error("configuration outside bounded spike limits");
+ if(c.gpu_mode!=fl::GpuMode::Off&&c.profile.empty())throw std::runtime_error("GPU profiling requires --profile CSV");
+ if(c.freeze_scene){
+  if(explicit_play||c.autoplay||c.dev_overlay||c.resize_check)throw std::runtime_error("static terrain fixture conflicts with play/autoplay/dev-overlay/resize-check");
+  c.play=false;
+ }
  return c;
 }
 std::string ipc(const std::string& command){
@@ -82,13 +88,17 @@ int main(int argc,char** argv){
   }
   glapi::load();
   std::string version=reinterpret_cast<const char*>(glGetString(GL_VERSION)),vendor=reinterpret_cast<const char*>(glGetString(GL_VENDOR)),gpu=reinterpret_cast<const char*>(glGetString(GL_RENDERER));
-  std::cout<<"GL_VERSION="<<version<<"\nGL_RENDERER="<<gpu<<"\nGL_VENDOR="<<vendor<<"\nGLSL="<<glGetString(GL_SHADING_LANGUAGE_VERSION)<<std::endl;
+  std::cout<<"GL_VERSION="<<version<<"\nGL_RENDERER="<<gpu<<"\nGL_VENDOR="<<vendor<<"\nGLSL="<<glGetString(GL_SHADING_LANGUAGE_VERSION)<<"\nGL_EXTENSIONS="<<glGetString(GL_EXTENSIONS)<<std::endl;
   GLint major=0;glGetIntegerv(GL_MAJOR_VERSION,&major);if(major<3)throw std::runtime_error("GLES3 required");
-  if(SDL_GL_SetSwapInterval(1)!=0)std::cerr<<"warning: swap interval: "<<SDL_GetError()<<'\n';
+  GLint max_texture=0,max_renderbuffer=0;glGetIntegerv(GL_MAX_TEXTURE_SIZE,&max_texture);glGetIntegerv(GL_MAX_RENDERBUFFER_SIZE,&max_renderbuffer);std::cout<<"GL_CAPS max_texture="<<max_texture<<" max_renderbuffer="<<max_renderbuffer<<'\n';
+  if(SDL_GL_SetSwapInterval(c.no_vsync?0:1)!=0)std::cerr<<"warning: swap interval: "<<SDL_GetError()<<'\n';
   pad=SDL_NumJoysticks()>0?SDL_JoystickOpen(0):nullptr;
   std::cout<<"joystick="<<(pad?SDL_JoystickName(pad):"none")<<'\n';
   fl::Renderer renderer;renderer.set_absolute_coordinates(c.absolute_coordinates);renderer.initialize(c.seed,c.play?-1:c.cell,c.play?4:c.cells,c.width,c.height,c.assets,!c.source_sampler_precision,!c.source_sky_hash,c.play);
-  fl::Profiler profiler(c.profile,c.gpu_profile);
+  fl::Profiler profiler(c.profile,c.gpu_mode,c.profile_cadence);
+  renderer.set_post_bypass(c.post_bypass);
+  std::cout<<"DIAGNOSTIC fixture="<<(c.freeze_scene?"static-terrain":"live-or-default")<<" second_view="<<(c.freeze_scene?"same-camera":"first-person")<<" post_bypass="<<c.post_bypass<<" non_parity="<<(c.freeze_scene||c.post_bypass)<<" seed="<<c.seed<<" cell="<<c.cell<<" cells="<<c.cells<<" internal="<<c.width<<"x"<<c.height<<" dual="<<c.dual<<"\n";
+  if(c.freeze_scene)std::cout<<"STATIC TERRAIN: no simulation/update_player/RNG advancement, rider/particles/trails/HUD/streaming/audio-DSP; fixed initialized camera, input mutations disabled\n";
   fl::Game game(c.seed);fl::NativeFrameClock frame_clock;fl::NativeInputMapper input_mapper;fl::TitleAutopilot autopilot(c.seed);
   const fl::AudioOpenOptions audio_options{c.audio_buffer,c.audio_mode,c.source_vinyl};
   fl::AudioEngine audio;bool audio_started=false,muted=c.muted;std::string last_persistence_error;
@@ -129,6 +139,7 @@ int main(int argc,char** argv){
     physical.axis_x=SDL_JoystickGetAxis(pad,0)/32767.;physical.axis_y=SDL_JoystickGetAxis(pad,1)/32767.;
    }
    const auto actions=input_mapper.read(physical,game.title());quit=quit||actions.quit;
+   if(!c.freeze_scene){
    if(actions.dev_overlay_restore)dev_overlay=select_overlay_saved;
    if(actions.dev_overlay_toggle){if(actions.dev_overlay_select)select_overlay_saved=dev_overlay;dev_overlay=!dev_overlay;}
    if(actions.dev_overlay_restore||actions.dev_overlay_toggle){renderer.set_developer_overlay(dev_overlay);overlay_cache.invalidate();}
@@ -140,6 +151,7 @@ int main(int argc,char** argv){
     else if(actions.pause){game.set_paused(physical.focus_lost?true:!game.paused());audio.pause(game.paused());}
     if(actions.mute){muted=!muted;audio.set_muted(muted);}
    }
+   } // static fixture only accepts quit
    auto event_end=std::chrono::steady_clock::now(),physics_end=event_end,player_end=event_end;
    double elapsed=std::min(.05,std::chrono::duration<double>(frame_start-previous_frame).count());previous_frame=frame_start;
    fl::FrameResult current_frame;
@@ -166,10 +178,10 @@ int main(int argc,char** argv){
     snapshot.audio_open=audio_started;if(audio_started){snapshot.audio=audio.diagnostics();const char* backend=SDL_GetCurrentAudioDriver();snapshot.audio_backend=backend?backend:"n/a";}
     overlay_cache.refresh(snapshot,overlay_now);renderer.set_developer_overlay_lines(overlay_cache.lines());
    }
-   auto top_start=std::chrono::steady_clock::now();profiler.begin_gpu(frames,0);
-   renderer.render(drawable_w,drawable_h,c.debug,c.palette);profiler.end_gpu(frames,0);
+   auto top_start=std::chrono::steady_clock::now();renderer.set_measurement(profiler.enabled()?&profiler:nullptr,frames,0);
+   renderer.render(drawable_w,drawable_h,c.debug,c.palette);
    auto swap_start=std::chrono::steady_clock::now();SDL_GL_SwapWindow(window);auto top_swap_end=std::chrono::steady_clock::now(),bottom_submit_end=top_swap_end;
-   if(lower_window){if(SDL_GL_MakeCurrent(lower_window,context)!=0)throw std::runtime_error(SDL_GetError());SDL_GL_SetSwapInterval(0);int lw=0,lh=0;SDL_GL_GetDrawableSize(lower_window,&lw,&lh);profiler.begin_gpu(frames,1);renderer.render_first_person(lw,lh,c.palette);profiler.end_gpu(frames,1);bottom_submit_end=std::chrono::steady_clock::now();SDL_GL_SwapWindow(lower_window);}
+   if(lower_window){if(SDL_GL_MakeCurrent(lower_window,context)!=0)throw std::runtime_error(SDL_GetError());SDL_GL_SetSwapInterval(0);int lw=0,lh=0;SDL_GL_GetDrawableSize(lower_window,&lw,&lh);renderer.set_measurement(profiler.enabled()?&profiler:nullptr,frames,1);if(c.freeze_scene)renderer.render(lw,lh,c.debug,c.palette);else renderer.render_first_person(lw,lh,c.palette);bottom_submit_end=std::chrono::steady_clock::now();SDL_GL_SwapWindow(lower_window);}
    auto swap_end=std::chrono::steady_clock::now();
    if(c.fps_cap>0){auto period=std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(1.0/c.fps_cap));frame_deadline+=period;if(swap_end<frame_deadline)std::this_thread::sleep_until(frame_deadline);else if(swap_end>frame_deadline+period)frame_deadline=swap_end;}
    auto end=std::chrono::steady_clock::now();
@@ -192,6 +204,7 @@ int main(int argc,char** argv){
    });}
    if((c.frames && frames>=c.frames) || (c.seconds && std::chrono::duration<double>(end-start).count()>=c.seconds))quit=true;
   }
+  renderer.set_measurement(nullptr,0,0); // capture is not a measured frame
   if(audio_started){
    audio.pause(true); // final numeric snapshot has quiescent, comparable frontiers
    auto a=audio.diagnostics();const auto& p=a.producer;
@@ -211,7 +224,8 @@ int main(int argc,char** argv){
   std::cout<<"frames="<<frames<<" measured="<<times.size()<<" frame_p50_ms="<<percentile(times,.5)<<" frame_p95_ms="<<p95<<" frame_p99_ms="<<percentile(times,.99)<<" peak_rss_kib="<<peak_rss<<" GL_error="<<glGetError()<<std::endl;
   if(!c.receipt.empty()){
    std::ofstream out(c.receipt);if(!out)throw std::runtime_error("cannot write receipt");
-   out<<std::setprecision(10)<<"{\n\"source_sha256\":\"cb9b4befd0252859d9c45246f94fbd7dd1662c6d034c6ccb95fbe16947e8b556\",\n\"seed\":"<<c.seed<<",\"cell\":"<<c.cell<<",\"cells\":"<<c.cells<<",\n\"context\":{\"version\":"<<std::quoted(version)<<",\"vendor\":"<<std::quoted(vendor)<<",\"renderer\":"<<std::quoted(gpu)<<"},\n\"render_size\":["<<renderer.width()<<','<<renderer.height()<<"],\"drawable_size\":["<<drawable_w<<','<<drawable_h<<"],\"placement_ok\":"<<(placed?"true":"false")<<",\n\"debug_view\":"<<c.debug<<",\"palette\":"<<c.palette<<",\"dual_screen\":"<<(c.dual?"true":"false")<<",\"stable_sky\":"<<(!c.source_sky_hash?"true":"false")<<",\"depth_sampler_highp\":"<<(!c.source_sampler_precision?"true":"false")<<",\"resize_check\":"<<(c.resize_check?"true":"false")<<",\n\"camera_eye\":["<<camera.eye.x<<','<<camera.eye.y<<','<<camera.eye.z<<"],\"camera_look\":["<<camera.look.x<<','<<camera.look.y<<','<<camera.look.z<<"],\n\"vertices\":"<<renderer.vertex_count()<<",\"indices\":"<<renderer.index_count()<<",\"terrain_build_ms\":"<<renderer.build_ms()<<",\n\"frames\":"<<frames<<",\"warmup_frames\":60,\"measured_frames\":"<<times.size()<<",\n\"frame_ms\":{\"p50\":"<<percentile(times,.5)<<",\"p95\":"<<p95<<",\"p99\":"<<percentile(times,.99)<<"},\n\"swap_p95_ms\":"<<percentile(swaps,.95)<<",\"rss_kib\":{\"start\":"<<start_rss<<",\"peak\":"<<peak_rss<<",\"end\":"<<rss_kib()<<"},\n\"timing_scope\":\"CPU submission plus swap; not GPU timer\",\"timing_target_met\":"<<(!times.empty() && p95<=33.3?"true":"false")<<",\n\"rss_samples\":[";
+   out<<"{\n\"measurement\":{\"fixture\":"<<std::quoted(c.freeze_scene?"static-terrain":"live-or-default")<<",\"second_view\":"<<std::quoted(c.freeze_scene?"same-camera":"first-person")<<",\"post_bypass\":"<<(c.post_bypass?"true":"false")<<",\"gpu_mode\":"<<std::quoted(c.gpu_mode==fl::GpuMode::Off?"off":c.gpu_mode==fl::GpuMode::View?"view":"passes")<<",\"cadence\":"<<c.profile_cadence<<",\"static_exclusions\":"<<std::quoted(c.freeze_scene?"rider,particles,trails,HUD,streaming,audio-DSP":"none")<<"},\n";
+   out<<std::setprecision(10)<<"\"source_sha256\":\"cb9b4befd0252859d9c45246f94fbd7dd1662c6d034c6ccb95fbe16947e8b556\",\n\"seed\":"<<c.seed<<",\"cell\":"<<c.cell<<",\"cells\":"<<c.cells<<",\n\"context\":{\"version\":"<<std::quoted(version)<<",\"vendor\":"<<std::quoted(vendor)<<",\"renderer\":"<<std::quoted(gpu)<<"},\n\"render_size\":["<<renderer.width()<<','<<renderer.height()<<"],\"drawable_size\":["<<drawable_w<<','<<drawable_h<<"],\"placement_ok\":"<<(placed?"true":"false")<<",\n\"debug_view\":"<<c.debug<<",\"palette\":"<<c.palette<<",\"dual_screen\":"<<(c.dual?"true":"false")<<",\"stable_sky\":"<<(!c.source_sky_hash?"true":"false")<<",\"depth_sampler_highp\":"<<(!c.source_sampler_precision?"true":"false")<<",\"resize_check\":"<<(c.resize_check?"true":"false")<<",\n\"camera_eye\":["<<camera.eye.x<<','<<camera.eye.y<<','<<camera.eye.z<<"],\"camera_look\":["<<camera.look.x<<','<<camera.look.y<<','<<camera.look.z<<"],\n\"vertices\":"<<renderer.vertex_count()<<",\"indices\":"<<renderer.index_count()<<",\"terrain_build_ms\":"<<renderer.build_ms()<<",\n\"frames\":"<<frames<<",\"warmup_frames\":60,\"measured_frames\":"<<times.size()<<",\n\"frame_ms\":{\"p50\":"<<percentile(times,.5)<<",\"p95\":"<<p95<<",\"p99\":"<<percentile(times,.99)<<"},\n\"swap_p95_ms\":"<<percentile(swaps,.95)<<",\"rss_kib\":{\"start\":"<<start_rss<<",\"peak\":"<<peak_rss<<",\"end\":"<<rss_kib()<<"},\n\"timing_scope\":\"CPU submission plus swap; not GPU timer\",\"timing_target_met\":"<<(!times.empty() && p95<=33.3?"true":"false")<<",\n\"rss_samples\":[";
    // Keep periodic RSS separate from post-readback allocation in the receipt.
    for(size_t i=0;i<rss_samples.size();++i){if(i)out<<',';out<<'['<<rss_samples[i].first<<','<<rss_samples[i].second<<']';}
    out<<"],\"gl_error\":0\n}\n";

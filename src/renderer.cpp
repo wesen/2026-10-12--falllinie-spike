@@ -133,10 +133,12 @@ void Renderer::make_targets(){
 }
 void Renderer::resize(int w,int h){if(w==width_ && h==height_)return;delete_targets();width_=w;height_=h;make_targets();gl_check("resize");}
 void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
+ Profiler::Scope whole(profiler_,profile_frame_,profile_view_,RenderPass::View);
  Vec3 eye=camera_.eye+camera_shake_;
  // Keep the active view's roll; rebase projection only, never world shading.
  Vec3 up=norm({camera_.vp[1],camera_.vp[5],camera_.vp[9]});
  const auto frame=render_frame(eye,camera_.look,up,fov_*3.141592653589793/180,double(width_)/height_,relative_coordinates_);
+ { Profiler::Scope scene(profiler_,profile_frame_,profile_view_,RenderPass::Scene);
  glBindFramebuffer(GL_FRAMEBUFFER,scene_fbo_);glViewport(0,0,width_,height_);glEnable(GL_DEPTH_TEST);glDisable(GL_BLEND);glDisable(GL_CULL_FACE);glDepthMask(GL_TRUE);glClearColor(1,0,0,0);glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);glUseProgram(scene_);
  matrix(scene_,"uVP",frame.vp);vec3(scene_,"uRenderOrigin",frame.origin);matrix(scene_,"uM",identity());const float identity3[]={1,0,0,0,1,0,0,0,1};glUniformMatrix3fv(loc(scene_,"uN"),1,GL_FALSE,identity3);
  vec3(scene_,"uCam",eye);vec3(scene_,"uL",norm({0.45,0.78,-0.5}));glUniform2f(loc(scene_,"uFog"),150,400);
@@ -149,25 +151,34 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
  if(rig_valid_){
   Vec3 view=norm(camera_.eye-camera_.look),right=source_norm(cross(first_person_up_,view),{1,0,0}),up=cross(view,right);
   if(following_){right=source_norm(cross({0,1,0},view),{1,0,0});up=cross(view,right);}
-  update_dynamic(particle_mesh_,particles_.snow_mesh(eye,right,up));update_dynamic(trail_mesh_,particles_.trail_mesh(game_time_));
+  if(profiler_&&profiler_->sampling(profile_frame_)){
+   CpuMesh snow,trail;
+   {Profiler::Scope prep(profiler_,profile_frame_,profile_view_,RenderPass::DynamicPrep);snow=particles_.snow_mesh(eye,right,up);trail=particles_.trail_mesh(game_time_);}
+   {Profiler::Scope upload(profiler_,profile_frame_,profile_view_,RenderPass::DynamicUpload);update_dynamic(particle_mesh_,snow);update_dynamic(trail_mesh_,trail);}
+  }else{update_dynamic(particle_mesh_,particles_.snow_mesh(eye,right,up));update_dynamic(trail_mesh_,particles_.trail_mesh(game_time_));}
   if(trail_mesh_.indices){glEnable(GL_POLYGON_OFFSET_FILL);glPolygonOffset(-2,-4);integer(scene_,"uKind",3);scalar(scene_,"uMat",5);glBindVertexArray(trail_mesh_.vao);glDrawElements(GL_TRIANGLES,trail_mesh_.indices,GL_UNSIGNED_INT,nullptr);glDisable(GL_POLYGON_OFFSET_FILL);}
  }
  integer(scene_,"uKind",1);
  if(rider_indices_){integer(scene_,"uKind",1);glBindVertexArray(rider_vao_);for(const auto& group:rider_groups_){scalar(scene_,"uMat",float(group[2]));glDrawElements(GL_TRIANGLES,GLsizei(group[1]),GL_UNSIGNED_INT,reinterpret_cast<void*>(uintptr_t(group[0])*4));}}
  if(particle_mesh_.indices){integer(scene_,"uKind",2);scalar(scene_,"uMat",30);scalar(scene_,"uAlbO",-1);glBindVertexArray(particle_mesh_.vao);glDrawElements(GL_TRIANGLES,particle_mesh_.indices,GL_UNSIGNED_INT,nullptr);}
- glBindFramebuffer(GL_FRAMEBUFFER,print_fbo_);glViewport(0,0,width_,height_);glDisable(GL_DEPTH_TEST);glUseProgram(post_);
- glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,color_);integer(post_,"uC",0);glActiveTexture(GL_TEXTURE1);glBindTexture(GL_TEXTURE_2D,depth_);integer(post_,"uD",1);
- glUniform2f(loc(post_,"uRes"),width_,height_);matrix(post_,"uIVP",frame.inverse_vp);vec3(post_,"uCamP",frame.eye);vec3(post_,"uSunG",norm({.42,.14,1}));
+ } // scene (includes dynamic CPU preparation and uploads)
  const Vec3 papers[]={{243/255.0,244/255.0,247/255.0},{244/255.0,244/255.0,245/255.0},{244/255.0,243/255.0,248/255.0},{238/255.0,244/255.0,246/255.0},{240/255.0,240/255.0,241/255.0},{10/255.0,16/255.0,32/255.0}};
  const Vec3 inks[]={{28/255.0,47/255.0,158/255.0},{18/255.0,18/255.0,18/255.0},{43/255.0,26/255.0,92/255.0},{11/255.0,42/255.0,58/255.0},{17/255.0,17/255.0,18/255.0},{143/255.0,234/255.0,1}};
  const Vec3 spots[]={{1,77/255.0,141/255.0},{227/255.0,18/255.0,11/255.0},{1,106/255.0,0},{0,166/255.0,166/255.0},{141/255.0,141/255.0,145/255.0},{74/255.0,99/255.0,1}};
- palette=(palette%6+6)%6;vec3(post_,"uPaper",papers[palette]);vec3(post_,"uInk",inks[palette]);vec3(post_,"uGrey",spots[palette]);
+ palette=(palette%6+6)%6;
+ if(!post_bypass_){Profiler::Scope post(profiler_,profile_frame_,profile_view_,RenderPass::Post);
+ glBindFramebuffer(GL_FRAMEBUFFER,print_fbo_);glViewport(0,0,width_,height_);glDisable(GL_DEPTH_TEST);glUseProgram(post_);
+ glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,color_);integer(post_,"uC",0);glActiveTexture(GL_TEXTURE1);glBindTexture(GL_TEXTURE_2D,depth_);integer(post_,"uD",1);
+ glUniform2f(loc(post_,"uRes"),width_,height_);matrix(post_,"uIVP",frame.inverse_vp);vec3(post_,"uCamP",frame.eye);vec3(post_,"uSunG",norm({.42,.14,1}));
+ vec3(post_,"uPaper",papers[palette]);vec3(post_,"uInk",inks[palette]);vec3(post_,"uGrey",spots[palette]);
  scalar(post_,"uNear",.1);scalar(post_,"uFar",900);scalar(post_,"uPitch",4.4f*width_/1024);scalar(post_,"uInv",float(inversion_));scalar(post_,"uTime",float(render_time_));scalar(post_,"uSpeed",float(speed_effect_));scalar(post_,"uFlash",float(flash_));scalar(post_,"uEW",1);scalar(post_,"uApx",float((fov_*3.141592653589793/180)/height_*1.2));glUniform2f(loc(post_,"uFogP"),150,380);
  Vec3 sun=frame.eye+norm({.42,.14,1})*800;double clip[4]{};for(int r=0;r<4;++r)clip[r]=frame.vp[r]*sun.x+frame.vp[4+r]*sun.y+frame.vp[8+r]*sun.z+frame.vp[12+r];
  if(clip[3]>0)glUniform2f(loc(post_,"uSunPx"),(clip[0]/clip[3]*.5+.5)*width_,(clip[1]/clip[3]*.5+.5)*height_);else glUniform2f(loc(post_,"uSunPx"),-9999,-9999);
  scalar(post_,"uSunR",height_*.085);glBindVertexArray(fullscreen_vao_);glDrawArrays(GL_TRIANGLES,0,3);
- glBindFramebuffer(GL_FRAMEBUFFER,0);glViewport(0,0,drawable_w,drawable_h);glUseProgram(copy_);
- glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,debug?color_:printed_);integer(copy_,"uC",0);glActiveTexture(GL_TEXTURE1);glBindTexture(GL_TEXTURE_2D,depth_);integer(copy_,"uD",1);integer(copy_,"uMode",debug);glUniform2f(loc(copy_,"uOutputRes"),drawable_w,drawable_h);glDrawArrays(GL_TRIANGLES,0,3);
+ } // bypass omits the print draw and all post uniforms, not just its presentation
+ {Profiler::Scope output(profiler_,profile_frame_,profile_view_,RenderPass::Output);
+ glBindFramebuffer(GL_FRAMEBUFFER,0);glViewport(0,0,drawable_w,drawable_h);if(post_bypass_){glDisable(GL_DEPTH_TEST);glBindVertexArray(fullscreen_vao_);}glUseProgram(copy_);
+ glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,(debug||post_bypass_)?color_:printed_);integer(copy_,"uC",0);glActiveTexture(GL_TEXTURE1);glBindTexture(GL_TEXTURE_2D,depth_);integer(copy_,"uD",1);integer(copy_,"uMode",debug);glUniform2f(loc(copy_,"uOutputRes"),drawable_w,drawable_h);glDrawArrays(GL_TRIANGLES,0,3);
  if(following_){
   glUseProgram(hud_program_);glUniform2f(loc(hud_program_,"uOutputRes"),drawable_w,drawable_h);glEnable(GL_BLEND);glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,hud_font_);integer(hud_program_,"uFont",0);vec3(hud_program_,"uInk",inks[palette]);vec3(hud_program_,"uPaper",papers[palette]);
   struct HUDVertex{float x,y,u,v;};static_assert(sizeof(HUDVertex)==16);std::vector<HUDVertex> glyphs;glyphs.reserve(1200);
@@ -184,6 +195,7 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
   glDrawArrays(GL_TRIANGLES,0,primary);vec3(hud_program_,"uInk",spots[palette]);glDrawArrays(GL_TRIANGLES,primary,status_end-primary);vec3(hud_program_,"uInk",inks[palette]);glDrawArrays(GL_TRIANGLES,status_end,GLsizei(glyphs.size())-status_end);glDisable(GL_BLEND);
  }
  if(developer_overlay_visible_&&!first_person_view_)draw_developer_overlay(drawable_w,drawable_h);
+ } // output copy + HUD + developer overlay
  gl_check("render");
 }
 void Renderer::draw_developer_overlay(int width,int height){
@@ -214,7 +226,7 @@ void Renderer::capture(const std::string& path){
  for(int y=0;y<height_;++y)std::memcpy(static_cast<unsigned char*>(s->pixels)+y*s->pitch,pixels.data()+size_t(height_-1-y)*width_*4,width_*4);
  int status=SDL_SaveBMP(s,filename.c_str());SDL_FreeSurface(s);glBindFramebuffer(GL_FRAMEBUFFER,0);if(status!=0)throw std::runtime_error(SDL_GetError());
  };
- save(print_fbo_,path);
+ save(post_bypass_?scene_fbo_:print_fbo_,path);
  const auto parent=std::filesystem::path(path).parent_path().string();
  save(scene_fbo_,parent+"/scene.bmp");
  glBindFramebuffer(GL_FRAMEBUFFER,print_fbo_);glViewport(0,0,width_,height_);glUseProgram(copy_);glDisable(GL_DEPTH_TEST);

@@ -45,3 +45,9 @@ set_tests_properties(audio-lifecycle PROPERTIES ENVIRONMENT "SDL_AUDIODRIVER=dum
 add_executable(falllinie-spike src/main.cpp src/renderer.cpp src/game_renderer.cpp src/profiler.cpp)
 target_link_libraries(falllinie-spike PRIVATE source-systems)
 target_compile_options(falllinie-spike PRIVATE -Wall -Wextra)
+add_executable(test-profiler tests/test_profiler.cpp src/profiler.cpp)
+target_include_directories(test-profiler PRIVATE src)
+target_link_libraries(test-profiler PRIVATE PkgConfig::SDL2)
+# Keep lifecycle checks active even in Release builds.
+target_compile_options(test-profiler PRIVATE -UNDEBUG -Wall -Wextra)
+add_test(NAME profiler COMMAND test-profiler ${CMAKE_CURRENT_BINARY_DIR}/profiler-test)

@@ -1,0 +1,194 @@
+[
+  {
+    "case": "off-single",
+    "result": "passed",
+    "renderer": "GL_RENDERER=llvmpipe (LLVM 20.1.2, 256 bits)",
+    "stats": {
+      "mode": "off",
+      "cadence": "1",
+      "supported": "0",
+      "issued": "0",
+      "valid": "0",
+      "disjoint": "0",
+      "unavailable_polls": "0",
+      "skipped_pool": "0",
+      "unsupported_scopes": "0",
+      "misuse": "0",
+      "disjoint_polls": "0",
+      "pending": "0",
+      "cpu_dropped": "0"
+    }
+  },
+  {
+    "case": "off-dual",
+    "result": "passed",
+    "renderer": "GL_RENDERER=llvmpipe (LLVM 20.1.2, 256 bits)",
+    "stats": {
+      "mode": "off",
+      "cadence": "1",
+      "supported": "0",
+      "issued": "0",
+      "valid": "0",
+      "disjoint": "0",
+      "unavailable_polls": "0",
+      "skipped_pool": "0",
+      "unsupported_scopes": "0",
+      "misuse": "0",
+      "disjoint_polls": "0",
+      "pending": "0",
+      "cpu_dropped": "0"
+    }
+  },
+  {
+    "case": "passes-dual",
+    "result": "passed",
+    "renderer": "GL_RENDERER=llvmpipe (LLVM 20.1.2, 256 bits)",
+    "stats": {
+      "mode": "passes",
+      "cadence": "1",
+      "supported": "1",
+      "issued": "48",
+      "valid": "48",
+      "disjoint": "0",
+      "unavailable_polls": "0",
+      "skipped_pool": "0",
+      "unsupported_scopes": "0",
+      "misuse": "0",
+      "disjoint_polls": "0",
+      "pending": "0",
+      "cpu_dropped": "0"
+    }
+  },
+  {
+    "case": "view-dual",
+    "result": "passed",
+    "renderer": "GL_RENDERER=llvmpipe (LLVM 20.1.2, 256 bits)",
+    "stats": {
+      "mode": "view",
+      "cadence": "1",
+      "supported": "1",
+      "issued": "16",
+      "valid": "16",
+      "disjoint": "0",
+      "unavailable_polls": "0",
+      "skipped_pool": "0",
+      "unsupported_scopes": "0",
+      "misuse": "0",
+      "disjoint_polls": "0",
+      "pending": "0",
+      "cpu_dropped": "0"
+    }
+  },
+  {
+    "case": "bypass-dual",
+    "result": "passed",
+    "renderer": "GL_RENDERER=llvmpipe (LLVM 20.1.2, 256 bits)",
+    "stats": {
+      "mode": "passes",
+      "cadence": "1",
+      "supported": "1",
+      "issued": "32",
+      "valid": "32",
+      "disjoint": "0",
+      "unavailable_polls": "0",
+      "skipped_pool": "0",
+      "unsupported_scopes": "0",
+      "misuse": "0",
+      "disjoint_polls": "0",
+      "pending": "0",
+      "cpu_dropped": "0"
+    }
+  },
+  {
+    "case": "live-dual",
+    "result": "passed",
+    "renderer": "GL_RENDERER=llvmpipe (LLVM 20.1.2, 256 bits)",
+    "stats": {
+      "mode": "passes",
+      "cadence": "1",
+      "supported": "1",
+      "issued": "48",
+      "valid": "48",
+      "disjoint": "0",
+      "unavailable_polls": "0",
+      "skipped_pool": "0",
+      "unsupported_scopes": "0",
+      "misuse": "0",
+      "disjoint_polls": "0",
+      "pending": "0",
+      "cpu_dropped": "0"
+    }
+  },
+  {
+    "case": [
+      "--profile-cadence",
+      "0"
+    ],
+    "result": "rejected",
+    "diagnostic": "fatal: profile cadence must be 1..3600"
+  },
+  {
+    "case": [
+      "--profile-cadence",
+      "3601"
+    ],
+    "result": "rejected",
+    "diagnostic": "fatal: profile cadence must be 1..3600"
+  },
+  {
+    "case": [
+      "--profile-cadence",
+      "1x"
+    ],
+    "result": "rejected",
+    "diagnostic": "fatal: profile cadence must be 1..3600"
+  },
+  {
+    "case": [
+      "--gpu-profile-mode",
+      "bad"
+    ],
+    "result": "rejected",
+    "diagnostic": "fatal: GPU profile mode must be off, view or passes"
+  },
+  {
+    "case": [
+      "--gpu-profile-mode",
+      "passes"
+    ],
+    "result": "rejected",
+    "diagnostic": "fatal: GPU profiling requires --profile CSV"
+  },
+  {
+    "case": [
+      "--freeze-scene",
+      "--autoplay"
+    ],
+    "result": "rejected",
+    "diagnostic": "fatal: static terrain fixture conflicts with play/autoplay/dev-overlay/resize-check"
+  },
+  {
+    "case": [
+      "--play",
+      "--freeze-scene"
+    ],
+    "result": "rejected",
+    "diagnostic": "fatal: static terrain fixture conflicts with play/autoplay/dev-overlay/resize-check"
+  },
+  {
+    "case": [
+      "--freeze-scene",
+      "--resize-check"
+    ],
+    "result": "rejected",
+    "diagnostic": "fatal: static terrain fixture conflicts with play/autoplay/dev-overlay/resize-check"
+  },
+  {
+    "case": [
+      "--freeze-scene",
+      "--dev-overlay"
+    ],
+    "result": "rejected",
+    "diagnostic": "fatal: static terrain fixture conflicts with play/autoplay/dev-overlay/resize-check"
+  }
+]

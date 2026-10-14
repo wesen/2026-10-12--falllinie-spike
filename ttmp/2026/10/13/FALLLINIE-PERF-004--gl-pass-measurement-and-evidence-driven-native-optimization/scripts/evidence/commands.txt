@@ -1,0 +1,4 @@
+Commands: sh scripts/build-host.sh; python3 scripts/smoke-host.py (paths relative to ticket).
+Host assertions: 13/13 CTest, 9/9 analyzer, six 8-frame software-GL cases; same frozen top captures across off/view/pass modes; bypass no post CPU/GPU scopes; CLI rejection records in summary JSON.
+run-one.sh: local Xvfb static-off 10s exit_status=0; metadata/hash/argv/snapshots/receipt/CSV created and analyzer accepted. Full output under ignored .work/runner-check; not target evidence.
+sh -n scripts/{build-host,build-parent-arm,run-one}.sh: passed. Offline ARM helper NOT EXECUTED. Device gate NOT RUN.

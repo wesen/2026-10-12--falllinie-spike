@@ -1,0 +1,54 @@
+HOST FUNCTIONAL ONLY; existing Xvfb / software Mesa. NOT target Mali performance.
+
+CASE=off-single
+GL_VERSION=OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2
+GL_RENDERER=llvmpipe (LLVM 20.1.2, 256 bits)
+GL_VENDOR=Mesa
+GL_CAPS max_texture=16384 max_renderbuffer=16384
+DIAGNOSTIC fixture=static-terrain second_view=same-camera post_bypass=0 non_parity=1 seed=42 cell=0 cells=3 internal=384x288 dual=0
+STATIC TERRAIN: no simulation/update_player/RNG advancement, rider/particles/trails/HUD/streaming/audio-DSP; fixed initialized camera, input mutations disabled
+frames=8 measured=0 frame_p50_ms=0 frame_p95_ms=0 frame_p99_ms=0 peak_rss_kib=132576 GL_error=0
+
+CASE=off-dual
+GL_VERSION=OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2
+GL_RENDERER=llvmpipe (LLVM 20.1.2, 256 bits)
+GL_VENDOR=Mesa
+GL_CAPS max_texture=16384 max_renderbuffer=16384
+DIAGNOSTIC fixture=static-terrain second_view=same-camera post_bypass=0 non_parity=1 seed=42 cell=0 cells=3 internal=384x288 dual=1
+STATIC TERRAIN: no simulation/update_player/RNG advancement, rider/particles/trails/HUD/streaming/audio-DSP; fixed initialized camera, input mutations disabled
+frames=8 measured=0 frame_p50_ms=0 frame_p95_ms=0 frame_p99_ms=0 peak_rss_kib=140480 GL_error=0
+
+CASE=passes-dual
+GL_VERSION=OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2
+GL_RENDERER=llvmpipe (LLVM 20.1.2, 256 bits)
+GL_VENDOR=Mesa
+GL_CAPS max_texture=16384 max_renderbuffer=16384
+DIAGNOSTIC fixture=static-terrain second_view=same-camera post_bypass=0 non_parity=1 seed=42 cell=0 cells=3 internal=384x288 dual=1
+STATIC TERRAIN: no simulation/update_player/RNG advancement, rider/particles/trails/HUD/streaming/audio-DSP; fixed initialized camera, input mutations disabled
+frames=8 measured=0 frame_p50_ms=0 frame_p95_ms=0 frame_p99_ms=0 peak_rss_kib=140440 GL_error=0
+
+CASE=view-dual
+GL_VERSION=OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2
+GL_RENDERER=llvmpipe (LLVM 20.1.2, 256 bits)
+GL_VENDOR=Mesa
+GL_CAPS max_texture=16384 max_renderbuffer=16384
+DIAGNOSTIC fixture=static-terrain second_view=same-camera post_bypass=0 non_parity=1 seed=42 cell=0 cells=3 internal=384x288 dual=1
+STATIC TERRAIN: no simulation/update_player/RNG advancement, rider/particles/trails/HUD/streaming/audio-DSP; fixed initialized camera, input mutations disabled
+frames=8 measured=0 frame_p50_ms=0 frame_p95_ms=0 frame_p99_ms=0 peak_rss_kib=140468 GL_error=0
+
+CASE=bypass-dual
+GL_VERSION=OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2
+GL_RENDERER=llvmpipe (LLVM 20.1.2, 256 bits)
+GL_VENDOR=Mesa
+GL_CAPS max_texture=16384 max_renderbuffer=16384
+DIAGNOSTIC fixture=static-terrain second_view=same-camera post_bypass=1 non_parity=1 seed=42 cell=0 cells=3 internal=384x288 dual=1
+STATIC TERRAIN: no simulation/update_player/RNG advancement, rider/particles/trails/HUD/streaming/audio-DSP; fixed initialized camera, input mutations disabled
+frames=8 measured=0 frame_p50_ms=0 frame_p95_ms=0 frame_p99_ms=0 peak_rss_kib=140544 GL_error=0
+
+CASE=live-dual
+GL_VERSION=OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2
+GL_RENDERER=llvmpipe (LLVM 20.1.2, 256 bits)
+GL_VENDOR=Mesa
+GL_CAPS max_texture=16384 max_renderbuffer=16384
+DIAGNOSTIC fixture=live-or-default second_view=first-person post_bypass=0 non_parity=0 seed=42 cell=0 cells=3 internal=384x288 dual=1
+frames=8 measured=0 frame_p50_ms=0 frame_p95_ms=0 frame_p99_ms=0 peak_rss_kib=140848 GL_error=0

@@ -1,0 +1,15 @@
+{
+"measurement":{"fixture":"static-terrain","second_view":"same-camera","post_bypass":false,"gpu_mode":"passes","cadence":60,"static_exclusions":"rider,particles,trails,HUD,streaming,audio-DSP"},
+"source_sha256":"cb9b4befd0252859d9c45246f94fbd7dd1662c6d034c6ccb95fbe16947e8b556",
+"seed":42,"cell":0,"cells":3,
+"context":{"version":"OpenGL ES 3.2 v1.g29p1-12eac0.d6e9c0f8499d70cc285f3f0ca2ede780","vendor":"ARM","renderer":"Mali-G52"},
+"render_size":[384,288],"drawable_size":[1024,768],"placement_ok":true,
+"debug_view":0,"palette":0,"dual_screen":false,"stable_sky":true,"depth_sampler_highp":true,"resize_check":false,
+"camera_eye":[22.1059528,16.16278409,0],"camera_look":[28.78827181,2.239432732,38],
+"vertices":44619,"indices":263304,"terrain_build_ms":58.89137,
+"frames":1199,"warmup_frames":60,"measured_frames":1139,
+"frame_ms":{"p50":16.577404,"p95":16.712984,"p99":16.798481},
+"swap_p95_ms":15.401098,"rss_kib":{"start":43816,"peak":59260,"end":59260},
+"timing_scope":"CPU submission plus swap; not GPU timer","timing_target_met":true,
+"rss_samples":[[60,59260],[120,59260],[180,59260],[240,59260],[300,59260],[360,59260],[420,59260],[480,59260],[540,59260],[600,59260],[660,59260],[720,59260],[780,59260],[840,59260],[900,59260],[960,59260],[1020,59260],[1080,59260],[1140,59260]],"gl_error":0
+}

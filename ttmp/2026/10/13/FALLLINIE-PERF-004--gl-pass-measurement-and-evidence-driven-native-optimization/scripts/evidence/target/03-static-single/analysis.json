@@ -1,0 +1,166 @@
+{
+  "profile": "/home/manuel/code/wesen/2026-10-12--falllinie-spike/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/evidence/target/03-static-single/frames.csv",
+  "warmup_frames": 60,
+  "gpu_mode": "passes",
+  "measurement_receipt": {
+    "fixture": "static-terrain",
+    "second_view": "same-camera",
+    "post_bypass": false,
+    "gpu_mode": "passes",
+    "cadence": 60,
+    "static_exclusions": "rider,particles,trails,HUD,streaming,audio-DSP"
+  },
+  "cpu_scope_integrity": {
+    "schema_version": 2,
+    "records": 80,
+    "count_reconciled": true,
+    "parent_closure": true,
+    "gpu_counterparts": true
+  },
+  "cpu_intervals_independent_not_additive": {
+    "interval_ms": {
+      "n": 1139,
+      "mean_ms": 16.666663821773486,
+      "p50_ms": 16.66661,
+      "p95_ms": 16.79644,
+      "p99_ms": 16.877188
+    },
+    "events_ms": {
+      "n": 1139,
+      "mean_ms": 0.2052809244951712,
+      "p50_ms": 0.178204,
+      "p95_ms": 0.347658,
+      "p99_ms": 0.534904
+    },
+    "physics_ms": {
+      "n": 1139,
+      "mean_ms": 0.0,
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 0.0
+    },
+    "player_ms": {
+      "n": 1139,
+      "mean_ms": 0.0,
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 0.0
+    },
+    "stream_ms": {
+      "n": 1139,
+      "mean_ms": 0.0,
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 0.0
+    },
+    "top_submit_ms": {
+      "n": 1139,
+      "mean_ms": 2.8503741211589113,
+      "p50_ms": 1.637379,
+      "p95_ms": 10.52167,
+      "p99_ms": 12.532915
+    },
+    "top_swap_ms": {
+      "n": 1139,
+      "mean_ms": 0.3908746874451273,
+      "p50_ms": 0.335992,
+      "p95_ms": 0.745774,
+      "p99_ms": 1.113849
+    },
+    "bottom_submit_ms": {
+      "n": 1139,
+      "mean_ms": 0.0,
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 0.0
+    },
+    "bottom_swap_ms": {
+      "n": 1139,
+      "mean_ms": 0.0010949297629499562,
+      "p50_ms": 0.000875,
+      "p95_ms": 0.001458,
+      "p99_ms": 0.00175
+    },
+    "pace_wait_ms": {
+      "n": 1139,
+      "mean_ms": 13.10858069622476,
+      "p50_ms": 14.261665,
+      "p95_ms": 15.10598,
+      "p99_ms": 15.284142
+    }
+  },
+  "cpu_scopes_nested_not_additive": {
+    "0/scene (parent=view)": {
+      "n": 19,
+      "mean_ms": 0.43173342105263157,
+      "p50_ms": 0.418241,
+      "p95_ms": 0.62736,
+      "p99_ms": 0.62736
+    },
+    "0/post (parent=view)": {
+      "n": 19,
+      "mean_ms": 0.8221188947368422,
+      "p50_ms": 0.712234,
+      "p95_ms": 1.734501,
+      "p99_ms": 1.734501
+    },
+    "0/output (parent=view)": {
+      "n": 19,
+      "mean_ms": 2.1460834210526314,
+      "p50_ms": 0.830647,
+      "p95_ms": 10.710416,
+      "p99_ms": 10.710416
+    },
+    "0/view (parent=none)": {
+      "n": 19,
+      "mean_ms": 3.662506263157895,
+      "p50_ms": 2.389569,
+      "p95_ms": 12.692245,
+      "p99_ms": 12.692245
+    }
+  },
+  "gpu_scopes_no_cross_mode_sum": {
+    "0/scene": {
+      "n": 19,
+      "mean_ms": 4.387970684210527,
+      "p50_ms": 4.381999,
+      "p95_ms": 4.461916,
+      "p99_ms": 4.461916
+    },
+    "0/post": {
+      "n": 19,
+      "mean_ms": 5.697431157894737,
+      "p50_ms": 5.690415,
+      "p95_ms": 5.77325,
+      "p99_ms": 5.77325
+    },
+    "0/output": {
+      "n": 19,
+      "mean_ms": 2.4103469473684207,
+      "p50_ms": 2.409457,
+      "p95_ms": 2.421707,
+      "p99_ms": 2.421707
+    }
+  },
+  "postwarmup_gpu_status": {
+    "valid": 57
+  },
+  "whole_run_query_stats": {
+    "mode": "passes",
+    "cadence": "60",
+    "supported": "1",
+    "issued": "60",
+    "valid": "60",
+    "disjoint": "0",
+    "unavailable_polls": "6",
+    "skipped_pool": "0",
+    "unsupported_scopes": "0",
+    "misuse": "0",
+    "disjoint_polls": "1",
+    "pending": "0",
+    "cpu_dropped": "0",
+    "schema_version": "2",
+    "cpu_samples": "80"
+  },
+  "limits": "CPU submit includes driver/backpressure; GPU elapsed is not utilization. Empty GPU data is unavailable, never zero. Static terrain lacks dynamic/streaming/audio coverage. Compare repetitions, not pooled divergent live trajectories."
+}

@@ -1,0 +1,6 @@
+source_rev=532081682d36f1eaf5eb0daf9a45b17f4b60f136
+case=static-res
+order=5
+seconds=20
+warmup_frames=60
+exit_status=0

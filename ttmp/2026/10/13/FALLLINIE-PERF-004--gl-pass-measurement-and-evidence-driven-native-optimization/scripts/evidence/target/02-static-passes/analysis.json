@@ -1,0 +1,215 @@
+{
+  "profile": "/home/manuel/code/wesen/2026-10-12--falllinie-spike/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/evidence/target/02-static-passes/frames.csv",
+  "warmup_frames": 60,
+  "gpu_mode": "passes",
+  "measurement_receipt": {
+    "fixture": "static-terrain",
+    "second_view": "same-camera",
+    "post_bypass": false,
+    "gpu_mode": "passes",
+    "cadence": 60,
+    "static_exclusions": "rider,particles,trails,HUD,streaming,audio-DSP"
+  },
+  "cpu_scope_integrity": {
+    "schema_version": 2,
+    "records": 160,
+    "count_reconciled": true,
+    "parent_closure": true,
+    "gpu_counterparts": true
+  },
+  "cpu_intervals_independent_not_additive": {
+    "interval_ms": {
+      "n": 1132,
+      "mean_ms": 16.666672371024735,
+      "p50_ms": 16.667776,
+      "p95_ms": 16.765191,
+      "p99_ms": 16.845147
+    },
+    "events_ms": {
+      "n": 1132,
+      "mean_ms": 0.2849743303886926,
+      "p50_ms": 0.262494,
+      "p95_ms": 0.519738,
+      "p99_ms": 0.69065
+    },
+    "physics_ms": {
+      "n": 1132,
+      "mean_ms": 0.0,
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 0.0
+    },
+    "player_ms": {
+      "n": 1132,
+      "mean_ms": 0.0,
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 0.0
+    },
+    "stream_ms": {
+      "n": 1132,
+      "mean_ms": 0.0,
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 0.0
+    },
+    "top_submit_ms": {
+      "n": 1132,
+      "mean_ms": 1.4827981934628975,
+      "p50_ms": 1.358551,
+      "p95_ms": 2.473275,
+      "p99_ms": 3.17355
+    },
+    "top_swap_ms": {
+      "n": 1132,
+      "mean_ms": 0.32216853886925795,
+      "p50_ms": 0.279411,
+      "p95_ms": 0.584194,
+      "p99_ms": 0.843771
+    },
+    "bottom_submit_ms": {
+      "n": 1132,
+      "mean_ms": 1.6135238277385158,
+      "p50_ms": 1.348052,
+      "p95_ms": 3.305381,
+      "p99_ms": 5.202336
+    },
+    "bottom_swap_ms": {
+      "n": 1132,
+      "mean_ms": 0.23436266342756185,
+      "p50_ms": 0.202703,
+      "p95_ms": 0.398699,
+      "p99_ms": 0.729733
+    },
+    "pace_wait_ms": {
+      "n": 1132,
+      "mean_ms": 12.635581916077738,
+      "p50_ms": 12.961071,
+      "p95_ms": 14.105252,
+      "p99_ms": 14.326956
+    }
+  },
+  "cpu_scopes_nested_not_additive": {
+    "0/scene (parent=view)": {
+      "n": 19,
+      "mean_ms": 0.34850284210526317,
+      "p50_ms": 0.302743,
+      "p95_ms": 0.565236,
+      "p99_ms": 0.565236
+    },
+    "0/post (parent=view)": {
+      "n": 19,
+      "mean_ms": 0.5935431052631579,
+      "p50_ms": 0.523821,
+      "p95_ms": 0.98406,
+      "p99_ms": 0.98406
+    },
+    "0/output (parent=view)": {
+      "n": 19,
+      "mean_ms": 0.795727,
+      "p50_ms": 0.625319,
+      "p95_ms": 3.018971,
+      "p99_ms": 3.018971
+    },
+    "0/view (parent=none)": {
+      "n": 19,
+      "mean_ms": 1.9189548947368422,
+      "p50_ms": 1.555422,
+      "p95_ms": 4.882969,
+      "p99_ms": 4.882969
+    },
+    "1/scene (parent=view)": {
+      "n": 19,
+      "mean_ms": 0.3089904210526316,
+      "p50_ms": 0.299243,
+      "p95_ms": 0.571945,
+      "p99_ms": 0.571945
+    },
+    "1/post (parent=view)": {
+      "n": 19,
+      "mean_ms": 0.5827211052631579,
+      "p50_ms": 0.484739,
+      "p95_ms": 1.184722,
+      "p99_ms": 1.184722
+    },
+    "1/output (parent=view)": {
+      "n": 19,
+      "mean_ms": 1.0184913684210526,
+      "p50_ms": 0.719525,
+      "p95_ms": 4.856428,
+      "p99_ms": 4.856428
+    },
+    "1/view (parent=none)": {
+      "n": 19,
+      "mean_ms": 2.0960517894736843,
+      "p50_ms": 1.861081,
+      "p95_ms": 5.647701,
+      "p99_ms": 5.647701
+    }
+  },
+  "gpu_scopes_no_cross_mode_sum": {
+    "0/scene": {
+      "n": 19,
+      "mean_ms": 5.117198684210527,
+      "p50_ms": 5.088416,
+      "p95_ms": 5.524749,
+      "p99_ms": 5.524749
+    },
+    "0/post": {
+      "n": 19,
+      "mean_ms": 6.439707157894737,
+      "p50_ms": 6.397999,
+      "p95_ms": 6.838999,
+      "p99_ms": 6.838999
+    },
+    "0/output": {
+      "n": 19,
+      "mean_ms": 2.443259105263158,
+      "p50_ms": 2.41354,
+      "p95_ms": 2.957498,
+      "p99_ms": 2.957498
+    },
+    "1/scene": {
+      "n": 19,
+      "mean_ms": 4.768288789473684,
+      "p50_ms": 4.747458,
+      "p95_ms": 5.003249,
+      "p99_ms": 5.003249
+    },
+    "1/post": {
+      "n": 19,
+      "mean_ms": 6.079713631578947,
+      "p50_ms": 6.06054,
+      "p95_ms": 6.315165,
+      "p99_ms": 6.315165
+    },
+    "1/output": {
+      "n": 19,
+      "mean_ms": 2.4125726842105264,
+      "p50_ms": 2.411207,
+      "p95_ms": 2.421414,
+      "p99_ms": 2.421414
+    }
+  },
+  "postwarmup_gpu_status": {
+    "valid": 114
+  },
+  "whole_run_query_stats": {
+    "mode": "passes",
+    "cadence": "60",
+    "supported": "1",
+    "issued": "120",
+    "valid": "120",
+    "disjoint": "0",
+    "unavailable_polls": "0",
+    "skipped_pool": "0",
+    "unsupported_scopes": "0",
+    "misuse": "0",
+    "disjoint_polls": "1",
+    "pending": "0",
+    "cpu_dropped": "0",
+    "schema_version": "2",
+    "cpu_samples": "160"
+  },
+  "limits": "CPU submit includes driver/backpressure; GPU elapsed is not utilization. Empty GPU data is unavailable, never zero. Static terrain lacks dynamic/streaming/audio coverage. Compare repetitions, not pooled divergent live trajectories."
+}

@@ -1,0 +1,56 @@
+Wed Oct 14 01:05:50 UTC 2026
+Linux RK3566 7.2.7 #1 SMP PREEMPT Sat Oct 10 05:42:23 UTC 2026 aarch64 GNU/Linux
+MemTotal:         998480 kB
+MemFree:          130764 kB
+MemAvailable:     346704 kB
+Buffers:            3660 kB
+Cached:           358116 kB
+SwapCached:            0 kB
+Active:           214368 kB
+Inactive:         324304 kB
+Active(anon):     120668 kB
+Inactive(anon):   137088 kB
+Active(file):      93700 kB
+Inactive(file):   187216 kB
+Unevictable:        3208 kB
+Mlocked:             136 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+Dirty:               200 kB
+Writeback:             0 kB
+AnonPages:        179108 kB
+Mapped:            56124 kB
+Shmem:             80928 kB
+KReclaimable:      95584 kB
+Slab:             135872 kB
+SReclaimable:      95584 kB
+SUnreclaim:        40288 kB
+KernelStack:        3400 kB
+PageTables:         4196 kB
+SecPageTables:       168 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:      499240 kB
+Committed_AS:     726816 kB
+VmallocTotal:   261087232 kB
+VmallocUsed:       17304 kB
+VmallocChunk:          0 kB
+Percpu:             1328 kB
+AnonHugePages:         0 kB
+ShmemHugePages:        0 kB
+ShmemPmdMapped:        0 kB
+FileHugePages:         0 kB
+FilePmdMapped:         0 kB
+CmaTotal:         262144 kB
+CmaFree:           46916 kB
+Balloon:               0 kB
+GPUActive:             0 kB
+GPUReclaim:            0 kB
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq=1104000
+/sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq=408000
+/sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq=1992000
+/sys/devices/system/cpu/cpufreq/policy0/scaling_governor=ondemand
+/sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq=1992000
+/sys/class/thermal/thermal_zone0/temp=46111
+/sys/class/thermal/thermal_zone1/temp=46111

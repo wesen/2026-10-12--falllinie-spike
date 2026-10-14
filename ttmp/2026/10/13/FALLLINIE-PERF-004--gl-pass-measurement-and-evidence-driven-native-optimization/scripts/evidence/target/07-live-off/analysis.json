@@ -1,0 +1,198 @@
+{
+  "profile": "/home/manuel/code/wesen/2026-10-12--falllinie-spike/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/evidence/target/07-live-off/frames.csv",
+  "warmup_frames": 60,
+  "gpu_mode": "off",
+  "measurement_receipt": {
+    "fixture": "live-or-default",
+    "second_view": "first-person",
+    "post_bypass": false,
+    "gpu_mode": "off",
+    "cadence": 60,
+    "static_exclusions": "none"
+  },
+  "cpu_scope_integrity": {
+    "schema_version": 2,
+    "records": 228,
+    "count_reconciled": true,
+    "parent_closure": true,
+    "gpu_counterparts": true
+  },
+  "cpu_intervals_independent_not_additive": {
+    "interval_ms": {
+      "n": 1031,
+      "mean_ms": 18.313201357904944,
+      "p50_ms": 16.671568,
+      "p95_ms": 33.021437,
+      "p99_ms": 34.033204
+    },
+    "events_ms": {
+      "n": 1031,
+      "mean_ms": 0.21012408826382153,
+      "p50_ms": 0.172079,
+      "p95_ms": 0.389075,
+      "p99_ms": 1.019351
+    },
+    "physics_ms": {
+      "n": 1031,
+      "mean_ms": 0.10465436081474297,
+      "p50_ms": 0.091289,
+      "p95_ms": 0.170038,
+      "p99_ms": 0.277077
+    },
+    "player_ms": {
+      "n": 1031,
+      "mean_ms": 0.6360762104752667,
+      "p50_ms": 0.483572,
+      "p95_ms": 1.182389,
+      "p99_ms": 4.23636
+    },
+    "stream_ms": {
+      "n": 1031,
+      "mean_ms": 0.09225333947623666,
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 3.613666
+    },
+    "top_submit_ms": {
+      "n": 1031,
+      "mean_ms": 8.425683597478177,
+      "p50_ms": 8.876668,
+      "p95_ms": 10.066056,
+      "p99_ms": 11.414692
+    },
+    "top_swap_ms": {
+      "n": 1031,
+      "mean_ms": 0.35856790494665375,
+      "p50_ms": 0.27941,
+      "p95_ms": 0.885479,
+      "p99_ms": 1.415717
+    },
+    "bottom_submit_ms": {
+      "n": 1031,
+      "mean_ms": 7.661781103782735,
+      "p50_ms": 5.778657,
+      "p95_ms": 22.766968,
+      "p99_ms": 23.187833
+    },
+    "bottom_swap_ms": {
+      "n": 1031,
+      "mean_ms": 0.3225000164888458,
+      "p50_ms": 0.256369,
+      "p95_ms": 0.745775,
+      "p99_ms": 1.336385
+    },
+    "pace_wait_ms": {
+      "n": 1031,
+      "mean_ms": 0.4704181871968962,
+      "p50_ms": 0.001459,
+      "p95_ms": 2.01187,
+      "p99_ms": 3.123677
+    }
+  },
+  "cpu_scopes_nested_not_additive": {
+    "0/dynamic_prep (parent=scene)": {
+      "n": 18,
+      "mean_ms": 0.08155127777777778,
+      "p50_ms": 0.07204,
+      "p95_ms": 0.156329,
+      "p99_ms": 0.156329
+    },
+    "0/dynamic_upload (parent=scene)": {
+      "n": 18,
+      "mean_ms": 0.07225061111111111,
+      "p50_ms": 0.067081,
+      "p95_ms": 0.122205,
+      "p99_ms": 0.122205
+    },
+    "0/scene (parent=view)": {
+      "n": 18,
+      "mean_ms": 2.580557777777778,
+      "p50_ms": 2.38432,
+      "p95_ms": 4.465604,
+      "p99_ms": 4.465604
+    },
+    "0/post (parent=view)": {
+      "n": 18,
+      "mean_ms": 0.5817318333333333,
+      "p50_ms": 0.492031,
+      "p95_ms": 1.267845,
+      "p99_ms": 1.267845
+    },
+    "0/output (parent=view)": {
+      "n": 18,
+      "mean_ms": 3.8212625555555553,
+      "p50_ms": 4.917093,
+      "p95_ms": 6.529389,
+      "p99_ms": 6.529389
+    },
+    "0/view (parent=none)": {
+      "n": 18,
+      "mean_ms": 6.997648944444445,
+      "p50_ms": 7.931981,
+      "p95_ms": 9.263117,
+      "p99_ms": 9.263117
+    },
+    "1/dynamic_prep (parent=scene)": {
+      "n": 18,
+      "mean_ms": 0.08777355555555556,
+      "p50_ms": 0.092164,
+      "p95_ms": 0.135914,
+      "p99_ms": 0.135914
+    },
+    "1/dynamic_upload (parent=scene)": {
+      "n": 18,
+      "mean_ms": 0.085035,
+      "p50_ms": 0.076123,
+      "p95_ms": 0.148163,
+      "p99_ms": 0.148163
+    },
+    "1/scene (parent=view)": {
+      "n": 18,
+      "mean_ms": 1.3468851666666666,
+      "p50_ms": 1.320636,
+      "p95_ms": 2.740144,
+      "p99_ms": 2.740144
+    },
+    "1/post (parent=view)": {
+      "n": 18,
+      "mean_ms": 0.6522322777777778,
+      "p50_ms": 0.548904,
+      "p95_ms": 2.15245,
+      "p99_ms": 2.15245
+    },
+    "1/output (parent=view)": {
+      "n": 18,
+      "mean_ms": 4.818901277777778,
+      "p50_ms": 4.151777,
+      "p95_ms": 9.722189,
+      "p99_ms": 9.722189
+    },
+    "1/view (parent=none)": {
+      "n": 18,
+      "mean_ms": 6.838305444444444,
+      "p50_ms": 5.742491,
+      "p95_ms": 12.018719,
+      "p99_ms": 12.018719
+    }
+  },
+  "gpu_scopes_no_cross_mode_sum": {},
+  "postwarmup_gpu_status": {},
+  "whole_run_query_stats": {
+    "mode": "off",
+    "cadence": "60",
+    "supported": "0",
+    "issued": "0",
+    "valid": "0",
+    "disjoint": "0",
+    "unavailable_polls": "0",
+    "skipped_pool": "0",
+    "unsupported_scopes": "0",
+    "misuse": "0",
+    "disjoint_polls": "0",
+    "pending": "0",
+    "cpu_dropped": "0",
+    "schema_version": "2",
+    "cpu_samples": "228"
+  },
+  "limits": "CPU submit includes driver/backpressure; GPU elapsed is not utilization. Empty GPU data is unavailable, never zero. Static terrain lacks dynamic/streaming/audio coverage. Compare repetitions, not pooled divergent live trajectories."
+}

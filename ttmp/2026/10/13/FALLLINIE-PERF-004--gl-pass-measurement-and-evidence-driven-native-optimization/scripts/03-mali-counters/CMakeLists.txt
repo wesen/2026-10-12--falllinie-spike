@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.13.5)
+project(falllinie_mali_counters LANGUAGES C CXX)
+set(CMAKE_CXX_STANDARD 14)
+set(HWCPIPE_WERROR OFF CACHE BOOL "Third-party warning policy" FORCE)
+add_subdirectory(.work/libGPUCounters)
+add_executable(mali-counters probe.cpp)
+target_link_libraries(mali-counters PRIVATE hwcpipe device pthread)

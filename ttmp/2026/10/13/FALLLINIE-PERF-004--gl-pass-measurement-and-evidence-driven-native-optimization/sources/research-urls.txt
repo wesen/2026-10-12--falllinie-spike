@@ -1,0 +1,3 @@
+https://github.com/ARM-software/libGPUCounters
+https://github.com/ARM-software/gator
+https://github.com/ARM-software/libGPUCounters/blob/378c7b59e2dae87cbbffb0ac9cf96ed13c939823/docs/mali-g52_counter_reference.html

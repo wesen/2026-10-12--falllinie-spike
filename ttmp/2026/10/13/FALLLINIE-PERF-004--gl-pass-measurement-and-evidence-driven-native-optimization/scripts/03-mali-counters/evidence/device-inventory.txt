@@ -1,0 +1,151 @@
+2026-10-14T02:41:13Z
+Linux 7.2.7 aarch64
+device-tree model=Anbernic RG DS Plus 
+device-tree compatible=anbernic,rg-ds-plus rockchip,rk3568 
+crw-rw-rw-    1 root     root       10, 259 Oct 10 04:08 /dev/mali0
+/sys/module/mali_kbase/version=r54p2-02eac0 (UK version 11.46)
+/sys/module/mali_kbase/srcversion=3E2AC1D43B98CFE3AFC85C5
+/sys/module/mali_kbase/taint=O
+filename:       /lib/modules/7.2.7/mali-bifrost/mali_kbase.ko
+version:        r54p2-02eac0 (UK version 11.46)
+srcversion:     3E2AC1D43B98CFE3AFC85C5
+vermagic:       7.2.7 SMP preempt mod_unload aarch64
+parm:           corestack_driver_control:Let the driver power on/off the GPU core stack independently without involving the Power Domain Controller. This should only be enabled on platforms for which integration of the PDC to the Mali GPU is known to be problematic. (bool)
+parm:           fully_backed_gpf_memory:Enable the full physical backing of all grow-on-GPU-page-fault allocations in the kernel.Note that this should only be enabled for testing worst case memory usage and should not be enabled in production (bool)
+parm:           override_l2_size:Override L2 size config for testing (byte)
+parm:           override_l2_hash:Override L2 hash config for testing (byte)
+parm:           l2_hash_values:Override L2 hash values config for testing (array of uint)
+parm:           kbase_page_migration_enabled:Explicitly enable or disable page migration with 1 or 0 respectively. (int)
+parm:           large_page_conf:User override for large page usage on supporting platforms. (charp)
+gpu_device=/sys/class/misc/mali0/device
+core_mask
+devfreq
+driver
+driver_override
+dvfs_period
+gpuinfo
+js_ctx_scheduling_mode
+js_scheduling_period
+js_timeouts
+lp_mem_pool_max_size
+lp_mem_pool_size
+mem_pool_max_size
+mem_pool_size
+mempool
+misc
+modalias
+of_node
+pm_poweroff
+power
+power_policy
+reset_timeout
+scheduling
+soft_job_timeout
+subsystem
+supplier:i2c:0-0020
+supplier:platform:fdd90000.power-management:power-controller
+supplier:platform:firmware:scmi
+supplier:regulator:regulator.9
+uevent
+/sys/class/misc/mali0/device/gpuinfo=Mali-G52 1 cores r1p0 0x07040002
+
+/sys/class/misc/mali0/device/core_mask=Current core mask (JS0) : 0x1
+Current core mask (JS1) : 0x1
+Current core mask (JS2) : 0x1
+Available core mask : 0x1
+
+gpu_device=/sys/devices/platform/fde60000.gpu
+core_mask
+devfreq
+driver
+driver_override
+dvfs_period
+gpuinfo
+js_ctx_scheduling_mode
+js_scheduling_period
+js_timeouts
+lp_mem_pool_max_size
+lp_mem_pool_size
+mem_pool_max_size
+mem_pool_size
+mempool
+misc
+modalias
+of_node
+pm_poweroff
+power
+power_policy
+reset_timeout
+scheduling
+soft_job_timeout
+subsystem
+supplier:i2c:0-0020
+supplier:platform:fdd90000.power-management:power-controller
+supplier:platform:firmware:scmi
+supplier:regulator:regulator.9
+uevent
+/sys/devices/platform/fde60000.gpu/gpuinfo=Mali-G52 1 cores r1p0 0x07040002
+
+/sys/devices/platform/fde60000.gpu/core_mask=Current core mask (JS0) : 0x1
+Current core mask (JS1) : 0x1
+Current core mask (JS2) : 0x1
+Available core mask : 0x1
+
+devfreq=/sys/class/devfreq/fde60000.gpu
+name=fde60000.gpu
+
+governor=simple_ondemand
+
+cur_freq=200000000
+
+available_frequencies=800000000 700000000 600000000 400000000 300000000 200000000
+
+trans_stat=     From  :   To
+           : 800000000 700000000 600000000 400000000 300000000 200000000   time(ms)
+  800000000:         0        90       482       163       284       170  25043300
+  700000000:        59         0        27         1         0         3    909752
+  600000000:        73         0         0       419        10         7    237764
+  400000000:       502         0         0         0        59        22   2569844
+  300000000:        77         0         0         0         0       276    238100
+* 200000000:       478         0         0         0         0         0  43090676
+Total transition : 3202
+
+driver_libraries:
+/usr/lib/dri/mali-dp_dri.so
+/usr/lib/libmali-bifrost-g52-g29p1.so
+/usr/lib/libmali-hook.so
+/usr/lib/libmali-hook.so.1
+/usr/lib/libmali-hook.so.1.10.0
+/usr/lib/libmali.so
+/usr/lib/libmali.so.1
+/usr/lib/libmali.so.1.10.0
+/usr/lib/libretro/tamalibretro_libretro.info
+/usr/lib/mali
+/usr/lib/modprobe.d/mali-gpu-noauto.conf
+605e3a5caf1be62bb48d97b1168434257355d56db5e3be9b515cfa742c173118  /usr/lib/libmali.so
+605e3a5caf1be62bb48d97b1168434257355d56db5e3be9b515cfa742c173118  /usr/lib/libmali.so.1
+605e3a5caf1be62bb48d97b1168434257355d56db5e3be9b515cfa742c173118  /usr/lib/libmali.so.1.10.0
+existing_capture_tools:
+/usr/bin/renderdoccmd
+relevant_active_processes:
+gpu_boot_messages:
+[   32.105915] mali_kbase: loading out-of-tree module taints kernel.
+[   32.111698] mali fde60000.gpu: Kernel DDK version r54p2-02eac0
+[   32.112138] mali fde60000.gpu: Looking up mali-supply from device node /gpu@fde60000
+[   32.113006] mali fde60000.gpu: Looking up shadercores-supply from device node /gpu@fde60000
+[   32.113050] mali fde60000.gpu: Looking up shadercores-supply property in node /gpu@fde60000 failed
+[   32.113208] mali fde60000.gpu: Looking up mali-supply from device node /gpu@fde60000
+[   32.114376] mali fde60000.gpu: Register LUT 00070200 initialized for GPU arch 0x00070400
+[   32.114416] mali fde60000.gpu: GPU identified as 0x2 arch 7.4.0 r1p0 status 0
+[   32.114567] workqueue: mali_mmu0 is using neither WQ_PERCPU or WQ_UNBOUND. Setting WQ_PERCPU.
+[   32.114598] Modules linked in: mali_kbase(O) ntfs3 ntfs hci_uart crc_ccitt btrtl rocknix_singleadc_joypad bluetooth rtw88_8821cs rtw88_8821c rtw88_sdio rtw88_core rockchip_rga videobuf2_dma_sg hantro_vpu v4l2_jpeg
+[   32.114823]  kbase_mmu_as_init+0x4c/0xd0 [mali_kbase]
+[   32.114963]  kbase_device_misc_init+0x138/0x304 [mali_kbase]
+[   32.115066]  kbase_device_init+0x64/0xf4 [mali_kbase]
+[   32.115165]  kbase_platform_device_probe+0x48/0x100 [mali_kbase]
+[   32.117160] mali fde60000.gpu: No priority control manager is configured
+[   32.117182] mali fde60000.gpu: Large page support was disabled at compile-time!
+[   32.117588] mali fde60000.gpu: No memory group manager is configured
+[   32.121770] mali fde60000.gpu: Using configured power model mali-g52_r1-power-model, and fallback mali-simple-power-model
+[   32.125881] mali fde60000.gpu: * MALI kbase_mmap_min_addr compiled to CONFIG_DEFAULT_MMAP_MIN_ADDR, no runtime update possible! *
+[   32.125901] mali fde60000.gpu: Probed as mali0

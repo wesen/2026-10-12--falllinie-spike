@@ -51,7 +51,8 @@ void Renderer::initialize(uint32_t seed,int first_cell,int count,int w,int h,con
  if(projection_at==std::string::npos)throw std::runtime_error("original scene projection expression missing");
  scene_source.replace(projection_at,projection.size(),"gl_Position=uVP*vec4(w.xyz-uRenderOrigin,1.);");
  scene_source.insert(scene_source.find("void main(){"),"uniform highp vec3 uRenderOrigin;\n");
- scene_=program(scene_source,read_file(assets+"/scene_fs.glsl"),"original scene with relative projection");
+ scene_=program(scene_source,adapt_shadow_shader(read_file(assets+"/scene_fs.glsl"),shadow_mode_),"scene with explicit shadow policy");
+ std::cout<<"SHADOW mode="<<shadow_mode_name(shadow_mode_)<<" non_parity="<<(shadow_mode_==ShadowMode::Off)<<'\n';
  std::cout<<"projection coordinates="<<(relative_coordinates_?"camera-relative":"source absolute (diagnostic)")<<'\n';
  std::string print_source=read_file(assets+"/post_fs.glsl");
  if(precise_depth){
@@ -145,6 +146,15 @@ void Renderer::draw_indexed(GLsizei count,size_t vertices,const void* offset){
   glDrawRangeElements(GL_TRIANGLES,0,GLuint(vertices-1),count,GL_UNSIGNED_INT,offset);
  else glDrawElements(GL_TRIANGLES,count,GL_UNSIGNED_INT,offset);
 }
+void Renderer::upload_shadow_segments(const float* segments){
+ glUniform4fv(loc(scene_,"uSeg"),6,segments);
+ if(shadow_mode_==ShadowMode::Bounds){
+  const auto l=norm({0.45,0.78,-0.5});const auto b=shadow_bounds(segments,{float(l.x),float(l.y),float(l.z)});
+  glUniform2f(loc(scene_,"uShadowSlope"),b.slope[0],b.slope[1]);
+  glUniform4fv(loc(scene_,"uShadowBounds"),1,b.rectangle.data());
+  integer(scene_,"uShadowCullEnabled",b.enabled?1:0);
+ }
+}
 void Renderer::resize(int w,int h){if(w==width_ && h==height_)return;delete_targets();width_=w;height_=h;make_targets();gl_check("resize");}
 void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
  Profiler::Scope whole(profiler_,profile_frame_,profile_view_,RenderPass::View);
@@ -158,7 +168,7 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
  vec3(scene_,"uCam",eye);vec3(scene_,"uL",norm({0.45,0.78,-0.5}));glUniform2f(loc(scene_,"uFog"),150,400);
  // Static spike has no rider; play uses the original live rig shadow segments.
  const float shadows[]={1000000,1000000,1000000,.26f,1000000,1000001,1000000,0,1000002,1000000,1000000,.17f,1000002,1000001,1000000,0,1000004,1000000,1000000,.2f,1000004,1000001,1000000,0};
- if(rig_valid_){Vec3 bx=qrot(rig_.board_orientation,{1,0,0}),nose=rig_.board_position+bx*.75,tail=rig_.board_position-bx*.75,ankle=(rig_.ankle[0]+rig_.ankle[1])*.5;const float seg[]={float(rig_.pelvis.x),float(rig_.pelvis.y),float(rig_.pelvis.z),.26f,float(rig_.head.x),float(rig_.head.y),float(rig_.head.z),0,float(nose.x),float(nose.y),float(nose.z),.17f,float(tail.x),float(tail.y),float(tail.z),0,float(rig_.pelvis.x),float(rig_.pelvis.y),float(rig_.pelvis.z),.2f,float(ankle.x),float(ankle.y),float(ankle.z),0};glUniform4fv(loc(scene_,"uSeg"),6,seg);}else glUniform4fv(loc(scene_,"uSeg"),6,shadows);integer(scene_,"uKind",0);scalar(scene_,"uMat",1);scalar(scene_,"uAlbO",-1);scalar(scene_,"uXray",(palette%6+6)%6==5?1:0);
+ if(rig_valid_){Vec3 bx=qrot(rig_.board_orientation,{1,0,0}),nose=rig_.board_position+bx*.75,tail=rig_.board_position-bx*.75,ankle=(rig_.ankle[0]+rig_.ankle[1])*.5;const float seg[]={float(rig_.pelvis.x),float(rig_.pelvis.y),float(rig_.pelvis.z),.26f,float(rig_.head.x),float(rig_.head.y),float(rig_.head.z),0,float(nose.x),float(nose.y),float(nose.z),.17f,float(tail.x),float(tail.y),float(tail.z),0,float(rig_.pelvis.x),float(rig_.pelvis.y),float(rig_.pelvis.z),.2f,float(ankle.x),float(ankle.y),float(ankle.z),0};upload_shadow_segments(seg);}else upload_shadow_segments(shadows);integer(scene_,"uKind",0);scalar(scene_,"uMat",1);scalar(scene_,"uAlbO",-1);scalar(scene_,"uXray",(palette%6+6)%6==5?1:0);
  glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,glyph_);integer(scene_,"uGlyph",0);if(cell_meshes_.empty()){glBindVertexArray(vao_);draw_indexed(GLsizei(indices_),vertices_);}else for(int cell=patch_first_;cell<patch_first_+patch_count_;++cell){auto found=cell_meshes_.find(cell);if(found!=cell_meshes_.end()){glBindVertexArray(found->second.vao);draw_indexed(found->second.indices,found->second.vertices);}}
  integer(scene_,"uKind",1);scalar(scene_,"uMat",2);
  for(int cell=patch_first_;cell<patch_first_+patch_count_;++cell){auto found=object_meshes_.find(cell);if(found!=object_meshes_.end()){glBindVertexArray(found->second.vao);draw_indexed(found->second.indices,found->second.vertices);}}
@@ -233,13 +243,16 @@ void Renderer::draw_developer_overlay(int width,int height){
  vec3(hud_program_,"uInk",{.05,.08,.12});vec3(hud_program_,"uPaper",{.97,.98,1});
  glDrawArrays(GL_TRIANGLES,0,developer_overlay_vertices_);glDisable(GL_BLEND);
 }
-void Renderer::capture(const std::string& path){
- auto save=[&](GLuint fbo,const std::string& filename){
- glBindFramebuffer(GL_FRAMEBUFFER,fbo);glPixelStorei(GL_PACK_ALIGNMENT,1);std::vector<unsigned char> pixels(size_t(width_)*height_*4);glReadPixels(0,0,width_,height_,GL_RGBA,GL_UNSIGNED_BYTE,pixels.data());gl_check("readback");
- SDL_Surface* s=SDL_CreateRGBSurfaceWithFormat(0,width_,height_,32,SDL_PIXELFORMAT_ABGR8888);if(!s)throw std::runtime_error(SDL_GetError());
- for(int y=0;y<height_;++y)std::memcpy(static_cast<unsigned char*>(s->pixels)+y*s->pitch,pixels.data()+size_t(height_-1-y)*width_*4,width_*4);
+static void save_framebuffer(GLuint fbo,int width,int height,const std::string& filename){
+ if(width<=0||height<=0)throw std::runtime_error("invalid capture size");
+ glBindFramebuffer(GL_FRAMEBUFFER,fbo);glPixelStorei(GL_PACK_ALIGNMENT,1);std::vector<unsigned char> pixels(size_t(width)*height*4);glReadPixels(0,0,width,height,GL_RGBA,GL_UNSIGNED_BYTE,pixels.data());gl_check("readback");
+ SDL_Surface* s=SDL_CreateRGBSurfaceWithFormat(0,width,height,32,SDL_PIXELFORMAT_ABGR8888);if(!s)throw std::runtime_error(SDL_GetError());
+ for(int y=0;y<height;++y)std::memcpy(static_cast<unsigned char*>(s->pixels)+y*s->pitch,pixels.data()+size_t(height-1-y)*width*4,width*4);
  int status=SDL_SaveBMP(s,filename.c_str());SDL_FreeSurface(s);glBindFramebuffer(GL_FRAMEBUFFER,0);if(status!=0)throw std::runtime_error(SDL_GetError());
- };
+}
+void Renderer::capture_output(const std::string& path,int width,int height){save_framebuffer(0,width,height,path);}
+void Renderer::capture(const std::string& path){
+ auto save=[&](GLuint fbo,const std::string& filename){save_framebuffer(fbo,width_,height_,filename);};
  save(post_bypass_?scene_fbo_:print_fbo_,path);
  const auto parent=std::filesystem::path(path).parent_path().string();
  save(scene_fbo_,parent+"/scene.bmp");

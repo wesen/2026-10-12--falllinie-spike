@@ -48,3 +48,44 @@ Read design-doc/01, assets/shaders/scene_fs.glsl and renderer.cpp's shadow uploa
 
 ### Technical details
 Default original; off is non-parity/replay-only; bounds is opt-in. Proposed finite domain +/-8192, slope components <=2, outward bounds plus0.25 projected slack. No kernel/governor/production change.
+
+## Step 2: Implement the guarded original loop and dual-view screenshots
+
+Implemented original/off/bounds modes and a CPU-computed light-invariant rectangle using actual uploaded float segments. The bounds shader retains the original shadow loop verbatim inside a conditional; unsupported inputs retain original evaluation. Default rendering and canonical shader assets remain unchanged.
+
+Host and ARM builds succeeded, all16 CPU tests passed, and a600,000-point float-reference stress test found zero rejected shadow-contributing samples. The short host replay has identical tracked state in all modes; original/bounds match every pixel across eight capture targets, while shadow-off changes1,402 pixels across those targets. This is host qualification, not target fidelity or speed evidence.
+
+### Prompt Context
+**User prompt:** See Step1.
+**Assistant interpretation:** Implement a measurable candidate, retain a narrower non-parity control and produce complete screenshot evidence.
+**Commit (design):**88f1f32.
+
+### What I did
+Added shadow_bounds.hpp and test_shadow_bounds.cpp; wired CLI/receipt policy and renderer uploads. Refactored framebuffer saving to share readback code and added top/lower full-window screenshots plus both cameras' internal targets. Added build, host qualification, bounded device/capture runners and lossless PNG conversion with original BMP hashes.
+
+### Why
+Compute the box from uniforms once per view, not independently per fragment. Keep screenshot readback after profiler detachment and retain camera restoration. Avoid relying solely on tiny internal print images when checking the HUD and enlarged presentation.
+
+### What worked
+01-build.sh: host/ARM build success,16/16 CPU tests. Float test:600000 samples,300280 rejected,207121 contributing samples retained.02-host-check.py: signature13752613737572218072, zero candidate pixel differences across scene/depth/print/output for top and lower views. Shadow-only omission visibly differs. No compile warnings observed in build receipts.
+
+### What didn't work
+No build or host qualification failure. Device performance and fidelity remain unmeasured at this checkpoint.
+
+### What I learned
+Full-window captures can reuse the same checked RGBA readback/vertical flip as internal diagnostics; there is no need for compositor policy changes. Readbacks still do not establish physical scanout appearance.
+
+### What was tricky to build
+Use the same float input coordinates as GL, outward rounding and0.25 slack; do not derive the bound from independently rounded doubles. Conditional receivers outside +/-8192 or unsupported segments evaluate the source loop. Keep lower render/capture ordering from corrupting top endpoint artifacts.
+
+### What warrants a second pair of eyes
+The sampling test is not a proof for all floats or GPU instruction lowering. Target pixel equality remains a separate gate. Domain limits and generous slack are documented rather than hidden behind a claim of universal equivalence.
+
+### What should be done in the future
+Run multi-endpoint target screenshots and the six-case timing/counter matrix. Continue measurement if pixels differ, but block fidelity acceptance and retain differences.
+
+### Code review instructions
+Start with shadow_bounds.hpp, then its test, renderer upload/adaptation/capture changes and main.cpp's post-loop two-window capture. Inspect host/validation.json and lossless-conversion.json records.
+
+### Technical details
+New --shadow-mode defaults original; off requires replay. Screenshot dimensions follow actual drawables. Build precedes implementation commit; source-hashes.txt records the compiled source bytes for later commit qualification. Snapshot runs are separate from measured cases; all mode-specific assets remain canonical.

@@ -1,5 +1,6 @@
 #pragma once
 #include "terrain.hpp"
+#include "shadow_bounds.hpp"
 #include "profiler.hpp"
 #include "game.hpp"
 #include "pose.hpp"
@@ -20,6 +21,8 @@ public:
  void render_first_person(int width,int height,int palette=0);
  void render(int drawable_width,int drawable_height,int debug_view=0,int palette=0);
  void capture(const std::string& path);
+ void capture_output(const std::string& path,int width,int height);
+ void set_shadow_mode(ShadowMode mode){shadow_mode_=mode;}
  void set_measurement(Profiler* profiler,uint64_t frame,int view){profiler_=profiler;profile_frame_=frame;profile_view_=view;}
  void set_post_bypass(bool bypass){post_bypass_=bypass;}
  void set_draw_ranges(bool enabled){draw_ranges_=enabled;}
@@ -38,6 +41,8 @@ public:
  int height()const{return height_;}
  const Camera& camera()const{return camera_;}
 private:
+ ShadowMode shadow_mode_=ShadowMode::Original;
+ void upload_shadow_segments(const float* segments);
  bool draw_ranges_=false,benchmark_replay_=false;
  void draw_indexed(GLsizei count,size_t vertices,const void* offset=nullptr);
  Profiler* profiler_=nullptr;uint64_t profile_frame_=0;int profile_view_=0;bool post_bypass_=false;

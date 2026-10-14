@@ -1,0 +1,11 @@
+VALIDATION PASS substantive_prose_words=6566 body_words_including_tables_code=7520
+5 portable SVGs; 6 local links; 27 immutable receipt hashes; 13 metric rows x3 engines
+Frontmatter/fences/XML/external-dependency/placeholder/analogy-pattern checks passed; manual editorial review remains required.
+Changed vault inventory (exactly seven new files):
+Projects/2026/10/13/PROJECT REPORT - Falllinie JavaScript Embedding - ARM64 Qualification, V8 Ownership and Bounded Rules.md
+Projects/2026/10/13/_assets/falllinie-js-arm64-22241ca/copy-commit.svg
+Projects/2026/10/13/_assets/falllinie-js-arm64-22241ca/evidence-pipeline.svg
+Projects/2026/10/13/_assets/falllinie-js-arm64-22241ca/latency.svg
+Projects/2026/10/13/_assets/falllinie-js-arm64-22241ca/memory.svg
+Projects/2026/10/13/_assets/falllinie-js-arm64-22241ca/ownership.svg
+Projects/2026/10/13/_assets/falllinie-js-arm64-22241ca/provenance.json

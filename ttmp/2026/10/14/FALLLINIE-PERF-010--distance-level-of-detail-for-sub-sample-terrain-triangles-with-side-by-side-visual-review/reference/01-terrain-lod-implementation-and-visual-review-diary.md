@@ -121,3 +121,45 @@ The visual cost is 0.29–0.70% of window pixels at 120 m and 0.60–1.38% at 60
 
 ### Technical details
 - GPU busy = GPU-active cycles per frame × loop FPS ÷ 800 MHz.
+
+## Step 3: Owner chose 60 m; acceptance with audio in replay and live autoplay
+
+The owner chose the 60 m setting after reviewing the side-by-side page. It is now the default (`--terrain-lod off` restores full detail). The acceptance campaign compared previous defaults with the new default at the shipping size, with the muted audio producer running, in the replay (three runs each) and in live autoplay (two runs each). Both already met 60 Hz; the new default lowers the tail (live p95 17.40 → 16.78 ms, p99 18.84 → 17.69 ms) and cuts GPU-active cycles per frame from 12.99 M to 9.24 M, about 70% instead of 97% of the GPU.
+
+The repeated audio runs answer the open question from Step 2. One audio starvation occurred with the new default (`05-lod60-audio`) and one with the previous default (`10-previous-live`). The rare underrun is therefore a property of the audio producer under this load, not of the terrain change.
+
+### Prompt Context
+**User prompt (verbatim):** "60m.\n\nexplain the 1024x768 output copies for?"
+**Assistant interpretation:** Make 60 m the default, qualify it, and explain the role and cost of the full-resolution output pass.
+**Inferred user intent:** Keep the speedup and understand the next cost centre.
+**Commit (code):** aa7d5f5 — "Make 60 m row-decimated terrain LOD the default (owner decision); add 60 m acceptance plan" (device binary `e3e94bd7…afbc62f`)
+
+### What I did
+- `src/main.cpp`: `terrain_lod` default 60; help text.
+- `06-campaign.py`: plan `accept60`, which compares explicit `--terrain-lod off` with the default; the live-case script is now part of the deployment. The earlier `lod` plan used an empty flag list for its baseline when the default was still off; its evidence stays valid for the binary it ran (`b5c7eb3`).
+- `python3 06-campaign.py accept60` → `evidence/accept60-20261014T233951Z`; `07-analyze.py`.
+
+### What worked
+
+| Workload | Mode | Mean ms | p95 ms | p99 ms | Long | GPU-active Mcy/frame |
+|---|---|---:|---:|---:|---:|---:|
+| Replay + audio | previous (01, 04, 06) | 16.626 | 18.240 | 19.296 | 0.1% | 13.13 |
+| Replay + audio | 60 m (02, 03, 05) | 16.619 | 17.647 | 18.682 | 0.0% | 9.24 |
+| Live + audio | previous (07, 10) | 16.667 | 17.399 | 18.837 | 0.0% | 12.99 |
+| Live + audio | 60 m (08, 09) | 16.663 | 16.777 | 17.687 | 0.0% | 9.24 |
+
+- `GL_error=0` everywhere; governor restored to `ondemand`; replay signature unchanged.
+- Audio producer CPU per block is slightly lower with 60 m (9.06–9.32 ms vs 9.61–10.06 ms), consistent with less CPU contention from driver work.
+
+### What didn't work
+- Two audio starvations of one block each: `05-lod60-audio` (`starved_callbacks=1 missing_frames=1024`, `producer_over_budget=4`) and `10-previous-live` (`starved_callbacks=1 missing_frames=1024`, `producer_over_budget=5`). Not caused by the terrain change; a separate audio-robustness follow-up.
+
+### What I learned
+- The output pass (two 1024×768 full-screen copies, ≈1.57 M fragment threads and ≈6.3 MB of writes per frame) is now the largest fragment cost; its only substantial saving would come from display-side scaling, which changes the look.
+
+### What should be done in the future
+- Audio: investigate the rare producer overrun (deeper target lead or a cheaper reverb tail).
+- Resolution comparison 384×288 vs 512×384 with 60 m (next step).
+
+### Code review instructions
+- `python3 -I scripts/07-analyze.py scripts/evidence/accept60-*`.

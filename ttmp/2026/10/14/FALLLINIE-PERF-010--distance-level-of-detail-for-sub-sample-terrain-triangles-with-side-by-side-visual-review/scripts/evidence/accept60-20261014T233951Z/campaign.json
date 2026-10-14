@@ -1,0 +1,11 @@
+{
+  "plan": "accept60",
+  "source_revision": "aa7d5f517693a44d40e0a5ea5ac388250c70d6bd",
+  "dirty": false,
+  "remote": "/storage/apps/falllinie-perf010-20261014T233951Z",
+  "binary_sha256": "e3e94bd7591b9c45a5280298b3459dc30e27c5860804a647dd4a6bf15afbc62f",
+  "complete": true,
+  "governor_before": "ondemand",
+  "governor_during": "performance",
+  "governor_after": "ondemand"
+}

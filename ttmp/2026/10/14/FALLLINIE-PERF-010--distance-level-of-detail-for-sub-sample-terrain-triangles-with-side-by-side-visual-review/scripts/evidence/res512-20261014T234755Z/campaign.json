@@ -1,0 +1,9 @@
+{
+  "plan": "res512",
+  "source_revision": "0dc1dee54f48f78c14be8df3950158b406623e38",
+  "dirty": false,
+  "remote": "/storage/apps/falllinie-perf010-20261014T234755Z",
+  "binary_sha256": "e3e94bd7591b9c45a5280298b3459dc30e27c5860804a647dd4a6bf15afbc62f",
+  "complete": false,
+  "governor_before": "ondemand"
+}

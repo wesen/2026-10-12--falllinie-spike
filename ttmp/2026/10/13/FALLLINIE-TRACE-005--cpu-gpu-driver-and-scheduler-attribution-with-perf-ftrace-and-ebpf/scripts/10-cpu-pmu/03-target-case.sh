@@ -18,13 +18,15 @@ sleep 6
 kill -0 "$app"
 for f in /proc/$app/task/*/comm; do echo "$f"; cat "$f"; done > "$OUT/threads.txt"
 cat /proc/$app/status > "$OUT/process-status.txt"
+cat /proc/$app/maps > "$OUT/process-maps.txt"
 cat /sys/devices/system/cpu/cpufreq/policy0/scaling_governor /sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq > "$OUT/cpu-before.txt"
 status=0
 "$ROOT/pmu-clock" > "$OUT/collection-start-ns.txt"
 if [ "$PAIR" = none ]; then
  sleep 20
 elif [ "$PAIR" = sample ]; then
- perf record --no-inherit -t "$app" --no-buildid-cache -e armv8_cortex_a55/cpu_cycles/ -F 199 --call-graph fp -m 128 -o "$OUT/perf.data" -- sleep 20 > "$OUT/perf-record.log" 2>&1 || status=$?
+ printf 'event=%s\nfrequency=%s\nmain_tid=%s\n' "${SAMPLE_EVENT:-armv8_cortex_a55/cpu_cycles/}" "${SAMPLE_FREQ:-199}" "$app" > "$OUT/sample-config.txt"
+ perf record --no-inherit -t "$app" --no-buildid-cache -e "${SAMPLE_EVENT:-armv8_cortex_a55/cpu_cycles/}" -F "${SAMPLE_FREQ:-199}" --call-graph fp -m 128 -o "$OUT/perf.data" -- sleep 20 > "$OUT/perf-record.log" 2>&1 || status=$?
 else
  EVENTS=$(printf '%s' "$PAIR" | awk -F, '{printf "{armv8_cortex_a55/%s/,armv8_cortex_a55/%s/}",$1,$2}')
  printf 'perf stat --no-inherit -t %s -I 1000 -x , -e %s -- sleep 20\n' "$app" "$EVENTS" > "$OUT/command.txt"

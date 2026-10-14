@@ -149,3 +149,44 @@ Read the new vault report and scripts/12-cpu-vault-report/validation.json. NoteS
 
 ### Technical details
 Publication:3815prosewords,3SVGs,2Mermaid diagrams,8relativeassetlinks,8assetfiles,10scopedfiles including MOC. Target captures were not repeated. Native tooling/evidence remains unpushed; vault main was pushed and independently verified. No background collection is running.
+
+## Step 4: Resume event-location attribution and inspect the driver scan
+
+Resumed after publication. The saved driver excerpt shows vector unsigned minima/maxima around the hot offset: `ld4` reads sixteen32-bit elements, pointer advances64bytes, `umin`/`umax` reduce lanes, and a counted loop repeats. This suggests a range scan, not a uniform-name lookup; its inputs and callers still require evidence. The disassembler's nearest exported label `glViewport+...` is not the private function's identity.
+
+Prepared a five-case unchanged-runtime campaign: cycles, L1Drefill, retiredbranchmisprediction, L1DTLBrefill, cycles. Only event selection changes. Extended the existing runner to preserve process mappings and explicit sample configuration; source shaders and game runtime remain untouched.
+
+### Prompt Context
+**User prompt (verbatim):** "resyme"
+**Assistant interpretation:** Resume the paused targeted attribution, maintain the diary/commit cadence and update the living report when there is new evidence.
+**Inferred user intent:** Progress from aggregate PMU data to a concrete optimization hypothesis.
+
+### What I did
+Read the saved disassembly, inspected renderer indexed draws and the driver's ELF load segments. Added scripts/11-cpu-attribution/01-campaign.sh and sample-event/frequency configuration to the bounded runner.
+
+### Why
+A large instruction-location weight is more actionable when its surrounding algorithm and associated event profiles are known. No precise load attribution is implied by overflow sampling.
+
+### What worked
+Executable LOAD segment has file offset0 and virtual address0, permitting matching module-relative offsets to this code segment; process mapping evidence will be retained during each run. Renderer uses32-bit indexed draws, making index-range scanning a hypothesis worth testing, not a proven call path.
+
+### What didn't work
+No new failure observed at this preparation checkpoint.
+
+### What I learned
+The hot address itself is an ADD immediately after an interleaved vector load. Reading only the sampled opcode would miss the surrounding reduction and could misattribute the cost.
+
+### What was tricky to build
+Retain the identical qualified game binary and explicit mainTID/no-inherit while changing the hardware event. Nearest exported-symbol annotations on stripped code must not become invented function names.
+
+### What warrants a second pair of eyes
+Frame-pointer driver unwinding may be incomplete; sampling skid and distinct event populations remain. A min/max algorithm alone does not identify its caller or prove a cache-latency cause.
+
+### What should be done in the future
+Execute the bounded event campaign, examine address/call-path evidence, then decide whether an index-submission experiment is justified. No candidate optimization is enabled at this checkpoint.
+
+### Code review instructions
+Inspect the new campaign helper and existing runner diff; all private binaries stay ignored. Target evidence and analysis will follow in Step5.
+
+### Technical details
+Five32s games,20s main-thread199Hz requested-event profiles after6s warmup; no-audio, dual384x288, seed42 and unchanged323b095runtime. Requested events are named Cortex-A55 PMU aliases already counted successfully.

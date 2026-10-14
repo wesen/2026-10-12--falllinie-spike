@@ -1,0 +1,14 @@
+{
+  "cases": [
+    "baseline",
+    "post-copy",
+    "scene-flat",
+    "both"
+  ],
+  "frames_per_case": 60,
+  "signature": "13644297744808369648",
+  "depth_diagnostics_match": true,
+  "post_change_preserves_scene": true,
+  "non_parity_prints_differ": true,
+  "scope": "Host linking/consistency only; not Mali performance or full appearance qualification"
+}

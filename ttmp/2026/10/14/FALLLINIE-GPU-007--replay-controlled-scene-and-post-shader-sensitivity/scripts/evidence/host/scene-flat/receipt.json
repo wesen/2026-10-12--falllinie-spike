@@ -1,0 +1,21 @@
+{
+"benchmark_replay":true,
+"replay_signature":"13644297744808369648",
+"replay_step_seconds":0.0166667,
+"replay_work_units":32,
+"draw_ranges":false,
+"audio_disabled":true,
+"measurement":{"fixture":"live-or-default","second_view":"first-person","post_bypass":false,"gpu_mode":"off","cadence":60,"static_exclusions":"none"},
+"source_sha256":"cb9b4befd0252859d9c45246f94fbd7dd1662c6d034c6ccb95fbe16947e8b556",
+"seed":42,"cell":0,"cells":3,
+"context":{"version":"OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2","vendor":"Mesa","renderer":"llvmpipe (LLVM 20.1.2, 256 bits)"},
+"render_size":[256,192],"drawable_size":[1024,768],"placement_ok":false,
+"debug_view":0,"palette":0,"dual_screen":true,"stable_sky":true,"depth_sampler_highp":true,"resize_check":false,
+"camera_eye":[23.62309992,13.70742695,4.430129797],"camera_look":[25.24475271,11.18734849,14.84565357],
+"vertices":104111,"indices":614376,"terrain_build_ms":11.82368,
+"frames":60,"warmup_frames":60,"measured_frames":0,
+"frame_ms":{"p50":0,"p95":0,"p99":0},
+"swap_p95_ms":0,"rss_kib":{"start":138204,"peak":152880,"end":154112},
+"timing_scope":"CPU submission plus swap; not GPU timer","timing_target_met":false,
+"rss_samples":[[60,152880]],"gl_error":0
+}

@@ -1,0 +1,22 @@
+[
+  "xvfb-run",
+  "-a",
+  "/home/manuel/code/wesen/2026-10-12--falllinie-spike/build/integrated-source/falllinie-spike",
+  "--assets",
+  "/home/manuel/code/wesen/2026-10-12--falllinie-spike/ttmp/2026/10/14/FALLLINIE-GPU-007--replay-controlled-scene-and-post-shader-sensitivity/scripts/inputs/assets/baseline",
+  "--benchmark-replay",
+  "--frames",
+  "60",
+  "--seed",
+  "42",
+  "--render-size",
+  "256x192",
+  "--dual-screen",
+  "--no-vsync",
+  "--fps",
+  "0",
+  "--receipt",
+  "/home/manuel/code/wesen/2026-10-12--falllinie-spike/ttmp/2026/10/14/FALLLINIE-GPU-007--replay-controlled-scene-and-post-shader-sensitivity/scripts/evidence/host/baseline/receipt.json",
+  "--capture-dir",
+  "/home/manuel/code/wesen/2026-10-12--falllinie-spike/ttmp/2026/10/14/FALLLINIE-GPU-007--replay-controlled-scene-and-post-shader-sensitivity/scripts/evidence/host/baseline/capture"
+]

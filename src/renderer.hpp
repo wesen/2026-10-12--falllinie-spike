@@ -52,7 +52,7 @@ private:
  void upload_shadow_segments(const float* segments);
  bool draw_ranges_=false,benchmark_replay_=false,fog_constant_=false,view_culling_=false,short_indices_=false,output_clear_=false;
  void draw_indexed(GLsizei count,size_t vertices,const void* offset=nullptr,GLenum type=GL_UNSIGNED_INT);
- struct DrawStats{uint64_t views=0,terrain_drawn=0,terrain_culled=0,terrain_fog_constant=0,object_drawn=0,object_culled=0,object_fog_constant=0,short_index_draws=0,triangles_submitted=0,triangles_culled=0;};
+ struct DrawStats{uint64_t views=0,chunks_drawn=0,chunks_culled=0,chunks_fog_constant=0,terrain_drawn=0,terrain_culled=0,terrain_fog_constant=0,object_drawn=0,object_culled=0,object_fog_constant=0,short_index_draws=0,triangles_submitted=0,triangles_culled=0;};
  DrawStats draw_stats_;
  Profiler* profiler_=nullptr;uint64_t profile_frame_=0;int profile_view_=0;bool post_bypass_=false;
  GLuint hud_program_=0,hud_font_=0,hud_vao_=0,hud_vbo_=0;
@@ -65,7 +65,7 @@ private:
  std::string hud_line_,hud_status_,hud_combo_,hud_meter_,hud_banner_,hud_controls_,hud_grade_,hud_points_;
  std::vector<std::string> hud_trick_lines_;
  double hud_meter_fraction_=0,hud_combo_fraction_=0;
- struct CellMesh{GLuint vao=0,vbo=0,ibo=0;GLsizei indices=0;size_t vertices=0;GLenum index_type=GL_UNSIGNED_INT;Aabb bounds{};};
+ struct CellMesh{GLuint vao=0,vbo=0,ibo=0;GLsizei indices=0;size_t vertices=0;GLenum index_type=GL_UNSIGNED_INT;Aabb bounds{};std::vector<IndexChunk> chunks;};
  std::map<int,CellMesh> cell_meshes_,object_meshes_;
  CellMesh particle_mesh_,trail_mesh_;
  Particles particles_;

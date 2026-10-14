@@ -67,6 +67,14 @@ int main(int argc,char** argv){
  assert(!fl::fits_short_indices(0,{}));
  assert(!fl::fits_short_indices(100,{0,1,100}));
  std::vector<uint16_t> narrow(idx.begin(),idx.end());for(size_t i=0;i<idx.size();++i)assert(uint32_t(narrow[i])==idx[i]);
+ // 3b. Index chunks partition the index buffer in order and bound every referenced vertex.
+ {struct V{float px,py,pz;};std::vector<V> verts;std::vector<uint32_t> tri;
+  for(int i=0;i<5000;++i)verts.push_back({float(unit(rng)*300),float(unit(rng)*50),float(unit(rng)*300)});
+  for(int i=0;i<3*7001;++i)tri.push_back(uint32_t(std::abs(unit(rng))*4999));
+  const auto chunks=fl::index_chunks(verts,tri,636*16);uint32_t next=0;
+  for(const auto& c:chunks){assert(c.first==next&&c.count%3==0&&c.count>0);next+=c.count;
+   for(uint32_t k=c.first;k<c.first+c.count;++k){const auto& v=verts[tri[k]];assert(v.px>=c.bounds.min[0]&&v.px<=c.bounds.max[0]&&v.py>=c.bounds.min[1]&&v.py<=c.bounds.max[1]&&v.pz>=c.bounds.min[2]&&v.pz<=c.bounds.max[2]);}}
+  assert(next==tri.size()&&chunks.size()==3);}
  // 4. The adaptation is anchored on the original fog tail and leaves the body intact.
  assert(argc==2);std::ifstream in(argv[1]);assert(in.good());std::string source{std::istreambuf_iterator<char>(in),{}};
  const auto adapted=fl::adapt_fog_constant_shader(source);

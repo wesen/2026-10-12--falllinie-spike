@@ -16,7 +16,7 @@ program original print linked
 program presentation diagnostic linked
 program batched native HUD using source font linked
 glyph atlas loaded
-terrain vertices=59492 indices=351072 build_ms=14.2214 targets=384x288 FBOs complete
+terrain vertices=59492 indices=351072 build_ms=13.5484 targets=384x288 FBOs complete
 INDEX_DRAW mode=ordinary
 GEOMETRY fog_cells=original view_culling=off short_indices=on output_clear=off window_depth=24 replay_audio=off
 DIAGNOSTIC fixture=live-or-default second_view=first-person post_bypass=0 non_parity=0 seed=42 cell=0 cells=3 internal=384x288 dual=1
@@ -24,20 +24,20 @@ AUDIO_POLICY disabled=1 muted=0 (disabled omits device/producer/callback DSP; mu
 SOURCE: A jump / B-X boost / L1-R1-L2-R2 grabs / START pause / SELECT dev / SELECT+Y new seed / SELECT+START quit; keyboard WASD/arrows, SPACE, SHIFT/B, J/K/U/I, P/ESC, R new seed, F2 dev, M, C, F3, F10
 seed=42 best_path=/home/manuel/.local/share/Falllinie/Falllinie/best-score
 ride z=4.09308 speed=6.05412 airborne=0 charge=0 score=0
-FPS=27.2606 frame_interval_ms=62.869
-FPS=16.477 frame_interval_ms=62.0046
+FPS=26.4887 frame_interval_ms=62.636
+FPS=17.0028 frame_interval_ms=61.1908
 ride z=11.1847 speed=9.19627 airborne=0 charge=0 score=0
-FPS=16.4275 frame_interval_ms=59.5852
-FPS=16.7597 frame_interval_ms=61.4895
-FPS=16.0398 frame_interval_ms=61.3432
-FPS=16.7647 frame_interval_ms=59.717
+FPS=15.5976 frame_interval_ms=62.8063
+FPS=16.4168 frame_interval_ms=60.7738
+FPS=16.0211 frame_interval_ms=62.5655
+FPS=15.9901 frame_interval_ms=59.6446
 ride z=20.9018 speed=12.0703 airborne=0 charge=0 score=0
-FPS=16.8358 frame_interval_ms=59.6043
-FPS=16.053 frame_interval_ms=60.1855
-FPS=16.4072 frame_interval_ms=59.126
+FPS=14.6154 frame_interval_ms=68.0955
+FPS=13.6972 frame_interval_ms=69.7794
+FPS=15.6631 frame_interval_ms=62.815
+FPS=16.3507 frame_interval_ms=60.1672
 ride z=33.1411 speed=14.7288 airborne=0 charge=1 score=0
-FPS=16.3578 frame_interval_ms=58.453
-FPS=16.9668 frame_interval_ms=55.6
-FPS=17.4998 frame_interval_ms=57.0926
-FPS=17.5805 frame_interval_ms=57.5868
-frames=240 measured=180 frame_p50_ms=59.2397 frame_p95_ms=65.3174 frame_p99_ms=81.4413 peak_rss_kib=192604 GL_error=0
+FPS=16.226 frame_interval_ms=56.3073
+FPS=17.5955 frame_interval_ms=60.7888
+FPS=17.5597 frame_interval_ms=55.8062
+frames=240 measured=180 frame_p50_ms=61.1774 frame_p95_ms=71.2954 frame_p99_ms=84.0327 peak_rss_kib=192260 GL_error=0

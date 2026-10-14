@@ -58,6 +58,20 @@ inline bool fits_short_indices(size_t vertices,const std::vector<uint32_t>& indi
  for(uint32_t i:indices)if(i>65535||i>=vertices)return false;
  return true;
 }
+// Consecutive index ranges of one mesh with the bounds of the vertices they reference.
+// Drawing the surviving ranges in their original order rasterizes the same triangles
+// in the same order as one draw of the whole index buffer.
+struct IndexChunk {uint32_t first=0,count=0;Aabb bounds{};};
+template<class VertexT>
+inline std::vector<IndexChunk> index_chunks(const std::vector<VertexT>& vertices,const std::vector<uint32_t>& indices,uint32_t chunk_indices){
+ std::vector<IndexChunk> chunks;if(chunk_indices<3)chunk_indices=3;chunk_indices-=chunk_indices%3;
+ for(uint32_t first=0;first<indices.size();first+=chunk_indices){
+  IndexChunk c;c.first=first;c.count=uint32_t(std::min<size_t>(chunk_indices,indices.size()-first));
+  for(uint32_t k=first;k<first+c.count;++k){const auto& v=vertices.at(indices[k]);c.bounds.add(v.px,v.py,v.pz);}
+  chunks.push_back(c);
+ }
+ return chunks;
+}
 // PERF-009: explicit adaptation for meshes proven to lie entirely beyond full fog.
 // For dist>=uFog.y the original tail yields (1,0,uMat/255,0) independent of the body.
 inline std::string adapt_fog_constant_shader(std::string source){

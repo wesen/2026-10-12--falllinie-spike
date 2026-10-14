@@ -8,7 +8,7 @@
 "replay_work_units":32,
 "draw_ranges":false,
 "audio_disabled":true,
-"replay_audio":false,"fog_cells":"original","view_culling":true,"short_indices":false,"output_clear":false,"window_depth":24,"geometry_draws":{"views":480,"terrain_drawn":3079,"terrain_culled":21,"terrain_fog_constant":0,"object_drawn":2750,"object_culled":350,"object_fog_constant":0,"short_index_draws":0,"triangles_submitted":92673024,"triangles_culled":933576},
+"replay_audio":false,"fog_cells":"original","view_culling":true,"short_indices":false,"output_clear":false,"window_depth":24,"geometry_draws":{"views":480,"chunks_drawn":28098,"chunks_culled":2363,"chunks_fog_constant":0,"terrain_drawn":3079,"terrain_culled":21,"terrain_fog_constant":0,"object_drawn":2750,"object_culled":350,"object_fog_constant":0,"short_index_draws":0,"triangles_submitted":84657728,"triangles_culled":8948872},
 "measurement":{"fixture":"live-or-default","second_view":"first-person","post_bypass":false,"gpu_mode":"off","cadence":60,"static_exclusions":"none"},
 "source_sha256":"cb9b4befd0252859d9c45246f94fbd7dd1662c6d034c6ccb95fbe16947e8b556",
 "seed":42,"cell":0,"cells":3,
@@ -16,10 +16,10 @@
 "render_size":[384,288],"drawable_size":[1024,768],"placement_ok":false,
 "debug_view":0,"palette":0,"dual_screen":true,"stable_sky":true,"depth_sampler_highp":true,"resize_check":false,
 "camera_eye":[33.72101717,3.555028136,40.76832685],"camera_look":[35.7577987,1.050144547,51.99856088],
-"vertices":104111,"indices":614376,"terrain_build_ms":13.781003,
+"vertices":104111,"indices":614376,"terrain_build_ms":16.534053,
 "frames":240,"warmup_frames":60,"measured_frames":180,
-"frame_ms":{"p50":58.921057,"p95":74.054537,"p99":78.889413},
-"swap_p95_ms":39.40056,"rss_kib":{"start":136996,"peak":196404,"end":194524},
+"frame_ms":{"p50":60.270653,"p95":78.364277,"p99":89.127974},
+"swap_p95_ms":44.295676,"rss_kib":{"start":136752,"peak":193532,"end":191780},
 "timing_scope":"CPU submission plus swap; not GPU timer","timing_target_met":false,
-"rss_samples":[[60,194492],[120,194492],[180,196404],[240,194376]],"gl_error":0
+"rss_samples":[[60,193532],[120,192684],[180,191684],[240,191568]],"gl_error":0
 }

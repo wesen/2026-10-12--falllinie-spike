@@ -4,6 +4,9 @@
   "draw_stats": {
     "original": {
       "views": 480,
+      "chunks_drawn": 0,
+      "chunks_culled": 0,
+      "chunks_fog_constant": 0,
       "terrain_drawn": 3100,
       "terrain_culled": 0,
       "terrain_fog_constant": 0,
@@ -16,18 +19,24 @@
     },
     "fog": {
       "views": 480,
+      "chunks_drawn": 31000,
+      "chunks_culled": 0,
+      "chunks_fog_constant": 8502,
       "terrain_drawn": 3100,
       "terrain_culled": 0,
-      "terrain_fog_constant": 748,
+      "terrain_fog_constant": 0,
       "object_drawn": 3100,
       "object_culled": 0,
-      "object_fog_constant": 802,
+      "object_fog_constant": 0,
       "short_index_draws": 0,
       "triangles_submitted": 93606600,
       "triangles_culled": 0
     },
     "cull": {
       "views": 480,
+      "chunks_drawn": 28098,
+      "chunks_culled": 2363,
+      "chunks_fog_constant": 0,
       "terrain_drawn": 3079,
       "terrain_culled": 21,
       "terrain_fog_constant": 0,
@@ -35,11 +44,14 @@
       "object_culled": 350,
       "object_fog_constant": 0,
       "short_index_draws": 0,
-      "triangles_submitted": 92673024,
-      "triangles_culled": 933576
+      "triangles_submitted": 84657728,
+      "triangles_culled": 8948872
     },
     "short": {
       "views": 480,
+      "chunks_drawn": 0,
+      "chunks_culled": 0,
+      "chunks_fog_constant": 0,
       "terrain_drawn": 3100,
       "terrain_culled": 0,
       "terrain_fog_constant": 0,
@@ -52,6 +64,9 @@
     },
     "clear": {
       "views": 480,
+      "chunks_drawn": 0,
+      "chunks_culled": 0,
+      "chunks_fog_constant": 0,
       "terrain_drawn": 3100,
       "terrain_culled": 0,
       "terrain_fog_constant": 0,
@@ -64,15 +79,18 @@
     },
     "combined": {
       "views": 480,
+      "chunks_drawn": 28098,
+      "chunks_culled": 2363,
+      "chunks_fog_constant": 8502,
       "terrain_drawn": 3079,
       "terrain_culled": 21,
-      "terrain_fog_constant": 748,
+      "terrain_fog_constant": 0,
       "object_drawn": 2750,
       "object_culled": 350,
-      "object_fog_constant": 802,
+      "object_fog_constant": 0,
       "short_index_draws": 5829,
-      "triangles_submitted": 92673024,
-      "triangles_culled": 933576
+      "triangles_submitted": 84657728,
+      "triangles_culled": 8948872
     }
   },
   "comparisons": {

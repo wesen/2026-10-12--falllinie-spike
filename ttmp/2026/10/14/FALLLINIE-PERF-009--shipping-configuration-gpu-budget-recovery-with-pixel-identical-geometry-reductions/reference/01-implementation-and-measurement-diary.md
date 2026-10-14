@@ -181,3 +181,74 @@ The counters also corrected a weakness in the review's cycle model. Bounds runs 
 
 ### Technical details
 - GPU-active per loop frame (estimate): original 13.87–13.91 M; bounds 13.28–13.29 M; original+audio 14.18–14.24 M; bounds+audio 13.31–13.32 M. All are ≈ 800 M/s ÷ loop FPS.
+
+## Step 4: Phase B — geometry counters, and row-block chunks
+
+Phase B ran the shipping replay with a geometry counter set: original, cell-level candidate, candidate, original. It answered the question the review left open: geometry is a large cost, and most of it is triangles that never produce a fragment. Per loop frame (two views) the GPU receives about 425,000 primitives; only 66,000 are visible. 252,000 (59%) are culled because they cover no sample point, 85,000 (20%) fall outside the near/far planes, and 22,000 are culled by facing or the XY frustum. Position shading runs 447,000 threads per frame while varying shading runs only 77,000. Non-fragment activity is about 7.2 M cycles per frame, half of GPU-active time.
+
+The cell-level candidate from Step 2 (per-cell culling, fog-constant cells, 16-bit indices) cut external reads by 16% per frame (25.76 → 21.63 MB) and non-fragment activity by 6% (7.21 → 6.75 M cycles), but frame timing barely moved (long share 0.044 → 0.041). Because cells are 600 m wide, per-cell culling only removed 6% of primitives. While Phase B ran I implemented row-block chunks, which on the host raise culled triangles from 1% to 9.6% and fog-constant chunks to 27% of chunk draws, still byte-identical.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Measure whether geometry matters before investing in geometry changes; refine the candidate if it does.
+**Inferred user intent:** Spend effort where the counters show cost.
+**Commit (code):** pending in this step — "Draw static meshes as row-block chunks for culling and fog-constant decisions"
+
+### What I did
+- `python3 06-campaign.py phase-b` → `evidence/phase-b-20261014T222320Z` (probe set `geometry`; binary from `a7626fd`). Note: the previous commit `6b6c3c2` captured this directory's early `campaign.json` (`complete: false`) while the campaign was still running; this step commits the completed directory.
+- `07-analyze.py` on the campaign.
+- `src/geometry_bounds.hpp`: `IndexChunk` and `index_chunks(vertices, indices, chunk_indices)`, consecutive index ranges with the AABB of referenced vertices.
+- `src/renderer.cpp`: when culling or fog-constant is enabled, static meshes get chunks of 16 terrain row strips (636 indices per strip, ≈12.8 m of slope). `draw_static` culls and fog-tests each chunk and merges consecutive surviving chunks with the same fog state into one `glDrawElements` with an index-buffer offset, preserving draw order. New stats `chunks_drawn/culled/fog_constant`.
+- `tests/test_geometry_bounds.cpp`: chunks partition the index buffer in order and bound every referenced vertex.
+
+### Why
+- Terrain indices are emitted row by row (`TerrainJob::step`, `mesh_.indices.insert(...{a,c,b,b,c,d})` per column within each row), so a row block is a contiguous index range and can be skipped without reordering triangles.
+
+### What worked
+
+Per loop frame, pooled (estimates: whole-device rate ÷ loop FPS):
+
+| Counter | Original | Cell-level candidate |
+|---|---:|---:|
+| `MaliGeomTotalPrim` | 424,955 | 399,862 |
+| `MaliGeomVisiblePrim` | 66,328 | 66,251 |
+| `MaliGeomSampleCullPrim` | 251,571 | 251,274 |
+| `MaliGeomZPlaneCullPrim` | 84,813 | 60,128 |
+| `MaliGeomFaceXYPlaneCullPrim` | 22,243 | 22,208 |
+| `MaliTilerPosShadThread` | 447,477 | 419,713 |
+| `MaliTilerVarShadThread` | 76,585 | 76,488 |
+| `MaliFragRastQd` | 682,886 | 680,900 |
+| `MaliFragThread` | 2,543,976 | 2,541,631 |
+| `MaliNonFragActiveCy` | 7.21 M | 6.75 M |
+| `MaliGPUActiveCy` | 13.95 M | 13.90 M |
+| `MaliExtBusRdBy` | 25.76 MB | 21.63 MB |
+| `MaliExtBusWrBy` | 13.37 MB | 13.35 MB |
+
+- Frame timing: original mean 17.358 ms, long share 0.044; candidate 17.301 ms, 0.041. All four cases `GL_error=0`, probe `errors=0`, signature `6081555844518115723`.
+- Host check with chunks (240 frames, 480 views): `cull` and `combined` culled 2,363 chunks and 8,948,872 of 93,606,600 triangles; `fog` flagged 8,502 of 31,000 chunk draws; all configurations 0 different pixels.
+
+### What didn't work
+- First attempt to apply the chunk edit failed before touching files: `SyntaxError: unterminated string literal (detected at line 58)` in my inline Python editing script (an unescaped quote in a replacement string). Rewrote the script with raw strings; all assertions on anchor text passed.
+
+### What I learned
+- 59% of submitted primitives are sub-sample triangles. They are discarded before fragment shading but still cost index fetch, position shading and tiler work. No pixel-identical CPU-side change can remove them cheaply: identifying them needs per-frame projection, and a coarser far mesh changes depth and the sky/terrain silhouette that the post pass reads. Distance level of detail is therefore an owner decision.
+- Fragment threads per frame (2.54 M) are dominated by the two 1024×768 output copies (1.57 M threads); the scene and post passes at 384×288 together are under 1 M threads.
+- 16-bit indices and culling reduce memory reads clearly (−16%) but not GPU-active time; with the GPU saturated, bytes saved do not translate one-for-one into time.
+
+### What was tricky to build
+- Merging runs must break on both a fog-state change and a gap left by a culled chunk; otherwise a draw would span culled indices or use the wrong uniform. The loop flushes the current run when the next surviving chunk is not adjacent or has a different fog flag.
+
+### What warrants a second pair of eyes
+- The counter normalisation by loop FPS uses a counter window narrower than the frame window (as in earlier tickets).
+- Whether `MaliGeomSampleCullPrim` on this driver counts only triangles with zero sample coverage; the pinned G52 reference describes it as primitives culled by the sample-coverage test.
+
+### What should be done in the future
+- Measure the chunked candidate in Phase C, including its CPU cost (more draws per view).
+- Prepare a distance-LOD image comparison for the owner, since sub-sample triangles are the largest geometry cost.
+
+### Code review instructions
+- `src/geometry_bounds.hpp` (`index_chunks`), `Renderer::render` (`draw_static` chunk loop), `Renderer::upload_cell`.
+- `python3 -I scripts/07-analyze.py scripts/evidence/phase-b-20261014T222320Z`.
+
+### Technical details
+- Terrain cell: 107 columns per row (`columns_` in `TerrainJob`), 636 indices per row strip, 139 rows; chunk = 16 strips = 10,176 indices.

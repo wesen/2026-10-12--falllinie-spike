@@ -16,7 +16,7 @@ program original print linked
 program presentation diagnostic linked
 program batched native HUD using source font linked
 glyph atlas loaded
-terrain vertices=59492 indices=351072 build_ms=13.1997 targets=384x288 FBOs complete
+terrain vertices=59492 indices=351072 build_ms=14.7667 targets=384x288 FBOs complete
 INDEX_DRAW mode=ordinary
 GEOMETRY fog_cells=constant view_culling=on short_indices=on output_clear=on window_depth=24 replay_audio=off
 DIAGNOSTIC fixture=live-or-default second_view=first-person post_bypass=0 non_parity=0 seed=42 cell=0 cells=3 internal=384x288 dual=1
@@ -24,23 +24,22 @@ AUDIO_POLICY disabled=1 muted=0 (disabled omits device/producer/callback DSP; mu
 SOURCE: A jump / B-X boost / L1-R1-L2-R2 grabs / START pause / SELECT dev / SELECT+Y new seed / SELECT+START quit; keyboard WASD/arrows, SPACE, SHIFT/B, J/K/U/I, P/ESC, R new seed, F2 dev, M, C, F3, F10
 seed=42 best_path=/home/manuel/.local/share/Falllinie/Falllinie/best-score
 ride z=4.09308 speed=6.05412 airborne=0 charge=0 score=0
-FPS=22.349 frame_interval_ms=61.1772
-FPS=14.2313 frame_interval_ms=77.4923
-FPS=12.3612 frame_interval_ms=84.8978
+FPS=26.6172 frame_interval_ms=61.9676
+FPS=14.3552 frame_interval_ms=77.806
+FPS=11.7108 frame_interval_ms=81.7377
 ride z=11.1847 speed=9.19627 airborne=0 charge=0 score=0
-FPS=11.7873 frame_interval_ms=83.1302
-FPS=11.408 frame_interval_ms=85.4568
-FPS=11.5323 frame_interval_ms=86.0671
-FPS=11.5188 frame_interval_ms=83.8085
-FPS=11.4481 frame_interval_ms=81.8744
+FPS=11.7049 frame_interval_ms=80.9318
+FPS=12.1965 frame_interval_ms=80.365
+FPS=12.7103 frame_interval_ms=79.132
+FPS=12.2407 frame_interval_ms=88.2356
+FPS=11.3734 frame_interval_ms=83.2299
 ride z=20.9018 speed=12.0703 airborne=0 charge=0 score=0
-FPS=12.0667 frame_interval_ms=83.5276
-FPS=11.9381 frame_interval_ms=90.7688
-FPS=11.448 frame_interval_ms=84.8654
-FPS=15.6344 frame_interval_ms=63.1146
+FPS=12.7092 frame_interval_ms=77.5608
+FPS=12.8229 frame_interval_ms=78.0369
+FPS=13.7915 frame_interval_ms=55.7524
+FPS=16.8952 frame_interval_ms=58.6022
 ride z=33.1411 speed=14.7288 airborne=0 charge=1 score=0
-FPS=15.3371 frame_interval_ms=100.02
-FPS=16.2899 frame_interval_ms=55.595
-FPS=17.1683 frame_interval_ms=57.1851
-FPS=16.7965 frame_interval_ms=61.6466
-frames=240 measured=180 frame_p50_ms=81.4701 frame_p95_ms=91.1465 frame_p99_ms=100.02 peak_rss_kib=195792 GL_error=0
+FPS=17.2742 frame_interval_ms=55.9866
+FPS=16.9636 frame_interval_ms=57.2751
+FPS=17.7408 frame_interval_ms=56.1014
+frames=240 measured=180 frame_p50_ms=76.6762 frame_p95_ms=85.6906 frame_p99_ms=97.2214 peak_rss_kib=192528 GL_error=0

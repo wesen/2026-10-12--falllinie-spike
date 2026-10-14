@@ -1,0 +1,426 @@
+{
+  "lod120": {
+    "f0120-s42-p0": {
+      "depth.png": {
+        "different_pixels": 39,
+        "max_channel_delta": 2,
+        "pixels": 110592
+      },
+      "lower/depth.png": {
+        "different_pixels": 25,
+        "max_channel_delta": 30,
+        "pixels": 110592
+      },
+      "lower/output.png": {
+        "different_pixels": 4918,
+        "max_channel_delta": 215,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "different_pixels": 686,
+        "max_channel_delta": 215,
+        "pixels": 110592
+      },
+      "lower/scene.png": {
+        "different_pixels": 291,
+        "max_channel_delta": 255,
+        "pixels": 110592
+      },
+      "output.png": {
+        "different_pixels": 5068,
+        "max_channel_delta": 186,
+        "pixels": 786432
+      },
+      "print.png": {
+        "different_pixels": 716,
+        "max_channel_delta": 186,
+        "pixels": 110592
+      },
+      "scene.png": {
+        "different_pixels": 428,
+        "max_channel_delta": 178,
+        "pixels": 110592
+      }
+    },
+    "f0600-s42-p0": {
+      "depth.png": {
+        "different_pixels": 5,
+        "max_channel_delta": 1,
+        "pixels": 110592
+      },
+      "lower/depth.png": {
+        "different_pixels": 22,
+        "max_channel_delta": 1,
+        "pixels": 110592
+      },
+      "lower/output.png": {
+        "different_pixels": 2270,
+        "max_channel_delta": 152,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "different_pixels": 316,
+        "max_channel_delta": 152,
+        "pixels": 110592
+      },
+      "lower/scene.png": {
+        "different_pixels": 431,
+        "max_channel_delta": 221,
+        "pixels": 110592
+      },
+      "output.png": {
+        "different_pixels": 2551,
+        "max_channel_delta": 218,
+        "pixels": 786432
+      },
+      "print.png": {
+        "different_pixels": 358,
+        "max_channel_delta": 218,
+        "pixels": 110592
+      },
+      "scene.png": {
+        "different_pixels": 465,
+        "max_channel_delta": 246,
+        "pixels": 110592
+      }
+    },
+    "f1200-s42-p0": {
+      "depth.png": {
+        "different_pixels": 91,
+        "max_channel_delta": 17,
+        "pixels": 110592
+      },
+      "lower/depth.png": {
+        "different_pixels": 91,
+        "max_channel_delta": 29,
+        "pixels": 110592
+      },
+      "lower/output.png": {
+        "different_pixels": 4462,
+        "max_channel_delta": 215,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "different_pixels": 633,
+        "max_channel_delta": 215,
+        "pixels": 110592
+      },
+      "lower/scene.png": {
+        "different_pixels": 580,
+        "max_channel_delta": 67,
+        "pixels": 110592
+      },
+      "output.png": {
+        "different_pixels": 4530,
+        "max_channel_delta": 215,
+        "pixels": 786432
+      },
+      "print.png": {
+        "different_pixels": 660,
+        "max_channel_delta": 215,
+        "pixels": 110592
+      },
+      "scene.png": {
+        "different_pixels": 604,
+        "max_channel_delta": 236,
+        "pixels": 110592
+      }
+    },
+    "f0600-s7-p0": {
+      "depth.png": {
+        "different_pixels": 31,
+        "max_channel_delta": 1,
+        "pixels": 110592
+      },
+      "lower/depth.png": {
+        "different_pixels": 31,
+        "max_channel_delta": 2,
+        "pixels": 110592
+      },
+      "lower/output.png": {
+        "different_pixels": 4595,
+        "max_channel_delta": 107,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "different_pixels": 638,
+        "max_channel_delta": 107,
+        "pixels": 110592
+      },
+      "lower/scene.png": {
+        "different_pixels": 524,
+        "max_channel_delta": 158,
+        "pixels": 110592
+      },
+      "output.png": {
+        "different_pixels": 2789,
+        "max_channel_delta": 121,
+        "pixels": 786432
+      },
+      "print.png": {
+        "different_pixels": 392,
+        "max_channel_delta": 121,
+        "pixels": 110592
+      },
+      "scene.png": {
+        "different_pixels": 324,
+        "max_channel_delta": 145,
+        "pixels": 110592
+      }
+    },
+    "f0600-s42-p5": {
+      "depth.png": {
+        "different_pixels": 5,
+        "max_channel_delta": 1,
+        "pixels": 110592
+      },
+      "lower/depth.png": {
+        "different_pixels": 22,
+        "max_channel_delta": 1,
+        "pixels": 110592
+      },
+      "lower/output.png": {
+        "different_pixels": 5543,
+        "max_channel_delta": 203,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "different_pixels": 784,
+        "max_channel_delta": 203,
+        "pixels": 110592
+      },
+      "lower/scene.png": {
+        "different_pixels": 866,
+        "max_channel_delta": 232,
+        "pixels": 110592
+      },
+      "output.png": {
+        "different_pixels": 5151,
+        "max_channel_delta": 218,
+        "pixels": 786432
+      },
+      "print.png": {
+        "different_pixels": 737,
+        "max_channel_delta": 218,
+        "pixels": 110592
+      },
+      "scene.png": {
+        "different_pixels": 727,
+        "max_channel_delta": 246,
+        "pixels": 110592
+      }
+    }
+  },
+  "lod60": {
+    "f0120-s42-p0": {
+      "depth.png": {
+        "different_pixels": 265,
+        "max_channel_delta": 21,
+        "pixels": 110592
+      },
+      "lower/depth.png": {
+        "different_pixels": 227,
+        "max_channel_delta": 30,
+        "pixels": 110592
+      },
+      "lower/output.png": {
+        "different_pixels": 10332,
+        "max_channel_delta": 219,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "different_pixels": 1445,
+        "max_channel_delta": 219,
+        "pixels": 110592
+      },
+      "lower/scene.png": {
+        "different_pixels": 1116,
+        "max_channel_delta": 255,
+        "pixels": 110592
+      },
+      "output.png": {
+        "different_pixels": 10863,
+        "max_channel_delta": 221,
+        "pixels": 786432
+      },
+      "print.png": {
+        "different_pixels": 1546,
+        "max_channel_delta": 221,
+        "pixels": 110592
+      },
+      "scene.png": {
+        "different_pixels": 1391,
+        "max_channel_delta": 255,
+        "pixels": 110592
+      }
+    },
+    "f0600-s42-p0": {
+      "depth.png": {
+        "different_pixels": 94,
+        "max_channel_delta": 45,
+        "pixels": 110592
+      },
+      "lower/depth.png": {
+        "different_pixels": 156,
+        "max_channel_delta": 71,
+        "pixels": 110592
+      },
+      "lower/output.png": {
+        "different_pixels": 5072,
+        "max_channel_delta": 225,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "different_pixels": 716,
+        "max_channel_delta": 225,
+        "pixels": 110592
+      },
+      "lower/scene.png": {
+        "different_pixels": 1237,
+        "max_channel_delta": 255,
+        "pixels": 110592
+      },
+      "output.png": {
+        "different_pixels": 5125,
+        "max_channel_delta": 221,
+        "pixels": 786432
+      },
+      "print.png": {
+        "different_pixels": 741,
+        "max_channel_delta": 221,
+        "pixels": 110592
+      },
+      "scene.png": {
+        "different_pixels": 1367,
+        "max_channel_delta": 253,
+        "pixels": 110592
+      }
+    },
+    "f1200-s42-p0": {
+      "depth.png": {
+        "different_pixels": 307,
+        "max_channel_delta": 140,
+        "pixels": 110592
+      },
+      "lower/depth.png": {
+        "different_pixels": 450,
+        "max_channel_delta": 95,
+        "pixels": 110592
+      },
+      "lower/output.png": {
+        "different_pixels": 9522,
+        "max_channel_delta": 219,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "different_pixels": 1350,
+        "max_channel_delta": 219,
+        "pixels": 110592
+      },
+      "lower/scene.png": {
+        "different_pixels": 1709,
+        "max_channel_delta": 255,
+        "pixels": 110592
+      },
+      "output.png": {
+        "different_pixels": 9469,
+        "max_channel_delta": 219,
+        "pixels": 786432
+      },
+      "print.png": {
+        "different_pixels": 1349,
+        "max_channel_delta": 219,
+        "pixels": 110592
+      },
+      "scene.png": {
+        "different_pixels": 1576,
+        "max_channel_delta": 255,
+        "pixels": 110592
+      }
+    },
+    "f0600-s7-p0": {
+      "depth.png": {
+        "different_pixels": 226,
+        "max_channel_delta": 3,
+        "pixels": 110592
+      },
+      "lower/depth.png": {
+        "different_pixels": 322,
+        "max_channel_delta": 9,
+        "pixels": 110592
+      },
+      "lower/output.png": {
+        "different_pixels": 9184,
+        "max_channel_delta": 212,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "different_pixels": 1293,
+        "max_channel_delta": 212,
+        "pixels": 110592
+      },
+      "lower/scene.png": {
+        "different_pixels": 1532,
+        "max_channel_delta": 216,
+        "pixels": 110592
+      },
+      "output.png": {
+        "different_pixels": 4746,
+        "max_channel_delta": 173,
+        "pixels": 786432
+      },
+      "print.png": {
+        "different_pixels": 672,
+        "max_channel_delta": 173,
+        "pixels": 110592
+      },
+      "scene.png": {
+        "different_pixels": 855,
+        "max_channel_delta": 144,
+        "pixels": 110592
+      }
+    },
+    "f0600-s42-p5": {
+      "depth.png": {
+        "different_pixels": 94,
+        "max_channel_delta": 45,
+        "pixels": 110592
+      },
+      "lower/depth.png": {
+        "different_pixels": 156,
+        "max_channel_delta": 71,
+        "pixels": 110592
+      },
+      "lower/output.png": {
+        "different_pixels": 8534,
+        "max_channel_delta": 223,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "different_pixels": 1212,
+        "max_channel_delta": 223,
+        "pixels": 110592
+      },
+      "lower/scene.png": {
+        "different_pixels": 1398,
+        "max_channel_delta": 255,
+        "pixels": 110592
+      },
+      "output.png": {
+        "different_pixels": 7915,
+        "max_channel_delta": 223,
+        "pixels": 786432
+      },
+      "print.png": {
+        "different_pixels": 1144,
+        "max_channel_delta": 223,
+        "pixels": 110592
+      },
+      "scene.png": {
+        "different_pixels": 1312,
+        "max_channel_delta": 253,
+        "pixels": 110592
+      }
+    }
+  }
+}

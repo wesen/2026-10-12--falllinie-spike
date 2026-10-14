@@ -1,0 +1,255 @@
+schema=1 set=base pid=1188550 scope=whole-device cores=1 bus_width=128 period_ms=100 seconds=45
+available=235 name=Varying unit utilization units=percent
+available=234 name=Average varying unit cycles per thread units=cycles
+available=233 name=Varying unit issue cycles units=cycles
+available=232 name=Varying unit instructions units=requests
+available=231 name=Varying unit 32-bit interpolation slot issues units=issues
+available=230 name=Varying unit 32-bit interpolation issue cycles units=cycles
+available=229 name=Varying unit 16-bit interpolation slot issues units=issues
+available=228 name=Varying unit 16-bit interpolation issue cycles units=cycles
+available=227 name=Tiler write bytes to L2 memory system units=bytes
+available=226 name=Tiler write beats to L2 memory system units=beats
+available=225 name=Varying shader threads per input primitive units=threads
+available=224 name=Varying shader thread invocations units=threads
+available=223 name=Tiler varying shading requests units=requests
+available=222 name=Tiler varying shading stall cycles units=cycles
+available=221 name=Tiler varying cache misses units=requests
+available=220 name=Tiler varying cache hit rate units=percent
+available=219 name=Tiler varying cache hits units=requests
+available=218 name=Tiler utilization units=percent
+available=217 name=Tiler read bytes from the L2 memory system units=bytes
+available=216 name=Tiler read beats from the L2 memory system units=beats
+available=215 name=Tiler position shading outstanding cycles units=cycles
+available=214 name=Position shader threads per input primitive units=threads
+available=213 name=Position shader thread invocations units=threads
+available=212 name=Tiler position shading requests units=requests
+available=211 name=Tiler position shading stall cycles units=cycles
+available=210 name=Tiler position FIFO full cycles units=cycles
+available=209 name=Tiler position cache misses units=requests
+available=208 name=Tiler position cache hit rate units=percent
+available=207 name=Tiler position cache hits units=requests
+available=206 name=Tiler active cycles units=cycles
+available=205 name=Texture unit utilization units=percent
+available=204 name=Texture unit samples using trilinear filter percentage units=percent
+available=203 name=Average texture unit cycles per thread units=cycles
+available=202 name=Texture samples units=requests
+available=201 name=Texture unit quads units=quads
+available=200 name=Trilinear unit filtered texture quad issues units=issues
+available=199 name=Texture unit mipmapped texture quad issues units=issues
+available=198 name=Texture unit quad descriptor misses units=requests
+available=197 name=Texture unit quad issues units=issues
+available=196 name=Texture unit samples using mipmapping percentage units=percent
+available=195 name=Texture unit issue cycles units=cycles
+available=194 name=Texture unit filtering utilization units=percent
+available=193 name=Texture unit filtering cycles units=cycles
+available=192 name=Texture unit cache lookup utilization units=percent
+available=191 name=Texture unit data cache lookup requests units=cycles
+available=190 name=Texture unit line fetch requests units=issues
+available=189 name=Texture unit compressed line fetch request percentage units=percent
+available=188 name=Texture unit compressed line fetch requests units=issues
+available=187 name=Texture filtering cycles per instruction units=cycles
+available=186 name=Tile unit write bytes to L2 memory system units=bytes
+available=185 name=Tile unit write beats to L2 memory system units=beats
+available=184 name=Tile unit bytes written to L2 memory system per pixel units=bytes
+available=183 name=Texture unit bytes read from L2 per texture cycle units=bytes
+available=182 name=Texture unit read bytes from L2 cache units=bytes
+available=181 name=Texture unit read beats from L2 cache units=beats
+available=180 name=Texture unit bytes read from external memory per texture cycle units=bytes
+available=179 name=Texture unit read bytes from external memory units=bytes
+available=178 name=Texture unit read beats from external memory units=beats
+available=177 name=Other shader core read bytes from L2 cache units=bytes
+available=176 name=Other shader core read beats from L2 cache units=beats
+available=175 name=Load/store unit bytes written to L2 per access cycle units=bytes
+available=174 name=Load/store unit write bytes to L2 memory system units=bytes
+available=173 name=Load/store unit write beats to L2 memory system units=beats
+available=172 name=Load/store unit write-back write beats to L2 memory system units=beats
+available=171 name=Load/store unit other write beats to L2 memory system units=beats
+available=170 name=Load/store unit bytes read from L2 per access cycle units=bytes
+available=169 name=Load/store unit read bytes from L2 cache units=bytes
+available=168 name=Load/store unit read beats from L2 cache units=beats
+available=167 name=Load/store unit bytes read from external memory per access cycle units=bytes
+available=166 name=Load/store unit read bytes from external memory units=bytes
+available=165 name=Load/store unit read beats from external memory units=beats
+available=164 name=Fragment front-end read bytes from L2 cache units=bytes
+available=163 name=Fragment front-end read beats from L2 cache units=beats
+available=162 name=Fragment front-end read bytes from external memory units=bytes
+available=161 name=Fragment front-end read beats from external memory units=beats
+available=160 name=Reserved queue job descriptor read wait cycles units=cycles
+available=159 name=Reserved queue job issue wait cycles units=cycles
+available=158 name=Reserved queue cache flush wait cycles units=cycles
+available=157 name=Reserved queue job finish wait cycles units=cycles
+available=156 name=Reserved queue job dependency wait cycles units=cycles
+available=155 name=Reserved queue tasks units=tasks
+available=154 name=Reserved queue jobs units=jobs
+available=153 name=Reserved active cycles units=cycles
+available=152 name=Non-fragment warps units=warps
+available=151 name=Shader core non-fragment utilization units=percent
+available=150 name=Average cycles per non-fragment thread units=cycles
+available=149 name=Non-fragment threads units=threads
+available=148 name=Non-fragment core tasks units=tasks
+available=147 name=Non-fragment queue job descriptor read wait cycles units=cycles
+available=146 name=Non-fragment queue job issue wait cycles units=cycles
+available=145 name=Non-fragment queue cache flush wait cycles units=cycles
+available=144 name=Non-fragment queue job finish wait cycles units=cycles
+available=143 name=Non-fragment queue job dependency wait cycles units=cycles
+available=142 name=Non-fragment queue utilization units=percent
+available=141 name=Non-fragment tasks units=tasks
+available=140 name=Non-fragment jobs units=jobs
+available=139 name=Non-fragment queue active cycles units=cycles
+available=138 name=Shader core non-fragment active cycles units=cycles
+available=137 name=MMU lookup requests units=requests
+available=136 name=MMU level 3 lookup TLB misses units=requests
+available=135 name=MMU level 3 lookup TLB hit rate units=percent
+available=134 name=MMU level 3 lookup TLB hits units=requests
+available=133 name=MMU level 2 lookup TLB misses units=requests
+available=132 name=MMU level 2 lookup TLB hit rate units=percent
+available=131 name=MMU level 2 lookup TLB hits units=requests
+available=130 name=Load/store unit write issues units=cycles
+available=129 name=Load/store unit utilization units=percent
+available=128 name=Average load/store unit cycles per thread units=cycles
+available=127 name=Load/store unit read issues units=cycles
+available=126 name=Load/store unit partial write issues units=cycles
+available=125 name=Load/store unit partial read issues units=cycles
+available=124 name=Load/store unit issue cycles units=cycles
+available=123 name=Load/store unit full write issues units=cycles
+available=54 name=Occluding quad percentage units=percent
+available=53 name=Occluding quads units=quads
+available=52 name=Late ZS tested quad percentage units=percent
+available=51 name=Late ZS tested quads units=quads
+available=50 name=Late ZS killed quad percentage units=percent
+available=49 name=Late ZS killed quads units=quads
+available=48 name=FPK HSR killed quad percentage units=percent
+available=47 name=FPK HSR killed quads units=quads
+available=46 name=Early ZS updated quad percentage units=percent
+available=45 name=Early ZS updated quads units=quads
+available=44 name=Early ZS tested quad percentage units=percent
+available=43 name=Early ZS tested quads units=quads
+available=42 name=Early ZS killed quad percentage units=percent
+available=41 name=Early ZS killed quads units=quads
+available=40 name=Shader core fragment active cycles units=cycles
+available=39 name=Output external write stall percentage units=percent
+available=38 name=Output external write stall cycles units=cycles
+available=37 name=Output external WriteSnoopPartial transactions units=transactions
+available=36 name=Output external WriteSnoopFull transactions units=transactions
+available=35 name=Output external outstanding writes 75-100% units=transactions
+available=34 name=Output external outstanding writes 50-75% units=transactions
+available=33 name=Output external outstanding writes 25-50% units=transactions
+available=32 name=Output external outstanding writes 0-25% units=transactions
+available=31 name=Output external WriteNoSnoopPartial transactions units=transactions
+available=30 name=Output external WriteNoSnoopFull transactions units=transactions
+available=29 name=Output external write bytes units=bytes
+available=28 name=Output external write beats units=beats
+available=27 name=Output external write transactions units=transactions
+available=26 name=Output external ReadUnique transactions units=transactions
+available=25 name=Output external read stall percentage units=percent
+available=8 name=Arithmetic instruction issue cycles units=instructions
+available=7 name=Warp divergence percentage units=percent
+available=6 name=Diverged instructions units=instructions
+available=5 name=Programmable core utilization units=percent
+available=4 name=Programmable core active cycles units=cycles
+available=239 name=Full warp percentage units=percent
+available=112 name=Input internal read stall cycles units=cycles
+available=3 name=Attribute unit instructions units=instructions
+available=238 name=Full warps units=warps
+available=111 name=L2 cache read miss rate units=percent
+available=2 name=Arithmetic unit utilization units=percent
+available=237 name=All registers warp percentage units=percent
+available=110 name=L2 cache read lookups units=requests
+available=1 name=Average ALU cycles per thread units=cycles
+available=236 name=Warps using more than 32 registers units=warps
+available=109 name=L2 cache read hit rate units=percent
+available=0 name=Arithmetic unit issue cycles units=cycles
+available=9 name=Instruction issue starvation cycles units=cycles
+available=10 name=Output external read transactions units=transactions
+available=11 name=Output external read beats units=beats
+available=12 name=Output external read bytes units=bytes
+available=13 name=Output external read latency 0-127 cycles units=beats
+available=14 name=Output external read latency 128-191 cycles units=beats
+available=15 name=Output external read latency 192-255 cycles units=beats
+available=16 name=Output external read latency 256-319 cycles units=beats
+available=17 name=Output external read latency 320-383 cycles units=beats
+available=18 name=Output external read latency 384+ cycles units=beats
+available=19 name=Output external ReadNoSnoop transactions units=transactions
+available=20 name=Output external outstanding reads 0-25% units=transactions
+available=21 name=Output external outstanding reads 25-50% units=transactions
+available=22 name=Output external outstanding reads 50-75% units=transactions
+available=23 name=Output external outstanding reads 75-100% units=transactions
+available=24 name=Output external read stall cycles units=cycles
+available=55 name=Fragments per pixel units=threads
+available=56 name=Partial fragment warps units=warps
+available=57 name=Partial coverage percentage units=percent
+available=58 name=Loaded fragment primitives units=primitives
+available=59 name=Fragment queue active cycles units=cycles
+available=60 name=Fragment jobs units=jobs
+available=61 name=Fragment tasks units=tasks
+available=62 name=Fragment queue utilization units=percent
+available=63 name=Fragment queue job dependency wait cycles units=cycles
+available=64 name=Fragment queue job finish wait cycles units=cycles
+available=65 name=Fragment queue cache flush wait cycles units=cycles
+available=66 name=Fragment queue job issue wait cycles units=cycles
+available=67 name=Fragment queue job descriptor read wait cycles units=cycles
+available=68 name=Rasterized primitives units=primitives
+available=69 name=Rasterized fine quads units=quads
+available=70 name=Shaded coarse quads units=quads
+available=71 name=Fragment shading staging buffer active cycles units=cycles
+available=72 name=Fragment shading staging buffer utilization units=percent
+available=73 name=Fragment threads units=threads
+available=74 name=Average cycles per fragment thread units=cycles
+available=75 name=Tiles units=tiles
+available=76 name=Killed unchanged tiles units=tiles
+available=77 name=Unchanged tile kill percentage units=percent
+available=78 name=Non-occluding quads units=quads
+available=79 name=Shader core fragment utilization units=percent
+available=80 name=Fragment warps units=warps
+available=81 name=GPU active cycles units=cycles
+available=82 name=Average cycles per pixel units=cycles
+available=83 name=GPU interrupt pending cycles units=cycles
+available=84 name=Interrupt pending utilization units=percent
+available=85 name=Pixels units=pixels
+available=86 name=Visible back-facing primitives units=primitives
+available=87 name=Facing or XY plane test culled primitives units=primitives
+available=88 name=Facing or XY plane test cull percentage units=percent
+available=89 name=Visible front-facing primitives units=primitives
+available=90 name=Line primitives units=primitives
+available=91 name=Point primitives units=primitives
+available=92 name=Sample test culled primitives units=primitives
+available=93 name=Sample test cull percentage units=percent
+available=94 name=Culled primitives units=primitives
+available=95 name=Input primitives units=primitives
+available=96 name=Triangle primitives units=primitives
+available=97 name=Visible primitives units=primitives
+available=98 name=Visible primitive percentage units=percent
+available=99 name=Z plane test culled primitives units=primitives
+available=100 name=Z plane test cull percentage units=percent
+available=101 name=L2 cache flush requests units=requests
+available=102 name=Input external snoop transactions units=transactions
+available=103 name=Input external snoop stall cycles units=cycles
+available=104 name=Output internal read requests units=requests
+available=105 name=Output internal read stall cycles units=cycles
+available=106 name=Output internal write requests units=requests
+available=107 name=L2 cache lookup requests units=requests
+available=108 name=Input internal read requests units=requests
+available=113 name=Input internal snoop requests units=requests
+available=114 name=Input external snoop lookup requests units=requests
+available=115 name=Input internal snoop stall cycles units=cycles
+available=116 name=Input internal write requests units=requests
+available=117 name=L2 cache write hit rate units=percent
+available=118 name=L2 cache write lookups units=requests
+available=119 name=L2 cache write miss rate units=percent
+available=120 name=Input internal write stall cycles units=cycles
+available=121 name=Load/store unit atomic issues units=cycles
+available=122 name=Load/store unit full read issues units=cycles
+selected=MaliGPUActiveCy
+selected=MaliCoreActiveCy
+selected=MaliFragActiveCy
+selected=MaliNonFragActiveCy
+selected=MaliTilerActiveCy
+selected=MaliExtBusRdBy
+selected=MaliExtBusWrBy
+selected=MaliFragUtil
+selected=MaliNonFragUtil
+selected=MaliTexUtil
+selected=MaliALUUtil
+selected=MaliExtBusRdStallRate
+selected=MaliExtBusWrStallRate
+final rows=5850 errors=0 nonfinite=0 stop=ok

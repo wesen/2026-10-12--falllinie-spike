@@ -1,0 +1,137 @@
+<title>Terrain LOD Review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one review column; decision table on top, frame viewer below, method notes last.
+   Palette taken from the game's own print palette 0: paper, ink blue, spot pink. */
+:root{
+ --paper:#f3f4f7; --surface:#ffffff; --ink:#1c2f9e; --text:#1b1d2a; --muted:#5b6078; --rule:#d9dbe6;
+ --spot:#e23d7c; --change:#dc1e28; --good:#1d7f4f; --warn:#a86a00;
+ --display:"Barlow Condensed","Arial Narrow",sans-serif; --body:"Source Sans 3","Segoe UI",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#0a1020;--surface:#121a30;--ink:#8feaff;--text:#e6e9f4;--muted:#9aa3c0;--rule:#27304c;--spot:#ff6aa3;--change:#ff4b55;--good:#4cc98a;--warn:#e0a84a;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#0a1020;--surface:#121a30;--ink:#8feaff;--text:#e6e9f4;--muted:#9aa3c0;--rule:#27304c;--spot:#ff6aa3;--change:#ff4b55;--good:#4cc98a;--warn:#e0a84a;color-scheme:dark}
+body{background:var(--paper);color:var(--text);font:16px/1.5 var(--body)}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:28px}
+h1,h2{font-family:var(--display);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);margin:0;text-wrap:balance}
+h1{font-size:clamp(28px,4vw,40px)} h2{font-size:22px}
+.lede{max-width:68ch;margin:6px 0 0;color:var(--muted)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.table-scroll{overflow-x:auto;border:1px solid var(--rule);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--rule);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{font-family:var(--display);font-weight:500;text-transform:uppercase;letter-spacing:.08em;font-size:14px;color:var(--muted)}
+tbody tr:last-child td{border-bottom:0}
+td{font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums}
+td.label{font-family:var(--body);font-size:15px}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-family:var(--mono);font-size:12px;border:1px solid currentColor}
+.pill.good{color:var(--good)} .pill.warn{color:var(--warn)}
+.controls{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:end}
+.group{display:grid;gap:6px}
+.group > span{font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:13px;color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--surface)}
+.seg button{font:600 13px var(--mono);color:var(--text);background:none;border:0;border-right:1px solid var(--rule);padding:8px 12px;cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg button:focus-visible,input:focus-visible{outline:2px solid var(--spot);outline-offset:2px}
+.frames{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.frames.single{grid-template-columns:1fr}
+figure{margin:0;display:grid;gap:6px;min-width:0}
+figure img{width:100%;height:auto;display:block;border:1px solid var(--rule);image-rendering:pixelated;background:var(--surface)}
+figcaption{font:13px var(--mono);color:var(--muted);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.swipe{position:relative;max-width:100%;border:1px solid var(--rule);overflow:hidden;background:var(--surface)}
+.swipe img{display:block;width:100%;height:auto;image-rendering:pixelated}
+.swipe .top{position:absolute;inset:0;clip-path:inset(0 0 0 var(--cut,50%))}
+.swipe .line{position:absolute;top:0;bottom:0;left:var(--cut,50%);width:2px;background:var(--spot)}
+.swipe-range{width:100%}
+.stats{display:flex;flex-wrap:wrap;gap:8px 24px;font:14px var(--mono);color:var(--muted)}
+.stats b{color:var(--text);font-weight:600}
+.crop img{width:100%;height:auto;image-rendering:pixelated;border:1px solid var(--rule)}
+.crop .heads{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font:12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.notes{max-width:72ch;color:var(--muted);display:grid;gap:10px}
+.notes p{margin:0}
+@media (max-width:720px){.frames{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+ <header>
+  <h1>Terrain LOD Review</h1>
+  <p class="lede">Distant terrain drawn with fewer rows, measured on the RG DS Plus (Mali-G52, 384×288 internal, two 1024×768 windows). The baseline is the current default renderer. Every frame below is a capture from the device after the same replay.</p>
+ </header>
+
+ <section aria-labelledby="decision">
+  <h2 id="decision">What each setting costs and saves</h2>
+  <div class="table-scroll"><table id="summary"><thead><tr><th>Setting</th><th>GPU busy</th><th>Mean frame</th><th>p95</th><th>Frames ≥ 25 ms</th><th>Geometry Mcy / frame</th><th>Triangles / frame</th><th>Big-scene mean</th><th>Big-scene ≥ 25 ms</th><th>Pixels changed</th></tr></thead><tbody></tbody></table></div>
+ </section>
+
+ <section aria-labelledby="viewer" style="display:grid;gap:16px">
+  <h2 id="viewer">Compare frames</h2>
+  <div class="controls">
+   <div class="group"><span>Checkpoint</span><div class="seg" id="ckpt"></div></div>
+   <div class="group"><span>Window</span><div class="seg" id="view"></div></div>
+   <div class="group"><span>LOD setting</span><div class="seg" id="mode"></div></div>
+   <div class="group"><span>Display</span><div class="seg" id="disp"></div></div>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div id="stage"></div>
+  <div class="crop" id="crop"></div>
+ </section>
+
+ <section class="notes" aria-labelledby="method">
+  <h2 id="method">How this was made</h2>
+  <p>Each 16-row terrain block keeps all columns and its two boundary rows, and draws every 2nd, 4th, 8th or 16th row in between as its distance from the camera doubles past the near distance (120 m or 60 m). Blocks share full boundary rows, so they cannot crack apart.</p>
+  <p>GPU busy is GPU-active cycles per second over the 800 MHz clock; near 100% means no headroom left. Frames come from the deterministic replay (seed 42 unless noted, 600 frames unless noted) captured after the measured loop, at five checkpoints. Timing is the mean of mirrored device runs with the muted audio producer running at 384×288; the big-scene column is 512×384 without audio, where the GPU is overloaded and savings show directly. Geometry cycles are whole-device counter rates divided by the loop rate.</p>
+  <p>Red marks every pixel whose colour differs in any channel from the baseline capture.</p>
+ </section>
+</div>
+
+<script>
+const REVIEW = /*REVIEW_JSON*/null;
+const LABEL = {lod120:'LOD from 120 m', lod60:'LOD from 60 m'};
+const CK = k => { const m=k.match(/f(\d+)-s(\d+)-p(\d+)/); return m?`frame ${+m[1]} · seed ${m[2]}${m[3]!=='0'?' · palette '+m[3]:''}`:k; };
+const state = {ckpt: REVIEW.checkpoints[1]?.key ?? REVIEW.checkpoints[0].key, view:'top', mode:'lod60', disp:'side'};
+function seg(id, items, key){
+ const el=document.getElementById(id); el.innerHTML='';
+ for(const [value,label] of items){ const b=document.createElement('button'); b.type='button'; b.textContent=label; b.setAttribute('aria-pressed', String(state[key]===value)); b.addEventListener('click',()=>{state[key]=value; render();}); el.appendChild(b); }
+}
+function fmtPct(x){return x.toFixed(x<0.1?3:2)+'%';}
+function summary(){
+ const t=REVIEW.timing, body=document.querySelector('#summary tbody'); body.innerHTML='';
+ const avgChanged = mode => { if(!mode) return null; let s=0,n=0; for(const c of REVIEW.checkpoints) for(const v of Object.values(c.views)){ s+=v[mode].percent; n++; } return s/n; };
+ const tri = g => { const m=t[g+'-geom']; return m? Math.round((m.per_frame.MaliGeomTotalPrim||0)/1000)+'k':'not measured'; };
+ const rows=[['Current defaults','defaults',null],['LOD from 120 m','lod120','lod120'],['LOD from 60 m','lod60','lod60']];
+ for(const [label,g,mode] of rows){
+  const a=t[g+'-audio'], b=t[g+'-big'], ch=avgChanged(mode);
+  const busy = a? a.per_frame.MaliGPUActiveCy*(1000/a.mean_ms)/8e8*100 : null;
+  const pill=(v,ok)=>`<span class="pill ${ok?'good':'warn'}">${v}</span>`;
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td class="label">${label}</td><td>${busy===null?'—':pill(busy.toFixed(0)+'%',busy<90)}</td><td>${a.mean_ms.toFixed(2)} ms</td><td>${a.p95_ms.toFixed(1)} ms</td><td>${(a.long_share*100).toFixed(1)}%</td><td>${(a.per_frame.MaliNonFragActiveCy/1e6).toFixed(2)}</td><td>${tri(g)}</td><td>${b?b.mean_ms.toFixed(2)+' ms':'not measured'}</td><td>${b?pill((b.long_share*100).toFixed(1)+'%',b.long_share<0.005):'—'}</td><td>${ch===null?'0 (baseline)':fmtPct(ch)}</td>`;
+  body.appendChild(tr);
+ }
+}
+function render(){
+ seg('ckpt', REVIEW.checkpoints.map(c=>[c.key, CK(c.key)]), 'ckpt');
+ seg('view', [['top','Top · third person'],['lower','Lower · first person']], 'view');
+ seg('mode', [['lod120','120 m'],['lod60','60 m']], 'mode');
+ seg('disp', [['side','Side by side'],['swipe','Swipe'],['diff','Changes']], 'disp');
+ const c=REVIEW.checkpoints.find(x=>x.key===state.ckpt), s=c.views[state.view][state.mode];
+ const base=`${state.ckpt}-${state.view}`, img=n=>`${base}-${n}.png`;
+ document.getElementById('stats').innerHTML=`<span>Changed pixels <b>${s.different_pixels.toLocaleString()}</b> of ${s.pixels.toLocaleString()} (<b>${fmtPct(s.percent)}</b>)</span><span>Largest channel change <b>${s.max_channel_delta}</b>/255</span><span>${CK(state.ckpt)}</span>`;
+ const stage=document.getElementById('stage');
+ if(state.disp==='side'){
+  stage.innerHTML=`<div class="frames"><figure><img src="${img('baseline')}" alt="Baseline frame" width="1024" height="768"><figcaption><span>Current defaults</span><span>full detail</span></figcaption></figure><figure><img src="${img(state.mode)}" alt="${LABEL[state.mode]} frame" width="1024" height="768"><figcaption><span>${LABEL[state.mode]}</span><span>${fmtPct(s.percent)} changed</span></figcaption></figure></div>`;
+ } else if(state.disp==='swipe'){
+  stage.innerHTML=`<div class="swipe" id="sw" style="--cut:50%"><img src="${img('baseline')}" alt="Baseline frame" width="1024" height="768"><img class="top" src="${img(state.mode)}" alt="${LABEL[state.mode]} frame" width="1024" height="768"><div class="line"></div></div><label class="stats" for="cut"><span>Left: current defaults · right: ${LABEL[state.mode]}</span></label><input class="swipe-range" id="cut" type="range" min="0" max="100" value="50" aria-label="Swipe position">`;
+  const sw=document.getElementById('sw'); document.getElementById('cut').addEventListener('input',e=>sw.style.setProperty('--cut',e.target.value+'%'));
+ } else {
+  stage.innerHTML=`<div class="frames single"><figure><img src="${img(state.mode+'-diff')}" alt="Changed pixels in red" width="1024" height="768"><figcaption><span>Changed pixels in red over the dimmed baseline</span><span>${s.different_pixels.toLocaleString()} px</span></figcaption></figure></div>`;
+ }
+ const [x,y,w,h]=s.crop;
+ document.getElementById('crop').innerHTML=`<h2 style="font-size:18px;margin-bottom:8px">Most-changed region, 2× enlarged</h2><div class="heads"><span>Current defaults</span><span>${LABEL[state.mode]}</span><span>Changes</span></div><img src="${img(state.mode+'-crop')}" alt="Enlarged crop of the most changed region" width="1552" height="384"><div class="stats"><span>Region x ${x}, y ${y}, ${w}×${h} px · ${s.crop_changed.toLocaleString()} changed pixels inside</span></div>`;
+}
+summary(); render();
+</script>

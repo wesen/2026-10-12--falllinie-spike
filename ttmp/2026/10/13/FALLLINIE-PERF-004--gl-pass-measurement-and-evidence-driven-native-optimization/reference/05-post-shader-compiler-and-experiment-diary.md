@@ -177,3 +177,28 @@ Vault commitd769550 contains exactly the new report plus12assets. Native scripts
 
 ### Technical details
 4606prosewords;2Mermaid diagrams;4actual/compilerSVGfigures;2fixturePNGs;12assetfiles;13totalnewvaultfiles. Prior vaultHEADc7b1535 was preserved as parent. Canonical shader and production launcher unchanged. No further hardware run was needed to publish this evidence.
+
+## Step 4: Connect the reports, then broaden the index to general optimization
+
+The user resumed with editorial requests, not further experiments. First connected all eight Falllinie reports with contextual navigation and a shared reading map. Then broadened that map into `MOC - Optimization and Performance Engineering`, retaining the full Falllinie series and adding older investigations, reciprocal links and external references.
+
+### Prompt Context
+**User prompt (verbatim):** "cross link all the optimization reports about falllinie we wrote, now that we hve a fair amount of information"
+**User prompt (verbatim):** "oh well actually turn that into a general optimization MOC and look for older ebpf and other reports that would be related, and link to online resources as we ll"
+**Assistant interpretation:** Extend navigation across the vault, preserve historical claims, distinguish measured work from plans/simulation/conversations, and publish the result.
+
+### What I did and why
+- Found eight Falllinie reports; added seven direct related-report links and one MOC link to each, with checkpoint-specific interpretation notes. Verified original report bodies were preserved and all64newnavigation links resolved. Published asf4810f67dec92c963f9179060f8f06b004bd023f.
+- Searched beyond Projects and found the April x264/Go/CGO page-fault report under Research/Institute. Read its two errata before describing it: allocator interception was disproved, real page faults did not explain sustained CPU, and ignored encoder property settings were the final CPU diagnosis. Explicitly warned that lower historical sections retain earlier interpretations.
+- Added11older reports spanning screencast metrics/methodology, x264/eBPF, X11 resize/paint, memory/RSS, ESP32 transfer/display, browserSQLite, Goja boundaries and researchctl simulation. Each receives a reciprocal general-MOC link. Two archived eBPF conversations are linked as discussions, not qualified experiments; transcripts were not edited.
+- Renamed the index to the general MOC, kept the old title as an alias, updated all eight Falllinie links, and retained the complete specialized catalogue within the broader map.
+- Used Kagi to discover methodology and official references. Linked USE, perf, off-CPU, flame graphs, versioned bpftrace docs/project, BCC, Go diagnostics, Arm counters and compiler; no claim that every tool works on the handheld.
+
+### Results and validation
+Validated54general-MOC wikilinks and21scoped changed paths. Published and pushed generalization commit487c23cba9680b5fac9c60de91cea383a32408cf; independent gitls-remote matched localHEAD and vault status was clean. Both navigation commits have receipts in scripts/06-report-links/.
+
+### Failure and recovery
+The first final diff-check found an existing whitespace-only EOF line in the SQLite article exposed by appending navigation: `Projects/2026/05/03/ARTICLE - SQLite in the Browser - Measuring and Fixing sql.js Performance in Static Code Review Sites.md:873: trailing whitespace.` Removed the two spaces on that blank separator, restaged only that article and reran the scoped check successfully. No substantive historical content changed.
+
+### Review and stopping point
+Inspect the general MOC, the eight report navigation addenda and11older-report backlinks. Original publication content hashes remain historical receipts; later editorial commits intentionally change note hashes without changing measurements or figures. No new hardware work, optimization or deployment occurred. Native remains unpushed; stop after the requested editorial publication.

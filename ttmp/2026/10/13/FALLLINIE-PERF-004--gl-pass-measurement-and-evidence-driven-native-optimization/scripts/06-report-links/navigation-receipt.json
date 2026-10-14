@@ -1,0 +1,50 @@
+[
+  {
+    "path": "Projects/2026/10/12/PROJECT REPORT - Falllinie Native GLES Spike - Deterministic Terrain, Print Shaders and Mali Depth Precision.md",
+    "before_sha256": "deec6bb525a284f8544fad1c2dc158afae0c3cedd00fbbf38210ed55c4144156",
+    "after_sha256": "8436f43d63818bf005cb5726c3f658450a0a194026e0c089ae4b419dbf76784b",
+    "original_body_preserved": true
+  },
+  {
+    "path": "Projects/2026/10/12/PROJECT REPORT - Falllinie Playable Port - Dual Views, Frame Profiling and Cooperative Terrain Streaming.md",
+    "before_sha256": "497c97a3f07804026e2d5564344529f72aab7cef71a1d6627e10a9b347cfa7d9",
+    "after_sha256": "c70a8b2bc7cf4bbbcad87c73dbfac97f26702a84985978dbe20d7c558636ea37",
+    "original_body_preserved": true
+  },
+  {
+    "path": "Projects/2026/10/13/PROJECT REPORT - Falllinie Integrated Native Game - Precision, Real-Time Audio, Developer Telemetry and JavaScript Embedding.md",
+    "before_sha256": "aa213575149ebf6f842a124428350380a31f5dd3adc6a174487b8759e5743cb8",
+    "after_sha256": "2472ea979939b63508d75743007564d4eec705d4e110286b6814f22fbbcb7107",
+    "original_body_preserved": true
+  },
+  {
+    "path": "Projects/2026/10/13/PROJECT REPORT - Falllinie Buffered Audio - PCM Ownership, Callback Deadlines and Measured Producer Scheduling.md",
+    "before_sha256": "810a7f6bcc028473291924e890ca7fc9bdf74be8d2bb8abfff8fa8dc5834d667",
+    "after_sha256": "8f27ee900c5129820220c4f4b26231a87a2dccbda50be31094e6965cb3b99c7a",
+    "original_body_preserved": true
+  },
+  {
+    "path": "Projects/2026/10/13/PROJECT REPORT - Falllinie JavaScript Embedding - ARM64 Qualification, V8 Ownership and Bounded Rules.md",
+    "before_sha256": "2dc70f92fb82ef1427fb9b136e99ba6fdd620e22e838af6379fe19ba3495f6e4",
+    "after_sha256": "94977d25a7ff6852a8095668aa25c3f79796de6c22b4b448973bd4a8fc255ea4",
+    "original_body_preserved": true
+  },
+  {
+    "path": "Projects/2026/10/13/PROJECT REPORT - Falllinie Tracing - CPU Execution, Driver Waits and GPU Attribution.md",
+    "before_sha256": "bda2f359e2abcd56acad5e7653e261cd1b6d8bf2bd1fb90355fb91a62faa0614",
+    "after_sha256": "dc071fef7fb2e9f1e5f7c313ef04831b4c9d726e8fdc4ea0181f5a8fb90d9e68",
+    "original_body_preserved": true
+  },
+  {
+    "path": "Projects/2026/10/13/PROJECT REPORT - Falllinie Rendering Measurements - CPU Execution, Mali Driver Work and GPU Timer Limits.md",
+    "before_sha256": "cd512fb4cfde86ac611b29bb191511aa26d6f2875babfee6fd0547f6f78e3b92",
+    "after_sha256": "e6dafcea9d0c441a9f8a9689cc38550846232b9e57f2a6a76e90e878cc2b5dd9",
+    "original_body_preserved": true
+  },
+  {
+    "path": "Projects/2026/10/13/PROJECT REPORT - Falllinie GPU Profiling - Hardware Counters, Shader Compilation and a Rejected Optimization.md",
+    "before_sha256": "aca4540ea4556ed0ef993dc08ef629e68bfb355b7484b58fb40ace4753e8cbc1",
+    "after_sha256": "7f6e24588a64e2d2edd91b0a832c4aa999995e2efafb762a096e9958ebb24c1f",
+    "original_body_preserved": true
+  }
+]

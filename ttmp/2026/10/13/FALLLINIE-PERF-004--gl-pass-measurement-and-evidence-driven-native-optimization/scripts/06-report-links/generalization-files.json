@@ -1,0 +1,15 @@
+[
+  "Projects/2026/10/13/MOC - Optimization and Performance Engineering.md",
+  "Projects/2026/10/13/MOC - Falllinie Optimization Reports.md",
+  "Projects/2026/04/15/ARTICLE - Screencast Studio - Performance Investigation Approaches and Tricks.md",
+  "Research/Institute/Technical Reports/2026-04-15--x264-go-page-fault-analysis/01-REPORT-x264-Go-CGO-Page-Fault-Root-Cause-Analysis.md",
+  "Projects/2026/07/22/ARTICLE - Measuring Before Optimizing - An X11 Window Manager Resize Path.md",
+  "Projects/2026/07/22/ARTICLE - Optimizing an X11 Window Manager Paint Path.md",
+  "Projects/2026/08/25/ARTICLE - Publish Vault Memory Optimization - From OOM Incidents to Phase-Attributed Baselines.md",
+  "Projects/2026/04/15/ARTICLE - Screencast Studio - Prometheus Metrics Architecture and Field Guide.md",
+  "Projects/2026/05/27/ARTICLE - Optimizing WiFi Image Upload on ESP32-P4 - From 6 Seconds to Sub-Second.md",
+  "Projects/2026/06/01/ARTICLE - ESP32-P4 PicoCalc Display Optimization - Queued SPI and Dirty Rectangles.md",
+  "Projects/2026/05/03/ARTICLE - SQLite in the Browser - Measuring and Fixing sql.js Performance in Static Code Review Sites.md",
+  "Projects/2026/05/15/ARTICLE - Goja Site Rendering Performance Internals and Export Boundary Deep Dive.md",
+  "Projects/2026/06/30/PROJECT REPORT - researchctl CPU GPU Codesign Experiment Runtime Deep Dive.md"
+]

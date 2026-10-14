@@ -212,3 +212,16 @@ Historical direct-callback target evidence: a 55-second muted dual-view run with
 1024 frames recorded 3/2574 callback budget misses (max 39.8702 ms), about 50 FPS
 and GL_error 0. This predates buffering; it is neither zero-miss acceptance nor a
 measured driver-XRUN count.
+
+## Optional GL pass investigation (PERF-004)
+
+`--profile CSV --gpu-profile-mode off|view|passes --profile-cadence 60`
+adds sparse CPU renderer scopes and optional nonblocking, nonnested GPU queries.
+`--gpu-profile` remains the whole-view alias. GPU invalid/unavailable results are
+not zero timings. `--freeze-scene` is a **static terrain-only** fixture (dual uses
+the same camera, no simulation/dynamics/streaming/audio); `--post-bypass` actually
+omits the print pass and is explicitly non-parity. Production defaults are unchanged.
+
+See [ticket-local build/test/run/analyze commands and scope contracts](ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/README.md).
+Target Mali measurements and final optimization acceptance are pending; host
+llvmpipe smoke results are functional evidence only.

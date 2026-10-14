@@ -9,12 +9,18 @@ Topics:
 DocType: design-doc
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://src/geometry_bounds.hpp
+      Note: Bounds helpers and fog adaptation
+    - Path: repo://src/renderer.cpp
+      Note: Chunk culling, short indices, acquire scope
+    - Path: repo://tests/test_geometry_bounds.cpp
+      Note: Conservativeness tests
 ExternalSources: []
-Summary: "Plan and contracts for measuring shadow bounds at the shipping 384x288 dual-view configuration, collecting geometry counters, and adding pixel-identical geometry reductions (fogged-cell constant shading, per-view culling, 16-bit indices) plus a presentation-acquire scope."
+Summary: Plan and contracts for measuring shadow bounds at the shipping 384x288 dual-view configuration, collecting geometry counters, and adding pixel-identical geometry reductions (fogged-cell constant shading, per-view culling, 16-bit indices) plus a presentation-acquire scope.
 LastUpdated: 2026-10-14T18:06:41.235458157-04:00
-WhatFor: "Executing the next performance step after the vault performance review"
-WhenToUse: "Before implementing or measuring PERF-009 changes; when deciding whether a candidate becomes default"
+WhatFor: Executing the next performance step after the vault performance review
+WhenToUse: Before implementing or measuring PERF-009 changes; when deciding whether a candidate becomes default
 ---
 
 # Shipping-configuration GPU budget recovery design

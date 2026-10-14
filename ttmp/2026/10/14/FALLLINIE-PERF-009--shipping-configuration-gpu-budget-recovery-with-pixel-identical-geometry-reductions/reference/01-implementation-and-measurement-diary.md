@@ -312,3 +312,73 @@ Following the design's promotion rule, shadow bounds, view culling and 16-bit in
 
 ### Technical details
 - Visual checkpoints: frames 120/600/1200 seed 42 palette 0; frame 600 seed 7; frame 600 palette 5; 384×288 dual view; captures taken after the measured loop.
+
+## Step 6: Phase D — presentation acquisition measured directly; acceptance with audio and live gameplay
+
+Phase D answered the presentation question that the review could only infer. With `--output-clear on`, the first operation on each window's default framebuffer is an explicit clear inside its own `acquire` scope. At the shipping size, sampling every frame, one window's `acquire` scope takes 9.2–9.5 ms of wall time with only 0.28–0.40 ms of thread CPU time, and the rest of that window's output scope is under 0.6 ms. The loop waits for the window system to hand back a buffer, at the first default-framebuffer operation, not in `SDL_GL_SwapWindow`. Which window waits flips between sessions (top in `01-clear-ship`, lower in `02-clear-ship`), consistent with a session-dependent phase between the two panels' refresh cycles.
+
+The acceptance campaign compared the old behaviour with the new defaults in two workloads with the muted audio producer running: the shipping replay and live autoplay with launcher-like settings (`--autoplay --dual-screen --render-size 384x288 --no-vsync --fps 60 --audio-buffer 1024 --no-vinyl`). In live gameplay the long-frame share fell from 7.6% to 0.1% and p95 from 27.8 ms to 17.2 ms. Window depth 0 had no measurable effect and is not promoted.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Instrument the presentation wait, test window depth, and run an acceptance comparison of the promoted defaults including audio and live play.
+**Inferred user intent:** Confirm the defaults improve the real game, not only the replay benchmark.
+**Commit (code):** f1c44a7 (device binary `97d5af04…40733`, identical to the pre-commit build of the same sources)
+
+### What I did
+- `06-campaign.py phase-d` → `evidence/phase-d-20261014T224833Z`: visual identity for `defaults`, `clear`, `nodepth` against explicit original flags at five checkpoints; timed `clear` twice at 384×288 with `--profile-cadence 1`; defaults vs `--window-depth 0` at 512×384, ABBA.
+- `06-campaign.py acceptance` → `evidence/acceptance-20261014T225930Z`: replay+audio original/defaults/defaults/original, then live original/defaults/defaults/original.
+- Compressed the two cadence-1 paired logs with `gzip -9` (4 MB each); `07-analyze.py` reads `.gz` transparently and regenerates a byte-identical `summary.json`.
+- Kept PNGs only for `visual-f0600-s42-p0-original` and `-defaults`.
+- Ran Mali Offline Compiler 2026.5 on the bounds and bounds+fog-constant scene fragment shaders dumped from the host binary (`evidence/malioc/`).
+
+### Why
+- The clear does not change the image (the copy overwrites every pixel) and moves the acquisition wait into a scope of its own, which makes the presentation hypothesis directly testable.
+- Live autoplay is closer to the shipped game than the replay: wall-time streaming, real timing-dependent trajectory, launcher settings.
+
+### What worked
+- Visual: 0 different pixels for `defaults`, `clear` and `nodepth` at all five checkpoints (15 comparisons × 8 images).
+- Acquire scope (n = 540 per view per run):
+
+| Run | Top acquire wall / CPU ms | Top output wall ms | Lower acquire wall / CPU ms | Lower output wall ms |
+|---|---|---:|---|---:|
+| 01-clear-ship | 9.528 / 0.400 | 10.025 | 0.226 / 0.183 | 0.629 |
+| 02-clear-ship | 0.404 / 0.339 | 1.064 | 9.231 / 0.276 | 9.587 |
+
+- Window depth (512×384 dual, defaults): 20.132 ms (defaults) vs 20.147 ms (depth 0); no change.
+- Acceptance:
+
+| Workload | Mode | Mean ms | p95 ms | p99 ms | Long share |
+|---|---|---:|---:|---:|---:|
+| Replay + audio | original (01, 04) | 17.753 | 27.928 | 29.813 | 0.069 |
+| Replay + audio | defaults (02, 03) | 16.625 | 17.510 | 18.419 | 0.000 |
+| Live + audio | original (05, 08) | 17.883 | 27.796 | 29.436 | 0.076 |
+| Live + audio | defaults (06, 07) | 16.670 | 17.235 | 18.616 | 0.001 |
+
+- Health: every case `GL_error=0`, `starved_callbacks=0 missing_frames=0`, `producer_over_budget` 0–3, probe `errors=0`. Peak RSS 95–107 MiB; defaults are not higher than original.
+- `malioc` confirms the Step 5 hypothesis for fog-constant: longest arithmetic path 11.03 → 11.20 cycles and total 11.25 → 11.53, work registers 31 → 32. Every non-fogged fragment pays the extra cycles.
+
+### What didn't work
+- The wrapper command for the two campaigns ended with `tail -3 file1 file2`, which zsh's `tail` rejected (`tail: option used in invalid context -- 3`), so the background task reported exit code 1. Both campaigns had already completed (`phase-d exit=0`, `acceptance exit=0`, `complete: true`, governor restored to `ondemand`).
+
+### What I learned
+- Presentation pacing is now measured, not inferred: frame time is the time until the next window buffer is free, so the loop is refresh-locked even with swap interval 0.
+- With the defaults, the GPU still reports ≈13.0–13.1 M active cycles per loop frame at 60 FPS, i.e. close to fully busy. The improvement is real in the player-visible metric, but headroom remains thin.
+
+### What was tricky to build
+- Live runs have no replay signature, so the analyzer's signature sets must tolerate an empty value (`str()` around the receipt field).
+
+### What warrants a second pair of eyes
+- Live cases follow timing-dependent trajectories, so original and defaults do not draw identical frames; the ABBA ordering and the size of the change carry the comparison.
+- The production launcher at `/storage/apps/falllinie-spike` was not replaced; it still runs the older binary.
+
+### What should be done in the future
+- Deploy the new binary to the launcher when the owner approves.
+- Owner decision with side-by-side images: distance level of detail for sub-sample terrain triangles (59% of primitives), the largest remaining geometry cost and the main source of additional headroom.
+
+### Code review instructions
+- `python3 -I scripts/07-analyze.py scripts/evidence/acceptance-20261014T225930Z` and `.../phase-d-20261014T224833Z`.
+- `scripts/08-live-case.sh` for the live configuration.
+
+### Technical details
+- Defaults now: `--shadow-mode bounds --view-culling on --short-indices on`; opt-in diagnostics: `--fog-cells constant` (rejected), `--output-clear on`, `--window-depth 0`, `--replay-audio`.

@@ -8,7 +8,7 @@ the paired-clock window, counter values per loop frame (rate / loop FPS, an
 estimate), paired scope means, and receipt health. Writes CAMPAIGN_DIR/summary.json
 unless OUTPUT_JSON is given (use that for directories owned by other tickets).
 """
-import csv,json,math,statistics,sys
+import csv,gzip,json,math,statistics,sys
 from collections import defaultdict
 from pathlib import Path
 PERIOD=1000/60
@@ -25,7 +25,8 @@ def case_summary(d):
  out['receipt']={k:receipt.get(k) for k in ['replay_signature','gl_error','shadow_mode','replay_audio','audio_disabled','fog_cells','view_culling','short_indices','output_clear','window_depth','geometry_draws','placement_ok']}
  # Paired scopes.
  window=[None,None];scopes=defaultdict(lambda:{'wall':[],'cpu':[]});final=None
- for line in open(d/'frames.csv.paired.jsonl'):
+ paired=d/'frames.csv.paired.jsonl'
+ for line in (gzip.open(str(paired)+'.gz','rt') if not paired.exists() else open(paired)):
   r=json.loads(line)
   if r['record']=='final':final=r
   if r['record']!='sample' or r['frame']<60 or r['wall_status']!='valid':continue

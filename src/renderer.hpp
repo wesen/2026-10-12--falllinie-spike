@@ -23,6 +23,7 @@ public:
  void set_measurement(Profiler* profiler,uint64_t frame,int view){profiler_=profiler;profile_frame_=frame;profile_view_=view;}
  void set_post_bypass(bool bypass){post_bypass_=bypass;}
  void set_draw_ranges(bool enabled){draw_ranges_=enabled;}
+ void set_benchmark_replay(bool enabled){benchmark_replay_=enabled;}
  size_t vertex_count()const{return vertices_;}
  size_t index_count()const{return indices_;}
  double build_ms()const{return build_ms_;}
@@ -37,7 +38,7 @@ public:
  int height()const{return height_;}
  const Camera& camera()const{return camera_;}
 private:
- bool draw_ranges_=false;
+ bool draw_ranges_=false,benchmark_replay_=false;
  void draw_indexed(GLsizei count,size_t vertices,const void* offset=nullptr);
  Profiler* profiler_=nullptr;uint64_t profile_frame_=0;int profile_view_=0;bool post_bypass_=false;
  GLuint hud_program_=0,hud_font_=0,hud_vao_=0,hud_vbo_=0;

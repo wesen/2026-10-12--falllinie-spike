@@ -48,3 +48,44 @@ Start with design-doc/01, main.cpp loop, game_renderer.cpp streaming and Terrain
 
 ### Technical details
 Proposed600frame trajectory,1/60simulation step,32row-work units/frame;256×192/384×288/512×384 internal targets, one/twoviews, realcamera/HUD/particles, audiooff. Countercapture remains bounded and does not alter governors or productiondeployment.
+
+## Step 2: Implement frame-indexed replay and validate the feature boundary
+
+Implemented --benchmark-replay with1/60simulationdt, seededautoplay, no-audio, disabled persistent score access and ignored gameplay/focus mutations. The real rendering path remains active. TerrainJob shares its original numerical algorithm but can stop after32row-workunits, making residency progression independent of wall time. Production defaults retain wall-dt and3.5msstreaming.
+
+Host validation compares120frames of single-view uncapped rendering against dual-view60FPS pacing. Both produce replay signature13752613737572218072 and byte-identical finalprint images. All15CPUtests pass, including added comparisons of fixed1/32unit terrain generation against the synchronous reference. ARM candidate built successfully; target scaling remains the next gate.
+
+### Prompt Context
+**User prompt:** SeeStep1.
+**Assistant interpretation:** Implement practical repeatability before measuring scaling, without an unrelated validationmatrix.
+**Commit (guide/delivery):**c7ca46a.
+
+### What I did
+Changed main.cpp configuration/loop/receipt, renderer replaypolicy and terrain rowbudget. Added scripts/01-build.sh,02-target-case.sh and03-campaign.sh. The targetcampaign uses three internalresolutions, one/twoviews, repeated384×288dual reference and one pacedreference; all have600frames and45scountercaptures.
+
+### Why
+Fixing onlydt would leave geometry arrival time dependent on CPU speed. Selected-state rollingfingerprint excludes timing and resolution but includes gameposition/velocity/time/score, cameraeye/look and terrainvertex/index counts. Same-size captures supplement the partial fingerprint.
+
+### What worked
+Host/ARMbuilds,15tests and cross-view/pacing replay check passed. Autoplay starts without audio; no change to physics/shader formulas or productionlauncher.
+
+### What didn't work
+No implementation or validationfailure observed at this checkpoint.
+
+### What I learned
+A deterministic workbudget can reuse the same rowstate machine. Benchmark evidence should name its altered streamingpolicy rather than presenting it as identical production scheduling.
+
+### What was tricky to build
+Do not hash objectpadding, pointers or timing. Serialize selected scalar fields in explicit order/precision and fold bytes. The hash is same-binary/platform evidence, not universal floatingpoint determinism. Preserve feedback draining and ignore focuspause when comparing windowcounts.
+
+### What warrants a second pair of eyes
+The fingerprint does not encode everyparticle/mesh byte; images are only checked at a bounded endpoint. Counters remain whole-device and rates use hostwindows. Developer-overlay timing text and persistedbestscore are intentionally excluded.
+
+### What should be done in the future
+Execute and analyze the targetmatrix; reject same-trajectory claims if signatures differ. Document actual scaling and any collection failures before declaring this ticketimplemented.
+
+### Code review instructions
+Inspect main.cpp benchmarkguards, game_renderer.cpp TerrainJob call, TerrainJob::step and tests/test_terrain.cpp. Host receipts/logs/images are scripts/evidence/host; build receipts are evidence/build.
+
+### Technical details
+Simulation updatefixed1/60, original120Hzphysics internal;32sampling/emissionworkunits perframe. Frame/CPUclocks remainreal. Actualfingerprint processing is outside profiledrender scopes and its small fixed workload still contributes to loop timing. Private targetdeployment only.

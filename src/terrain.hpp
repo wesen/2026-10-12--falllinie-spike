@@ -41,7 +41,7 @@ struct CpuMesh {std::vector<Vertex> vertices;std::vector<uint32_t> indices;};
 class TerrainJob {
 public:
  TerrainJob(Terrain& terrain,int cell);
- bool step(double budget_ms);
+ bool step(double budget_ms,unsigned max_work_units=0);
  int cell()const{return cell_;}
  CpuMesh take();
 private:

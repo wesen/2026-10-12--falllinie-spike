@@ -85,9 +85,9 @@ TerrainJob::TerrainJob(Terrain& terrain,int cell):terrain_(terrain),cell_(cell){
  for(double u:{48,54,64,80,105,140,185,240,300})columns_.push_back(u);
  samples_.reserve(ROWS+3);mesh_.vertices.reserve((ROWS+1)*columns_.size());mesh_.indices.reserve(ROWS*(columns_.size()-1)*6);
 }
-bool TerrainJob::step(double budget_ms){
+bool TerrainJob::step(double budget_ms,unsigned max_work_units){
  if(complete_)return true;
- const auto started=std::chrono::steady_clock::now();
+ const auto started=std::chrono::steady_clock::now();unsigned work_units=0;
  do{
   if(sampling_){double z=cell_*CELL+row_*ROW,cx=Terrain::center(z);std::vector<Sample> row;row.reserve(columns_.size());
    for(double u:columns_){Sample s;s.p={cx+u,0,z};s.p.y=terrain_.height(s.p.x,z,&s.o);row.push_back(s);}samples_.push_back(std::move(row));
@@ -99,7 +99,7 @@ bool TerrainJob::step(double budget_ms){
    if(j<=ROWS){uint32_t nc=uint32_t(columns_.size());for(uint32_t i=0;i<nc-1;++i){uint32_t a=(j-1)*nc+i,b=a+1,c=a+nc,d=c+1;mesh_.indices.insert(mesh_.indices.end(),{a,c,b,b,c,d});}}
    if(++row_>ROWS+1)complete_=true;
   }
- }while(!complete_ && std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-started).count()<budget_ms);
+ }while(!complete_ && (max_work_units ? ++work_units<max_work_units : std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-started).count()<budget_ms));
  return complete_;
 }
 CpuMesh TerrainJob::take(){if(!complete_)throw std::runtime_error("terrain job is incomplete");return std::move(mesh_);}

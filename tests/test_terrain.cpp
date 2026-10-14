@@ -18,6 +18,7 @@ int main(){try{
  for(const auto& h:hashes)require(fl::hash_int(h[0],42)==h[1],"hash mismatch");
  fl::Rng rng{12345};for(double r:random_values)require(rng.next()==r,"RNG mismatch");
  fl::Terrain terrain(42);auto m=fl::build_terrain(terrain,0);
+ for(unsigned units:{1u,32u}){fl::Terrain replay_terrain(42);fl::TerrainJob replay(replay_terrain,0);int calls=1;while(!replay.step(0,units))require(++calls<1000,"fixed work job did not finish");auto mesh=replay.take();require(mesh.indices==m.indices&&mesh.vertices.size()==m.vertices.size(),"fixed work topology mismatch");require(std::memcmp(mesh.vertices.data(),m.vertices.data(),m.vertices.size()*sizeof(fl::Vertex))==0,"fixed work vertex bytes differ");}
  fl::Terrain incremental_terrain(42);fl::TerrainJob job(incremental_terrain,0);int slices=0;while(!job.step(.05))require(++slices<10000,"incremental job did not finish");auto incremental=job.take();
  require(incremental.indices==m.indices && incremental.vertices.size()==m.vertices.size(),"incremental topology mismatch");require(std::memcmp(incremental.vertices.data(),m.vertices.data(),m.vertices.size()*sizeof(fl::Vertex))==0,"incremental vertex bytes differ");
  require(m.vertices.size()==14873 && m.indices.size()==87768,"mesh count mismatch");

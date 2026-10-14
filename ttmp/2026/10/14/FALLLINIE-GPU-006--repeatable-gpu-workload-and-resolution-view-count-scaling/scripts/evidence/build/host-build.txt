@@ -1,0 +1,48 @@
+[  2%] Building CXX object CMakeFiles/terrain.dir/src/terrain.cpp.o
+[ 10%] Built target test-audio-pcm
+[ 10%] Built target test-audio-worker
+[ 18%] Built target test-profiler
+[ 27%] Built target test-paired-clocks
+[ 29%] Linking CXX static library libterrain.a
+[ 29%] Built target terrain
+[ 31%] Building CXX object CMakeFiles/test-terrain.dir/tests/test_terrain.cpp.o
+[ 33%] Building CXX object CMakeFiles/source-systems.dir/src/pose.cpp.o
+[ 35%] Building CXX object CMakeFiles/source-systems.dir/src/world.cpp.o
+[ 37%] Building CXX object CMakeFiles/source-systems.dir/src/game.cpp.o
+[ 39%] Linking CXX executable test-terrain
+[ 39%] Built target test-terrain
+[ 41%] Building CXX object CMakeFiles/source-systems.dir/src/particles.cpp.o
+[ 43%] Building CXX object CMakeFiles/source-systems.dir/src/runtime.cpp.o
+[ 45%] Building CXX object CMakeFiles/source-systems.dir/src/developer_overlay.cpp.o
+[ 47%] Linking CXX static library libsource-systems.a
+[ 50%] Built target source-systems
+[ 58%] Building CXX object CMakeFiles/test-integration.dir/tests/test_integration.cpp.o
+[ 58%] Building CXX object CMakeFiles/test-gameplay.dir/tests/test_gameplay.cpp.o
+[ 58%] Building CXX object CMakeFiles/test-gameplay_pose.dir/tests/test_gameplay_pose.cpp.o
+[ 58%] Building CXX object CMakeFiles/test-gameplay_world.dir/tests/test_gameplay_world.cpp.o
+[ 60%] Linking CXX executable test-integration
+[ 60%] Built target test-integration
+[ 62%] Building CXX object CMakeFiles/test-developer_overlay.dir/tests/test_developer_overlay.cpp.o
+[ 64%] Linking CXX executable test-developer_overlay
+[ 64%] Built target test-developer_overlay
+[ 66%] Building CXX object CMakeFiles/test-developer_controls.dir/tests/test_developer_controls.cpp.o
+[ 68%] Linking CXX executable test-gameplay_pose
+[ 68%] Built target test-gameplay_pose
+[ 70%] Linking CXX executable test-audio
+[ 72%] Linking CXX executable test-gameplay_world
+[ 72%] Built target test-gameplay_world
+[ 75%] Building CXX object CMakeFiles/test-audio-diagnostics.dir/tests/test_audio_diagnostics.cpp.o
+[ 77%] Built target test-audio
+[ 79%] Linking CXX executable test-audio-lifecycle
+[ 81%] Linking CXX executable test-gameplay
+[ 83%] Built target test-audio-lifecycle
+[ 85%] Building CXX object CMakeFiles/falllinie-spike.dir/src/main.cpp.o
+[ 85%] Built target test-gameplay
+[ 87%] Building CXX object CMakeFiles/falllinie-spike.dir/src/renderer.cpp.o
+[ 89%] Linking CXX executable test-developer_controls
+[ 89%] Built target test-developer_controls
+[ 91%] Building CXX object CMakeFiles/falllinie-spike.dir/src/game_renderer.cpp.o
+[ 93%] Linking CXX executable test-audio-diagnostics
+[ 93%] Built target test-audio-diagnostics
+[ 95%] Linking CXX executable falllinie-spike
+[100%] Built target falllinie-spike

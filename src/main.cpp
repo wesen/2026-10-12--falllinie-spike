@@ -10,6 +10,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
+#include <sstream>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -25,7 +26,7 @@ namespace {
 volatile std::sig_atomic_t termination_requested=0;
 void request_termination(int){termination_requested=1;}
 struct Config {
- bool paired_clocks=false,freeze_scene=false,post_bypass=false;fl::GpuMode gpu_mode=fl::GpuMode::Off;unsigned profile_cadence=60;
+ bool paired_clocks=false,freeze_scene=false,post_bypass=false,benchmark_replay=false;fl::GpuMode gpu_mode=fl::GpuMode::Off;unsigned profile_cadence=60;
  bool place=false,resize_check=false,source_sampler_precision=false,play=false,autoplay=false,dual=false,source_sky_hash=false,no_vsync=false,absolute_coordinates=false,muted=false,no_audio=false,draw_ranges=false,dev_overlay=false;double seconds=0,fps_cap=0;int frames=0,width=512,height=384,cell=0,cells=3,debug=0,palette=0,audio_buffer=512;uint32_t seed=42;
  fl::AudioRenderMode audio_mode=fl::AudioRenderMode::BufferedWorker;bool source_vinyl=true;
  std::string assets="assets/shaders",capture,receipt,profile;
@@ -46,14 +47,19 @@ Config parse(int argc,char** argv){
   else if(a=="--muted")c.muted=true;
   else if(a=="--no-audio")c.no_audio=true;
   else if(a=="--draw-ranges")c.draw_ranges=true;
+  else if(a=="--benchmark-replay")c.benchmark_replay=true;
   else if(a=="--dev-overlay"){c.dev_overlay=true;c.play=true;}
   else if(a=="--absolute-render-coordinates")c.absolute_coordinates=true;
   else if(a=="--no-vsync")c.no_vsync=true;else if(a=="--gpu-profile")c.gpu_mode=fl::GpuMode::View;else if(a=="--gpu-profile-mode"){auto mode=value();if(mode=="off")c.gpu_mode=fl::GpuMode::Off;else if(mode=="view")c.gpu_mode=fl::GpuMode::View;else if(mode=="passes")c.gpu_mode=fl::GpuMode::Passes;else throw std::runtime_error("GPU profile mode must be off, view or passes");}else if(a=="--profile-cadence"){auto text=value();size_t consumed=0;int n=std::stoi(text,&consumed);if(consumed!=text.size()||n<1||n>3600)throw std::runtime_error("profile cadence must be 1..3600");c.profile_cadence=unsigned(n);}else if(a=="--freeze-scene")c.freeze_scene=true;else if(a=="--post-bypass")c.post_bypass=true;else if(a=="--profile")c.profile=value();else if(a=="--assets")c.assets=value();else if(a=="--capture-dir")c.capture=value();else if(a=="--receipt")c.receipt=value();
   else if(a=="--render-size"){auto size=value();auto x=size.find('x');if(x==std::string::npos)throw std::runtime_error("expected WIDTHxHEIGHT");c.width=std::stoi(size.substr(0,x));c.height=std::stoi(size.substr(x+1));}
-  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..5] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash] [--absolute-render-coordinates] [--muted] [--no-audio (diagnostic: no device or DSP worker)] [--draw-ranges (diagnostic: supply indexed vertex bounds)] [--audio-buffer 256..4096 power-of-two] [--audio-mode buffered|direct] [--no-vinyl|--source-vinyl] [--dev-overlay] [--profile CSV] [--paired-clocks (requires --profile)] [--gpu-profile (view)] [--gpu-profile-mode off|view|passes] [--profile-cadence 1..3600] [--freeze-scene (static terrain; dual uses same camera; overrides dual implicit play)] [--post-bypass (non-parity)] [--no-vsync] [--fps N]\nF3 cycles debug; C cycles six palettes; A/START or ENTER/SPACE starts; START/P/ESC pauses; SELECT/F2 toggles developer overlay; SELECT+Y/R new run; M mutes; F10 or SELECT+START quits. --dev-overlay starts gameplay title with overlay. SELECT-first chords restore pre-press visibility; F2 is independent.\n";std::exit(0);}
+  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..5] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash] [--absolute-render-coordinates] [--muted] [--no-audio (diagnostic: no device or DSP worker)] [--draw-ranges (diagnostic: supply indexed vertex bounds)] [--benchmark-replay (requires --frames; fixed simulation and streaming; no audio)] [--audio-buffer 256..4096 power-of-two] [--audio-mode buffered|direct] [--no-vinyl|--source-vinyl] [--dev-overlay] [--profile CSV] [--paired-clocks (requires --profile)] [--gpu-profile (view)] [--gpu-profile-mode off|view|passes] [--profile-cadence 1..3600] [--freeze-scene (static terrain; dual uses same camera; overrides dual implicit play)] [--post-bypass (non-parity)] [--no-vsync] [--fps N]\nF3 cycles debug; C cycles six palettes; A/START or ENTER/SPACE starts; START/P/ESC pauses; SELECT/F2 toggles developer overlay; SELECT+Y/R new run; M mutes; F10 or SELECT+START quits. --dev-overlay starts gameplay title with overlay. SELECT-first chords restore pre-press visibility; F2 is independent.\n";std::exit(0);}
   else throw std::runtime_error("unknown argument "+a);
  }
  if(!std::isfinite(c.fps_cap)||c.fps_cap<0||c.fps_cap>240||c.width<128||c.height<96||c.width>2048||c.height>1536||c.cell< -1||c.cell>4096||c.cells<1||c.cells>7||c.frames<0||c.seconds<0||!std::isfinite(c.seconds)||c.debug<0||c.debug>5||c.palette<0||c.palette>5||c.audio_buffer<256||c.audio_buffer>4096||(c.audio_buffer&(c.audio_buffer-1)))throw std::runtime_error("configuration outside bounded spike limits");
+ if(c.benchmark_replay){
+  if(c.frames<=0||c.seconds!=0||c.freeze_scene||c.resize_check||c.dev_overlay||c.post_bypass)throw std::runtime_error("benchmark replay requires positive --frames, no --seconds/freeze/resize/overlay/post-bypass");
+  c.play=true;c.autoplay=true;c.no_audio=true;
+ }
  if(c.paired_clocks&&c.profile.empty())throw std::runtime_error("paired clocks require --profile CSV");
  if(c.gpu_mode!=fl::GpuMode::Off&&c.profile.empty())throw std::runtime_error("GPU profiling requires --profile CSV");
  if(c.freeze_scene){
@@ -98,7 +104,7 @@ int main(int argc,char** argv){
   if(SDL_GL_SetSwapInterval(c.no_vsync?0:1)!=0)std::cerr<<"warning: swap interval: "<<SDL_GetError()<<'\n';
   pad=SDL_NumJoysticks()>0?SDL_JoystickOpen(0):nullptr;
   std::cout<<"joystick="<<(pad?SDL_JoystickName(pad):"none")<<'\n';
-  fl::Renderer renderer;renderer.set_draw_ranges(c.draw_ranges);renderer.set_absolute_coordinates(c.absolute_coordinates);renderer.initialize(c.seed,c.play?-1:c.cell,c.play?4:c.cells,c.width,c.height,c.assets,!c.source_sampler_precision,!c.source_sky_hash,c.play);
+  fl::Renderer renderer;renderer.set_benchmark_replay(c.benchmark_replay);renderer.set_draw_ranges(c.draw_ranges);renderer.set_absolute_coordinates(c.absolute_coordinates);renderer.initialize(c.seed,c.play?-1:c.cell,c.play?4:c.cells,c.width,c.height,c.assets,!c.source_sampler_precision,!c.source_sky_hash,c.play);
   fl::Profiler profiler(c.profile,c.gpu_mode,c.profile_cadence,nullptr,c.paired_clocks);
   renderer.set_post_bypass(c.post_bypass);
   std::cout<<"INDEX_DRAW mode="<<(c.draw_ranges?"range":"ordinary")<<'\n';
@@ -116,7 +122,7 @@ int main(int argc,char** argv){
   if(c.play){
    char* preference=SDL_GetPrefPath("Falllinie","Falllinie");
    if(!preference)throw std::runtime_error(std::string("app best path: ")+SDL_GetError());
-   std::string best_path=std::string(preference)+"best-score";SDL_free(preference);game.set_best_path(best_path);
+   std::string best_path=std::string(preference)+"best-score";SDL_free(preference);if(!c.benchmark_replay)game.set_best_path(best_path);
    if(c.autoplay){game.start();if(!c.no_audio){audio_started=audio.open(audio_options);if(!audio_started)std::cerr<<"audio unavailable (no render-mode fallback): "<<SDL_GetError()<<'\n';else audio.set_muted(muted);}}
    else game.enter_title();
    std::cout<<"SOURCE: A jump / B-X boost / L1-R1-L2-R2 grabs / START pause / SELECT dev / SELECT+Y new seed / SELECT+START quit; keyboard WASD/arrows, SPACE, SHIFT/B, J/K/U/I, P/ESC, R new seed, F2 dev, M, C, F3, F10\nseed="<<game.seed()<<" best_path="<<best_path<<'\n';
@@ -126,6 +132,7 @@ int main(int argc,char** argv){
   std::vector<std::pair<int,size_t>> rss_samples;size_t start_rss=rss_kib(),peak_rss=start_rss;
   auto start=std::chrono::steady_clock::now();auto previous_end=start,fps_epoch=start,frame_deadline=start;int fps_frames=0;
   auto ms=[](auto a,auto b){return std::chrono::duration<double,std::milli>(b-a).count();};
+  uint64_t replay_signature=14695981039346656037ull;
   int frames=0,drawable_w=0,drawable_h=0;bool quit=false;
   while(!quit && !termination_requested){auto frame_start=std::chrono::steady_clock::now();SDL_Event e;
    if(lower_window){fl::PairedClocks::Scope timing(profiler.paired(),frames,0,fl::FrameStage::Context);if(SDL_GL_MakeCurrent(window,context)!=0)throw std::runtime_error(SDL_GetError());SDL_GL_SetSwapInterval(c.no_vsync?0:1);}
@@ -146,7 +153,7 @@ int main(int argc,char** argv){
     physical.axis_x=SDL_JoystickGetAxis(pad,0)/32767.;physical.axis_y=SDL_JoystickGetAxis(pad,1)/32767.;
    }
    const auto actions=input_mapper.read(physical,game.title());quit=quit||actions.quit;
-   if(!c.freeze_scene){
+   if(!c.freeze_scene&&!c.benchmark_replay){
    if(actions.dev_overlay_restore)dev_overlay=select_overlay_saved;
    if(actions.dev_overlay_toggle){if(actions.dev_overlay_select)select_overlay_saved=dev_overlay;dev_overlay=!dev_overlay;}
    if(actions.dev_overlay_restore||actions.dev_overlay_toggle){renderer.set_developer_overlay(dev_overlay);overlay_cache.invalidate();}
@@ -161,7 +168,7 @@ int main(int argc,char** argv){
    } // static fixture only accepts quit
    auto event_end=std::chrono::steady_clock::now(),physics_end=event_end,player_end=event_end;
    events_timing.stop();
-   double elapsed=std::min(.05,std::chrono::duration<double>(frame_start-previous_frame).count());previous_frame=frame_start;
+   double elapsed=c.benchmark_replay?1.0/60.0:std::min(.05,std::chrono::duration<double>(frame_start-previous_frame).count());previous_frame=frame_start;
    fl::FrameResult current_frame;
    if(c.play&&!quit){
     fl::PairedClocks::Scope physics_timing(profiler.paired(),frames,-1,fl::FrameStage::Physics);
@@ -169,7 +176,7 @@ int main(int argc,char** argv){
     current_frame=frame_clock.advance(game,input,elapsed);
     physics_end=std::chrono::steady_clock::now();physics_timing.stop();
     fl::PairedClocks::Scope player_timing(profiler.paired(),frames,-1,fl::FrameStage::Player);
-    renderer.set_native_feedback(pad!=nullptr,muted);renderer.update_player(game,current_frame.raw_dt);player_end=std::chrono::steady_clock::now();player_timing.stop();
+    renderer.set_native_feedback(!c.benchmark_replay&&pad!=nullptr,muted);renderer.update_player(game,current_frame.raw_dt);player_end=std::chrono::steady_clock::now();player_timing.stop();
     fl::publish_feedback(audio,game,audio_started);
     if(game.persistence_error!=last_persistence_error){last_persistence_error=game.persistence_error;if(!last_persistence_error.empty())std::cerr<<last_persistence_error<<'\n';}
     if(frames%60==0)std::cout<<"ride z="<<game.position.z<<" speed="<<fl::length(game.velocity)<<" airborne="<<game.airborne<<" charge="<<game.charge<<" score="<<game.score<<std::endl;
@@ -206,6 +213,12 @@ int main(int argc,char** argv){
    completed_frame={true,bool(lower_window),ms(previous_end,end),ms(frame_start,event_end),ms(event_end,physics_end),ms(physics_end,player_end),c.play?renderer.stream_ms():0,ms(top_start,swap_start),ms(swap_start,top_swap_end),ms(top_swap_end,bottom_submit_end),ms(bottom_submit_end,swap_end),ms(swap_end,end),current_frame.ticks,current_frame.scale};
    const auto& t=completed_frame;
    profiler.cpu(frames,t.interval_ms,t.input_ms,t.physics_ms,t.player_ms,t.stream_ms,t.top_submit_ms,t.top_swap_ms,t.bottom_submit_ms,t.bottom_swap_ms,t.pace_ms);previous_end=end;
+   if(c.benchmark_replay){
+    const auto& camera=renderer.camera();std::ostringstream state;state<<std::setprecision(17)<<frames<<','<<game.seed()<<','<<game.generation()<<','<<game.time<<','<<game.score;
+    for(auto v:{game.position,game.velocity,camera.eye,camera.look})state<<','<<v.x<<','<<v.y<<','<<v.z;
+    state<<','<<renderer.vertex_count()<<','<<renderer.index_count()<<';';
+    for(unsigned char b:state.str()){replay_signature^=b;replay_signature*=1099511628211ull;}
+   }
    overlay_window.add(t.interval_ms);
    ++fps_frames;if(ms(fps_epoch,end)>=1000){double fps=fps_frames*1000.0/ms(fps_epoch,end);renderer.set_fps(fps);std::cout<<"FPS="<<fps<<" frame_interval_ms="<<ms(frame_start,end)<<std::endl;fps_epoch=end;fps_frames=0;}
    ++frames;
@@ -242,7 +255,7 @@ int main(int argc,char** argv){
   std::cout<<"frames="<<frames<<" measured="<<times.size()<<" frame_p50_ms="<<percentile(times,.5)<<" frame_p95_ms="<<p95<<" frame_p99_ms="<<percentile(times,.99)<<" peak_rss_kib="<<peak_rss<<" GL_error="<<glGetError()<<std::endl;
   if(!c.receipt.empty()){
    std::ofstream out(c.receipt);if(!out)throw std::runtime_error("cannot write receipt");
-   out<<"{\n\"draw_ranges\":"<<(c.draw_ranges?"true":"false")<<",\n\"audio_disabled\":"<<(c.no_audio?"true":"false")<<",\n\"measurement\":{\"fixture\":"<<std::quoted(c.freeze_scene?"static-terrain":"live-or-default")<<",\"second_view\":"<<std::quoted(c.freeze_scene?"same-camera":"first-person")<<",\"post_bypass\":"<<(c.post_bypass?"true":"false")<<",\"gpu_mode\":"<<std::quoted(c.gpu_mode==fl::GpuMode::Off?"off":c.gpu_mode==fl::GpuMode::View?"view":"passes")<<",\"cadence\":"<<c.profile_cadence<<",\"static_exclusions\":"<<std::quoted(c.freeze_scene?"rider,particles,trails,HUD,streaming,audio-DSP":"none")<<"},\n";
+   out<<"{\n\"benchmark_replay\":"<<(c.benchmark_replay?"true":"false")<<",\n\"replay_signature\":"<<std::quoted(c.benchmark_replay?std::to_string(replay_signature):std::string())<<",\n\"replay_step_seconds\":"<<(c.benchmark_replay?1.0/60.0:0)<<",\n\"replay_work_units\":"<<(c.benchmark_replay?32:0)<<",\n\"draw_ranges\":"<<(c.draw_ranges?"true":"false")<<",\n\"audio_disabled\":"<<(c.no_audio?"true":"false")<<",\n\"measurement\":{\"fixture\":"<<std::quoted(c.freeze_scene?"static-terrain":"live-or-default")<<",\"second_view\":"<<std::quoted(c.freeze_scene?"same-camera":"first-person")<<",\"post_bypass\":"<<(c.post_bypass?"true":"false")<<",\"gpu_mode\":"<<std::quoted(c.gpu_mode==fl::GpuMode::Off?"off":c.gpu_mode==fl::GpuMode::View?"view":"passes")<<",\"cadence\":"<<c.profile_cadence<<",\"static_exclusions\":"<<std::quoted(c.freeze_scene?"rider,particles,trails,HUD,streaming,audio-DSP":"none")<<"},\n";
    out<<std::setprecision(10)<<"\"source_sha256\":\"cb9b4befd0252859d9c45246f94fbd7dd1662c6d034c6ccb95fbe16947e8b556\",\n\"seed\":"<<c.seed<<",\"cell\":"<<c.cell<<",\"cells\":"<<c.cells<<",\n\"context\":{\"version\":"<<std::quoted(version)<<",\"vendor\":"<<std::quoted(vendor)<<",\"renderer\":"<<std::quoted(gpu)<<"},\n\"render_size\":["<<renderer.width()<<','<<renderer.height()<<"],\"drawable_size\":["<<drawable_w<<','<<drawable_h<<"],\"placement_ok\":"<<(placed?"true":"false")<<",\n\"debug_view\":"<<c.debug<<",\"palette\":"<<c.palette<<",\"dual_screen\":"<<(c.dual?"true":"false")<<",\"stable_sky\":"<<(!c.source_sky_hash?"true":"false")<<",\"depth_sampler_highp\":"<<(!c.source_sampler_precision?"true":"false")<<",\"resize_check\":"<<(c.resize_check?"true":"false")<<",\n\"camera_eye\":["<<camera.eye.x<<','<<camera.eye.y<<','<<camera.eye.z<<"],\"camera_look\":["<<camera.look.x<<','<<camera.look.y<<','<<camera.look.z<<"],\n\"vertices\":"<<renderer.vertex_count()<<",\"indices\":"<<renderer.index_count()<<",\"terrain_build_ms\":"<<renderer.build_ms()<<",\n\"frames\":"<<frames<<",\"warmup_frames\":60,\"measured_frames\":"<<times.size()<<",\n\"frame_ms\":{\"p50\":"<<percentile(times,.5)<<",\"p95\":"<<p95<<",\"p99\":"<<percentile(times,.99)<<"},\n\"swap_p95_ms\":"<<percentile(swaps,.95)<<",\"rss_kib\":{\"start\":"<<start_rss<<",\"peak\":"<<peak_rss<<",\"end\":"<<rss_kib()<<"},\n\"timing_scope\":\"CPU submission plus swap; not GPU timer\",\"timing_target_met\":"<<(!times.empty() && p95<=33.3?"true":"false")<<",\n\"rss_samples\":[";
    // Keep periodic RSS separate from post-readback allocation in the receipt.
    for(size_t i=0;i<rss_samples.size();++i){if(i)out<<',';out<<'['<<rss_samples[i].first<<','<<rss_samples[i].second<<']';}

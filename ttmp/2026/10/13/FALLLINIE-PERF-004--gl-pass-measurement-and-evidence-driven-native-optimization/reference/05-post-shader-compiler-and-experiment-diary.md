@@ -2,10 +2,23 @@
 Title: Post shader compiler and hardware experiment diary
 Ticket: FALLLINIE-PERF-004
 Status: active
-Topics: [performance]
+Topics:
+    - performance
 DocType: reference
 Intent: long-term
+Owners: []
+RelatedFiles:
+    - Path: repo://src/renderer.cpp
+      Note: Optional exact glShaderSource input dump
+    - Path: repo://ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/04-shader-analysis/05-analyze.py
+      Note: Actual ABBA metrics and image equality evidence
+    - Path: repo://ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/05-gpu-vault-report/validation.json
+      Note: Scoped report publication and content receipt
+ExternalSources: []
 Summary: Actual Mali Offline Compiler results guide a bounded post-shader experiment; no assumed static-to-runtime speedup.
+LastUpdated: 0001-01-01T00:00:00Z
+WhatFor: ""
+WhenToUse: ""
 ---
 
 ## Step 1: Compile actual adapted shader bytes and compare focused candidates
@@ -118,3 +131,49 @@ Read evidence/experiment-summary.json/.txt and raw evidence/target-20261014T0321
 ![Actual ABBA frame distributions](../scripts/04-shader-analysis/evidence/frame-abba.svg)
 
 Raw cases, compiler versions/inputs and decision are preserved so the report can explain both useful findings and the rejected optimization.
+
+## Step 3: Publish the technical report and stop for the night
+
+Synthesized the GPU-counter campaign and rejected shader experiment into a new append-only vault report. The4606-word prose narrative explains CPU/GPU measurement distinctions, counter definitions and clock-domain limits, a worked actual counter interval, the non-parity bypass result, exact-input compilation, register tradeoffs and the null ABBA outcome. It uses two Mermaid diagrams, four reproducible SVGs and the bounded image fixture, without analogies.
+
+Committed exactly13new vault files and pushed main successfully. Independently compared the remote main hash with localHEAD; both ared769550d9730853d3cb221bec8bdbee777139487. The vault is clean. This completes the user's publication request and is the stopping point; no further experiments are running or scheduled by this work.
+
+### Prompt Context
+**User prompt (verbatim, JSON-escaped):** "write a detailed project report for the obsidian vault as a deep dive technical analysis blog post using a textbook writing style (no analogies, see skill).      \n Commit and push the bsidian vault when done (go-go-parc vault).    \n\nthen stop"
+**Assistant interpretation:** Publish a detailed, evidence-grounded textbook-style follow-up, preserve earlier reports, commit/push only the new note/assets, and stop afterward.
+**Inferred user intent:** End the night with a durable, readable account of the findings rather than additional optimization attempts.
+**Commit (measured experiment):**70c164a18ee10a6c321c767ea00e64e3faa8dc7e.
+
+### What I did
+- Followed the vault-writing and textbook-authoring skills: concept ordering, concrete evidence, explicit hypotheses, prose-first explanations and no analogies.
+- Authored `Projects/2026/10/13/PROJECT REPORT - Falllinie GPU Profiling - Hardware Counters, Shader Compilation and a Rejected Optimization.md` in go-go-parc.
+- Copied a self-contained12-asset subset under `_assets/falllinie-gpu-shader-investigation/`, including actual counter example, source hashes, summaries, fourfigures and two identical fixturePNGs.
+- Ran one publication-boundary validator for relative links, data/assets, exact numeric means,6308frame total and interpretation boundaries; viewed the actual fixtureimage. Preserved receipts in scripts/05-gpu-vault-report/.
+- Staged only the intended13newfiles, checked the scoped diff, committed, pushed origin/main and independently verified with gitls-remote. Existing vault history and notes remained untouched.
+
+### Why
+The post-bypass improvement and combined candidate's null result answer different questions. The report explains that distinction rather than letting the more dramatic bypass numbers imply a successful source-faithful optimization.
+
+### What worked
+Publication validation passed;13relative links resolve; fourSVGs parse, allJSON parses, bothPNGs verify, copied hashes match, and report means match raw-derived summaries. Two Mermaid diagrams explain execution evidence and the optimization decision. The source evidence stays in the native repository; the vault contains enough actual data and figures to read independently.
+
+### What didn't work
+No publication failure occurred. The previously recorded asset-package failure and null optimization remain part of the report rather than being omitted from the narrative.
+
+### What I learned
+A useful technical report can end with rejection of a candidate. The important result is a qualified inference, not a claim that every experiment improved runtime.
+
+### What was tricky to build
+Preserved separate identities for game binary/runtime, measurement-tool commits, pinnedcounterlibrary, offlinebackend and installeddriver. Report formulas use declared denominators and an actual timestamp-mismatched record, not a synthetic percentage. The static fixture is explicitly not a universal parity proof.
+
+### What warrants a second pair of eyes
+Read the counter rate versus frequency discussion and the ABBA decision together. Neither805Mcycles/s nor+0.30%mean difference is presented as a calibrated utilization or statistically established regression. Future work remains future work.
+
+### What should be done in the future
+Stop now, as requested. In a later explicitly resumed session, use the report/diary checkpoint; do not silently promote the diagnostic shader or reinterpret the bypass result as its benefit.
+
+### Code review instructions
+Vault commitd769550 contains exactly the new report plus12assets. Native scripts/05-gpu-vault-report/validation.json records their paths and the noteSHA256aca4540ea4556ed0ef993dc08ef629e68bfb355b7484b58fb40ace4753e8cbc1. `remote-verification.txt` proves the observed remote/local equality. Native source/tooling commits remain unpushed.
+
+### Technical details
+4606prosewords;2Mermaid diagrams;4actual/compilerSVGfigures;2fixturePNGs;12assetfiles;13totalnewvaultfiles. Prior vaultHEADc7b1535 was preserved as parent. Canonical shader and production launcher unchanged. No further hardware run was needed to publish this evidence.

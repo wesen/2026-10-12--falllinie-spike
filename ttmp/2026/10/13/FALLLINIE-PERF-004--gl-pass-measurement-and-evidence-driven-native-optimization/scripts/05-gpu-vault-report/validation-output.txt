@@ -1,0 +1,26 @@
+{
+  "note": "Projects/2026/10/13/PROJECT REPORT - Falllinie GPU Profiling - Hardware Counters, Shader Compilation and a Rejected Optimization.md",
+  "note_sha256": "aca4540ea4556ed0ef993dc08ef629e68bfb355b7484b58fb40ace4753e8cbc1",
+  "prose_words": 4606,
+  "mermaid_diagrams": 2,
+  "svg_figures": 4,
+  "png_fixtures": 2,
+  "asset_files": 12,
+  "relative_links_checked": 13,
+  "checks": "links, SVG XML, JSON parse, PNG integrity, copied hashes, frame total, exact means, fixture equality, claim boundaries",
+  "files": [
+    "Projects/2026/10/13/PROJECT REPORT - Falllinie GPU Profiling - Hardware Counters, Shader Compilation and a Rejected Optimization.md",
+    "Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/01-hardware-counters.svg",
+    "Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/02-post-bypass-frames.svg",
+    "Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/03-compiler-tradeoffs.svg",
+    "Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/04-candidate-abba.svg",
+    "Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/actual-counter-example.json",
+    "Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/fixture-baseline.png",
+    "Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/fixture-combined.png",
+    "Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/hardware-provenance.json",
+    "Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/hardware-summary.json",
+    "Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/report-provenance.json",
+    "Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shader-provenance.json",
+    "Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shader-summary.json"
+  ]
+}

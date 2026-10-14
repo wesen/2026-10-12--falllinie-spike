@@ -1,0 +1,15 @@
+[main d769550] Document Mali counters and the rejected Falllinie shader optimization
+ 13 files changed, 1234 insertions(+)
+ create mode 100644 Projects/2026/10/13/PROJECT REPORT - Falllinie GPU Profiling - Hardware Counters, Shader Compilation and a Rejected Optimization.md
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/01-hardware-counters.svg
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/02-post-bypass-frames.svg
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/03-compiler-tradeoffs.svg
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/04-candidate-abba.svg
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/actual-counter-example.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/fixture-baseline.png
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/fixture-combined.png
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/hardware-provenance.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/hardware-summary.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/report-provenance.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shader-provenance.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shader-summary.json

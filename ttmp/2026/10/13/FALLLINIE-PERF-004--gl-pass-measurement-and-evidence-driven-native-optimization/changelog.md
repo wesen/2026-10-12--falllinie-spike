@@ -15,3 +15,7 @@ Direct G52 counter path actually works: pinned libGPUCounters,240advertised/13sa
 ## 2026-10-13
 
 Actual compiler-guided post experiment complete: exact adapted GLSL, G52 r51p0 offline reports, bounded static images byte-identical, four live ABBA runs show no convincing gain (18.262742ms baseline vs18.317052 candidate pooled means). Candidate remains diagnostic-only. Detailed diary preserves asset-deployment failure and recovery. User requests final vault report then stop tonight.
+
+## 2026-10-13
+
+Published4606-word textbook-style GPU counter/compiler/rejected-optimization report with2Mermaid diagrams,4figures and self-contained evidence. Exactly13new vaultfiles committed/pushed asd769550d9730853d3cb221bec8bdbee777139487; remote independently verified and vault clean. Native remains unpushed; canonicalshader unchanged. Stop for night per user.

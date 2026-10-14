@@ -10,7 +10,8 @@ from pathlib import Path
 from capture_tools import compress,compare
 P=Path(__file__).resolve().parent;R=Path(subprocess.check_output(['git','-C',str(P),'rev-parse','--show-toplevel'],text=True).strip());E=P/'evidence/host';E.mkdir(parents=True,exist_ok=True)
 CONFIGS={
- 'original':[],
+ 'original':['--shadow-mode','original','--view-culling','off','--short-indices','off'],
+ 'defaults':[],
  'fog':['--fog-cells','constant'],
  'cull':['--view-culling','on'],
  'short':['--short-indices','on'],

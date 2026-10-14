@@ -1,0 +1,11 @@
+{
+  "plan": "phase-c",
+  "source_revision": "aab216370bc962131173e8451058262c2abb0f32",
+  "dirty": false,
+  "remote": "/storage/apps/falllinie-perf009-20261014T222848Z",
+  "binary_sha256": "00e2cc09dc2758122975443a6bdf1f4c4f9ade81bde732429049675e04e400a2",
+  "complete": true,
+  "governor_before": "ondemand",
+  "governor_during": "performance",
+  "governor_after": "ondemand"
+}

@@ -252,3 +252,63 @@ Per loop frame, pooled (estimates: whole-device rate ÷ loop FPS):
 
 ### Technical details
 - Terrain cell: 107 columns per row (`columns_` in `TerrainJob`), 636 indices per row strip, 139 rows; chunk = 16 strips = 10,176 indices.
+
+## Step 5: Phase C — Mali visual qualification, timing, and default promotion
+
+Phase C ran the chunked binary on the device. Every candidate and their combination produced byte-identical images against the original at all five checkpoints at 384×288: 25 comparisons of eight images each (full top and lower windows plus both cameras' scene, print and depth targets). Timing at 512×384 dual view, with shadow bounds as the baseline, split the candidates clearly: per-view chunk culling helps (−1.6% mean, long-frame share 0.238 → 0.219), 16-bit indices help a little (−0.7%), and the fog-constant early-out hurts (+0.7%) in both of its repetitions.
+
+Following the design's promotion rule, shadow bounds, view culling and 16-bit indices are now the defaults. Fog-constant shading stays opt-in and is recorded as rejected: the uniform branch appears to cost every scene fragment more than it saves on the few fully fogged ones.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Qualify candidates on Mali, measure them, and promote the ones that pass the written rule.
+**Inferred user intent:** Ship improvements instead of leaving them opt-in.
+**Commit (code):** pending in this step — "Promote shadow bounds, view culling and 16-bit indices to defaults"
+
+### What I did
+- Built `aab2163` for ARM (`00e2cc09…e400a2`) and ran `06-campaign.py phase-c` → `evidence/phase-c-20261014T222848Z`. Visual set: `fog`, `cull`, `short`, `bounds`, `all` (= bounds + fog + cull + short). Timed: bounds, fog, short, cull, geometry, geometry, cull, short, fog, bounds, all with bounds.
+- Deleted PNGs from all visual directories except `f0600-s42-p0-original` and `f0600-s42-p0-all` to keep evidence bounded (35 MB → 10 MB); `lossless-conversion.json` keeps every image's BMP/PNG/RGBA hash and `visual-comparisons.json` keeps every comparison.
+- `src/main.cpp`: default `shadow_mode=Bounds`, `view_culling=true`, `short_indices=true`; help text updated. `--shadow-mode original --view-culling off --short-indices off` restores the old behaviour.
+- Scripts: `ORIGINAL`/`NOGEOM`/`DEFAULTS` flag sets in `06-campaign.py` and `02-host-check.py`, because an empty flag list now means the new defaults; `08-live-case.sh` and an `acceptance` plan (replay with audio, then live autoplay with audio).
+
+### Why
+- Every promoted change has three pieces of evidence: an argument that it cannot change pixels, host identity, and Mali identity at five checkpoints; and each is faster in an ABBA campaign.
+- Fog-constant fails the timing condition of the rule.
+
+### What worked
+- `visual-comparisons.json`: 0 different pixels for every candidate at every checkpoint.
+
+| Mode (512×384 dual, bounds baseline) | Mean ms | p95 ms | Long share | Non-frag Mcy/frame | Reads MB/frame |
+|---|---:|---:|---:|---:|---:|
+| bounds (01, 10) | 20.571 | 29.460 | 0.238 | 7.84 / 7.81 | 27.3 / 27.4 |
+| + fog constant (02, 09) | 20.712 | 29.566 | 0.249 | 7.86 / 7.90 | 26.7 |
+| + short indices (03, 08) | 20.425 | 29.563 | 0.229 | 7.65 / 7.64 | 24.8 |
+| + chunk culling (04, 07) | 20.236 | 29.526 | 0.219 | 7.08 / 7.07 | 25.2 |
+| + all three (05, 06) | 20.297 | 29.512 | 0.220 | 6.95 / 6.91 | 22.2 |
+
+- Repeats agree: bounds 20.559/20.583, cull 20.252/20.221, short 20.435/20.415, fog 20.712/20.712. Signature `6081555844518115723` everywhere.
+- Culling removes 27,450 triangles per view on average (`triangles_culled / views`).
+
+### What didn't work
+- Fog-constant shading is slower. CPU scope times do not explain it (top scene CPU ≈2.1–2.4 ms in both), so the cost is on the GPU. The most likely cause is that the uniform branch changes register allocation or scheduling for the whole scene shader. This was not confirmed with the offline compiler.
+
+### What I learned
+- Culling helps through fewer position-shaded vertices and tiler work (non-fragment cycles −0.77 M per frame), which matches Phase B's finding that geometry is half of GPU-active time.
+- Bytes saved by 16-bit indices (−2.5 MB/frame) give a small but repeatable time gain.
+
+### What was tricky to build
+- Changing defaults silently changes the meaning of every existing "no flags" baseline in the scripts. The plans now name the original behaviour explicitly, and the campaign docstring notes which binaries earlier phases ran on.
+
+### What warrants a second pair of eyes
+- The combined `geometry` result (20.297) is slightly slower than culling alone (20.236) because it includes fog-constant. Culling plus short indices without fog was not measured as a pair; the acceptance campaign measures the promoted combination.
+
+### What should be done in the future
+- Run `malioc` on the fog-constant scene shader to confirm the code-generation hypothesis, or remove the option.
+- Acceptance with audio and live autoplay (next step).
+
+### Code review instructions
+- `src/main.cpp` defaults; `scripts/06-campaign.py` plan definitions.
+- `python3 -I scripts/07-analyze.py scripts/evidence/phase-c-20261014T222848Z`; `scripts/evidence/phase-c-20261014T222848Z/visual-comparisons.json`.
+
+### Technical details
+- Visual checkpoints: frames 120/600/1200 seed 42 palette 0; frame 600 seed 7; frame 600 palette 5; 384×288 dual view; captures taken after the measured loop.

@@ -61,9 +61,9 @@ def main():
   per=defaultdict(list)
   for n in names:
    for k,v in cases[n]['counters']['per_frame'].items():per[k].append(v)
-  pooled[g]={'cases':names,'frames':frame_stats(iv),'per_frame_mean':{k:statistics.fmean(v) for k,v in per.items()},'signatures':sorted({cases[n]['receipt']['replay_signature'] for n in names})}
+  pooled[g]={'cases':names,'frames':frame_stats(iv),'per_frame_mean':{k:statistics.fmean(v) for k,v in per.items()},'signatures':sorted({str(cases[n]['receipt']['replay_signature']) for n in names})}
  for c in cases.values():del c['intervals']
- summary={'campaign':root.name,'cases':cases,'pooled':pooled,'signatures':sorted({c['receipt']['replay_signature'] for c in cases.values()})}
+ summary={'campaign':root.name,'cases':cases,'pooled':pooled,'signatures':sorted({str(c['receipt']['replay_signature']) for c in cases.values()})}
  (Path(sys.argv[2]) if len(sys.argv)>2 else root/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
  print(f"{'case':28s} {'mean':>8s} {'p95':>8s} {'p99':>8s} {'long':>6s} {'miss/f':>7s} {'GPUact M/f':>10s}")
  for n,c in cases.items():

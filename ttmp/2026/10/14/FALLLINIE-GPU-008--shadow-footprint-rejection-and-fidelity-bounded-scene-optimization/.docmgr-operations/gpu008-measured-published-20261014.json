@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "digest": "cde631cefe26ade32717e2d53ad4b94226ea53466977e795df128dc4a25f1c63",
+  "request": {
+    "ticket": "FALLLINIE-GPU-008",
+    "status": "complete",
+    "intent": "",
+    "entry": "Designed five scene-reduction options, implemented opt-in shadow bounds, measured12.46% mean improvement with40 pixel-equal comparisons, and published screenshot-rich Section18. Other reductions and integrated adoption remain deferred."
+  },
+  "receipt": {
+    "sequence": 1,
+    "operation_id": "gpu008-measured-published-20261014",
+    "state": "committed",
+    "created_at": "2026-10-14T20:08:26.375274493Z",
+    "changed_paths": [
+      "changelog.md",
+      "index.md"
+    ],
+    "before": {
+      "changelog.md": "96e5a77568a7d9019f51644a175d5b41c97179b0fd292c390a62bc816b0654e2",
+      "index.md": "c3bbd5218461a32576e55cfae20d324e9096ecf286c1f30d715b9ff41dcdd00a"
+    },
+    "after": {
+      "changelog.md": "784ce83820b74b7249e8cea30d4984ee7314c9d8a5c6a10999bd709c7a208a47",
+      "index.md": "6255a12f2f752534dbc432a74a3a4900964b81d58bba4c1f40287edc73dbea8f"
+    }
+  },
+  "changes": [
+    {
+      "path": "changelog.md",
+      "before": "96e5a77568a7d9019f51644a175d5b41c97179b0fd292c390a62bc816b0654e2",
+      "after": "IyBDaGFuZ2Vsb2cKCiMjIDIwMjYtMTAtMTQKCi0gSW5pdGlhbCB3b3Jrc3BhY2UgY3JlYXRlZAoKIyMgMjAyNi0xMC0xNAoKRGVzaWduZWQgZml2ZSBzY2VuZS1yZWR1Y3Rpb24gb3B0aW9ucywgaW1wbGVtZW50ZWQgb3B0LWluIHNoYWRvdyBib3VuZHMsIG1lYXN1cmVkMTIuNDYlIG1lYW4gaW1wcm92ZW1lbnQgd2l0aDQwIHBpeGVsLWVxdWFsIGNvbXBhcmlzb25zLCBhbmQgcHVibGlzaGVkIHNjcmVlbnNob3QtcmljaCBTZWN0aW9uMTguIE90aGVyIHJlZHVjdGlvbnMgYW5kIGludGVncmF0ZWQgYWRvcHRpb24gcmVtYWluIGRlZmVycmVkLgo="
+    },
+    {
+      "path": "index.md",
+      "before": "c3bbd5218461a32576e55cfae20d324e9096ecf286c1f30d715b9ff41dcdd00a",
+      "after": "LS0tClRpdGxlOiBTaGFkb3cgZm9vdHByaW50IHJlamVjdGlvbiBhbmQgZmlkZWxpdHktYm91bmRlZCBzY2VuZSBvcHRpbWl6YXRpb24KVGlja2V0OiBGQUxMTElOSUUtR1BVLTAwOApTdGF0dXM6IGNvbXBsZXRlClRvcGljczoKICAgIC0gcGVyZm9ybWFuY2UKRG9jVHlwZTogaW5kZXgKSW50ZW50OiBsb25nLXRlcm0KT3duZXJzOiBbXQpSZWxhdGVkRmlsZXM6IFtdCkV4dGVybmFsU291cmNlczogW10KU3VtbWFyeTogIiIKTGFzdFVwZGF0ZWQ6IDIwMjYtMTAtMTRUMTY6MDg6MjYuMzc1MjI4NDExLTA0OjAwCldoYXRGb3I6ICIiCldoZW5Ub1VzZTogIiIKLS0tCgojIFNoYWRvdyBmb290cHJpbnQgcmVqZWN0aW9uIGFuZCBmaWRlbGl0eS1ib3VuZGVkIHNjZW5lIG9wdGltaXphdGlvbgoKRGVzaWduZWQgdGhlIGZpdmUgcHJvcG9zZWQgc2NlbmUtcmVkdWN0aW9uIG9wdGlvbnMgYW5kIGltcGxlbWVudGVkIHRoZSBmaXJzdCBpbWFnZS1wcmVzZXJ2aW5nIGNhbmRpZGF0ZTogY29uc2VydmF0aXZlIHNoYWRvdy1mb290cHJpbnQgcmVqZWN0aW9uLiBPcmlnaW5hbCByZW1haW5zIHRoZSBkZWZhdWx0OyBzaGFkb3ctb2ZmIGlzIGFuIGV4cGxpY2l0IG5vbi1wYXJpdHkgZGlhZ25vc3RpYy4KCi0gW0Rlc2lnbiBhbmQgc2NvcGVdKGRlc2lnbi1kb2MvMDEtc2NlbmUtY29zdC1yZWR1Y3Rpb24tb3B0aW9ucy1hbmQtY29uc2VydmF0aXZlLXNoYWRvdy1mb290cHJpbnQubWQpCi0gW01lYXN1cmVkIHJlc3VsdHMsIG1hdGhlbWF0aWNhbCBkZXJpdmF0aW9uIGFuZCBzY3JlZW5zaG90c10oYW5hbHlzaXMvMDEtbWVhc3VyZWQtc2hhZG93LWZvb3RwcmludC1vcHRpbWl6YXRpb24tYW5kLXNjcmVlbnNob3QtcXVhbGlmaWNhdGlvbi5tZCkKLSBbRGV0YWlsZWQgY2hyb25vbG9naWNhbCBkaWFyeSB3aXRoIGFjdHVhbCBzY3JlZW5zaG90c10ocmVmZXJlbmNlLzAxLXNoYWRvdy1vcHRpbWl6YXRpb24tYW5kLXZpc3VhbC1ldmlkZW5jZS1kaWFyeS5tZCkKClNjcmlwdHMwMeKAkzA3IHJlcHJvZHVjZSBidWlsZCwgaG9zdCBxdWFsaWZpY2F0aW9uLCBib3VuZGVkIHRhcmdldCBjYXB0dXJlcy9jYW1wYWlnbiwgYW5hbHlzaXMgYW5kIGZpZ3VyZXMuIEFjdHVhbCBjYW1wYWlnbjogc2NyaXB0cy9ldmlkZW5jZS90YXJnZXQtMjAyNjEwMTRUMTk0OTQ3Wi4gUmVtYWluaW5nIGRlc2lnbiBhbHRlcm5hdGl2ZXMgYXJlIG5vdCBpbXBsZW1lbnRlZCBvciBtZWFzdXJlZDsgdGhlIGJvdW5kcyBjYW5kaWRhdGUgcmVtYWlucyBvcHQtaW4gcGVuZGluZyBicm9hZGVyL2ludGVncmF0ZWQgcXVhbGlmaWNhdGlvbi4K"
+    }
+  ]
+}

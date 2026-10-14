@@ -1,0 +1,20 @@
+[  4%] Built target terrain
+[  8%] Built target test-shadow-bounds
+[ 12%] Built target test-audio-worker
+[ 16%] Built target test-audio-pcm
+[ 20%] Built target test-terrain
+[ 34%] Built target test-profiler
+[ 36%] Built target test-paired-clocks
+[ 52%] Built target source-systems
+[ 68%] Built target test-gameplay_world
+[ 68%] Built target test-gameplay
+[ 68%] Built target test-gameplay_pose
+[ 68%] Built target test-integration
+[ 80%] Built target test-developer_controls
+[ 80%] Built target test-audio-diagnostics
+[ 80%] Built target test-developer_overlay
+[ 84%] Built target test-audio
+[ 88%] Built target test-audio-lifecycle
+[ 90%] Building CXX object CMakeFiles/falllinie-spike.dir/src/main.cpp.o
+[ 92%] Linking CXX executable falllinie-spike
+[100%] Built target falllinie-spike

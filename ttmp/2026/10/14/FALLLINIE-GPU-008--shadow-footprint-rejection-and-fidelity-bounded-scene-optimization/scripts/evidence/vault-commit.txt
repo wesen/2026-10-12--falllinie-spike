@@ -1,0 +1,18 @@
+[main 3306f79] Publish measured shadow bound speedup with original and candidate screenshots
+ 18 files changed, 1886 insertions(+), 6 deletions(-)
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shadow-bounds/analysis-provenance.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shadow-bounds/baseline-continuity.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shadow-bounds/build-qualification.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shadow-bounds/campaign.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shadow-bounds/full-window-comparison.png
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shadow-bounds/later-bounds.png
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shadow-bounds/later-original.png
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shadow-bounds/lower-shadow-detail.png
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shadow-bounds/provenance.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shadow-bounds/publication-provenance.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shadow-bounds/summary.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shadow-bounds/timing.svg
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shadow-bounds/top-shadow-detail.png
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shadow-bounds/visual-comparisons.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shadow-bounds/xray-bounds.png
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/shadow-bounds/xray-original.png

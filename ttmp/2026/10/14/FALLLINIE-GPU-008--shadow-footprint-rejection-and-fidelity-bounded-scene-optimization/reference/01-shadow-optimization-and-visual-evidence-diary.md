@@ -136,3 +136,44 @@ The comparison panel preserves native1024×768 outputs. The detail uses a3×near
 
 ### Technical details
 Binary f9b7de52377501090392052039c0a13ad18cc258661aa6cb98614165ef9138c3. Implementation e970ec5, source-qualified after build. Default remains original (bounds disabled); all shader inputs are canonical. Raw compressed images and counter evidence total about31MB before final bookkeeping; no binaries/libraries/secrets staged.
+
+## Step 4: Publish the design outcome, derivation and screenshot report
+
+Published the measured candidate as Section18 of the living GPU report. It includes the light-invariant bound derivation, a flow diagram, measured timing/counter tables, both full-window views, enlarged original/bounds/off shadow details and later/x-ray screenshots. Historical Sections1–17 are preserved, with the latest-summary/navigation updated to distinguish this candidate from earlier rejected or non-parity experiments.
+
+Vault commit3306f79b05d158ed45e37305f5835375101bb9d4 was pushed and independently matched to remote main. Native measured checkpointa9a6c9f and implementatione970ec5 remain unpushed. Bounds remains opt-in; precomputation, distance-based LOD and marking changes are design alternatives, not completed implementations.
+
+### Prompt Context
+**User prompt:** See Step1.
+**Assistant interpretation:** Deliver a readable technical report with actual screenshots and preserve evidence/commit boundaries.
+**Commit (measurements):**a9a6c9f — Qualify shadow footprint speedup with repeated device runs and pixel-equal screenshots.
+
+### What I did
+Added08-vault-followup.py, copied figures, comparison/qualification/provenance and selected raw screenshots, and appended Section18. Validated old section preservation, image readability, relative links and source-copy hashes. Scoped the vault commit to the report, MOC and new shadow-bounds assets; pushed and verified remote main.
+
+### Why
+The broad scene experiment and the narrower successful candidate need separate historical claims. A reader should see exactly what shadow pixels are preserved and what the shadow-off diagnostic would lose.
+
+### What worked
+Publication checks passed. The report and diary embed actual target screenshots. The native doctor reported all checks passed. Source/build qualification identifies the measured executable separately from later documentation work.
+
+### What didn't work
+Final review found the legacy general DIAGNOSTIC log's non_parity expression did not include shadow-off, although the dedicated SHADOW line and structured receipt already correctly labeled it. Corrected the single general-log boolean after the campaign. Host rebuild and a one-frame off-mode smoke print `non_parity=1`; no shader/math/measurement policy changed. The measured ARM binary remains the recorded e970ec5 artifact and was not silently replaced or relabeled.
+
+### What I learned
+The image-preserving candidate removes enough work for a repeatable12.46% mean reduction, but still leaves substantial scene/post cost and frame tails. It does not justify adopting intentionally lossy alternatives or declaring integrated60FPS.
+
+### What was tricky to build
+Preserve old report sections byte-for-byte while updating only current metadata/navigation and adding the new chapter. Keep native screenshot comparisons and copied publication assets tied by hashes rather than reconstructing images from descriptions.
+
+### What warrants a second pair of eyes
+Finite endpoint qualification, conservative engineering float slack, no moving-image review and no audio-enabled campaign. Report latest_runtime_commit identifies the actually measured implementation, not the later log-only correction.
+
+### What should be done in the future
+Broader seed/motion and integrated audio qualification before any default change. The other three designed reductions require their own controlled evidence; they remain explicitly deferred.
+
+### Code review instructions
+Read report Section18 and its shadow-bounds assets, publication-validation.json and remote-verification.txt. The screenshot-linked Step3 records the actual image acceptance. Review the final one-line main.cpp log-label fix separately from measured shader/runtime changes.
+
+### Technical details
+Measured binary f9b7de52377501090392052039c0a13ad18cc258661aa6cb98614165ef9138c3; measured evidencea9a6c9f. Vault3306f79b05d158ed45e37305f5835375101bb9d4. Production launcher, canonical assets, governor and compositor policy unchanged.

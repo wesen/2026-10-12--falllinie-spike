@@ -111,7 +111,7 @@ int main(int argc,char** argv){
   fl::Profiler profiler(c.profile,c.gpu_mode,c.profile_cadence,nullptr,c.paired_clocks);
   renderer.set_post_bypass(c.post_bypass);
   std::cout<<"INDEX_DRAW mode="<<(c.draw_ranges?"range":"ordinary")<<'\n';
-  std::cout<<"DIAGNOSTIC fixture="<<(c.freeze_scene?"static-terrain":"live-or-default")<<" second_view="<<(c.freeze_scene?"same-camera":"first-person")<<" post_bypass="<<c.post_bypass<<" non_parity="<<(c.freeze_scene||c.post_bypass)<<" seed="<<c.seed<<" cell="<<c.cell<<" cells="<<c.cells<<" internal="<<c.width<<"x"<<c.height<<" dual="<<c.dual<<"\n";
+  std::cout<<"DIAGNOSTIC fixture="<<(c.freeze_scene?"static-terrain":"live-or-default")<<" second_view="<<(c.freeze_scene?"same-camera":"first-person")<<" post_bypass="<<c.post_bypass<<" non_parity="<<(c.freeze_scene||c.post_bypass||c.shadow_mode==fl::ShadowMode::Off)<<" seed="<<c.seed<<" cell="<<c.cell<<" cells="<<c.cells<<" internal="<<c.width<<"x"<<c.height<<" dual="<<c.dual<<"\n";
   if(c.freeze_scene)std::cout<<"STATIC TERRAIN: no simulation/update_player/RNG advancement, rider/particles/trails/HUD/streaming/audio-DSP; fixed initialized camera, input mutations disabled\n";
   fl::Game game(c.seed);fl::NativeFrameClock frame_clock;fl::NativeInputMapper input_mapper;fl::TitleAutopilot autopilot(c.seed);
   const fl::AudioOpenOptions audio_options{c.audio_buffer,c.audio_mode,c.source_vinyl};

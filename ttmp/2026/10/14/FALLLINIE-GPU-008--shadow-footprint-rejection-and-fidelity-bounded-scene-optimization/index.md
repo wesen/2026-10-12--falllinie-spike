@@ -1,7 +1,7 @@
 ---
 Title: Shadow footprint rejection and fidelity-bounded scene optimization
 Ticket: FALLLINIE-GPU-008
-Status: active
+Status: complete
 Topics:
     - performance
 DocType: index
@@ -10,7 +10,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-10-14T15:39:31.085588199-04:00
+LastUpdated: 2026-10-14T16:08:26.375228411-04:00
 WhatFor: ""
 WhenToUse: ""
 ---

@@ -1,0 +1,126 @@
+<title>Internal Resolution Review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one review column; cost table, frame viewer, close-up pairs, method notes.
+   Palette taken from the game's own print palette 0: paper, ink blue, spot pink. */
+:root{
+ --paper:#f3f4f7; --surface:#ffffff; --ink:#1c2f9e; --text:#1b1d2a; --muted:#5b6078; --rule:#d9dbe6;
+ --spot:#e23d7c; --good:#1d7f4f; --warn:#a86a00;
+ --display:"Barlow Condensed","Arial Narrow",sans-serif; --body:"Source Sans 3","Segoe UI",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#0a1020;--surface:#121a30;--ink:#8feaff;--text:#e6e9f4;--muted:#9aa3c0;--rule:#27304c;--spot:#ff6aa3;--good:#4cc98a;--warn:#e0a84a;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#0a1020;--surface:#121a30;--ink:#8feaff;--text:#e6e9f4;--muted:#9aa3c0;--rule:#27304c;--spot:#ff6aa3;--good:#4cc98a;--warn:#e0a84a;color-scheme:dark}
+body{background:var(--paper);color:var(--text);font:16px/1.5 var(--body)}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:28px}
+h1,h2,h3{font-family:var(--display);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);margin:0;text-wrap:balance}
+h1{font-size:clamp(28px,4vw,40px)} h2{font-size:22px} h3{font-size:17px}
+.lede{max-width:68ch;margin:6px 0 0;color:var(--muted)}
+.table-scroll{overflow-x:auto;border:1px solid var(--rule);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:620px}
+th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--rule);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{font-family:var(--display);font-weight:500;text-transform:uppercase;letter-spacing:.08em;font-size:14px;color:var(--muted)}
+tbody tr:last-child td{border-bottom:0}
+td{font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums}
+td.label{font-family:var(--body);font-size:15px}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-family:var(--mono);font-size:12px;border:1px solid currentColor}
+.pill.good{color:var(--good)} .pill.warn{color:var(--warn)}
+.controls{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:end}
+.group{display:grid;gap:6px}
+.group > span{font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:13px;color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--surface)}
+.seg button{font:600 13px var(--mono);color:var(--text);background:none;border:0;border-right:1px solid var(--rule);padding:8px 12px;cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg button:focus-visible,input:focus-visible{outline:2px solid var(--spot);outline-offset:2px}
+.frames{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+figure{margin:0;display:grid;gap:6px;min-width:0}
+figure img{width:100%;height:auto;display:block;border:1px solid var(--rule);image-rendering:pixelated;background:var(--surface)}
+figcaption{font:13px var(--mono);color:var(--muted);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.swipe{position:relative;max-width:100%;border:1px solid var(--rule);overflow:hidden;background:var(--surface)}
+.swipe img{display:block;width:100%;height:auto;image-rendering:pixelated}
+.swipe .top{position:absolute;inset:0;clip-path:inset(0 0 0 var(--cut,50%))}
+.swipe .line{position:absolute;top:0;bottom:0;left:var(--cut,50%);width:2px;background:var(--spot)}
+.swipe-range{width:100%}
+.note{font:14px var(--mono);color:var(--muted)}
+.crops{display:grid;gap:18px}
+.crop{display:grid;gap:6px;min-width:0}
+.crop img{width:100%;height:auto;image-rendering:pixelated;border:1px solid var(--rule)}
+.crop .heads{display:grid;grid-template-columns:1fr 1fr;gap:8px;font:12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.notes{max-width:72ch;color:var(--muted);display:grid;gap:10px}
+.notes p{margin:0}
+@media (max-width:720px){.frames{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+ <header>
+  <h1>Internal Resolution Review</h1>
+  <p class="lede">The 3D scene is drawn at a smaller internal size and stretched to each 1024×768 screen. 384×288 stretches by 2.67×, so texels become uneven 2- and 3-pixel blocks; 512×384 stretches by exactly 2×. Both captures use the 60 m terrain detail reduction and come from the RG DS Plus after the same replay.</p>
+ </header>
+
+ <section aria-labelledby="cost">
+  <h2 id="cost">What each size costs</h2>
+  <div class="table-scroll"><table id="summary"><thead><tr><th>Internal size</th><th>Workload</th><th>GPU busy</th><th>Mean frame</th><th>p95</th><th>p99</th><th>Frames ≥ 25 ms</th></tr></thead><tbody></tbody></table></div>
+ </section>
+
+ <section aria-labelledby="viewer" style="display:grid;gap:16px">
+  <h2 id="viewer">Compare frames</h2>
+  <div class="controls">
+   <div class="group"><span>Checkpoint</span><div class="seg" id="ckpt"></div></div>
+   <div class="group"><span>Window</span><div class="seg" id="view"></div></div>
+   <div class="group"><span>Display</span><div class="seg" id="disp"></div></div>
+  </div>
+  <div id="stage"></div>
+  <p class="note">Click the frames to view them at full size in a new tab. On a small screen the close-ups below show the difference best.</p>
+ </section>
+
+ <section aria-labelledby="close" style="display:grid;gap:16px">
+  <h2 id="close">Close-ups, 2× enlarged</h2>
+  <div class="crops" id="crops"></div>
+ </section>
+
+ <section class="notes" aria-labelledby="method">
+  <h2 id="method">How this was made</h2>
+  <p>Frames come from the deterministic replay (seed 42 unless noted, 600 frames unless noted), captured from each window's framebuffer after the measured loop at five checkpoints. The halftone dot pitch scales with the internal width, so dots keep the same size on screen at both sizes.</p>
+  <p>Timing uses mirrored device runs with the muted audio producer running: the replay at each size, then live autoplay with launcher settings. GPU busy is GPU-active cycles per second over the 800 MHz clock; near 100% means no headroom left.</p>
+ </section>
+</div>
+
+<script>
+const DATA = {"checkpoints":["f0120-s42-p0","f0600-s42-p0","f0600-s42-p5","f0600-s7-p0","f1200-s42-p0"],"regions":{"top":{"hud":[0,0,256,192,"HUD text"],"horizon":[400,180,256,192,"Distant terrain and horizon"],"rider":[384,420,256,192,"Rider and near snow"]},"lower":{"horizon":[384,200,256,192,"Distant terrain and horizon"],"near":[384,480,256,192,"Near terrain"],"edge":[0,300,256,192,"Left edge terrain"]}},"timing":{"r384-audio":{"mean_ms":16.62,"p95_ms":17.825,"p99_ms":18.786,"long_share":0.0,"gpu_busy_percent":69.3},"r512-audio":{"mean_ms":16.619,"p95_ms":17.021,"p99_ms":17.572,"long_share":0.0,"gpu_busy_percent":93.0},"r384-live":{"mean_ms":16.661,"p95_ms":16.937,"p99_ms":18.051,"long_share":0.0,"gpu_busy_percent":69.7},"r512-live":{"mean_ms":16.667,"p95_ms":16.751,"p99_ms":17.097,"long_share":0.0,"gpu_busy_percent":93.2}},"audio_health":{"01-r384-audio":"game_status=0\nprobe_status=0\n","02-r512-audio":"game_status=0\nprobe_status=0\n","03-r512-audio":"game_status=0\nprobe_status=0\n","04-r384-audio":"game_status=0\nprobe_status=0\n","05-r384-live":"game_status=0\nprobe_status=0\n","06-r512-live":"game_status=0\nprobe_status=0\n","07-r512-live":"game_status=0\nprobe_status=0\n","08-r384-live":"game_status=0\nprobe_status=0\n"}};
+const CK = k => { const m=k.match(/f(\d+)-s(\d+)-p(\d+)/); return m?`frame ${+m[1]} · seed ${m[2]}${m[3]!=='0'?' · palette '+m[3]:''}`:k; };
+const state = {ckpt: DATA.checkpoints.includes('f0600-s42-p0')?'f0600-s42-p0':DATA.checkpoints[0], view:'top', disp:'side'};
+function seg(id, items, key){
+ const el=document.getElementById(id); el.innerHTML='';
+ for(const [value,label] of items){ const b=document.createElement('button'); b.type='button'; b.textContent=label; b.setAttribute('aria-pressed', String(state[key]===value)); b.addEventListener('click',()=>{state[key]=value; render();}); el.appendChild(b); }
+}
+function summary(){
+ const body=document.querySelector('#summary tbody'), t=DATA.timing;
+ const rows=[['384×288','Replay + audio','r384-audio'],['512×384','Replay + audio','r512-audio'],['384×288','Live autoplay + audio','r384-live'],['512×384','Live autoplay + audio','r512-live']];
+ for(const [size,work,g] of rows){ const r=t[g]; if(!r) continue; const tr=document.createElement('tr');
+  tr.innerHTML=`<td class="label">${size}</td><td class="label">${work}</td><td><span class="pill ${r.gpu_busy_percent<90?'good':'warn'}">${r.gpu_busy_percent.toFixed(0)}%</span></td><td>${r.mean_ms.toFixed(2)} ms</td><td>${r.p95_ms.toFixed(1)} ms</td><td>${r.p99_ms.toFixed(1)} ms</td><td><span class="pill ${r.long_share<0.005?'good':'warn'}">${(r.long_share*100).toFixed(1)}%</span></td>`;
+  body.appendChild(tr); }
+}
+function render(){
+ seg('ckpt', DATA.checkpoints.map(k=>[k,CK(k)]), 'ckpt');
+ seg('view', [['top','Top · third person'],['lower','Lower · first person']], 'view');
+ seg('disp', [['side','Side by side'],['swipe','Swipe']], 'disp');
+ const img=n=>`${state.ckpt}-${state.view}-${n}.png`, stage=document.getElementById('stage');
+ if(state.disp==='side'){
+  stage.innerHTML=`<div class="frames"><figure><a href="${img('r384')}" target="_blank" rel="noopener"><img src="${img('r384')}" alt="384 by 288 internal" width="1024" height="768"></a><figcaption><span>384×288 · 2.67× stretch</span><span>current default</span></figcaption></figure><figure><a href="${img('r512')}" target="_blank" rel="noopener"><img src="${img('r512')}" alt="512 by 384 internal" width="1024" height="768"></a><figcaption><span>512×384 · exact 2× stretch</span><span>candidate</span></figcaption></figure></div>`;
+ } else {
+  stage.innerHTML=`<div class="swipe" id="sw" style="--cut:50%"><img src="${img('r384')}" alt="384 by 288 internal" width="1024" height="768"><img class="top" src="${img('r512')}" alt="512 by 384 internal" width="1024" height="768"><div class="line"></div></div><label class="note" for="cut">Left: 384×288 · right: 512×384</label><input class="swipe-range" id="cut" type="range" min="0" max="100" value="50" aria-label="Swipe position">`;
+  const sw=document.getElementById('sw'); document.getElementById('cut').addEventListener('input',e=>sw.style.setProperty('--cut',e.target.value+'%'));
+ }
+ const crops=document.getElementById('crops'); crops.innerHTML='';
+ for(const [name,[x,y,w,h,label]] of Object.entries(DATA.regions[state.view])){
+  const div=document.createElement('div'); div.className='crop';
+  div.innerHTML=`<h3>${label}</h3><div class="heads"><span>384×288</span><span>512×384</span></div><img src="${state.ckpt}-${state.view}-${name}-crop.png" alt="${label}, both sizes" width="1040" height="384"><span class="note">Region x ${x}, y ${y}, ${w}×${h} screen pixels</span>`;
+  crops.appendChild(div);
+ }
+}
+summary(); render();
+</script>

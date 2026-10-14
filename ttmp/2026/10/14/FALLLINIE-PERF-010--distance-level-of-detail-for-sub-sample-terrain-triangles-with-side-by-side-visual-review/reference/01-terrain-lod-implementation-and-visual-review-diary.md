@@ -163,3 +163,44 @@ The repeated audio runs answer the open question from Step 2. One audio starvati
 
 ### Code review instructions
 - `python3 -I scripts/07-analyze.py scripts/evidence/accept60-*`.
+
+## Step 4: Internal resolution 384×288 vs 512×384, side by side
+
+The owner asked for a side-by-side capture of the two internal sizes after the explanation of the output pass. Both sizes run with the 60 m terrain reduction and hold 60 Hz with no long frames, in the replay and in live autoplay, with the muted audio producer running. 512×384 uses about 93% of the GPU against about 69% at 384×288. In return it stretches to the 1024×768 panels by exactly 2×: the 384×288 close-ups show a plaid moiré in the halftone and lumpier outlines, caused by the uneven 2- and 3-pixel stretch, while 512×384 shows an even dot pattern. The comparison page is published at https://claude.ai/artifact/Cvb2FU7yxw5QPcXBMHB6hh.
+
+### Prompt Context
+**User prompt (verbatim):** "yes, do a side by side capture"
+**Assistant interpretation:** Capture both internal sizes on the device at the standard checkpoints, measure them, and present them side by side.
+**Inferred user intent:** Decide whether to spend the new GPU headroom on a sharper image.
+**Commit (code):** aa7d5f5 binary (`e3e94bd7…afbc62f`); scripts in this step's commit.
+
+### What I did
+- Plan `res512` in `06-campaign.py`: visual baseline (default 384×288) vs `--render-size 512x384` at five checkpoints; timed replay+audio r384/r512/r512/r384; live+audio r384/r512/r512/r384.
+- `09-resolution-assets.py`: full windows for both sizes and 2× crops of three fixed regions per window; `resolution-template.html` page; published as an artifact.
+
+### What didn't work
+- First run `evidence/res512-20261014T234755Z` stopped after the first checkpoint: `capture_tools.compare` asserted equal image sizes (`assert ia.size==ib.size` → `AssertionError`), but the internal scene/print/depth targets differ by design. Its early files had been swept into commit `b637d1f`; this step removes them from the index and keeps the directory outside the repository. `compare` now records `size_mismatch` for differently sized images and the campaign's pixel count ignores those entries. Rerun `evidence/res512-20261014T234849Z` completed.
+
+### What worked
+
+| Size | Workload | GPU busy | Mean ms | p95 ms | p99 ms | Long |
+|---|---|---:|---:|---:|---:|---:|
+| 384×288 | replay + audio | 69.3% | 16.620 | 17.825 | 18.786 | 0.0% |
+| 512×384 | replay + audio | 93.0% | 16.619 | 17.021 | 17.572 | 0.0% |
+| 384×288 | live + audio | 69.7% | 16.661 | 16.937 | 18.051 | 0.0% |
+| 512×384 | live + audio | 93.2% | 16.667 | 16.751 | 17.097 | 0.0% |
+
+- All eight cases `GL_error=0`, `starved_callbacks=0 missing_frames=0`; receipts confirm `render_size` [384,288] / [512,384].
+
+### What I learned
+- At 512×384 the halftone pitch (`4.4·width/1024`) is exactly 2.2 texels and every texel maps to a 2×2 screen block, which removes the beat pattern visible at 384×288.
+- 512×384 tails were slightly tighter than 384×288 in these runs; the difference is small and both are refresh-locked.
+
+### What warrants a second pair of eyes
+- 93% GPU busy leaves less margin for heavier scenes than 69%; a decision for 512×384 should be checked over a longer live session.
+
+### What should be done in the future
+- Owner decision on internal size; if 512×384, change the launcher argument (`--render-size`) rather than the binary default, since the launcher already passes 384×288.
+
+### Code review instructions
+- `scripts/09-resolution-assets.py`, `scripts/resolution-template.html`, `scripts/capture_tools.py` (`size_mismatch`).

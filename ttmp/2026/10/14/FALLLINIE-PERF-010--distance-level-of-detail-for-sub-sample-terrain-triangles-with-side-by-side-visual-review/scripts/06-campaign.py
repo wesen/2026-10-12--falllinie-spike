@@ -69,7 +69,7 @@ try:
   for name in plan['visual']:
    other=out/('visual-'+key+'-'+name);assert json.loads((other/'receipt.json').read_text())['replay_signature']==sig
    visual.setdefault(name,{})[key]=compare(base/'capture',other/'capture')
-   print(key,name,'different pixels',sum(v['different_pixels'] for v in visual[name][key].values()),flush=True)
+   print(key,name,'different pixels',sum(v.get('different_pixels',0) for v in visual[name][key].values()),flush=True)
   (out/'visual-comparisons.json').write_text(json.dumps(visual,indent=2)+'\n')
  for name,size,counter_set,cadence,flags in plan['timed']:
   path=remote+'/evidence/'+name;status=0

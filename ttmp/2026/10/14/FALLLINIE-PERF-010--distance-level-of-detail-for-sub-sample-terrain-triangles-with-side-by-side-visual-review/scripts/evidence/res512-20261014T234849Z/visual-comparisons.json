@@ -1,0 +1,424 @@
+{
+  "r512": {
+    "f0120-s42-p0": {
+      "depth.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "lower/depth.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "lower/output.png": {
+        "different_pixels": 708536,
+        "max_channel_delta": 230,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "lower/scene.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "output.png": {
+        "different_pixels": 587189,
+        "max_channel_delta": 230,
+        "pixels": 786432
+      },
+      "print.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "scene.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      }
+    },
+    "f0600-s42-p0": {
+      "depth.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "lower/depth.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "lower/output.png": {
+        "different_pixels": 708302,
+        "max_channel_delta": 230,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "lower/scene.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "output.png": {
+        "different_pixels": 555642,
+        "max_channel_delta": 231,
+        "pixels": 786432
+      },
+      "print.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "scene.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      }
+    },
+    "f1200-s42-p0": {
+      "depth.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "lower/depth.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "lower/output.png": {
+        "different_pixels": 746128,
+        "max_channel_delta": 230,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "lower/scene.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "output.png": {
+        "different_pixels": 595310,
+        "max_channel_delta": 230,
+        "pixels": 786432
+      },
+      "print.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "scene.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      }
+    },
+    "f0600-s7-p0": {
+      "depth.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "lower/depth.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "lower/output.png": {
+        "different_pixels": 739273,
+        "max_channel_delta": 230,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "lower/scene.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "output.png": {
+        "different_pixels": 585924,
+        "max_channel_delta": 231,
+        "pixels": 786432
+      },
+      "print.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "scene.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      }
+    },
+    "f0600-s42-p5": {
+      "depth.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "lower/depth.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "lower/output.png": {
+        "different_pixels": 714436,
+        "max_channel_delta": 227,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "lower/scene.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "output.png": {
+        "different_pixels": 564722,
+        "max_channel_delta": 227,
+        "pixels": 786432
+      },
+      "print.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      },
+      "scene.png": {
+        "size_mismatch": [
+          [
+            384,
+            288
+          ],
+          [
+            512,
+            384
+          ]
+        ]
+      }
+    }
+  }
+}

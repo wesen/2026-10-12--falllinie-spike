@@ -17,7 +17,9 @@ def compare(a,b):
     for p in sorted(Path(a).rglob('*.png')):
         rel=p.relative_to(a)
         with Image.open(p) as ia,Image.open(Path(b)/rel) as ib:
-            ia=ia.convert('RGBA');ib=ib.convert('RGBA');assert ia.size==ib.size
+            ia=ia.convert('RGBA');ib=ib.convert('RGBA')
+            # Different internal sizes are intentional in resolution comparisons; record, don't compare.
+            if ia.size!=ib.size:result[str(rel)]={'size_mismatch':[list(ia.size),list(ib.size)]};continue
             # Count differences across all channels; alpha-only differences included.
             changes=[max(abs(x-y) for x,y in zip(pa,pb)) for pa,pb in zip(ia.getdata(),ib.getdata())]
             result[str(rel)]={'different_pixels':sum(v!=0 for v in changes),'max_channel_delta':max(changes),'pixels':len(changes)}

@@ -1,0 +1,97 @@
+{
+ "checkpoints": [
+  "f0120-s42-p0",
+  "f0600-s42-p0",
+  "f0600-s42-p5",
+  "f0600-s7-p0",
+  "f1200-s42-p0"
+ ],
+ "regions": {
+  "top": {
+   "hud": [
+    0,
+    0,
+    256,
+    192,
+    "HUD text"
+   ],
+   "horizon": [
+    400,
+    180,
+    256,
+    192,
+    "Distant terrain and horizon"
+   ],
+   "rider": [
+    384,
+    420,
+    256,
+    192,
+    "Rider and near snow"
+   ]
+  },
+  "lower": {
+   "horizon": [
+    384,
+    200,
+    256,
+    192,
+    "Distant terrain and horizon"
+   ],
+   "near": [
+    384,
+    480,
+    256,
+    192,
+    "Near terrain"
+   ],
+   "edge": [
+    0,
+    300,
+    256,
+    192,
+    "Left edge terrain"
+   ]
+  }
+ },
+ "timing": {
+  "r384-audio": {
+   "mean_ms": 16.62,
+   "p95_ms": 17.825,
+   "p99_ms": 18.786,
+   "long_share": 0.0,
+   "gpu_busy_percent": 69.3
+  },
+  "r512-audio": {
+   "mean_ms": 16.619,
+   "p95_ms": 17.021,
+   "p99_ms": 17.572,
+   "long_share": 0.0,
+   "gpu_busy_percent": 93.0
+  },
+  "r384-live": {
+   "mean_ms": 16.661,
+   "p95_ms": 16.937,
+   "p99_ms": 18.051,
+   "long_share": 0.0,
+   "gpu_busy_percent": 69.7
+  },
+  "r512-live": {
+   "mean_ms": 16.667,
+   "p95_ms": 16.751,
+   "p99_ms": 17.097,
+   "long_share": 0.0,
+   "gpu_busy_percent": 93.2
+  }
+ },
+ "audio_health": {
+  "01-r384-audio": "game_status=0\nprobe_status=0\n",
+  "02-r512-audio": "game_status=0\nprobe_status=0\n",
+  "03-r512-audio": "game_status=0\nprobe_status=0\n",
+  "04-r384-audio": "game_status=0\nprobe_status=0\n",
+  "05-r384-live": "game_status=0\nprobe_status=0\n",
+  "06-r512-live": "game_status=0\nprobe_status=0\n",
+  "07-r512-live": "game_status=0\nprobe_status=0\n",
+  "08-r384-live": "game_status=0\nprobe_status=0\n"
+ }
+}

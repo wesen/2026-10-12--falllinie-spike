@@ -1,0 +1,82 @@
+[
+  {
+    "bmp": "capture/depth.bmp",
+    "bmp_sha256": "db1dea0de4fcdb16f097a01a9597becfc333f5158bd95a07bd0b2619498b96f5",
+    "png_sha256": "42c1f2caab4b7c021c06c6ca2791cdf33d324eacf456c989d18db7b853f2619c",
+    "rgba_sha256": "d222994644a4c474d4d2477cd16f1434ec0870e0e0f7b594ef9531b32d6897f8",
+    "size": [
+      512,
+      384
+    ]
+  },
+  {
+    "bmp": "capture/lower/depth.bmp",
+    "bmp_sha256": "cb72a7d0a08eff033e9852eab831ddc7ae35e4bacac6a238f8c2544b95140eba",
+    "png_sha256": "223c870e64ece56196a50c3025f6a2839085ff513e817e9ded02191abb1c0889",
+    "rgba_sha256": "866662e7081e1960b410b4740e3d67691bbeef247911a4629bad3dea19bd6b3f",
+    "size": [
+      512,
+      384
+    ]
+  },
+  {
+    "bmp": "capture/lower/output.bmp",
+    "bmp_sha256": "db314f63df04cf14333eeb4e3d60a1cdcc14247e592b763ed659d177f44371eb",
+    "png_sha256": "d67fa0a8771607b4a35bc52df5a6c0eb352ec9e615ed39ead9b34171ae834285",
+    "rgba_sha256": "ddbfbff800c46d058ddebfd193b085c94bd4f1c57db1f7248d03f6a056d67b86",
+    "size": [
+      1024,
+      768
+    ]
+  },
+  {
+    "bmp": "capture/lower/print.bmp",
+    "bmp_sha256": "f17ff64d93c355568ae474875850ccf0bd4d6304a48fc36f9990fd70b7462571",
+    "png_sha256": "5d4affb5bba4caf61e67a3132f0f1db4469c065198a9fbbfecd3518cb73c6896",
+    "rgba_sha256": "80bc234959d013b892463acd4eb58e83477fbc57bda4d0189723c3e92dc12467",
+    "size": [
+      512,
+      384
+    ]
+  },
+  {
+    "bmp": "capture/lower/scene.bmp",
+    "bmp_sha256": "c7475dda682ae89d4e9628e0391345672ecec37fd86001b7c83f713852b94a6c",
+    "png_sha256": "d8e0dd94c9783083e06c50e674e84bddf8451ee08a991cdc25bf8b5a21a5d59a",
+    "rgba_sha256": "70b8f0cdfc42e2c30c04ca9d105be18635203090a5454b59547b60694028ca4a",
+    "size": [
+      512,
+      384
+    ]
+  },
+  {
+    "bmp": "capture/output.bmp",
+    "bmp_sha256": "b89c16c3c10fa49e2faa95d7b05ac339cda0c58e39138cf7445cb5b1c5dde0d4",
+    "png_sha256": "7c540d492f6120fcf6c6ffd55c8a415668ae1ba55b50ec528c95a4e8ef7ae06a",
+    "rgba_sha256": "934af688b3f3320112cc0cb4a019d053b2d3ccedbe4663b2bc2f0d22f443fcc6",
+    "size": [
+      1024,
+      768
+    ]
+  },
+  {
+    "bmp": "capture/print.bmp",
+    "bmp_sha256": "e86fed7545d8a8088e8a9f950d6eb971936f08aecff51d5ebb5057684a77028e",
+    "png_sha256": "5399d8555887de22cfe24e1737f136440b71cf2d2d6bf93c5093b5fb025361da",
+    "rgba_sha256": "9ba4bc7649555fedc276e960b3ca1ecf79922917dcb8407778dea1f1b969c79a",
+    "size": [
+      512,
+      384
+    ]
+  },
+  {
+    "bmp": "capture/scene.bmp",
+    "bmp_sha256": "fb77393c41fae23cf2d6a2d357efe6054e467f7251404a4483345c12bf694887",
+    "png_sha256": "0384f7cc1a67c9b3c02ab15be97568a88c3897aa3811a0beec9e9079ade6578d",
+    "rgba_sha256": "0713e7ead04de9750ca1d5226dc4044bfff260da03e236164a5caa8f48619dc2",
+    "size": [
+      512,
+      384
+    ]
+  }
+]

@@ -1,0 +1,123 @@
+Mali Offline Compiler v2026.5.0 (Build 922df8)
+Copyright (c) 2007-2026 Arm Limited. All rights reserved.
+
+Usage: 
+
+   malioc  [--vertex|--tessellation_control|--tessellation_evaluation
+           |--geometry|--fragment|--compute|--kernel|--ray_generation
+           |--ray_any_hit|--ray_closest_hit|--ray_intersection|--ray_miss
+           |--ray_callable|--list|--info] [--opengles|--vulkan|--opencl
+           <VER>] [--format <text|json>] [-d] [-n <NAME>] [-c <CORE>] [-S
+           <LOC=VALUE>] ...  [-D <NAME[=VALUE]>] ...  [-o <FILE>] [--spirv]
+           [--] [--version] [-h] <input files> ...
+
+Where: 
+
+   No shader type flag
+     Infer shader type from input file extensions, where:
+       .vert - Source vertex shader
+       .tesc - Source tessellation control shader
+       .tese - Source tessellation evaluation shader
+       .geom - Source geometry shader
+       .frag - Source fragment shader
+       .comp - Source compute shader
+       .rgen - Source ray generation shader
+       .rint - Source ray intersection shader
+       .rahit - Source ray any hit shader
+       .rchit - Source ray closest hit shader
+       .rmiss - Source ray miss shader
+       .rcall - Source ray callable shader
+       .vert.spv - SPIR-V binary vertex shader
+       .tesc.spv - SPIR-V binary tessellation control shader
+       .tese.spv - SPIR-V binary tessellation evaluation shader
+       .geom.spv - SPIR-V binary geometry shader
+       .frag.spv - SPIR-V binary fragment shader
+       .comp.spv - SPIR-V binary compute shader
+       .rgen.spv - SPIR-V binary ray generation shader
+       .rint.spv - SPIR-V binary ray intersection shader
+       .rahit.spv - SPIR-V binary ray any hit shader
+       .rchit.spv - SPIR-V binary ray closest hit shader
+       .rmiss.spv - SPIR-V binary ray miss shader
+       .rcall.spv - SPIR-V binary ray callable shader
+       .cl - OpenCL compute kernel
+       .cl.spv - OpenCL SPIR-V binary compute kernel
+   -v,  --vertex
+     Compile a vertex shader.
+   -t,  --tessellation_control
+     Compile a tessellation control shader.
+   -e,  --tessellation_evaluation
+     Compile a tessellation evaluation shader.
+   -g,  --geometry
+     Compile a geometry shader.
+   -f,  --fragment
+     Compile a fragment shader.
+   -C,  --compute
+     Compile a compute shader.
+   -k,  --kernel
+     Compile an OpenCL kernel.
+   --ray_generation
+     Compile a ray generation shader.
+   --ray_any_hit
+     Compile a ray any hit shader.
+   --ray_closest_hit
+     Compile a ray closest hit shader.
+   --ray_intersection
+     Compile a ray intersection shader.
+   --ray_miss
+     Compile a ray miss shader.
+   --ray_callable
+     Compile a ray callable shader.
+   -l,  --list
+     Report the supported Arm GPU cores.
+   -i,  --info
+     Report the supported API capabilities for a specific core.
+
+   --opengles
+     Target the OpenGL ES API.
+   --vulkan
+     Target the Vulkan API.
+   --opencl <VER>
+     Target the OpenCL API (1.1, 1.2, 2.0, or 3.0).
+
+   --format <text|json>
+     Specify the report output format.
+
+   -d,  --detailed
+     Generate a more detailed report.
+
+   -n <NAME>,  --name <NAME>
+     Name the program entrypoint.
+
+   -c <CORE>,  --core <CORE>
+     Name the target Arm GPU.
+
+   -S <LOC=VALUE>,  --sconst <LOC=VALUE>  (accepted multiple times)
+     Define a specialization constant.
+
+   -D <NAME[=VALUE]>,  --define <NAME[=VALUE]>  (accepted multiple times)
+     Define a preprocessor macro.
+
+   -o <FILE>,  --output <FILE>
+     Name of output file for report data (stdout by default). Any required
+     intermediate directories must exist; they will not be created
+     automatically.
+
+   --spirv
+     Compile a SPIR-V binary module.
+
+   --,  --ignore_rest
+     Ignores the rest of the labeled arguments following this flag.
+
+   --version
+     Displays version information and exits.
+
+   -h,  --help
+     Displays usage information and exits.
+
+   <input files>  (accepted multiple times)
+     List of input files to compile. If the input files are source files
+     the contents are concatenated together in the order they were
+     specified. If the input is a SPIR-V binary module only a single input
+     file is allowed. Specify '-' to read from stdin.
+
+   

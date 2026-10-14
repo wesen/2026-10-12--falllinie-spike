@@ -1,0 +1,22 @@
+{
+  "baseline": {
+    "asset_sha256": "f598227c7bd8e07ccf27e1e2a52062b2801cec4dee5053de52c198eaf593ab9c",
+    "adapted_sha256": "14131090b19ac9a504ada252e456887b751979c2cc2af14115abe88f3b2573d7",
+    "diagnostic_only": false
+  },
+  "lazy-color": {
+    "asset_sha256": "f3364e3212f17112e81e109af31d7f803aebfcc52d85a58342a2df5b8c1fbd34",
+    "adapted_sha256": "e72820e54661d33d2ba84ee408d1a60d956da5b422925558c2f7e0d64ae3152f",
+    "diagnostic_only": true
+  },
+  "fog-skip": {
+    "asset_sha256": "c9eb26ee0bbb552639fda64d9ba952249ea570477662d7580ba97de92e9e8128",
+    "adapted_sha256": "2e3c634c97411630f5c1b775076a768601a51cac987cf98d2dc56c956f145ce2",
+    "diagnostic_only": true
+  },
+  "combined": {
+    "asset_sha256": "c8fbaed061743ee87076fa22ff54fa045f6e2c876843db86e871b4c200a5cfaf",
+    "adapted_sha256": "2a7cff99e16fbbedfcf46072fa7c6fbbcfbd0bca70c42a4e4f5c629d1a3e9a55",
+    "diagnostic_only": true
+  }
+}

@@ -2,6 +2,7 @@
 #include "gl_api.hpp"
 #include <chrono>
 #include <cstring>
+#include <cstdlib>
 #include <fstream>
 #include <filesystem>
 #include <iostream>
@@ -12,6 +13,13 @@
 namespace fl {
 static std::string read_file(const std::string& p){std::ifstream f(p);if(!f)throw std::runtime_error("cannot read shader: "+p);return {std::istreambuf_iterator<char>(f),{}};}
 static GLuint compile(GLenum kind,const std::string& source,const std::string& label){
+ // Optional developer dump of the exact adapted bytes passed to glShaderSource.
+ // No shader rewriting or per-frame work; disabled unless explicitly requested.
+ if(const char* dir=std::getenv("FALLLINIE_SHADER_DUMP_DIR")){if(*dir){
+  static unsigned serial=0;std::filesystem::create_directories(dir);
+  auto path=std::filesystem::path(dir)/(std::to_string(serial++)+(kind==GL_VERTEX_SHADER?".vert":".frag"));
+  std::ofstream dump(path,std::ios::binary);dump<<source;if(!dump)throw std::runtime_error("cannot dump shader "+path.string());
+ }}
  GLuint shader=glCreateShader(kind);const char* text=source.c_str();glShaderSource(shader,1,&text,nullptr);glCompileShader(shader);
  GLint ok=0;glGetShaderiv(shader,GL_COMPILE_STATUS,&ok);
  if(!ok){GLint size=0;glGetShaderiv(shader,GL_INFO_LOG_LENGTH,&size);std::vector<char> log(std::max(1,size));glGetShaderInfoLog(shader,size,nullptr,log.data());glDeleteShader(shader);throw std::runtime_error(label+": "+log.data());}

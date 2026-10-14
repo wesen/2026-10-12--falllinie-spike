@@ -1,0 +1,115 @@
+Mali Offline Compiler v2026.5.0 (Build 922df8)
+Copyright (c) 2007-2026 Arm Limited. All rights reserved.
+
+Configuration
+=============
+
+Hardware: Mali-G52 r1p0
+Architecture: Bifrost
+Driver: r51p0-00rel0
+
+Language Support
+================
+
+OpenGL ES: Version 320
+Vulkan: SPIR-V 1.6
+OpenCL: Version 300
+
+OpenGL ES ESSL Extensions
+=========================
+
+GL_ANDROID_extension_pack_es31a
+GL_ARM_shader_framebuffer_fetch
+GL_ARM_shader_framebuffer_fetch_depth_stencil
+GL_EXT_YUV_target
+GL_EXT_geometry_shader
+GL_EXT_gpu_shader5
+GL_EXT_primitive_bounding_box
+GL_EXT_shader_framebuffer_fetch
+GL_EXT_shader_io_blocks
+GL_EXT_shader_non_constant_global_initializers
+GL_EXT_shader_pixel_local_storage
+GL_EXT_tessellation_shader
+GL_EXT_texture_buffer
+GL_EXT_texture_cube_map_array
+GL_KHR_blend_equation_advanced
+GL_OES_EGL_image_external
+GL_OES_EGL_image_external_essl3
+GL_OES_geometry_shader
+GL_OES_gpu_shader5
+GL_OES_primitive_bounding_box
+GL_OES_sample_variables
+GL_OES_shader_image_atomic
+GL_OES_shader_io_blocks
+GL_OES_shader_multisample_interpolation
+GL_OES_tessellation_shader
+GL_OES_texture_buffer
+GL_OES_texture_cube_map_array
+GL_OES_texture_storage_multisample_2d_array
+GL_OVR_multiview
+GL_OVR_multiview2
+
+Vulkan SPIR-V Extensions
+========================
+
+SPV_ARM_core_builtins
+SPV_EXT_demote_to_helper_invocation
+SPV_EXT_physical_storage_buffer
+SPV_EXT_shader_image_int64
+SPV_EXT_shader_tile_image
+SPV_GOOGLE_decorate_string
+SPV_GOOGLE_hlsl_functionality1
+SPV_GOOGLE_user_type
+SPV_KHR_16bit_storage
+SPV_KHR_8bit_storage
+SPV_KHR_device_group
+SPV_KHR_expect_assume
+SPV_KHR_float_controls
+SPV_KHR_float_controls2
+SPV_KHR_integer_dot_product
+SPV_KHR_maximal_reconvergence
+SPV_KHR_multiview
+SPV_KHR_non_semantic_info
+SPV_KHR_physical_storage_buffer
+SPV_KHR_quad_control
+SPV_KHR_shader_ballot
+SPV_KHR_shader_clock
+SPV_KHR_shader_draw_parameters
+SPV_KHR_storage_buffer_storage_class
+SPV_KHR_subgroup_rotate
+SPV_KHR_subgroup_uniform_control_flow
+SPV_KHR_subgroup_vote
+SPV_KHR_terminate_invocation
+SPV_KHR_variable_pointers
+SPV_KHR_vulkan_memory_model
+
+OpenCL C Extensions
+===================
+
+cl_arm_controlled_kernel_termination
+cl_arm_core_id
+cl_arm_integer_dot_product_int8
+cl_arm_non_uniform_work_group_size
+cl_arm_printf
+cl_ext_image_raw10_raw12
+cl_khr_3d_image_writes
+cl_khr_byte_addressable_store
+cl_khr_depth_images
+cl_khr_extended_bit_ops
+cl_khr_fp16
+cl_khr_global_int32_base_atomics
+cl_khr_global_int32_extended_atomics
+cl_khr_int64_base_atomics
+cl_khr_int64_extended_atomics
+cl_khr_integer_dot_product
+cl_khr_kernel_clock
+cl_khr_local_int32_base_atomics
+cl_khr_local_int32_extended_atomics
+cl_khr_subgroup_ballot
+cl_khr_subgroup_clustered_reduce
+cl_khr_subgroup_extended_types
+cl_khr_subgroup_non_uniform_arithmetic
+cl_khr_subgroup_non_uniform_vote
+cl_khr_subgroup_shuffle
+cl_khr_subgroup_shuffle_relative
+cl_khr_subgroups

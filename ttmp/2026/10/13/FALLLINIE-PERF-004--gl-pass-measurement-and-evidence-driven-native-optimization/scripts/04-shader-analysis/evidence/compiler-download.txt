@@ -1,0 +1,2 @@
+url=https://artifacts.tools.arm.com/arm-performance-studio/2026.5/Arm_Performance_Studio_2026.5_linux_x86-64.tgz
+fetched_utc=2026-10-14T03:11:59Z

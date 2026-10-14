@@ -1,0 +1,35 @@
+-- Found Python3: /home/manuel/.pyenv/shims/python3 (found version "3.13.2") found components: Interpreter 
+-- Configuring done (0.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/manuel/code/wesen/2026-10-12--falllinie-spike/build/integrated-source
+[  4%] Built target terrain
+[  6%] Building CXX object CMakeFiles/test-profiler.dir/tests/test_profiler.cpp.o
+[ 10%] Built target test-audio-worker
+[ 14%] Built target test-audio-pcm
+[ 16%] Building CXX object CMakeFiles/test-profiler.dir/src/profiler.cpp.o
+[ 18%] Building CXX object CMakeFiles/test-paired-clocks.dir/tests/test_paired_clocks.cpp.o
+[ 22%] Built target test-terrain
+[ 25%] Building CXX object CMakeFiles/test-paired-clocks.dir/src/profiler.cpp.o
+[ 27%] Building CXX object CMakeFiles/test-profiler.dir/src/paired_clocks.cpp.o
+[ 29%] Building CXX object CMakeFiles/test-paired-clocks.dir/src/paired_clocks.cpp.o
+[ 45%] Built target source-systems
+[ 50%] Built target test-gameplay
+[ 58%] Built target test-gameplay_world
+[ 58%] Built target test-gameplay_pose
+[ 66%] Built target test-developer_overlay
+[ 66%] Built target test-integration
+[ 75%] Built target test-audio
+[ 72%] Built target test-developer_controls
+[ 79%] Built target test-audio-diagnostics
+[ 83%] Built target test-audio-lifecycle
+[ 87%] Building CXX object CMakeFiles/falllinie-spike.dir/src/main.cpp.o
+[ 87%] Building CXX object CMakeFiles/falllinie-spike.dir/src/renderer.cpp.o
+[ 89%] Linking CXX executable test-profiler
+[ 91%] Linking CXX executable test-paired-clocks
+[ 91%] Built target test-profiler
+[ 93%] Building CXX object CMakeFiles/falllinie-spike.dir/src/game_renderer.cpp.o
+[ 93%] Built target test-paired-clocks
+[ 95%] Building CXX object CMakeFiles/falllinie-spike.dir/src/profiler.cpp.o
+[ 97%] Building CXX object CMakeFiles/falllinie-spike.dir/src/paired_clocks.cpp.o
+[100%] Linking CXX executable falllinie-spike
+[100%] Built target falllinie-spike

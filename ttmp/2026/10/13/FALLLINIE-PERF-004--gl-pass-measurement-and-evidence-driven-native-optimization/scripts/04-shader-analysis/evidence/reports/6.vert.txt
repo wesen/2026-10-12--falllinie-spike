@@ -1,0 +1,58 @@
+Mali Offline Compiler v2026.5.0 (Build 922df8)
+Copyright (c) 2007-2026 Arm Limited. All rights reserved.
+
+Configuration
+=============
+
+Hardware: Mali-G52 r1p0
+Architecture: Bifrost
+Driver: r51p0-00rel0
+Shader type: OpenGL ES Vertex
+
+Main shader
+===========
+
+Position variant
+----------------
+
+Work registers: 32 (100% used at 100% occupancy)
+Uniform registers: 10 (7% used)
+Stack use: false
+16-bit arithmetic: 0%
+
+                                A      LS       T    Bound
+Total instruction cycles:    0.29    1.00    0.00       LS
+Shortest path cycles:        0.29    1.00    0.00       LS
+Longest path cycles:         0.29    1.00    0.00       LS
+
+A = Arithmetic, LS = Load/Store, T = Texture
+
+Varying variant
+---------------
+
+Work registers: 7 (21% used at 100% occupancy)
+Uniform registers: 10 (7% used)
+Stack use: false
+16-bit arithmetic: N/A
+
+                                A      LS       T    Bound
+Total instruction cycles:    0.00    3.00    0.00       LS
+Shortest path cycles:        0.00    3.00    0.00       LS
+Longest path cycles:         0.00    3.00    0.00       LS
+
+A = Arithmetic, LS = Load/Store, T = Texture
+
+Shader properties
+=================
+
+Has uniform computation: false
+
+Recommended attribute streams
+=============================
+
+Position attributes
+ - aPosition (location=0)
+
+Non-position attributes
+ - aUV (location=1)
+

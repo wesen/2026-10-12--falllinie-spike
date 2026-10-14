@@ -1,0 +1,30 @@
+HTTP/2 302 
+location: https://d17wkkv9vx2zt2.cloudfront.net/filestore/42/424ed2933ff07a4c11539cf0507ca47f3e3df94c?response-content-type=application%2Fx-gzip&response-content-disposition=attachment%3Bfilename%3D%22Arm_Performance_Studio_2026.5_linux_x86-64.tgz%22&x-jf-traceId=1c194db65c928ee5ba3ed99c2c8be99c&X-Artifactory-repositoryKey=perfstudio-arm-performance-studio&X-Artifactory-projectKey=perfstudio&X-Artifactory-artifactPath=2026.5%2FArm_Performance_Studio_2026.5_linux_x86-64.tgz&X-Artifactory-username=svc_dcs_af_iac%40arm.com&X-Artifactory-repoType=local&X-Artifactory-packageType=generic&X-Artifactory-originRepositoryKey=perfstudio-arm-performance-studio&X-Artifactory-originProjectKey=perfstudio&X-Artifactory-originRepoType=local&X-Artifactory-originPackageType=generic&Expires=1791948078&Signature=NV7sktKpljBBWM7tiuXBJCzftG74vFqKoA6JOlunnZZvFszliwsts2Ub9PlOBKLdzmtGSXq~6Bm3wpBr3NDiAANfwFXVrUUAURTvbE0H6UzKCUJXb9IuPZ1tUQf4tAIFdHA4vj9otTtjOkx85RurgGJxQ0O4h~nEBV7~LUdOrECyFCy7o-4yLVMRTTa7yBXJdwHOAjkdxVnU-Mb2INZ5pd7E35Ia8Cbi7xvM3fsDHFulahL2~RmBUsjjQZzBEKXP1xmhicuRjByY~xA-pi1VpG0ypGWnKtHuEHNl5AD~Aze9HVSlLEjOwGZ~T3lz7x6JoU2A~L~Pe4gVenNOruM3~w__&Key-Pair-Id=APKAJ6NHFWMVU3M6DPBA
+server: nginx
+date: Wed, 14 Oct 2026 03:11:18 GMT
+x-request-id: 1c194db65c928ee5ba3ed99c2c8be99c:0123456789101114:0123456789101114:0
+x-request-id: 1c194db65c928ee5ba3ed99c2c8be99c:0123456789101114:0123456789101114:0
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+x-cache: Miss from cloudfront
+via: 1.1 7e0c1ebb759362e1d5ed505d30e7b186.cloudfront.net (CloudFront)
+x-amz-cf-pop: BOS50-P5
+x-amz-cf-id: TJiYKKJvqY3ojNMlHHVLbbgQq6121NwLeByAJKa1Q1yqvV0cSBYpNw==
+
+HTTP/2 200 
+content-type: application/x-gzip
+content-length: 800083809
+accept-ranges: bytes
+date: Wed, 14 Oct 2026 03:11:18 GMT
+server: AmazonS3
+last-modified: Mon, 07 Sep 2026 14:34:32 GMT
+etag: "0dd981e39d3b04dcd49cd28921a1f85c-96"
+x-amz-version-id: NGHR1H9NxRB55jRxWRBCvPrqeLnK6vdb
+content-disposition: attachment;filename="Arm_Performance_Studio_2026.5_linux_x86-64.tgz"
+x-amz-server-side-encryption: AES256
+x-amz-storage-class: INTELLIGENT_TIERING
+x-amz-replication-status: COMPLETED
+x-cache: Miss from cloudfront
+via: 1.1 137ff3e162b7191b75115f8026afb7b6.cloudfront.net (CloudFront)
+x-amz-cf-pop: BOS50-P8
+x-amz-cf-id: qbacSU4YgT193hFiLQvC3aJrEQo2BZ8nsZrmIE6QYSAcC7uzsJDWeA==
+

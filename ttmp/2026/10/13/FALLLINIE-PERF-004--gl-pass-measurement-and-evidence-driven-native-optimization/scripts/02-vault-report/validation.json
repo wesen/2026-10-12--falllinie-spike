@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "prose_word_count": 5758,
+  "mermaid_diagrams": 2,
+  "figures": 5,
+  "source_revision": "f400ffa7c658086cf775fd6d27c28403ba09c2bb",
+  "vault_base": "da2c32a7a2978e26c875c553652378c4cdbee617",
+  "note": "Projects/2026/10/13/PROJECT REPORT - Falllinie Rendering Measurements - CPU Execution, Mali Driver Work and GPU Timer Limits.md",
+  "files": {
+    "Projects/2026/10/13/PROJECT REPORT - Falllinie Rendering Measurements - CPU Execution, Mali Driver Work and GPU Timer Limits.md": "cd512fb4cfde86ac611b29bb191511aa26d6f2875babfee6fd0547f6f78e3b92",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/01-cpu-wall.svg": "2fe2a407f5f491cf83b3e69223687699bb0f8d53f7f47e641046b79df1176392",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/02-frame-cdf.svg": "899497d10f130dac64618c699f6ef1f2fe1aa03df599686d7464b5f04f023a81",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/03-query-observer.svg": "c334c9776fe0f5871530f5163284ca6395b13e7c55bdc2e673898771d210d7d8",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/04-perf-cpu.svg": "ae3dbd77fec19afbe5ff57d19ca5ad0339f60ef976f629663f4c8eca03c09f48",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/05-gpu-elapsed.svg": "26518f5a962aae596922656715062d725310ef63d39d0a193e30a745624899ff",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/campaign-summary.json": "0471c622ac4c19fc299370671b83a2decd4441a30a50563c17577163699033e9",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/provenance.json": "171a90bf2b5e1c6c61d5a64089eb8ea56a7656cf96251d8eb6d116645fc9dd26",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/report-evidence.json": "dfa93d46f747077e890c705f31c2a10fb13ea6b4c1e61cda425499218e226d91",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/representative-sample.json": "c89203f195e16b7ec0c8dd344ef1bd3bfd35d16804eb8f17cb6524d1a822c27d"
+  },
+  "checks": [
+    "source input/provenance/figure hashes",
+    "frame counts and means from raw CSV",
+    "same-row paired group/sample calculations",
+    "perf denominator and GPU totals/anomaly population",
+    "relative assets/XML and related notes",
+    "new-note/new-asset scope; unchanged vault base"
+  ]
+}

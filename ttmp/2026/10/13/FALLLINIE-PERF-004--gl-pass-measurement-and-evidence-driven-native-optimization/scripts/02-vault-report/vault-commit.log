@@ -1,0 +1,12 @@
+[main c7b1535] Document Falllinie rendering measurements and Mali timer limits
+ 10 files changed, 2310 insertions(+)
+ create mode 100644 Projects/2026/10/13/PROJECT REPORT - Falllinie Rendering Measurements - CPU Execution, Mali Driver Work and GPU Timer Limits.md
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-render-measurements/01-cpu-wall.svg
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-render-measurements/02-frame-cdf.svg
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-render-measurements/03-query-observer.svg
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-render-measurements/04-perf-cpu.svg
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-render-measurements/05-gpu-elapsed.svg
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-render-measurements/campaign-summary.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-render-measurements/provenance.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-render-measurements/report-evidence.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-render-measurements/representative-sample.json

@@ -1,0 +1,42 @@
+{
+  "published_at_utc": "2026-10-14T02:30:05.673433+00:00",
+  "vault": "/home/manuel/code/wesen/go-go-golems/go-go-parc",
+  "branch": "main",
+  "remote": "ssh://git@github.com/go-go-golems/go-go-parc",
+  "vault_parent": "da2c32a7a2978e26c875c553652378c4cdbee617",
+  "vault_commit": "c7b1535f1d2eb951d03001cc6ee8273904f56359",
+  "push": "succeeded: origin main, no force",
+  "independent_remote_head": "c7b1535f1d2eb951d03001cc6ee8273904f56359",
+  "local_equals_remote": true,
+  "vault_clean": true,
+  "vault_no_staged_files": true,
+  "note": "Projects/2026/10/13/PROJECT REPORT - Falllinie Rendering Measurements - CPU Execution, Mali Driver Work and GPU Timer Limits.md",
+  "prose_word_count": 5758,
+  "note_sha256": "cd512fb4cfde86ac611b29bb191511aa26d6f2875babfee6fd0547f6f78e3b92",
+  "validation_sha256": "0539b73030240a4427695f35e30d347d2125d67e177dcdcdc476ddec374365d6",
+  "helper_sha256": "d5d6095f3d43227a80e049c14add2d9cab9c38f756bed25b642e0429c3f5cb06",
+  "editorial_approval": "Parent read full draft and approved commit/push conditional on removing following from figure03 alt text and adding explicitly future Mali counter/Streamline/gatord research gate. Both edits applied; final validator passed before commit.",
+  "source_revision": "f400ffa7c658086cf775fd6d27c28403ba09c2bb",
+  "runtime_revision": "209a6d092885ff3f0a1efd1efab4252cb4ad2b56",
+  "worker_source_base": "09430e4e1c360c9ffc1e28fb7147e4609b5c9530",
+  "files": {
+    "Projects/2026/10/13/PROJECT REPORT - Falllinie Rendering Measurements - CPU Execution, Mali Driver Work and GPU Timer Limits.md": "cd512fb4cfde86ac611b29bb191511aa26d6f2875babfee6fd0547f6f78e3b92",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/01-cpu-wall.svg": "2fe2a407f5f491cf83b3e69223687699bb0f8d53f7f47e641046b79df1176392",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/02-frame-cdf.svg": "899497d10f130dac64618c699f6ef1f2fe1aa03df599686d7464b5f04f023a81",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/03-query-observer.svg": "c334c9776fe0f5871530f5163284ca6395b13e7c55bdc2e673898771d210d7d8",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/04-perf-cpu.svg": "ae3dbd77fec19afbe5ff57d19ca5ad0339f60ef976f629663f4c8eca03c09f48",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/05-gpu-elapsed.svg": "26518f5a962aae596922656715062d725310ef63d39d0a193e30a745624899ff",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/campaign-summary.json": "0471c622ac4c19fc299370671b83a2decd4441a30a50563c17577163699033e9",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/provenance.json": "171a90bf2b5e1c6c61d5a64089eb8ea56a7656cf96251d8eb6d116645fc9dd26",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/report-evidence.json": "dfa93d46f747077e890c705f31c2a10fb13ea6b4c1e61cda425499218e226d91",
+    "Projects/2026/10/13/_assets/falllinie-render-measurements/representative-sample.json": "c89203f195e16b7ec0c8dd344ef1bd3bfd35d16804eb8f17cb6524d1a822c27d"
+  },
+  "residual_limits": [
+    "GPU elapsed semantic/physical validity unresolved.",
+    "Paired residual does not identify blocked/runnable or fence time.",
+    "Perf denominator is executing CPU samples across collected threads; not GPU utilization.",
+    "Live runs sequential with variable clocks/trajectories; no zero-overhead or 60FPS claim.",
+    "Query-active image equivalence remains untested.",
+    "Mali counter-interface and Streamline/gatord compatibility are future research, not executed tools."
+  ]
+}

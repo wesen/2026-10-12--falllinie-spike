@@ -72,6 +72,47 @@ inline std::vector<IndexChunk> index_chunks(const std::vector<VertexT>& vertices
  }
  return chunks;
 }
+// PERF-010 row-decimated terrain level of detail (pixel-changing; owner decision).
+// A terrain cell is rows x columns vertices; strip k joins rows k and k+1 with quads
+// {A,C,B,B,C,D}, A=k*columns+i. Level L of a chunk keeps every column and every
+// 2^L-th row between the chunk's boundary rows, which stay shared with neighbours.
+inline constexpr int terrain_lod_levels=5;
+struct TerrainLod {std::vector<uint32_t> extra;std::vector<std::array<std::array<uint32_t,2>,terrain_lod_levels>> ranges;};
+inline bool build_terrain_lod(const std::vector<uint32_t>& base,size_t vertices,uint32_t columns,uint32_t strips_per_chunk,TerrainLod& out){
+ out={};if(columns<2||strips_per_chunk==0)return false;
+ const size_t per_strip=size_t(columns-1)*6;if(base.empty()||base.size()%per_strip)return false;
+ const uint32_t strips=uint32_t(base.size()/per_strip);if(vertices!=size_t(strips+1)*columns)return false;
+ for(uint32_t k=0;k<strips;++k)for(uint32_t i=0;i+1<columns;++i){
+  const uint32_t a=k*columns+i,b=a+1,c=a+columns,d=c+1;const size_t at=k*per_strip+size_t(i)*6;
+  if(base[at]!=a||base[at+1]!=c||base[at+2]!=b||base[at+3]!=b||base[at+4]!=c||base[at+5]!=d)return false;
+ }
+ for(uint32_t s0=0;s0<strips;s0+=strips_per_chunk){
+  const uint32_t n=std::min(strips_per_chunk,strips-s0);std::array<std::array<uint32_t,2>,terrain_lod_levels> r{};
+  r[0]={uint32_t(s0*per_strip),uint32_t(n*per_strip)};
+  out.ranges.push_back(r);
+ }
+ const uint32_t base_size=uint32_t(base.size());
+ for(int level=1;level<terrain_lod_levels;++level){
+  const uint32_t stride=1u<<level;size_t chunk=0;
+  for(uint32_t s0=0;s0<strips;s0+=strips_per_chunk,++chunk){
+   const uint32_t n=std::min(strips_per_chunk,strips-s0);if(n%stride)continue;
+   const uint32_t first=base_size+uint32_t(out.extra.size());
+   for(uint32_t row=s0;row<s0+n;row+=stride)for(uint32_t i=0;i+1<columns;++i){
+    const uint32_t a=row*columns+i,b=a+1,c=a+stride*columns,d=c+1;out.extra.insert(out.extra.end(),{a,c,b,b,c,d});
+   }
+   out.ranges[chunk][size_t(level)]={first,base_size+uint32_t(out.extra.size())-first};
+  }
+ }
+ return true;
+}
+// Highest supported level for a chunk at this distance; level 0 below near_m.
+template<class Ranges>
+inline int terrain_lod_level(double distance,double near_m,const Ranges& ranges){
+ if(!(near_m>0)||!(distance>=near_m))return 0;
+ int level=std::min(terrain_lod_levels-1,int(std::floor(std::log2(distance/near_m)))+1);
+ while(level>0&&ranges[size_t(level)][1]==0)--level;
+ return level;
+}
 // PERF-009: explicit adaptation for meshes proven to lie entirely beyond full fog.
 // For dist>=uFog.y the original tail yields (1,0,uMat/255,0) independent of the body.
 inline std::string adapt_fog_constant_shader(std::string source){

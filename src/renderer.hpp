@@ -33,6 +33,7 @@ public:
  void set_view_culling(bool enabled){view_culling_=enabled;}
  void set_short_indices(bool enabled){short_indices_=enabled;}
  void set_output_clear(bool enabled){output_clear_=enabled;}
+ void set_terrain_lod(double near_m){terrain_lod_near_=near_m;}
  std::string draw_stats_json()const;
  size_t vertex_count()const{return vertices_;}
  size_t index_count()const{return indices_;}
@@ -52,7 +53,7 @@ private:
  void upload_shadow_segments(const float* segments);
  bool draw_ranges_=false,benchmark_replay_=false,fog_constant_=false,view_culling_=false,short_indices_=false,output_clear_=false;
  void draw_indexed(GLsizei count,size_t vertices,const void* offset=nullptr,GLenum type=GL_UNSIGNED_INT);
- struct DrawStats{uint64_t views=0,chunks_drawn=0,chunks_culled=0,chunks_fog_constant=0,terrain_drawn=0,terrain_culled=0,terrain_fog_constant=0,object_drawn=0,object_culled=0,object_fog_constant=0,short_index_draws=0,triangles_submitted=0,triangles_culled=0;};
+ struct DrawStats{uint64_t views=0,lod_triangles[terrain_lod_levels]={},chunks_drawn=0,chunks_culled=0,chunks_fog_constant=0,terrain_drawn=0,terrain_culled=0,terrain_fog_constant=0,object_drawn=0,object_culled=0,object_fog_constant=0,short_index_draws=0,triangles_submitted=0,triangles_culled=0;};
  DrawStats draw_stats_;
  Profiler* profiler_=nullptr;uint64_t profile_frame_=0;int profile_view_=0;bool post_bypass_=false;
  GLuint hud_program_=0,hud_font_=0,hud_vao_=0,hud_vbo_=0;
@@ -65,7 +66,7 @@ private:
  std::string hud_line_,hud_status_,hud_combo_,hud_meter_,hud_banner_,hud_controls_,hud_grade_,hud_points_;
  std::vector<std::string> hud_trick_lines_;
  double hud_meter_fraction_=0,hud_combo_fraction_=0;
- struct CellMesh{GLuint vao=0,vbo=0,ibo=0;GLsizei indices=0;size_t vertices=0;GLenum index_type=GL_UNSIGNED_INT;Aabb bounds{};std::vector<IndexChunk> chunks;};
+ struct CellMesh{GLuint vao=0,vbo=0,ibo=0;GLsizei indices=0;size_t vertices=0;GLenum index_type=GL_UNSIGNED_INT;Aabb bounds{};std::vector<IndexChunk> chunks;std::vector<std::array<std::array<uint32_t,2>,terrain_lod_levels>> lod;};
  std::map<int,CellMesh> cell_meshes_,object_meshes_;
  CellMesh particle_mesh_,trail_mesh_;
  Particles particles_;
@@ -75,7 +76,9 @@ private:
  double inversion_=0,flash_=0,speed_effect_=0;
  Rng camera_rng_{0x821371u};
  std::unique_ptr<TerrainJob> terrain_job_;
- CellMesh upload_cell(const CpuMesh& mesh,bool allow_short=true);
+ CellMesh upload_cell(const CpuMesh& mesh,bool allow_short=true,bool terrain=false);
+ CellMesh upload_terrain(const CpuMesh& mesh){return upload_cell(mesh,true,true);}
+ double terrain_lod_near_=0;
  void delete_cell(CellMesh& cell);
  void update_dynamic(CellMesh& cell,const CpuMesh& mesh);
  GLuint scene_=0,post_=0,copy_=0,vao_=0,vbo_=0,ibo_=0,fullscreen_vao_=0;

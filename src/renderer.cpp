@@ -114,7 +114,7 @@ void main(){vUV=aUV;gl_Position=vec4(aPosition/uOutputRes*2.-1.,0.,1.);})";
  for(auto name:{"uC","uD","uRes"})if(loc(post_,name)<0)throw std::runtime_error(std::string("missing print uniform ")+name);
  patch_first_=first_cell;patch_count_=count;world_generation_=1;
  Terrain terrain(seed);World world(terrain,seed);CpuMesh mesh;const auto started=std::chrono::steady_clock::now();
- for(int cell=first_cell;cell<first_cell+count;++cell){auto part=build_terrain(terrain,cell);vertices_+=part.vertices.size();indices_+=part.indices.size();if(play_mode){cell_meshes_.emplace(cell,upload_cell(part));object_meshes_.emplace(cell,upload_cell(world.objects(cell)));}else{uint32_t offset=uint32_t(mesh.vertices.size());mesh.vertices.insert(mesh.vertices.end(),part.vertices.begin(),part.vertices.end());for(uint32_t i:part.indices)mesh.indices.push_back(offset+i);}}
+ for(int cell=first_cell;cell<first_cell+count;++cell){auto part=build_terrain(terrain,cell);vertices_+=part.vertices.size();indices_+=part.indices.size();if(play_mode){cell_meshes_.emplace(cell,upload_terrain(part));object_meshes_.emplace(cell,upload_cell(world.objects(cell)));}else{uint32_t offset=uint32_t(mesh.vertices.size());mesh.vertices.insert(mesh.vertices.end(),part.vertices.begin(),part.vertices.end());for(uint32_t i:part.indices)mesh.indices.push_back(offset+i);}}
  build_ms_=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-started).count();
  const int sizes[]={3,3,1,2,2},offsets[]={0,12,24,28,36};
  if(!play_mode){auto static_mesh=upload_cell(mesh,false);vao_=static_mesh.vao;vbo_=static_mesh.vbo;ibo_=static_mesh.ibo;}
@@ -155,7 +155,8 @@ void Renderer::draw_indexed(GLsizei count,size_t vertices,const void* offset,GLe
 }
 std::string Renderer::draw_stats_json()const{
  const auto& d=draw_stats_;
- return "{\"views\":"+std::to_string(d.views)+",\"chunks_drawn\":"+std::to_string(d.chunks_drawn)+",\"chunks_culled\":"+std::to_string(d.chunks_culled)+",\"chunks_fog_constant\":"+std::to_string(d.chunks_fog_constant)+",\"terrain_drawn\":"+std::to_string(d.terrain_drawn)+",\"terrain_culled\":"+std::to_string(d.terrain_culled)+",\"terrain_fog_constant\":"+std::to_string(d.terrain_fog_constant)+",\"object_drawn\":"+std::to_string(d.object_drawn)+",\"object_culled\":"+std::to_string(d.object_culled)+",\"object_fog_constant\":"+std::to_string(d.object_fog_constant)+",\"short_index_draws\":"+std::to_string(d.short_index_draws)+",\"triangles_submitted\":"+std::to_string(d.triangles_submitted)+",\"triangles_culled\":"+std::to_string(d.triangles_culled)+"}";
+ std::string lod="[";for(int i=0;i<terrain_lod_levels;++i){if(i)lod+=",";lod+=std::to_string(d.lod_triangles[i]);}lod+="]";
+ return "{\"views\":"+std::to_string(d.views)+",\"terrain_lod_near_m\":"+std::to_string(terrain_lod_near_)+",\"lod_triangles\":"+lod+",\"chunks_drawn\":"+std::to_string(d.chunks_drawn)+",\"chunks_culled\":"+std::to_string(d.chunks_culled)+",\"chunks_fog_constant\":"+std::to_string(d.chunks_fog_constant)+",\"terrain_drawn\":"+std::to_string(d.terrain_drawn)+",\"terrain_culled\":"+std::to_string(d.terrain_culled)+",\"terrain_fog_constant\":"+std::to_string(d.terrain_fog_constant)+",\"object_drawn\":"+std::to_string(d.object_drawn)+",\"object_culled\":"+std::to_string(d.object_culled)+",\"object_fog_constant\":"+std::to_string(d.object_fog_constant)+",\"short_index_draws\":"+std::to_string(d.short_index_draws)+",\"triangles_submitted\":"+std::to_string(d.triangles_submitted)+",\"triangles_culled\":"+std::to_string(d.triangles_culled)+"}";
 }
 void Renderer::upload_shadow_segments(const float* segments){
  glUniform4fv(loc(scene_,"uSeg"),6,segments);
@@ -196,15 +197,19 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
    draw_stats_.triangles_submitted+=uint64_t(mesh.indices/3);draw_indexed(mesh.indices,mesh.vertices,nullptr,mesh.index_type);return;
   }
   // Merge consecutive surviving chunks with the same fog state into one draw; order is preserved.
-  const size_t index_size=mesh.index_type==GL_UNSIGNED_SHORT?2:4;uint32_t run_first=0,run_count=0;int run_fog=0;
+  const size_t index_size=mesh.index_type==GL_UNSIGNED_SHORT?2:4;uint32_t run_first=0,run_count=0;int run_fog=0;size_t chunk_index=0;
   auto flush=[&]{if(!run_count)return;set_fog(run_fog);draw_stats_.triangles_submitted+=run_count/3;draw_indexed(GLsizei(run_count),mesh.vertices,reinterpret_cast<const void*>(uintptr_t(run_first)*index_size),mesh.index_type);run_count=0;};
   for(const auto& chunk:mesh.chunks){
+   const size_t c=chunk_index++;
    if(view_culling_&&clip_rejects(chunk.bounds,frame.vp,frame.origin)){flush();++draw_stats_.chunks_culled;draw_stats_.triangles_culled+=chunk.count/3;continue;}
    const int wanted=fog_constant_at>=0&&fully_fogged(chunk.bounds,shading_eye,scene_fog_far)?1:0;
+   // PERF-010: pick the decimated range for this chunk's distance (level 0 = original).
+   uint32_t first=chunk.first,count=chunk.count;
+   if(!mesh.lod.empty()){const int level=terrain_lod_level(box_distance(chunk.bounds,shading_eye),terrain_lod_near_,mesh.lod[c]);first=mesh.lod[c][size_t(level)][0];count=mesh.lod[c][size_t(level)][1];draw_stats_.lod_triangles[level]+=count/3;}
    ++draw_stats_.chunks_drawn;if(wanted)++draw_stats_.chunks_fog_constant;
-   if(run_count&&(wanted!=run_fog||run_first+run_count!=chunk.first))flush();
-   if(!run_count){run_first=chunk.first;run_fog=wanted;}
-   run_count+=chunk.count;
+   if(run_count&&(wanted!=run_fog||run_first+run_count!=first))flush();
+   if(!run_count){run_first=first;run_fog=wanted;}
+   run_count+=count;
   }
   flush();
  };
@@ -310,16 +315,21 @@ void Renderer::capture(const std::string& path){
  integer(copy_,"uMode",5);glUniform2f(loc(copy_,"uOutputRes"),width_,height_);glBindVertexArray(fullscreen_vao_);glDrawArrays(GL_TRIANGLES,0,3);gl_check("depth diagnostic");
  save(print_fbo_,parent+"/depth.bmp");
 }
-Renderer::CellMesh Renderer::upload_cell(const CpuMesh& mesh,bool allow_short){
+Renderer::CellMesh Renderer::upload_cell(const CpuMesh& mesh,bool allow_short,bool terrain){
  CellMesh cell;cell.indices=GLsizei(mesh.indices.size());cell.vertices=mesh.vertices.size();for(const auto& v:mesh.vertices)cell.bounds.add(v.px,v.py,v.pz);
  glGenVertexArrays(1,&cell.vao);glBindVertexArray(cell.vao);glGenBuffers(1,&cell.vbo);glBindBuffer(GL_ARRAY_BUFFER,cell.vbo);glBufferData(GL_ARRAY_BUFFER,mesh.vertices.size()*sizeof(Vertex),mesh.vertices.data(),GL_STATIC_DRAW);glGenBuffers(1,&cell.ibo);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,cell.ibo);
- if(allow_short&&short_indices_&&fits_short_indices(mesh.vertices.size(),mesh.indices)){
+ // PERF-010: decimated terrain ranges follow the original indices in the same buffer.
+ TerrainLod lod;const bool with_lod=terrain&&allow_short&&terrain_lod_near_>0&&build_terrain_lod(mesh.indices,mesh.vertices.size(),107,16,lod);
+ std::vector<uint32_t> combined;const std::vector<uint32_t>* uploaded=&mesh.indices;
+ if(with_lod){combined=mesh.indices;combined.insert(combined.end(),lod.extra.begin(),lod.extra.end());uploaded=&combined;cell.lod=lod.ranges;}
+ if(allow_short&&short_indices_&&fits_short_indices(mesh.vertices.size(),*uploaded)){
   // Same index values and order; only the storage width changes.
-  std::vector<uint16_t> narrow(mesh.indices.begin(),mesh.indices.end());cell.index_type=GL_UNSIGNED_SHORT;
+  std::vector<uint16_t> narrow(uploaded->begin(),uploaded->end());cell.index_type=GL_UNSIGNED_SHORT;
   glBufferData(GL_ELEMENT_ARRAY_BUFFER,narrow.size()*sizeof(uint16_t),narrow.data(),GL_STATIC_DRAW);
- }else glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh.indices.size()*sizeof(uint32_t),mesh.indices.data(),GL_STATIC_DRAW);
+ }else glBufferData(GL_ELEMENT_ARRAY_BUFFER,uploaded->size()*sizeof(uint32_t),uploaded->data(),GL_STATIC_DRAW);
  // Sixteen terrain row strips (636 indices each, about 12.8 m) per chunk; static meshes only.
- if(allow_short&&(view_culling_||fog_constant_))cell.chunks=index_chunks(mesh.vertices,mesh.indices,636*16);
+ if(allow_short&&(view_culling_||fog_constant_||with_lod))cell.chunks=index_chunks(mesh.vertices,mesh.indices,636*16);
+ if(with_lod&&cell.chunks.size()!=cell.lod.size())throw std::runtime_error("terrain LOD chunk layout mismatch");
  const int sizes[]={3,3,1,2,2},offsets[]={0,12,24,28,36};for(int i=0;i<5;++i){glEnableVertexAttribArray(i);glVertexAttribPointer(i,sizes[i],GL_FLOAT,GL_FALSE,sizeof(Vertex),reinterpret_cast<void*>(intptr_t(offsets[i])));}return cell;
 }
 void Renderer::update_dynamic(CellMesh& cell,const CpuMesh& mesh){

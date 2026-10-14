@@ -54,13 +54,13 @@ void Renderer::update_player(Game& game,double dt){
   terrain_job_.reset();for(auto& entry:cell_meshes_)delete_cell(entry.second);cell_meshes_.clear();for(auto& entry:object_meshes_)delete_cell(entry.second);object_meshes_.clear();world_generation_=game.generation();following_=false;
   // Source ensureCell primes the two essential cells on a new course. Only
   // this explicit restart boundary is synchronous; lookahead stays cooperative.
-  for(int essential:{cell,cell+1}){cell_meshes_.emplace(essential,upload_cell(build_terrain(game.terrain,essential)));object_meshes_.emplace(essential,upload_cell(game.world.objects(essential)));}
+  for(int essential:{cell,cell+1}){cell_meshes_.emplace(essential,upload_terrain(build_terrain(game.terrain,essential)));object_meshes_.emplace(essential,upload_cell(game.world.objects(essential)));}
   streamed=true;
  }
  patch_first_=cell-1;patch_count_=7;
  if(terrain_job_&&(terrain_job_->cell()<cell-1||terrain_job_->cell()>cell+5))terrain_job_.reset();
  if(!terrain_job_)for(int wanted:{cell,cell+1,cell-1,cell+2,cell+3,cell+4,cell+5})if(!cell_meshes_.count(wanted)){terrain_job_=std::make_unique<TerrainJob>(game.terrain,wanted);break;}
- if(terrain_job_){streamed=true;if(terrain_job_->step(3.5,benchmark_replay_?32:0)){int ready=terrain_job_->cell();auto mesh=terrain_job_->take();cell_meshes_.emplace(ready,upload_cell(mesh));terrain_job_.reset();}}
+ if(terrain_job_){streamed=true;if(terrain_job_->step(3.5,benchmark_replay_?32:0)){int ready=terrain_job_->cell();auto mesh=terrain_job_->take();cell_meshes_.emplace(ready,upload_terrain(mesh));terrain_job_.reset();}}
  // One bounded original buildObjects cell per frame, separate from row job.
  for(int wanted=cell-1;wanted<=cell+5;++wanted)if(cell_meshes_.count(wanted)&&!object_meshes_.count(wanted)){object_meshes_.emplace(wanted,upload_cell(game.world.objects(wanted)));streamed=true;break;}
  auto retire=[&](auto& cells){for(auto it=cells.begin();it!=cells.end();){if(it->first<cell-1||it->first>cell+7){delete_cell(it->second);it=cells.erase(it);streamed=true;}else ++it;}};retire(cell_meshes_);retire(object_meshes_);

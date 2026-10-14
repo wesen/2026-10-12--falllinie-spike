@@ -1,6 +1,7 @@
 // PERF-009 conservativeness checks for per-view culling, fog-constant shading
 // and 16-bit index eligibility. Float evaluation mirrors the GPU expressions.
 #include "geometry_bounds.hpp"
+#include "terrain.hpp"
 #include <cassert>
 #include <fstream>
 #include <iostream>
@@ -75,6 +76,29 @@ int main(int argc,char** argv){
   for(const auto& c:chunks){assert(c.first==next&&c.count%3==0&&c.count>0);next+=c.count;
    for(uint32_t k=c.first;k<c.first+c.count;++k){const auto& v=verts[tri[k]];assert(v.px>=c.bounds.min[0]&&v.px<=c.bounds.max[0]&&v.py>=c.bounds.min[1]&&v.py<=c.bounds.max[1]&&v.pz>=c.bounds.min[2]&&v.pz<=c.bounds.max[2]);}}
   assert(next==tri.size()&&chunks.size()==3);}
+ // 3c. Terrain LOD: a real cell validates; every level keeps the chunk's boundary rows
+ //     and all columns, emits the expected quads, and level 0 is the original range.
+ {fl::Terrain terrain(42);const auto mesh=fl::build_terrain(terrain,3);fl::TerrainLod lod;
+  assert(fl::build_terrain_lod(mesh.indices,mesh.vertices.size(),107,16,lod));
+  const auto chunks=fl::index_chunks(mesh.vertices,mesh.indices,636*16);assert(chunks.size()==lod.ranges.size());
+  std::vector<uint32_t> all=mesh.indices;all.insert(all.end(),lod.extra.begin(),lod.extra.end());
+  size_t levels_seen=0;
+  for(size_t c=0;c<chunks.size();++c){
+   assert(lod.ranges[c][0][0]==chunks[c].first&&lod.ranges[c][0][1]==chunks[c].count);
+   const uint32_t strips=chunks[c].count/636,row0=chunks[c].first/636;
+   for(int level=1;level<fl::terrain_lod_levels;++level){
+    const auto r=lod.ranges[c][size_t(level)];const uint32_t stride=1u<<level;
+    if(strips%stride){assert(r[1]==0);continue;}
+    ++levels_seen;assert(r[1]==(strips/stride)*106*6);
+    std::vector<bool> rows(140,false);
+    for(uint32_t k=r[0];k<r[0]+r[1];++k){const uint32_t row=all[k]/107;assert(row>=row0&&row<=row0+strips&&(row-row0)%stride==0);rows[row]=true;}
+    assert(rows[row0]&&rows[row0+strips]);
+   }
+   assert(fl::terrain_lod_level(1.0,60,lod.ranges[c])==0);
+   const int far=fl::terrain_lod_level(1e6,60,lod.ranges[c]);assert(far>=1&&lod.ranges[c][size_t(far)][1]>0);
+  }
+  assert(levels_seen>=8*4);
+  fl::CpuMesh broken=mesh;std::swap(broken.indices[0],broken.indices[1]);fl::TerrainLod none;assert(!fl::build_terrain_lod(broken.indices,broken.vertices.size(),107,16,none));}
  // 4. The adaptation is anchored on the original fog tail and leaves the body intact.
  assert(argc==2);std::ifstream in(argv[1]);assert(in.good());std::string source{std::istreambuf_iterator<char>(in),{}};
  const auto adapted=fl::adapt_fog_constant_shader(source);

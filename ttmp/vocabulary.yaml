@@ -3,6 +3,10 @@ topics:
       description: Native audio synthesis, transport and device lifecycle
     - slug: performance
       description: Measured timing and workload qualification
+    - slug: graphics
+      description: Rendering pipeline, shaders and GPU behaviour
+    - slug: handheld
+      description: RG DS Plus device integration and on-device qualification
 docTypes: []
 intent: []
 status: []

@@ -11,7 +11,8 @@ export SWAYSOCK=/run/0-runtime-dir/sway-ipc.0.sock
 app=
 cleanup(){ if [ -n "$app" ] && kill -0 "$app" 2>/dev/null; then kill -TERM "$app"; wait "$app" || true; fi; }
 trap cleanup EXIT INT TERM
-"$ROOT/falllinie-pmu" --assets /storage/apps/falllinie-spike/assets/shaders --seconds 32 --no-vsync --fps 60 --seed 42 --cells 3 --render-size 384x288 --dual-screen --place --autoplay --no-audio --dev-overlay --profile "$OUT/frames.csv" --paired-clocks --profile-cadence 60 --receipt "$OUT/receipt.json" > "$OUT/game.log" 2>&1 &
+case "${DRAW_RANGES:-0}" in 0) range_arg=;; 1) range_arg=--draw-ranges;; *) exit 2;; esac
+"${GAME_BIN:-$ROOT/falllinie-pmu}" $range_arg --assets /storage/apps/falllinie-spike/assets/shaders --seconds 32 --no-vsync --fps 60 --seed 42 --cells 3 --render-size 384x288 --dual-screen --place --autoplay --no-audio --dev-overlay --profile "$OUT/frames.csv" --paired-clocks --profile-cadence 60 --receipt "$OUT/receipt.json" > "$OUT/game.log" 2>&1 &
 app=$!
 echo "$app" > "$OUT/main-tid.txt"
 sleep 6

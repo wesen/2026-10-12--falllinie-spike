@@ -1,0 +1,28 @@
+
+Elf file type is DYN (Shared object file)
+Entry point 0x298100
+There are 9 program headers, starting at offset 64
+
+Program Headers:
+  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align
+  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x375e884 0x375e884 R E 0x10000
+  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x10
+  NOTE           0x000200 0x0000000000000200 0x0000000000000200 0x000024 0x000024 R   0x4
+  GNU_EH_FRAME   0x31fa2a8 0x00000000031fa2a8 0x00000000031fa2a8 0x0ae224 0x0ae224 R   0x4
+  LOAD           0x375edf0 0x000000000376edf0 0x000000000376edf0 0x183140 0x1ee570 RW  0x10000
+  TLS            0x375edf0 0x000000000376edf0 0x000000000376edf0 0x000000 0x000058 R   0x8
+  GNU_RELRO      0x375edf0 0x000000000376edf0 0x000000000376edf0 0x110210 0x110210 R   0x1
+  DYNAMIC        0x386ce30 0x000000000387ce30 0x000000000387ce30 0x000290 0x000290 RW  0x8
+  LOAD           0x38e3000 0x000000000395e000 0x000000000395e000 0x032118 0x032118 RW  0x1000
+
+ Section to Segment mapping:
+  Segment Sections...
+   00     .gnu.hash .dynsym .gnu.version .gnu.version_d .gnu.version_r .rela.dyn .rela.plt .init .plt .text .fini .rodata .eh_frame_hdr .eh_frame .gcc_except_table 
+   01     
+   02     
+   03     .eh_frame_hdr 
+   04     .init_array .fini_array .data.rel.ro .dynamic .got .got.plt .data .bss 
+   05     .tbss 
+   06     .init_array .fini_array .data.rel.ro .dynamic .got 
+   07     .dynamic 
+   08     .dynstr .hash .note.gnu.build-id 

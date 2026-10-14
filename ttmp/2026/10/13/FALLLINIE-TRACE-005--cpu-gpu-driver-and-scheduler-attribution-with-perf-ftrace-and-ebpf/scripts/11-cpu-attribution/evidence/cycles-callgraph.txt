@@ -1,0 +1,48 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 2K of event 'armv8_cortex_a55/cpu_cycles/'
+# Event count (approx.): 13957987175
+#
+# Overhead  Symbol                                                                                                                                                                                                                                                                                                IPC   [IPC Coverage]
+# ........  ....................................................................................................................................................................................................................................................................................................  ....................
+#
+    16.84%  [.] 0x000000000042d6dc                                                                                                                                                                                                                                                                                -      -            
+            |
+            ---main
+               |          
+               |--12.45%--0x7f961503ef
+               |          0x7f9616d6dc
+               |          
+                --4.39%--fl::Renderer::render_first_person(int, int, int)
+                          0x7f961503ef
+                          0x7f9616d6dc
+
+     2.58%  [.] fl::RiderGeometry::update(fl::RiderRig const&, fl::RiderMesh&) const::{lambda(fl::CpuMesh const&, fl::Vec3, fl::Vec3, fl::Vec3, fl::Vec3, double, int)#1}::operator()(fl::CpuMesh const&, fl::Vec3, fl::Vec3, fl::Vec3, fl::Vec3, double, int) const                                              -      -            
+            |
+            ---main
+               fl::Renderer::update_player(fl::Game&, double)
+               fl::RiderGeometry::update(fl::RiderRig const&, fl::RiderMesh&) const
+               |          
+                --2.29%--fl::RiderGeometry::update(fl::RiderRig const&, fl::RiderMesh&) const::{lambda(fl::CpuMesh const&, fl::Vec3, fl::Vec3, fl::Vec3, fl::Vec3, double, int)#1}::operator()(fl::CpuMesh const&, fl::Vec3, fl::Vec3, fl::Vec3, fl::Vec3, double, int) const
+
+     1.64%  [.] pthread_mutex_lock                                                                                                                                                                                                                                                                                -      -            
+            |          
+             --1.23%--main
+
+     1.20%  [.] fl::MeshBuilder::vertex(fl::Vec3, fl::Vec3, double, double, double, double, double)                                                                                                                                                                                                               -      -            
+            |
+            ---main
+
+     1.14%  [.] fl::Renderer::render(int, int, int, int)                                                                                                                                                                                                                                                          -      -            
+            |
+            ---main
+
+     1.12%  [.] pthread_mutex_unlock                                                                                                                                                                                                                                                                              -      -            
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

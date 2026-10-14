@@ -1,0 +1,71 @@
+
+ttmp/2026/10/13/FALLLINIE-TRACE-005--cpu-gpu-driver-and-scheduler-attribution-with-perf-ftrace-and-ebpf/scripts/11-cpu-attribution/.work/libmali.so:     file format elf64-littleaarch64
+
+
+Disassembly of section .text:
+
+0000000000410350 <glViewport@@Base+0x69e90>:
+  410350:	2a0003e1 	mov	w1, w0
+  410354:	52800007 	mov	w7, #0x0                   	// #0
+  410358:	52800014 	mov	w20, #0x0                   	// #0
+  41035c:	8b030a63 	add	x3, x19, x3, lsl #2
+  410360:	52800006 	mov	w6, #0x0                   	// #0
+  410364:	b9005be0 	str	w0, [sp, #88]
+  410368:	b8404660 	ldr	w0, [x19], #4
+  41036c:	0b0000a2 	add	w2, w5, w0
+  410370:	3100041f 	cmn	w0, #0x1
+  410374:	54000120 	b.eq	410398 <glViewport@@Base+0x69ed8>  // b.none
+  410378:	6b01005f 	cmp	w2, w1
+  41037c:	54000062 	b.cs	410388 <glViewport@@Base+0x69ec8>  // b.hs, b.nlast
+  410380:	2a0203e1 	mov	w1, w2
+  410384:	52800026 	mov	w6, #0x1                   	// #1
+  410388:	6b14005f 	cmp	w2, w20
+  41038c:	54000069 	b.ls	410398 <glViewport@@Base+0x69ed8>  // b.plast
+  410390:	2a0203f4 	mov	w20, w2
+  410394:	52800027 	mov	w7, #0x1                   	// #1
+  410398:	eb03027f 	cmp	x19, x3
+  41039c:	54fffe61 	b.ne	410368 <glViewport@@Base+0x69ea8>  // b.any
+  4103a0:	34001866 	cbz	w6, 4106ac <glViewport@@Base+0x6a1ec>
+  4103a4:	b9005be1 	str	w1, [sp, #88]
+  4103a8:	34ffe727 	cbz	w7, 41008c <glViewport@@Base+0x69bcc>
+  4103ac:	b9405be1 	ldr	w1, [sp, #88]
+  4103b0:	a9415bf5 	ldp	x21, x22, [sp, #16]
+  4103b4:	17fffec1 	b	40feb8 <glViewport@@Base+0x699f8>
+  4103b8:	34000043 	cbz	w3, 4103c0 <glViewport@@Base+0x69f00>
+  4103bc:	b9005be0 	str	w0, [sp, #88]
+  4103c0:	34000046 	cbz	w6, 4103c8 <glViewport@@Base+0x69f08>
+  4103c4:	b9005fe2 	str	w2, [sp, #92]
+  4103c8:	721e76d8 	ands	w24, w22, #0xfffffffc
+  4103cc:	54001140 	b.eq	4105f4 <glViewport@@Base+0x6a134>  // b.none
+  4103d0:	aa1503e0 	mov	x0, x21
+  4103d4:	910163e2 	add	x2, sp, #0x58
+  4103d8:	910173e3 	add	x3, sp, #0x5c
+  4103dc:	2a1803e1 	mov	w1, w24
+  4103e0:	f90023e4 	str	x4, [sp, #64]
+  4103e4:	4b1802d6 	sub	w22, w22, w24
+  4103e8:	b9004fe5 	str	w5, [sp, #76]
+  4103ec:	940074b6 	bl	42d6c4 <glViewport@@Base+0x87204>
+  4103f0:	2a1803e0 	mov	w0, w24
+  4103f4:	b9404fe5 	ldr	w5, [sp, #76]
+  4103f8:	294b0be8 	ldp	w8, w2, [sp, #88]
+  4103fc:	8b000ab5 	add	x21, x21, x0, lsl #2
+  410400:	510006c0 	sub	w0, w22, #0x1
+  410404:	f94023e4 	ldr	x4, [sp, #64]
+  410408:	34001636 	cbz	w22, 4106cc <glViewport@@Base+0x6a20c>
+  41040c:	d37e7c03 	ubfiz	x3, x0, #2, #32
+  410410:	2a0803e0 	mov	w0, w8
+  410414:	91001063 	add	x3, x3, #0x4
+  410418:	52800007 	mov	w7, #0x0                   	// #0
+  41041c:	8b0302a3 	add	x3, x21, x3
+  410420:	52800006 	mov	w6, #0x0                   	// #0
+  410424:	d503201f 	nop
+  410428:	b84046a1 	ldr	w1, [x21], #4
+  41042c:	6b01001f 	cmp	w0, w1
+  410430:	54000069 	b.ls	41043c <glViewport@@Base+0x69f7c>  // b.plast
+  410434:	2a0103e0 	mov	w0, w1
+  410438:	52800026 	mov	w6, #0x1                   	// #1
+  41043c:	6b02003f 	cmp	w1, w2
+  410440:	54000069 	b.ls	41044c <glViewport@@Base+0x69f8c>  // b.plast
+  410444:	2a0103e2 	mov	w2, w1
+  410448:	52800027 	mov	w7, #0x1                   	// #1
+  41044c:	eb15007f 	cmp	x3, x21

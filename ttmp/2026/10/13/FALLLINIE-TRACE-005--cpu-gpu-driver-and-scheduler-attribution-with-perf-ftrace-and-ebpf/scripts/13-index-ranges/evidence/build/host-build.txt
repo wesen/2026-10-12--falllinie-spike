@@ -1,0 +1,26 @@
+[  4%] Built target terrain
+[ 12%] Built target test-audio-worker
+[ 12%] Built target test-audio-pcm
+[ 14%] Building CXX object CMakeFiles/test-profiler.dir/src/profiler.cpp.o
+[ 16%] Building CXX object CMakeFiles/test-paired-clocks.dir/src/profiler.cpp.o
+[ 20%] Built target test-terrain
+[ 37%] Built target source-systems
+[ 41%] Built target test-gameplay_world
+[ 45%] Built target test-gameplay
+[ 50%] Built target test-gameplay_pose
+[ 54%] Built target test-integration
+[ 62%] Built target test-developer_overlay
+[ 62%] Built target test-developer_controls
+[ 70%] Built target test-audio
+[ 70%] Built target test-audio-diagnostics
+[ 75%] Built target test-audio-lifecycle
+[ 79%] Building CXX object CMakeFiles/falllinie-spike.dir/src/main.cpp.o
+[ 79%] Building CXX object CMakeFiles/falllinie-spike.dir/src/renderer.cpp.o
+[ 81%] Linking CXX executable test-paired-clocks
+[ 85%] Built target test-paired-clocks
+[ 87%] Building CXX object CMakeFiles/falllinie-spike.dir/src/game_renderer.cpp.o
+[ 89%] Linking CXX executable test-profiler
+[ 93%] Built target test-profiler
+[ 95%] Building CXX object CMakeFiles/falllinie-spike.dir/src/profiler.cpp.o
+[ 97%] Linking CXX executable falllinie-spike
+[100%] Built target falllinie-spike

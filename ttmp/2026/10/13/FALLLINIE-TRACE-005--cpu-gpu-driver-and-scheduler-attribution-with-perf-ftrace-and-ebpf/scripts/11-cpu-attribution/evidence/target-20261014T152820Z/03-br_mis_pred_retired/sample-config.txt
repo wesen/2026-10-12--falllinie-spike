@@ -1,0 +1,3 @@
+event=armv8_cortex_a55/br_mis_pred_retired/
+frequency=199
+main_tid=840631

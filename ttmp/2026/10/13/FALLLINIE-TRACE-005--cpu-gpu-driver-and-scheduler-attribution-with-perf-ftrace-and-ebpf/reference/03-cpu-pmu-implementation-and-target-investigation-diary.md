@@ -190,3 +190,45 @@ Inspect the new campaign helper and existing runner diff; all private binaries s
 
 ### Technical details
 Five32s games,20s main-thread199Hz requested-event profiles after6s warmup; no-audio, dual384x288, seed42 and unchanged323b095runtime. Requested events are named Cortex-A55 PMU aliases already counted successfully.
+
+## Step 5: Complete attribution and implement an opt-in indexed-range experiment
+
+All five targeted profiles completed, totaling9895samples with zero reported loss. Driver cycle weight remained72.09%/71.20% in opening/closing cycles cases; the0x42d6dc hotspot remained16.84%/15.56%. Driver attribution was58.52%forL1Drefill,70.51%forretiredbranchmisprediction and72.10%forL1DTLBrefill. The cycle hotspot was not displayed at the0.5%symbol cutoff in those other event reports; this does not mean its actual event weight is zero.
+
+Verified the executable mapping base0x7f95d40000 and ELF executable LOAD offset/VA0. The sampled runtimePC maps to0x42d6dc. Its partial frame-pointer caller maps to0x4103ef; the preceding BL at0x4103ec calls0x42d6c4, the min/max helper entry. This establishes the immediate call relation, not a fully symbolized GL call path. Prepared an opt-in range-draw candidate to test whether supplying known vertex bounds avoids scanning, without altering shader formulas or index data.
+
+### Prompt Context
+**User prompt:** SeeStep4; intervening tooling-summary question answered without new measurements.
+**User prompt (verbatim):** "continue"
+**Assistant interpretation:** Finish the concrete indexed-draw experiment and its evidence, preserving source fidelity and detailed checkpoints.
+**Commit (attribution tooling):**d7b3935 — Add targeted CPU event attribution with unchanged no-audio workload.
+
+### What I did
+Added11-cpu-attribution/02-analyze.py to reconcile identities, paired completeness, sample/loss counts and the address mapping. Preserved event reports, processmaps, ELFsegments, callgraph and bounded disassembly. Added --draw-ranges, typed GLES3glDrawRangeElements loading and a renderer draw_indexed wrapper. The wrapper supplies start0/end(vertex_count-1) for nonempty meshes; rider subgroups use the full rider vertex domain, a legal broad bound. Empty draws retain the original API behavior. Default remains ordinary glDrawElements.
+
+### Why
+The instruction sequence reduces unsigned32-bit values, which is consistent with index-range scanning. The renderer's indices are already generated against known vertex arrays. Supplying bounds is a stronger evidence-led experiment than assuming uniform lookup overhead; the driver may still ignore hints or perform validation, so success must be measured.
+
+### What worked
+All attribution case statuses0, GL_error0, no-audio receipts and paired counts valid. Host/ARM candidate builds and15CPUtests passed. No shader, index storage/order, triangle grouping, camera logic or production launcher changed. The same candidate binary will run with flag off/on in ABBAorder.
+
+### What didn't work
+Two exact-text edit attempts were rejected before modifying renderer.cpp: first `Found 2 occurrences of edits[1]`, then `Could not find edits[6]` for an incorrectly assumed resize parameter spelling. Read the actual render block/signature and applied unique replacements. These were editing-tool failures, not compilation or target failures.
+
+### What I learned
+The sampled ADD follows LD4 in a reduction loop; labeling it as expensive pointer arithmetic would be misleading. The nearest exported `glViewport` label is not the helper's name. Event profiles locate different activity distributions and cannot be interpreted as exclusive time fractions.
+
+### What was tricky to build
+Provide legal bounds per boundVAO, not global cumulative counts for streamed cells. Staticcombinedterrain uses its totalvertices; cells/objects/dynamicmeshes use permeshcounts; ridergroups use the containing riderbuffer. Keep null/offset index pointers and GL_UNSIGNED_INT unchanged.
+
+### What warrants a second pair of eyes
+A GL range hint is not a promise the driver bypasses the scan. The full callpath remains partially unsymbolized, and overflow samples have skid. Bounded fixed-image equality will not establish universal visual parity.
+
+### What should be done in the future
+Run the same-device fixed seven-cell capture pair and four32s cycles-profile ABBAcases. Compare scan weight, paired renderingCPU/wall, frame distributions and GL health. Leave candidate opt-in unless evidence supports a later adoption decision.
+
+### Code review instructions
+Inspect renderer::draw_indexed, all six indexed call sites, main.cpp flag/receipt and gl_api.hpp typed entry. Reproduce with13-index-ranges/01-build.sh and02-campaign.sh. Attribution summaries remain separate in11-cpu-attribution/evidence.
+
+### Technical details
+Candidate source checkpoint precedes target qualification. Build uses existing offlineARMtoolchain,O2,debug/framepointers; full target receipts will follow. No renderer work is delegated to another thread and no audio is reenabled.

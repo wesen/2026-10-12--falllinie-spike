@@ -30,6 +30,7 @@ inline decltype(&::glDisable) glDisable_fn = nullptr;
 inline decltype(&::glDrawArrays) glDrawArrays_fn = nullptr;
 inline decltype(&::glDrawBuffers) glDrawBuffers_fn = nullptr;
 inline decltype(&::glDrawElements) glDrawElements_fn = nullptr;
+inline decltype(&::glDrawRangeElements) glDrawRangeElements_fn = nullptr;
 inline decltype(&::glEnable) glEnable_fn = nullptr;
 inline decltype(&::glEnableVertexAttribArray) glEnableVertexAttribArray_fn = nullptr;
 inline decltype(&::glFramebufferTexture2D) glFramebufferTexture2D_fn = nullptr;
@@ -116,6 +117,8 @@ inline void load() {
   if (!glDrawBuffers_fn) throw std::runtime_error("missing GL entry: glDrawBuffers");
   glDrawElements_fn = reinterpret_cast<decltype(glDrawElements_fn)>(SDL_GL_GetProcAddress("glDrawElements"));
   if (!glDrawElements_fn) throw std::runtime_error("missing GL entry: glDrawElements");
+  glDrawRangeElements_fn = reinterpret_cast<decltype(glDrawRangeElements_fn)>(SDL_GL_GetProcAddress("glDrawRangeElements"));
+  if (!glDrawRangeElements_fn) throw std::runtime_error("missing GL entry: glDrawRangeElements");
   glEnable_fn = reinterpret_cast<decltype(glEnable_fn)>(SDL_GL_GetProcAddress("glEnable"));
   if (!glEnable_fn) throw std::runtime_error("missing GL entry: glEnable");
   glEnableVertexAttribArray_fn = reinterpret_cast<decltype(glEnableVertexAttribArray_fn)>(SDL_GL_GetProcAddress("glEnableVertexAttribArray"));
@@ -213,6 +216,7 @@ inline void load() {
 #define glDrawArrays glapi::glDrawArrays_fn
 #define glDrawBuffers glapi::glDrawBuffers_fn
 #define glDrawElements glapi::glDrawElements_fn
+#define glDrawRangeElements glapi::glDrawRangeElements_fn
 #define glEnable glapi::glEnable_fn
 #define glEnableVertexAttribArray glapi::glEnableVertexAttribArray_fn
 #define glFramebufferTexture2D glapi::glFramebufferTexture2D_fn

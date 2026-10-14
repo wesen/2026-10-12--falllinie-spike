@@ -139,6 +139,12 @@ void Renderer::make_targets(){
  glGenFramebuffers(1,&print_fbo_);glBindFramebuffer(GL_FRAMEBUFFER,print_fbo_);glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D,printed_,0);glDrawBuffers(1,&draw);framebuffer_check("print");glBindFramebuffer(GL_FRAMEBUFFER,0);
  camera_.vp=multiply(perspective(62*3.141592653589793/180,double(width_)/height_,0.1,900),look_at(camera_.eye,camera_.look,{0,1,0}));camera_.inverse_vp=inverse(camera_.vp);
 }
+void Renderer::draw_indexed(GLsizei count,size_t vertices,const void* offset){
+ // Broad legal bounds cover subgroups too; index data/order and shaders stay unchanged.
+ if(draw_ranges_&&count>0&&vertices>0)
+  glDrawRangeElements(GL_TRIANGLES,0,GLuint(vertices-1),count,GL_UNSIGNED_INT,offset);
+ else glDrawElements(GL_TRIANGLES,count,GL_UNSIGNED_INT,offset);
+}
 void Renderer::resize(int w,int h){if(w==width_ && h==height_)return;delete_targets();width_=w;height_=h;make_targets();gl_check("resize");}
 void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
  Profiler::Scope whole(profiler_,profile_frame_,profile_view_,RenderPass::View);
@@ -153,9 +159,9 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
  // Static spike has no rider; play uses the original live rig shadow segments.
  const float shadows[]={1000000,1000000,1000000,.26f,1000000,1000001,1000000,0,1000002,1000000,1000000,.17f,1000002,1000001,1000000,0,1000004,1000000,1000000,.2f,1000004,1000001,1000000,0};
  if(rig_valid_){Vec3 bx=qrot(rig_.board_orientation,{1,0,0}),nose=rig_.board_position+bx*.75,tail=rig_.board_position-bx*.75,ankle=(rig_.ankle[0]+rig_.ankle[1])*.5;const float seg[]={float(rig_.pelvis.x),float(rig_.pelvis.y),float(rig_.pelvis.z),.26f,float(rig_.head.x),float(rig_.head.y),float(rig_.head.z),0,float(nose.x),float(nose.y),float(nose.z),.17f,float(tail.x),float(tail.y),float(tail.z),0,float(rig_.pelvis.x),float(rig_.pelvis.y),float(rig_.pelvis.z),.2f,float(ankle.x),float(ankle.y),float(ankle.z),0};glUniform4fv(loc(scene_,"uSeg"),6,seg);}else glUniform4fv(loc(scene_,"uSeg"),6,shadows);integer(scene_,"uKind",0);scalar(scene_,"uMat",1);scalar(scene_,"uAlbO",-1);scalar(scene_,"uXray",(palette%6+6)%6==5?1:0);
- glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,glyph_);integer(scene_,"uGlyph",0);if(cell_meshes_.empty()){glBindVertexArray(vao_);glDrawElements(GL_TRIANGLES,GLsizei(indices_),GL_UNSIGNED_INT,nullptr);}else for(int cell=patch_first_;cell<patch_first_+patch_count_;++cell){auto found=cell_meshes_.find(cell);if(found!=cell_meshes_.end()){glBindVertexArray(found->second.vao);glDrawElements(GL_TRIANGLES,found->second.indices,GL_UNSIGNED_INT,nullptr);}}
+ glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,glyph_);integer(scene_,"uGlyph",0);if(cell_meshes_.empty()){glBindVertexArray(vao_);draw_indexed(GLsizei(indices_),vertices_);}else for(int cell=patch_first_;cell<patch_first_+patch_count_;++cell){auto found=cell_meshes_.find(cell);if(found!=cell_meshes_.end()){glBindVertexArray(found->second.vao);draw_indexed(found->second.indices,found->second.vertices);}}
  integer(scene_,"uKind",1);scalar(scene_,"uMat",2);
- for(int cell=patch_first_;cell<patch_first_+patch_count_;++cell){auto found=object_meshes_.find(cell);if(found!=object_meshes_.end()){glBindVertexArray(found->second.vao);glDrawElements(GL_TRIANGLES,found->second.indices,GL_UNSIGNED_INT,nullptr);}}
+ for(int cell=patch_first_;cell<patch_first_+patch_count_;++cell){auto found=object_meshes_.find(cell);if(found!=object_meshes_.end()){glBindVertexArray(found->second.vao);draw_indexed(found->second.indices,found->second.vertices);}}
  if(rig_valid_){
   Vec3 view=norm(camera_.eye-camera_.look),right=source_norm(cross(first_person_up_,view),{1,0,0}),up=cross(view,right);
   if(following_){right=source_norm(cross({0,1,0},view),{1,0,0});up=cross(view,right);}
@@ -164,11 +170,11 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
    {Profiler::Scope prep(profiler_,profile_frame_,profile_view_,RenderPass::DynamicPrep);snow=particles_.snow_mesh(eye,right,up);trail=particles_.trail_mesh(game_time_);}
    {Profiler::Scope upload(profiler_,profile_frame_,profile_view_,RenderPass::DynamicUpload);update_dynamic(particle_mesh_,snow);update_dynamic(trail_mesh_,trail);}
   }else{update_dynamic(particle_mesh_,particles_.snow_mesh(eye,right,up));update_dynamic(trail_mesh_,particles_.trail_mesh(game_time_));}
-  if(trail_mesh_.indices){glEnable(GL_POLYGON_OFFSET_FILL);glPolygonOffset(-2,-4);integer(scene_,"uKind",3);scalar(scene_,"uMat",5);glBindVertexArray(trail_mesh_.vao);glDrawElements(GL_TRIANGLES,trail_mesh_.indices,GL_UNSIGNED_INT,nullptr);glDisable(GL_POLYGON_OFFSET_FILL);}
+  if(trail_mesh_.indices){glEnable(GL_POLYGON_OFFSET_FILL);glPolygonOffset(-2,-4);integer(scene_,"uKind",3);scalar(scene_,"uMat",5);glBindVertexArray(trail_mesh_.vao);draw_indexed(trail_mesh_.indices,trail_mesh_.vertices);glDisable(GL_POLYGON_OFFSET_FILL);}
  }
  integer(scene_,"uKind",1);
- if(rider_indices_){integer(scene_,"uKind",1);glBindVertexArray(rider_vao_);for(const auto& group:rider_groups_){scalar(scene_,"uMat",float(group[2]));glDrawElements(GL_TRIANGLES,GLsizei(group[1]),GL_UNSIGNED_INT,reinterpret_cast<void*>(uintptr_t(group[0])*4));}}
- if(particle_mesh_.indices){integer(scene_,"uKind",2);scalar(scene_,"uMat",30);scalar(scene_,"uAlbO",-1);glBindVertexArray(particle_mesh_.vao);glDrawElements(GL_TRIANGLES,particle_mesh_.indices,GL_UNSIGNED_INT,nullptr);}
+ if(rider_indices_){integer(scene_,"uKind",1);glBindVertexArray(rider_vao_);for(const auto& group:rider_groups_){scalar(scene_,"uMat",float(group[2]));draw_indexed(GLsizei(group[1]),rider_mesh_.mesh.vertices.size(),reinterpret_cast<void*>(uintptr_t(group[0])*4));}}
+ if(particle_mesh_.indices){integer(scene_,"uKind",2);scalar(scene_,"uMat",30);scalar(scene_,"uAlbO",-1);glBindVertexArray(particle_mesh_.vao);draw_indexed(particle_mesh_.indices,particle_mesh_.vertices);}
  } // scene (includes dynamic CPU preparation and uploads)
  const Vec3 papers[]={{243/255.0,244/255.0,247/255.0},{244/255.0,244/255.0,245/255.0},{244/255.0,243/255.0,248/255.0},{238/255.0,244/255.0,246/255.0},{240/255.0,240/255.0,241/255.0},{10/255.0,16/255.0,32/255.0}};
  const Vec3 inks[]={{28/255.0,47/255.0,158/255.0},{18/255.0,18/255.0,18/255.0},{43/255.0,26/255.0,92/255.0},{11/255.0,42/255.0,58/255.0},{17/255.0,17/255.0,18/255.0},{143/255.0,234/255.0,1}};

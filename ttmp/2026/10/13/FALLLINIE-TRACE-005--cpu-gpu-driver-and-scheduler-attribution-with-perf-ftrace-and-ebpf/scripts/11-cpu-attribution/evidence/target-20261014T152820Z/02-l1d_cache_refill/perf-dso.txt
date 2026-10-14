@@ -1,0 +1,26 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 2K of event 'armv8_cortex_a55/l1d_cache_refill/'
+# Event count (approx.): 30161324
+#
+# Overhead      Pid:Command        Shared Object              
+# ........  .....................  ...........................
+#
+    58.52%   840186:falllinie-pmu  libmali.so.1.10.0          
+    18.33%   840186:falllinie-pmu  falllinie-pmu              
+    12.10%   840186:falllinie-pmu  libc.so.6                  
+     7.62%   840186:falllinie-pmu  [kernel.kallsyms]          
+     1.65%   840186:falllinie-pmu  libwayland-client.so.0.26.0
+     0.78%   840186:falllinie-pmu  libSDL2-2.0.so.0.3200.10   
+     0.41%   840186:falllinie-pmu  libm.so.6                  
+     0.32%   840186:falllinie-pmu  libstdc++.so.6.0.36        
+     0.23%   840186:falllinie-pmu  [vdso]                     
+     0.05%   840186:falllinie-pmu  libudev.so.1.7.14          
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

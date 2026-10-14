@@ -1,0 +1,10 @@
+/sys/class/thermal/thermal_zone0/temp
+53125
+/sys/class/thermal/thermal_zone1/temp
+52500
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq
+1992000
+/sys/devices/system/cpu/cpufreq/policy0/scaling_governor
+performance
+/sys/class/devfreq/fde60000.gpu/cur_freq
+600000000

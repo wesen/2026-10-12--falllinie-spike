@@ -1,0 +1,11 @@
+{
+  "plan": "phase-a",
+  "source_revision": "a7626fd47367524b1c2ec9446cfc50fb0db6c04c",
+  "dirty": false,
+  "remote": "/storage/apps/falllinie-perf009-20261014T221635Z",
+  "binary_sha256": "b3e8fc8302d6761d70cc7abd6fd58a9eda75f33b12c752ec636ed6ffc89ad5c8",
+  "complete": true,
+  "governor_before": "ondemand",
+  "governor_during": "performance",
+  "governor_after": "ondemand"
+}

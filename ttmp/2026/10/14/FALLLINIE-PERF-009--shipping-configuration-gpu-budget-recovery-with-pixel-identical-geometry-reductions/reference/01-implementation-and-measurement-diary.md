@@ -66,3 +66,118 @@ Reading the source to write the design corrected one assumption from the review:
 ### Technical details
 - Budget: 800 MHz × 16.667 ms = 13.33 M GPU cycles per loop frame.
 - Terrain cell: 139 rows × 107 columns = 14,873 vertices; 29,256 triangles; resident window `cell-1 .. cell+5`.
+
+## Step 2: Implement opt-in geometry policies, replay audio and the acquire scope
+
+This step added every runtime switch the design needs, all defaulting to the existing behaviour: `--replay-audio`, `--fog-cells constant`, `--view-culling on`, `--short-indices on`, `--output-clear on` and `--window-depth 0`. The host xvfb replay at 384×288 dual view keeps the replay signature and produces byte-identical captures for every policy and for all of them combined with shadow bounds.
+
+The host draw statistics changed the expected value of one policy before any device run. Per-cell frustum culling removes only 21 of 3,100 terrain draws and 350 of 3,100 object draws (about 1% of triangles), because every terrain cell is 600 m wide (lateral columns reach ±300 m) and so almost always intersects both frusta. Fog-constant shading applies to 748 terrain draws and 802 object draws, about a quarter. Objects are small: 195,000 triangles per view in total against about 189,000 terrain triangles.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Implement Phase A–D runtime switches behind flags, with tests and a host identity check.
+**Inferred user intent:** Make every candidate measurable on the device with one binary.
+**Commit (code):** a7626fd — "Add opt-in fog-constant shading, per-view culling, 16-bit indices, output-clear acquire scope and replay audio"
+
+### What I did
+- `src/geometry_bounds.hpp` (new): `Aabb`, `clip_rejects` (all eight corners outside one clip half-space with relative slack), `box_distance`, `fully_fogged` (distance > 400 + 2 m), `fits_short_indices`, and `adapt_fog_constant_shader`, which refuses to adapt unless the original fog tail is present verbatim and inserts `if(uFogConstant!=0){ o=vec4(1.,0.,uMat/255.,0.); return; }` at the start of `main`.
+- `src/renderer.hpp/.cpp`: `CellMesh` stores `bounds` and `index_type`; `upload_cell(mesh, allow_short)` narrows indices for static meshes; dynamic meshes and the static fixture stay 32-bit; `draw_indexed` takes the index type; the scene pass draws terrain and objects through a `draw_static` lambda that applies culling and the fog flag and counts `DrawStats`; the uniform is reset before trail, rider and particles; `scene_fog_near/far` constants feed both the uniform upload and the CPU test; the output pass opens a `RenderPass::Acquire` scope around `glClear` when `--output-clear on`.
+- `src/profiler.*`: `RenderPass::Acquire`, named `acquire` with parent `output`.
+- `src/main.cpp`: flags, help text, `--replay-audio` (requires replay; forces muted audio), `SDL_GL_DEPTH_SIZE` from `--window-depth`, a `GEOMETRY ...` log line, and receipt fields including `geometry_draws`, snapshotted before the capture redraws.
+- `tests/test_geometry_bounds.cpp` and its CMake registration.
+- Ticket scripts: `01-build.sh` (from GPU-008, binary `falllinie-perf009`), `02-host-check.py`, `03-counters/` (probe copy with `base|geometry` sets), `04-target-case.sh`, `05-capture-case.sh`, `06-campaign.py` (plans `phase-a..d`, governor set/restore), `07-analyze.py`.
+
+### Why
+- One binary with explicit switches keeps every comparison an ABBA run of the same executable.
+- The fog-constant adaptation is anchored on the exact original tail so that a future shader edit cannot silently invalidate the equivalence argument.
+
+### What worked
+- Host build without warnings after two small fixes; `ctest`: 17/17 passed (`100% tests passed, 0 tests failed out of 17`).
+- `test-geometry-bounds`: `boxes=24000 rejected=19460 rejected_points=7784000 fogged_boxes=12917 fog_points=826688 OK`. Every sampled point of a rejected box lies outside the same clip plane in float evaluation; every point of a fog-flagged box is at float distance ≥ 400, where GLSL `smoothstep` returns exactly 1 and both legal `mix` formulas quantize to 255.
+- `02-host-check.py 240`: all five candidate configurations have 0 different pixels against `original` across output, print, scene and depth for both views; one signature `8964042839430826299` (240 frames).
+- Replay audio on host with `SDL_AUDIODRIVER=dummy`: same signature with and without `--replay-audio`; `AUDIO ... producer_blocks=667 ... starved_callbacks=0`.
+- ARM build: binary `b3e8fc8302d6761d70cc7abd6fd58a9eda75f33b12c752ec636ed6ffc89ad5c8`; probe `508e806007d7d84c16ba57164a37b673d0f6707f8d500f8b22af2792bfabe9f1`.
+
+### What didn't work
+- First build produced `warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]` in `geometry_bounds.hpp:50` and the test, and `-Wrange-loop-construct` in the test; fixed by splitting statements and binding by reference.
+- Testing the new analyzer against GPU-008 evidence overwrote `GPU-008/.../target-20261014T194947Z/summary.json`; restored with `git checkout` and added an explicit output-path argument. The analyzer reproduced the published GPU-008 pooled values (23.575 / 20.636 / 20.024 ms; 18.94 / 16.59 / 16.09 M GPU-active cycles per frame), which validates it.
+
+### What I learned
+- Per-cell culling is too coarse for this terrain. Cells span 600 m laterally, so a useful culling policy needs smaller chunks.
+- Objects contribute about 3% of scene triangles; terrain dominates geometry.
+
+### What was tricky to build
+- Draw statistics must not include the post-loop capture redraws, so `main` snapshots `draw_stats_json()` before the capture block.
+- The fog uniform must be reset before dynamic meshes; otherwise a flagged last object cell would make the rider or particles constant. The lambda tracks the current value and the reset runs after the object loop.
+
+### What warrants a second pair of eyes
+- `clip_rejects` slack (`1e-4` relative) versus the GPU's float transform; the CPU test checks float evaluation of the same expression, not Mali's exact instruction sequence.
+- The early return precedes `discard` for particles; particles are never flagged, which the reset guarantees.
+
+### What should be done in the future
+- If geometry turns out to matter, chunk cells into smaller row/column blocks so that culling and fog flags apply at finer granularity.
+
+### Code review instructions
+- Start with `src/geometry_bounds.hpp`, then `Renderer::render` (the `draw_static` lambda and the acquire scope) and `Renderer::upload_cell`.
+- Validate: `cmake --build build/integrated-source && ctest --test-dir build/integrated-source`; `python3 scripts/02-host-check.py 240` from the ticket.
+
+### Technical details
+- Host draw statistics over 240 frames (480 views), `combined`: terrain drawn 3,079 / culled 21 / fog-constant 748; objects drawn 2,750 / culled 350 / fog-constant 802; 92,673,024 triangles submitted, 933,576 culled.
+
+## Step 3: Phase A — shadow bounds at the shipping configuration
+
+This was the first device measurement of the ticket and the one the review singled out as most valuable. At 384×288 dual view, shadow bounds removed every long frame in the audio-off replay (long-frame share 0.039 → 0.000) and almost all of them with the muted audio producer running (0.065 → 0.005). The pooled mean fell from 17.273 to 16.620 ms without audio and from 17.697 to 16.688 ms with audio. The replay signature was identical in all eight cases.
+
+The counters also corrected a weakness in the review's cycle model. Bounds runs still show about 13.3 M GPU-active cycles per loop frame, i.e. about 800 M cycles per second: the GPU remains busy essentially all the time even at 60 loop frames per second. When the GPU is saturated, "GPU-active cycles per frame" is just 800 M divided by the frame rate, so it cannot measure how much work a change removed. The prediction was right in outcome (under budget) but the headroom is close to zero.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Run the Phase A campaign and decide whether shadow bounds reach the 60 Hz budget at the shipping size.
+**Inferred user intent:** Obtain the decision-relevant measurement before building more.
+**Commit (code):** a7626fd (measured binary `b3e8fc83…ad5c8`)
+
+### What I did
+- `python3 06-campaign.py phase-a` → `evidence/phase-a-20261014T221635Z`, eight timed cases at 384×288 dual view in order original, bounds, bounds, original, original+audio, bounds+audio, bounds+audio, original+audio. Governor recorded `ondemand`, set `performance` (all cases started at 1,992,000 kHz), restored to `ondemand` in the `finally` path.
+- `python3 -I 07-analyze.py evidence/phase-a-20261014T221635Z`.
+
+### Why
+- The shipping configuration is the acceptance configuration; the earlier 512×384 measurement could not answer whether bounds reach 60 Hz.
+- Running audio-off and audio-on in one session with one binary isolates the producer's effect.
+
+### What worked
+
+| Case | Mean ms | p95 ms | p99 ms | Long share | Missed refreshes/frame |
+|---|---:|---:|---:|---:|---:|
+| original (pooled 01, 04) | 17.273 | 20.399 | 29.875 | 0.039 | 0.036 |
+| bounds (pooled 02, 03) | 16.620 | 17.611 | 18.251 | 0.000 | −0.003 |
+| original + audio (05, 08) | 17.697 | 28.424 | 29.903 | 0.065 | 0.062 |
+| bounds + audio (06, 07) | 16.688 | 17.901 | 20.399 | 0.005 | 0.001 |
+
+- All cases: `GL_error=0`, `game_status=0 probe_status=0`, counter probe `final rows=5850 errors=0 nonfinite=0 stop=ok`, signature `6081555844518115723`.
+- Audio cases: `starved_callbacks=0 missing_frames=0`; producer CPU mean 9.66–10.06 ms per block; `producer_over_budget` 0–2 per case.
+- The opening/closing original pairs agree closely (17.243 / 17.304 ms; 17.656 / 17.738 ms), so drift is small relative to the effect.
+
+### What didn't work
+- No failures. The negative "−0.003 missed refreshes" values are measurement noise around exactly 60 loop frames per second (mean 16.620 ms is slightly below 16.667 ms because the replay loop is not locked to an exact 60.000 Hz).
+
+### What I learned
+- The audio producer is a real cost: it raises the original's long-frame share from 0.039 to 0.065 in the same session. With bounds, the remaining 0.5% long frames appear only when audio runs.
+- GPU-active cycles stay at ≈800 M/s in every case, including bounds at 60 FPS. The GPU has almost no idle time left, so any additional scene content or a slower trajectory segment could push frames over again. Further GPU savings are still needed for margin, not just for the mean.
+- Where the wait appears flips between runs: in `02-bounds` the top output scope waits 9.73 ms while the lower output waits 0.46 ms; in `03-bounds` it is 0.99 and 9.43 ms. This is consistent with the loop waiting for whichever window's buffer is released next, with a session-dependent phase between the two panels.
+
+### What was tricky to build
+- The campaign must restore the governor even if a case fails; `06-campaign.py` does it in a `finally` block and records before/during/after values in `campaign.json`.
+
+### What warrants a second pair of eyes
+- Whether the replay audio load represents the live game's audio load: the producer runs at the same rate and settings (1,024-frame buffer, muted, vinyl on) but follows the replay's fixed-step trajectory.
+
+### What should be done in the future
+- Promote shadow bounds after the five-checkpoint visual qualification at 384×288 (Phase C plan includes `bounds` in its visual set).
+- Find more GPU headroom; Phase B decides whether geometry is the place.
+
+### Code review instructions
+- `scripts/06-campaign.py` (`PLANS['phase-a']`, governor handling) and `scripts/07-analyze.py`.
+- Reproduce: `python3 -I scripts/07-analyze.py scripts/evidence/phase-a-20261014T221635Z`.
+
+### Technical details
+- GPU-active per loop frame (estimate): original 13.87–13.91 M; bounds 13.28–13.29 M; original+audio 14.18–14.24 M; bounds+audio 13.31–13.32 M. All are ≈ 800 M/s ÷ loop FPS.

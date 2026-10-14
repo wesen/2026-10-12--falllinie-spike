@@ -1,7 +1,7 @@
 # Tasks
 
 ## TODO
-- [ ] Phase A: add --replay-audio and measure shadow bounds at 384x288 dual, audio off and on <!-- t:a4ed -->
+- [x] Phase A: add --replay-audio and measure shadow bounds at 384x288 dual, audio off and on <!-- t:a4ed -->
 - [ ] Phase B: geometry counter set in a probe copy and one geometry campaign <!-- t:r0by -->
 - [ ] Phase C1: fog-cell constant shading (--fog-cells constant) <!-- t:k1jq -->
 - [ ] Phase C2: per-view frustum culling (--view-culling on) <!-- t:elja -->

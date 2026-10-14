@@ -25,7 +25,7 @@ namespace {
 volatile std::sig_atomic_t termination_requested=0;
 void request_termination(int){termination_requested=1;}
 struct Config {
- bool freeze_scene=false,post_bypass=false;fl::GpuMode gpu_mode=fl::GpuMode::Off;unsigned profile_cadence=60;
+ bool paired_clocks=false,freeze_scene=false,post_bypass=false;fl::GpuMode gpu_mode=fl::GpuMode::Off;unsigned profile_cadence=60;
  bool place=false,resize_check=false,source_sampler_precision=false,play=false,autoplay=false,dual=false,source_sky_hash=false,no_vsync=false,absolute_coordinates=false,muted=false,dev_overlay=false;double seconds=0,fps_cap=0;int frames=0,width=512,height=384,cell=0,cells=3,debug=0,palette=0,audio_buffer=512;uint32_t seed=42;
  fl::AudioRenderMode audio_mode=fl::AudioRenderMode::BufferedWorker;bool source_vinyl=true;
  std::string assets="assets/shaders",capture,receipt,profile;
@@ -40,6 +40,7 @@ Config parse(int argc,char** argv){
   else if(a=="--debug-view")c.debug=std::stoi(value());else if(a=="--palette")c.palette=std::stoi(value());
   else if(a=="--audio-buffer")c.audio_buffer=std::stoi(value());
   else if(a=="--audio-mode"){auto mode=value();if(mode=="buffered")c.audio_mode=fl::AudioRenderMode::BufferedWorker;else if(mode=="direct")c.audio_mode=fl::AudioRenderMode::DirectCallback;else throw std::runtime_error("audio mode must be buffered or direct");}
+  else if(a=="--paired-clocks")c.paired_clocks=true;
   else if(a=="--no-vinyl")c.source_vinyl=false;
   else if(a=="--source-vinyl")c.source_vinyl=true;
   else if(a=="--muted")c.muted=true;
@@ -47,10 +48,11 @@ Config parse(int argc,char** argv){
   else if(a=="--absolute-render-coordinates")c.absolute_coordinates=true;
   else if(a=="--no-vsync")c.no_vsync=true;else if(a=="--gpu-profile")c.gpu_mode=fl::GpuMode::View;else if(a=="--gpu-profile-mode"){auto mode=value();if(mode=="off")c.gpu_mode=fl::GpuMode::Off;else if(mode=="view")c.gpu_mode=fl::GpuMode::View;else if(mode=="passes")c.gpu_mode=fl::GpuMode::Passes;else throw std::runtime_error("GPU profile mode must be off, view or passes");}else if(a=="--profile-cadence"){auto text=value();size_t consumed=0;int n=std::stoi(text,&consumed);if(consumed!=text.size()||n<1||n>3600)throw std::runtime_error("profile cadence must be 1..3600");c.profile_cadence=unsigned(n);}else if(a=="--freeze-scene")c.freeze_scene=true;else if(a=="--post-bypass")c.post_bypass=true;else if(a=="--profile")c.profile=value();else if(a=="--assets")c.assets=value();else if(a=="--capture-dir")c.capture=value();else if(a=="--receipt")c.receipt=value();
   else if(a=="--render-size"){auto size=value();auto x=size.find('x');if(x==std::string::npos)throw std::runtime_error("expected WIDTHxHEIGHT");c.width=std::stoi(size.substr(0,x));c.height=std::stoi(size.substr(x+1));}
-  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..5] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash] [--absolute-render-coordinates] [--muted] [--audio-buffer 256..4096 power-of-two] [--audio-mode buffered|direct] [--no-vinyl|--source-vinyl] [--dev-overlay] [--profile CSV] [--gpu-profile (view)] [--gpu-profile-mode off|view|passes] [--profile-cadence 1..3600] [--freeze-scene (static terrain; dual uses same camera; overrides dual implicit play)] [--post-bypass (non-parity)] [--no-vsync] [--fps N]\nF3 cycles debug; C cycles six palettes; A/START or ENTER/SPACE starts; START/P/ESC pauses; SELECT/F2 toggles developer overlay; SELECT+Y/R new run; M mutes; F10 or SELECT+START quits. --dev-overlay starts gameplay title with overlay. SELECT-first chords restore pre-press visibility; F2 is independent.\n";std::exit(0);}
+  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..5] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash] [--absolute-render-coordinates] [--muted] [--audio-buffer 256..4096 power-of-two] [--audio-mode buffered|direct] [--no-vinyl|--source-vinyl] [--dev-overlay] [--profile CSV] [--paired-clocks (requires --profile)] [--gpu-profile (view)] [--gpu-profile-mode off|view|passes] [--profile-cadence 1..3600] [--freeze-scene (static terrain; dual uses same camera; overrides dual implicit play)] [--post-bypass (non-parity)] [--no-vsync] [--fps N]\nF3 cycles debug; C cycles six palettes; A/START or ENTER/SPACE starts; START/P/ESC pauses; SELECT/F2 toggles developer overlay; SELECT+Y/R new run; M mutes; F10 or SELECT+START quits. --dev-overlay starts gameplay title with overlay. SELECT-first chords restore pre-press visibility; F2 is independent.\n";std::exit(0);}
   else throw std::runtime_error("unknown argument "+a);
  }
  if(!std::isfinite(c.fps_cap)||c.fps_cap<0||c.fps_cap>240||c.width<128||c.height<96||c.width>2048||c.height>1536||c.cell< -1||c.cell>4096||c.cells<1||c.cells>7||c.frames<0||c.seconds<0||!std::isfinite(c.seconds)||c.debug<0||c.debug>5||c.palette<0||c.palette>5||c.audio_buffer<256||c.audio_buffer>4096||(c.audio_buffer&(c.audio_buffer-1)))throw std::runtime_error("configuration outside bounded spike limits");
+ if(c.paired_clocks&&c.profile.empty())throw std::runtime_error("paired clocks require --profile CSV");
  if(c.gpu_mode!=fl::GpuMode::Off&&c.profile.empty())throw std::runtime_error("GPU profiling requires --profile CSV");
  if(c.freeze_scene){
   if(explicit_play||c.autoplay||c.dev_overlay||c.resize_check)throw std::runtime_error("static terrain fixture conflicts with play/autoplay/dev-overlay/resize-check");
@@ -95,7 +97,7 @@ int main(int argc,char** argv){
   pad=SDL_NumJoysticks()>0?SDL_JoystickOpen(0):nullptr;
   std::cout<<"joystick="<<(pad?SDL_JoystickName(pad):"none")<<'\n';
   fl::Renderer renderer;renderer.set_absolute_coordinates(c.absolute_coordinates);renderer.initialize(c.seed,c.play?-1:c.cell,c.play?4:c.cells,c.width,c.height,c.assets,!c.source_sampler_precision,!c.source_sky_hash,c.play);
-  fl::Profiler profiler(c.profile,c.gpu_mode,c.profile_cadence);
+  fl::Profiler profiler(c.profile,c.gpu_mode,c.profile_cadence,nullptr,c.paired_clocks);
   renderer.set_post_bypass(c.post_bypass);
   std::cout<<"DIAGNOSTIC fixture="<<(c.freeze_scene?"static-terrain":"live-or-default")<<" second_view="<<(c.freeze_scene?"same-camera":"first-person")<<" post_bypass="<<c.post_bypass<<" non_parity="<<(c.freeze_scene||c.post_bypass)<<" seed="<<c.seed<<" cell="<<c.cell<<" cells="<<c.cells<<" internal="<<c.width<<"x"<<c.height<<" dual="<<c.dual<<"\n";
   if(c.freeze_scene)std::cout<<"STATIC TERRAIN: no simulation/update_player/RNG advancement, rider/particles/trails/HUD/streaming/audio-DSP; fixed initialized camera, input mutations disabled\n";
@@ -122,8 +124,9 @@ int main(int argc,char** argv){
   auto ms=[](auto a,auto b){return std::chrono::duration<double,std::milli>(b-a).count();};
   int frames=0,drawable_w=0,drawable_h=0;bool quit=false;
   while(!quit && !termination_requested){auto frame_start=std::chrono::steady_clock::now();SDL_Event e;
-   if(lower_window){if(SDL_GL_MakeCurrent(window,context)!=0)throw std::runtime_error(SDL_GetError());SDL_GL_SetSwapInterval(c.no_vsync?0:1);}
+   if(lower_window){fl::PairedClocks::Scope timing(profiler.paired(),frames,0,fl::FrameStage::Context);if(SDL_GL_MakeCurrent(window,context)!=0)throw std::runtime_error(SDL_GetError());SDL_GL_SetSwapInterval(c.no_vsync?0:1);}
    profiler.poll();
+   fl::PairedClocks::Scope events_timing(profiler.paired(),frames,-1,fl::FrameStage::Events);
    fl::NativeInputSnapshot physical;bool focus_event=false;
    while(SDL_PollEvent(&e)){
     if(e.type==SDL_QUIT)physical.quit=true;
@@ -153,12 +156,16 @@ int main(int argc,char** argv){
    }
    } // static fixture only accepts quit
    auto event_end=std::chrono::steady_clock::now(),physics_end=event_end,player_end=event_end;
+   events_timing.stop();
    double elapsed=std::min(.05,std::chrono::duration<double>(frame_start-previous_frame).count());previous_frame=frame_start;
    fl::FrameResult current_frame;
    if(c.play&&!quit){
+    fl::PairedClocks::Scope physics_timing(profiler.paired(),frames,-1,fl::FrameStage::Physics);
     fl::Controls input=game.title()||c.autoplay?autopilot.read(game,elapsed):actions.ride;
     current_frame=frame_clock.advance(game,input,elapsed);
-    physics_end=std::chrono::steady_clock::now();renderer.set_native_feedback(pad!=nullptr,muted);renderer.update_player(game,current_frame.raw_dt);player_end=std::chrono::steady_clock::now();
+    physics_end=std::chrono::steady_clock::now();physics_timing.stop();
+    fl::PairedClocks::Scope player_timing(profiler.paired(),frames,-1,fl::FrameStage::Player);
+    renderer.set_native_feedback(pad!=nullptr,muted);renderer.update_player(game,current_frame.raw_dt);player_end=std::chrono::steady_clock::now();player_timing.stop();
     fl::publish_feedback(audio,game,audio_started);
     if(game.persistence_error!=last_persistence_error){last_persistence_error=game.persistence_error;if(!last_persistence_error.empty())std::cerr<<last_persistence_error<<'\n';}
     if(frames%60==0)std::cout<<"ride z="<<game.position.z<<" speed="<<fl::length(game.velocity)<<" airborne="<<game.airborne<<" charge="<<game.charge<<" score="<<game.score<<std::endl;
@@ -180,11 +187,18 @@ int main(int argc,char** argv){
    }
    auto top_start=std::chrono::steady_clock::now();renderer.set_measurement(profiler.enabled()?&profiler:nullptr,frames,0);
    renderer.render(drawable_w,drawable_h,c.debug,c.palette);
-   auto swap_start=std::chrono::steady_clock::now();SDL_GL_SwapWindow(window);auto top_swap_end=std::chrono::steady_clock::now(),bottom_submit_end=top_swap_end;
-   if(lower_window){if(SDL_GL_MakeCurrent(lower_window,context)!=0)throw std::runtime_error(SDL_GetError());SDL_GL_SetSwapInterval(0);int lw=0,lh=0;SDL_GL_GetDrawableSize(lower_window,&lw,&lh);renderer.set_measurement(profiler.enabled()?&profiler:nullptr,frames,1);if(c.freeze_scene)renderer.render(lw,lh,c.debug,c.palette);else renderer.render_first_person(lw,lh,c.palette);bottom_submit_end=std::chrono::steady_clock::now();SDL_GL_SwapWindow(lower_window);}
+   auto swap_start=std::chrono::steady_clock::now();
+   {fl::PairedClocks::Scope timing(profiler.paired(),frames,0,fl::FrameStage::Swap);SDL_GL_SwapWindow(window);}
+   auto top_swap_end=std::chrono::steady_clock::now(),bottom_submit_end=top_swap_end;
+   if(lower_window){
+    {fl::PairedClocks::Scope timing(profiler.paired(),frames,1,fl::FrameStage::Context);if(SDL_GL_MakeCurrent(lower_window,context)!=0)throw std::runtime_error(SDL_GetError());SDL_GL_SetSwapInterval(0);}
+    int lw=0,lh=0;SDL_GL_GetDrawableSize(lower_window,&lw,&lh);renderer.set_measurement(profiler.enabled()?&profiler:nullptr,frames,1);if(c.freeze_scene)renderer.render(lw,lh,c.debug,c.palette);else renderer.render_first_person(lw,lh,c.palette);bottom_submit_end=std::chrono::steady_clock::now();
+    {fl::PairedClocks::Scope timing(profiler.paired(),frames,1,fl::FrameStage::Swap);SDL_GL_SwapWindow(lower_window);}
+   }
    auto swap_end=std::chrono::steady_clock::now();
+   fl::PairedClocks::Scope pacing_timing(profiler.paired(),frames,-1,fl::FrameStage::Pacing);
    if(c.fps_cap>0){auto period=std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(1.0/c.fps_cap));frame_deadline+=period;if(swap_end<frame_deadline)std::this_thread::sleep_until(frame_deadline);else if(swap_end>frame_deadline+period)frame_deadline=swap_end;}
-   auto end=std::chrono::steady_clock::now();
+   auto end=std::chrono::steady_clock::now();pacing_timing.stop();
    completed_frame={true,bool(lower_window),ms(previous_end,end),ms(frame_start,event_end),ms(event_end,physics_end),ms(physics_end,player_end),c.play?renderer.stream_ms():0,ms(top_start,swap_start),ms(swap_start,top_swap_end),ms(top_swap_end,bottom_submit_end),ms(bottom_submit_end,swap_end),ms(swap_end,end),current_frame.ticks,current_frame.scale};
    const auto& t=completed_frame;
    profiler.cpu(frames,t.interval_ms,t.input_ms,t.physics_ms,t.player_ms,t.stream_ms,t.top_submit_ms,t.top_swap_ms,t.bottom_submit_ms,t.bottom_swap_ms,t.pace_ms);previous_end=end;

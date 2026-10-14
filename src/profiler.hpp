@@ -1,5 +1,6 @@
 #pragma once
 #include <GLES3/gl3.h>
+#include "paired_clocks.hpp"
 #include <fstream>
 #include <array>
 #include <chrono>
@@ -18,9 +19,10 @@ enum class GpuMode {Off,View,Passes};
 enum class RenderPass {View,Scene,Post,Output,DynamicPrep,DynamicUpload};
 class Profiler {
 public:
- explicit Profiler(const std::string& path,GpuMode mode=GpuMode::Off,unsigned cadence=60,const QueryApi* test_api=nullptr);
+ explicit Profiler(const std::string& path,GpuMode mode=GpuMode::Off,unsigned cadence=60,const QueryApi* test_api=nullptr,bool paired_clocks=false,const PairedClocks::ClockApi* test_clocks=nullptr);
  ~Profiler();
  Profiler(const Profiler&)=delete;Profiler& operator=(const Profiler&)=delete;
+ PairedClocks* paired(){return paired_enabled_?&paired_:nullptr;}
  void poll();
  void cpu(uint64_t frame,double interval,double events,double physics,double player,double stream,double top_submit,double top_swap,double bottom_submit,double bottom_swap,double pace=0);
  bool enabled()const{return cpu_.is_open();}
@@ -33,8 +35,10 @@ public:
  private:
   Profiler* p_=nullptr;uint64_t frame_=0;int view_=0,query_=-1;RenderPass pass_=RenderPass::View;
   std::chrono::steady_clock::time_point start_;
+  PairedClocks::Scope paired_scope_;
  };
 private:
+ PairedClocks paired_;bool paired_enabled_=false;
  struct Query{GLuint id=0;uint64_t frame=0;int view=0;RenderPass pass=RenderPass::View;bool pending=false,invalid=false;};
  struct CpuSample{uint64_t frame;int view;RenderPass pass;double ms;};
  std::array<Query,32> queries_{};

@@ -5,7 +5,8 @@
 namespace fl {
 static constexpr GLenum elapsed=0x88BF,available=0x8867,result=0x8866,disjoint=0x8FBB;
 static const char* name(RenderPass p){switch(p){case RenderPass::View:return "view";case RenderPass::Scene:return "scene";case RenderPass::Post:return "post";case RenderPass::Output:return "output";case RenderPass::DynamicPrep:return "dynamic_prep";case RenderPass::DynamicUpload:return "dynamic_upload";}return "invalid";}
-Profiler::Profiler(const std::string& path,GpuMode mode,unsigned cadence,const QueryApi* test_api):mode_(mode),cadence_(cadence){
+Profiler::Profiler(const std::string& path,GpuMode mode,unsigned cadence,const QueryApi* test_api,bool paired_clocks,const PairedClocks::ClockApi* test_clocks):paired_(paired_clocks&&!path.empty()?path+".paired.jsonl":"",cadence,test_clocks),paired_enabled_(paired_clocks),mode_(mode),cadence_(cadence){
+ if(paired_clocks&&path.empty())throw std::runtime_error("paired clocks require --profile CSV");
  if(cadence<1||cadence>3600)throw std::runtime_error("profile cadence must be 1..3600");
  if(path.empty())return;
  cpu_.open(path);gpu_.open(path+".gpu.csv");passes_.open(path+".passes.csv");stats_.open(path+".stats.csv");
@@ -33,7 +34,7 @@ Profiler::Profiler(const std::string& path,GpuMode mode,unsigned cadence,const Q
 void Profiler::row(const Query& q,const char* status,double ms){gpu_<<q.frame<<','<<q.view<<','<<name(q.pass)<<','<<status<<',';if(ms>=0)gpu_<<ms;gpu_<<'\n';}
 void Profiler::flush_cpu(){for(size_t i=0;i<sample_count_;++i){const auto& s=samples_[i];passes_<<s.frame<<','<<s.view<<','<<name(s.pass)<<','<<(s.pass==RenderPass::View?"none":s.pass==RenderPass::DynamicPrep||s.pass==RenderPass::DynamicUpload?"scene":"view")<<','<<s.ms<<'\n';++cpu_samples_;}sample_count_=0;}
 void Profiler::poll(){
- flush_cpu();if(!api_)return;
+ paired_.flush();flush_cpu();if(!api_)return;
  GLint changed=0;api_.integer(disjoint,&changed);
  if(changed){++disjoint_polls_;for(auto& q:queries_)if(q.pending)q.invalid=true;if(active_>=0)queries_[size_t(active_)].invalid=true;}
  for(auto& q:queries_){if(!q.pending)continue;GLuint ready=0;api_.get(q.id,available,&ready);if(!ready){++unavailable_;continue;}
@@ -52,9 +53,9 @@ int Profiler::begin(uint64_t frame,int view,RenderPass pass){
 void Profiler::end(int token){if(token<0)return;if(token!=active_){++misuse_;return;}api_.end(elapsed);queries_[size_t(token)].pending=true;active_=-1;}
 Profiler::Scope::Scope(Profiler* p,uint64_t f,int v,RenderPass pass):frame_(f),view_(v),pass_(pass){
  if(!p||!p->enabled()||f%p->cadence_)return;
- if(v<0||v>1){++p->misuse_;return;}p_=p;query_=p_->begin(f,v,pass);start_=std::chrono::steady_clock::now();
+ if(v<0||v>1){++p->misuse_;return;}p_=p;query_=p_->begin(f,v,pass);paired_scope_.start(p_->paired(),f,v,FrameStage::Render,name(pass));start_=std::chrono::steady_clock::now();
 }
-Profiler::Scope::~Scope(){if(!p_)return;const auto stop=std::chrono::steady_clock::now();p_->end(query_);if(p_->sample_count_<p_->samples_.size())p_->samples_[p_->sample_count_++]={frame_,view_,pass_,std::chrono::duration<double,std::milli>(stop-start_).count()};else ++p_->cpu_dropped_;}
+Profiler::Scope::~Scope(){if(!p_)return;const auto stop=std::chrono::steady_clock::now();paired_scope_.stop();p_->end(query_);if(p_->sample_count_<p_->samples_.size())p_->samples_[p_->sample_count_++]={frame_,view_,pass_,std::chrono::duration<double,std::milli>(stop-start_).count()};else ++p_->cpu_dropped_;}
 void Profiler::cpu(uint64_t f,double i,double e,double p,double u,double s,double t,double ts,double b,double bs,double pace){if(enabled())cpu_<<f<<','<<i<<','<<e<<','<<p<<','<<u<<','<<s<<','<<t<<','<<ts<<','<<b<<','<<bs<<','<<pace<<'\n';}
 Profiler::~Profiler(){
  if(!enabled())return;

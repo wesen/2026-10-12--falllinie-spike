@@ -1,0 +1,6 @@
+CASE 01-baseline status=0
+CASE 02-clocks status=0
+CASE 03-view status=0
+CASE 04-passes status=0
+CASE 05-perf-stat status=0
+CASE 06-perf-record status=141

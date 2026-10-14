@@ -1,0 +1,191 @@
+{
+  "schema": 1,
+  "identity": {
+    "schema": 1,
+    "pid": 721804,
+    "tid": 721804,
+    "run_start_ns": 69909592533611
+  },
+  "cadence": 60,
+  "rows": 560,
+  "paired_samples": 560,
+  "negative_estimates": 0,
+  "final": {
+    "record": "final",
+    "schema": 1,
+    "pid": 721804,
+    "tid": 721804,
+    "run_start_ns": 69909592533611,
+    "attempted": 560,
+    "written": 560,
+    "dropped": 0,
+    "invalid_wall": 0,
+    "invalid_cpu": 0,
+    "active": 0
+  },
+  "transport_complete": true,
+  "all_attempted_samples_valid": true,
+  "groups": {
+    "context/view=0/none": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 89049.39285714286,
+      "mean_thread_cpu_ns": 76687.42857142857,
+      "mean_nonrunning_estimate_ns": 12361.964285714286
+    },
+    "events/view=-1/none": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 118538.03571428571,
+      "mean_thread_cpu_ns": 106364.57142857143,
+      "mean_nonrunning_estimate_ns": 12173.464285714286
+    },
+    "physics/view=-1/none": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 105652.96428571429,
+      "mean_thread_cpu_ns": 99645.85714285714,
+      "mean_nonrunning_estimate_ns": 6007.107142857143
+    },
+    "player/view=-1/none": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 1901367.642857143,
+      "mean_thread_cpu_ns": 1760614.857142857,
+      "mean_nonrunning_estimate_ns": 140752.7857142857
+    },
+    "render/view=0/dynamic_prep": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 131287.60714285713,
+      "mean_thread_cpu_ns": 111552.17857142857,
+      "mean_nonrunning_estimate_ns": 19735.428571428572
+    },
+    "render/view=0/dynamic_upload": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 97080.39285714286,
+      "mean_thread_cpu_ns": 93916.57142857143,
+      "mean_nonrunning_estimate_ns": 3163.8214285714284
+    },
+    "render/view=0/scene": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 3341729.1785714286,
+      "mean_thread_cpu_ns": 2981979.035714286,
+      "mean_nonrunning_estimate_ns": 359750.14285714284
+    },
+    "render/view=0/post": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 664062.6071428572,
+      "mean_thread_cpu_ns": 576312.5,
+      "mean_nonrunning_estimate_ns": 87750.10714285714
+    },
+    "render/view=0/output": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 4574607.571428572,
+      "mean_thread_cpu_ns": 1262843.642857143,
+      "mean_nonrunning_estimate_ns": 3311763.9285714286
+    },
+    "render/view=0/view": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 8604471.42857143,
+      "mean_thread_cpu_ns": 4860166.321428572,
+      "mean_nonrunning_estimate_ns": 3744305.1071428573
+    },
+    "swap/view=0/none": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 340114.46428571426,
+      "mean_thread_cpu_ns": 294864.53571428574,
+      "mean_nonrunning_estimate_ns": 45249.92857142857
+    },
+    "context/view=1/none": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 60237.892857142855,
+      "mean_thread_cpu_ns": 50104.28571428572,
+      "mean_nonrunning_estimate_ns": 10133.607142857143
+    },
+    "render/view=1/dynamic_prep": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 127246.10714285714,
+      "mean_thread_cpu_ns": 110510.46428571429,
+      "mean_nonrunning_estimate_ns": 16735.64285714286
+    },
+    "render/view=1/dynamic_upload": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 90455.39285714286,
+      "mean_thread_cpu_ns": 87156.32142857143,
+      "mean_nonrunning_estimate_ns": 3299.0714285714284
+    },
+    "render/view=1/scene": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 1391581.75,
+      "mean_thread_cpu_ns": 1251531.0,
+      "mean_nonrunning_estimate_ns": 140050.75
+    },
+    "render/view=1/post": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 591908.6785714285,
+      "mean_thread_cpu_ns": 524760.3571428572,
+      "mean_nonrunning_estimate_ns": 67148.32142857143
+    },
+    "render/view=1/output": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 6726030.0,
+      "mean_thread_cpu_ns": 872635.0,
+      "mean_nonrunning_estimate_ns": 5853395.0
+    },
+    "render/view=1/view": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 8738717.392857144,
+      "mean_thread_cpu_ns": 2683082.6428571427,
+      "mean_nonrunning_estimate_ns": 6055634.75
+    },
+    "swap/view=1/none": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 331635.46428571426,
+      "mean_thread_cpu_ns": 268354.10714285716,
+      "mean_nonrunning_estimate_ns": 63281.357142857145
+    },
+    "pacing/view=-1/none": {
+      "samples": 28,
+      "paired_samples": 28,
+      "negative_estimates": 0,
+      "mean_wall_ns": 450777.53571428574,
+      "mean_thread_cpu_ns": 12479.07142857143,
+      "mean_nonrunning_estimate_ns": 438298.46428571426
+    }
+  },
+  "interpretation": "Wall minus thread CPU is a non-running estimate with clock/accounting residual, NOT GPU wait. Nested scopes are nonadditive. Means use only same-row valid pairs."
+}

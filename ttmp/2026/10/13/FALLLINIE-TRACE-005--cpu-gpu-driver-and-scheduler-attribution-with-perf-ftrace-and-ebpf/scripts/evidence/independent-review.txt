@@ -1,0 +1,20 @@
+## Review
+
+Reviewed `9097f8d9c788da345cb43848583fa0f2b97e2c9d` in the handoff worktree against the `c9c65f9` checkout. Read-only source, test and documentation inspection; no tests, device access, edits or pushes.
+
+- **Correct — pairing/defaults:** Wall-start → CPU-start → body → CPU-end → wall-end ordering is explicit. Disabled and unsampled paths return before clock reads (`src/paired_clocks.cpp:35–36,52–63`).
+- **Correct — nesting/bounds:** Scope completion uses fixed-capacity storage with counted drops; flushing waits for zero active scopes. Final counters expose incomplete collection (`src/paired_clocks.hpp:38–41`; `src/paired_clocks.cpp:64–85`).
+- **Correct — integration:** Player timing includes `update_player`; context, swap and pacing boundaries preserve the existing execution order (`src/main.cpp:127–129,163–168,188–201`). Render clocks retain existing pass identities and legacy wall boundaries (`src/profiler.cpp:56–60`).
+- **Correct — analyzer:** Same-row valid pairs alone contribute means; unavailable readings remain null, negative residuals remain signed, and terminal counts reconcile observed records and known drops. Nested scopes are explicitly nonadditive, and residual time is not labeled GPU wait (`ttmp/2026/10/13/FALLLINIE-TRACE-005--cpu-gpu-driver-and-scheduler-attribution-with-perf-ftrace-and-ebpf/scripts/paired-clocks/analyze.py:23–31,75–109`).
+- **Validation limits:** Inspected deterministic C++ and Python coverage; the handoff’s 15/15 result was not rerun. Hardware clock overhead and observer effect remain measurement follow-up, not demonstrated defects. Additional defensive validation is not required for this developer-tool review.
+
+No issues found.
+
+**Merge verdict: OK.**
+
+<summary>
+This turn: Completed focused read-only TRACE005 review.
+Session so far: Checked pairing, integration, bounds, sidecar semantics and tests.
+Issues: No concrete P1/P2 regressions found.
+Next steps: Merge; perform planned target measurements.
+</summary>

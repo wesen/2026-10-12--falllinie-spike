@@ -1,0 +1,15 @@
+af692af46cff848d21f4272ee6a0ee4e4b4b1c34 /lib/modules/7.2.7/mali-bifrost/mali_kbase.ko
+be6944d5559eccf1e2e762593ece4ea0bd7a424e /storage/apps/falllinie-trace005-20261014T020124Z/falllinie-trace005
+                                         /tmp/perf-vdso.so-EPrpzq
+                                         /usr/lib/ld-linux-aarch64.so.1
+                                         /usr/lib/libSDL2-2.0.so.0.3200.10
+                                         /usr/lib/libc.so.6
+                                         /usr/lib/libm.so.6
+                                         /usr/lib/libmali.so.1.10.0
+                                         /usr/lib/libpulse.so.0.24.3
+                                         /usr/lib/libstdc++.so.6.0.36
+                                         /usr/lib/libudev.so.1.7.14
+                                         /usr/lib/libwayland-client.so.0.26.0
+                                         /usr/lib/libxkbcommon.so.0.8.0
+                                         /usr/lib/pulseaudio/libpulsecommon-17.0.so
+08004531155de60a48c12b296f95027cfae60652 [kernel.kallsyms]

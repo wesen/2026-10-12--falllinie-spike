@@ -1,0 +1,39 @@
+01-baseline mean/p95/p99 18.335 33.06 34.194 sampled/other 19.308 18.318 gpu_outliers 0 health {'GL_error': '0', 'starved_callbacks': '0', 'missing_frames': '0', 'over_budget': '0'}
+02-clocks mean/p95/p99 18.202 32.949 33.942 sampled/other 17.909 18.207 gpu_outliers 0 health {'GL_error': '0', 'starved_callbacks': '0', 'missing_frames': '0', 'over_budget': '0'}
+  render/0/view {'n': 27, 'wall': 7.645, 'cpu': 4.522, 'nonrunning': 3.122}
+  render/1/view {'n': 27, 'wall': 7.031, 'cpu': 2.774, 'nonrunning': 4.257}
+  render/0/scene {'n': 27, 'wall': 2.881, 'cpu': 2.596, 'nonrunning': 0.286}
+  render/0/post {'n': 27, 'wall': 0.66, 'cpu': 0.584, 'nonrunning': 0.076}
+  render/0/output {'n': 27, 'wall': 4.069, 'cpu': 1.293, 'nonrunning': 2.776}
+03-view mean/p95/p99 18.408 33.034 34.255 sampled/other 17.556 18.423 gpu_outliers 2 health {'GL_error': '0', 'starved_callbacks': '0', 'missing_frames': '0', 'over_budget': '0'}
+  render/0/view {'n': 27, 'wall': 7.821, 'cpu': 4.498, 'nonrunning': 3.322}
+  render/1/view {'n': 27, 'wall': 6.236, 'cpu': 2.966, 'nonrunning': 3.27}
+  render/0/scene {'n': 27, 'wall': 3.035, 'cpu': 2.674, 'nonrunning': 0.361}
+  render/0/post {'n': 27, 'wall': 0.771, 'cpu': 0.624, 'nonrunning': 0.147}
+  render/0/output {'n': 27, 'wall': 3.979, 'cpu': 1.152, 'nonrunning': 2.826}
+04-passes mean/p95/p99 18.309 33.026 34.166 sampled/other 17.336 18.326 gpu_outliers 2 health {'GL_error': '0', 'starved_callbacks': '0', 'missing_frames': '0', 'over_budget': '0'}
+  render/0/view {'n': 27, 'wall': 8.101, 'cpu': 4.374, 'nonrunning': 3.727}
+  render/1/view {'n': 27, 'wall': 6.629, 'cpu': 2.948, 'nonrunning': 3.681}
+  render/0/scene {'n': 27, 'wall': 2.573, 'cpu': 2.393, 'nonrunning': 0.18}
+  render/0/post {'n': 27, 'wall': 0.735, 'cpu': 0.604, 'nonrunning': 0.131}
+  render/0/output {'n': 27, 'wall': 4.515, 'cpu': 1.102, 'nonrunning': 3.413}
+05-perf-stat mean/p95/p99 18.309 33.03 34.154 sampled/other 17.218 18.328 gpu_outliers 0 health {'GL_error': '0', 'starved_callbacks': '0', 'missing_frames': '0', 'over_budget': '0'}
+  render/0/view {'n': 27, 'wall': 8.033, 'cpu': 4.496, 'nonrunning': 3.536}
+  render/1/view {'n': 27, 'wall': 5.993, 'cpu': 2.778, 'nonrunning': 3.216}
+  render/0/scene {'n': 27, 'wall': 2.994, 'cpu': 2.648, 'nonrunning': 0.346}
+  render/0/post {'n': 27, 'wall': 0.576, 'cpu': 0.52, 'nonrunning': 0.057}
+  render/0/output {'n': 27, 'wall': 4.437, 'cpu': 1.282, 'nonrunning': 3.155}
+06-perf-record mean/p95/p99 18.102 32.861 34.029 sampled/other 19.69 18.075 gpu_outliers 0 health {'GL_error': '0', 'starved_callbacks': '0', 'missing_frames': '0', 'over_budget': '0'}
+  render/0/view {'n': 27, 'wall': 8.163, 'cpu': 4.337, 'nonrunning': 3.827}
+  render/1/view {'n': 27, 'wall': 8.907, 'cpu': 2.645, 'nonrunning': 6.262}
+  render/0/scene {'n': 27, 'wall': 2.888, 'cpu': 2.551, 'nonrunning': 0.337}
+  render/0/post {'n': 27, 'wall': 0.616, 'cpu': 0.543, 'nonrunning': 0.073}
+  render/0/output {'n': 27, 'wall': 4.635, 'cpu': 1.204, 'nonrunning': 3.431}
+07-clocks mean/p95/p99 18.191 32.976 34.19 sampled/other 16.561 18.219 gpu_outliers 0 health {'GL_error': '0', 'starved_callbacks': '0', 'missing_frames': '0', 'over_budget': '0'}
+  render/0/view {'n': 27, 'wall': 7.582, 'cpu': 4.18, 'nonrunning': 3.402}
+  render/1/view {'n': 27, 'wall': 5.986, 'cpu': 2.513, 'nonrunning': 3.474}
+  render/0/scene {'n': 27, 'wall': 2.899, 'cpu': 2.512, 'nonrunning': 0.387}
+  render/0/post {'n': 27, 'wall': 0.549, 'cpu': 0.494, 'nonrunning': 0.056}
+  render/0/output {'n': 27, 'wall': 4.106, 'cpu': 1.132, 'nonrunning': 2.974}
+08-baseline mean/p95/p99 18.047 32.755 33.882 sampled/other 19.071 18.029 gpu_outliers 0 health {'GL_error': '0', 'starved_callbacks': '0', 'missing_frames': '0', 'over_budget': '0'}
+perf main 39.28 mali 28.06 fraction 0.7143584521384928

@@ -29,7 +29,7 @@ WhenToUse: Before authorizing target profiling or selecting CPU, driver, present
 
 # Implementation authorization update
 
-The user subsequently authorized implementation: “Ok, implement. commit at appropriate intervals and keep a detailed diary as you work (using the diary format from the skill)”. The historical publication-only scope below describes the earlier checkpoint; it no longer prohibits scoped instrumentation and bounded target experiments under the same safety constraints. Parent owns device execution, independent review and acceptance. No system installs, policy weakening, kernel changes or takeover of existing tracing collectors is authorized implicitly.
+The user subsequently authorized implementation, meaningful commits and a detailed skill-format diary (request summarized from compacted context; original authored bytes are not available here). The historical publication-only scope below describes the earlier checkpoint; it no longer prohibits scoped instrumentation and bounded target experiments under the same safety constraints. Parent owns device execution, independent review and acceptance. No system installs, policy weakening, kernel changes or takeover of existing tracing collectors is authorized implicitly.
 
 Initial read-only inventory (scripts/evidence/capabilities/initial.log): perf7.2.7 exists; CONFIG_PERF_EVENTS=y and BPF/BPF_SYSCALL/BPF_JIT=y; CONFIG_FTRACE and CONFIG_KPROBES explicitly disabled; /sys/kernel/btf/vmlinux absent; no trace-cmd,bpftrace,bpftool in PATH. No readable trace root was found. These observations constrain the plan to thread clocks and supported perf events initially, not an invented ftrace/kprobe execution success. BPF configuration alone does not prove required hook/helper availability.
 

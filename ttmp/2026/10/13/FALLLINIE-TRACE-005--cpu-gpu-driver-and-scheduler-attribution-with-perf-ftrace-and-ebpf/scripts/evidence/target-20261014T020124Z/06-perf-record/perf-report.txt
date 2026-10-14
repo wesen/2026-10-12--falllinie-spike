@@ -1,0 +1,4 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+cmd_addr2line_configure /storage/apps/falllinie-trace005-20261014T020124Z/falllinie-trace005: addr2line configuration failed
+	ÿ

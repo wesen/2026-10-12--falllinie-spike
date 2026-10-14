@@ -1,0 +1,6 @@
+source_rev=209a6d092885ff3f0a1efd1efab4252cb4ad2b56
+case=passes
+order=4
+seconds=30
+warmup_frames=60
+exit_status=0

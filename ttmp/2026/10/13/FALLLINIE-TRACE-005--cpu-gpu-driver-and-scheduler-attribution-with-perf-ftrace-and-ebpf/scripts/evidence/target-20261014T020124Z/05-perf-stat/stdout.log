@@ -1,0 +1,122 @@
+[69877.374709] (falllinie-trace) Successfully parsed 1 environment variable(s) from ./mali_debug.config.
+Could not open module param file '/sys/module/bifrost_kbase/parameters/large_page_conf'
+[69877.376039] (falllinie-trace) Successfully parsed 1 environment variable(s) from ./mali_debug.config.
+arm_release_ver: g29p1-12eac0, rk_so_ver: 5
+GL_VERSION=OpenGL ES 3.2 v1.g29p1-12eac0.d6e9c0f8499d70cc285f3f0ca2ede780
+GL_RENDERER=Mali-G52
+GL_VENDOR=ARM
+GLSL=OpenGL ES GLSL ES 3.20
+GL_EXTENSIONS=GL_ARM_rgba8 GL_ARM_mali_shader_binary GL_ARM_debug_assert GL_OES_depth24 GL_OES_depth_texture GL_OES_depth_texture_cube_map GL_OES_packed_depth_stencil GL_OES_rgb8_rgba8 GL_EXT_read_format_bgra GL_OES_compressed_paletted_texture GL_OES_compressed_ETC1_RGB8_texture GL_OES_standard_derivatives GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_EGL_image_external_essl3 GL_OES_EGL_sync GL_OES_texture_npot GL_OES_vertex_half_float GL_OES_required_internalformat GL_OES_vertex_array_object GL_OES_mapbuffer GL_EXT_texture_format_BGRA8888 GL_EXT_texture_rg GL_EXT_texture_type_2_10_10_10_REV GL_OES_fbo_render_mipmap GL_OES_element_index_uint GL_EXT_shadow_samplers GL_OES_texture_compression_astc GL_KHR_texture_compression_astc_ldr GL_KHR_texture_compression_astc_hdr GL_KHR_texture_compression_astc_sliced_3d GL_EXT_texture_compression_astc_decode_mode GL_EXT_texture_compression_astc_decode_mode_rgb9e5 GL_KHR_debug GL_EXT_occlusion_query_boolean GL_EXT_disjoint_timer_query GL_EXT_blend_minmax GL_EXT_discard_framebuffer GL_OES_get_program_binary GL_OES_texture_3D GL_EXT_texture_storage GL_EXT_multisampled_render_to_texture GL_EXT_multisampled_render_to_texture2 GL_OES_surfaceless_context GL_OES_texture_stencil8 GL_EXT_shader_pixel_local_storage GL_ARM_shader_framebuffer_fetch GL_ARM_shader_framebuffer_fetch_depth_stencil GL_ARM_mali_program_binary GL_EXT_sRGB GL_EXT_sRGB_write_control GL_EXT_texture_sRGB_decode GL_EXT_texture_sRGB_R8 GL_EXT_texture_sRGB_RG8 GL_KHR_blend_equation_advanced GL_KHR_blend_equation_advanced_coherent GL_OES_texture_storage_multisample_2d_array GL_OES_shader_image_atomic GL_EXT_robustness GL_EXT_draw_buffers_indexed GL_OES_draw_buffers_indexed GL_EXT_texture_border_clamp GL_OES_texture_border_clamp GL_EXT_texture_cube_map_array GL_OES_texture_cube_map_array GL_OES_sample_variables GL_OES_sample_shading GL_OES_shader_multisample_interpolation GL_EXT_shader_io_blocks GL_OES_shader_io_blocks GL_EXT_tessellation_shader GL_OES_tessellation_shader GL_EXT_primitive_bounding_box GL_OES_primitive_bounding_box GL_EXT_geometry_shader GL_OES_geometry_shader GL_ANDROID_extension_pack_es31a GL_EXT_gpu_shader5 GL_OES_gpu_shader5 GL_EXT_texture_buffer GL_OES_texture_buffer GL_EXT_copy_image GL_OES_copy_image GL_EXT_shader_non_constant_global_initializers GL_EXT_color_buffer_half_float GL_EXT_unpack_subimage GL_EXT_color_buffer_float GL_EXT_YUV_target GL_OVR_multiview GL_OVR_multiview2 GL_OVR_multiview_multisampled_render_to_texture GL_KHR_robustness GL_KHR_robust_buffer_access_behavior GL_EXT_draw_elements_base_vertex GL_OES_draw_elements_base_vertex GL_EXT_protected_textures GL_EXT_buffer_storage GL_EXT_clear_texture GL_ARM_shader_core_properties GL_EXT_texture_filter_anisotropic GL_ARM_texture_unnormalized_coordinates GL_EXT_shader_framebuffer_fetch GL_EXT_polygon_offset_clamp GL_EXT_EGL_image_storage 
+GL_CAPS max_texture=16383 max_renderbuffer=16383
+joystick=retrogame_joypad
+program original scene with relative projection linked
+projection coordinates=camera-relative
+sky hash=stable wrapped integer lattice
+depth sampler=explicit highp portability override
+program original print linked
+program presentation diagnostic linked
+program batched native HUD using source font linked
+glyph atlas loaded
+terrain vertices=59492 indices=351072 build_ms=66.7604 targets=384x288 FBOs complete
+PROFILE mode=off cadence=60 supported=0 pool=32 CPU_passes=sparse,nested,nonadditive
+DIAGNOSTIC fixture=live-or-default second_view=first-person post_bypass=0 non_parity=0 seed=42 cell=0 cells=3 internal=384x288 dual=1
+SOURCE: A jump / B-X boost / L1-R1-L2-R2 grabs / START pause / SELECT dev / SELECT+Y new seed / SELECT+START quit; keyboard WASD/arrows, SPACE, SHIFT/B, J/K/U/I, P/ESC, R new seed, F2 dev, M, C, F3, F10
+seed=42 best_path=/storage/.local/share/Falllinie/Falllinie/best-score
+ride z=4 speed=6 airborne=0 charge=0 score=0
+placement=[
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  }
+]
+
+FPS=51.4558 frame_interval_ms=16.0283
+ride z=12.2611 speed=9.56789 airborne=0 charge=0 score=0
+FPS=55.2002 frame_interval_ms=16.3999
+ride z=23.1416 speed=12.6184 airborne=0 charge=0 score=0
+FPS=54.2776 frame_interval_ms=33.6115
+ride z=37.9322 speed=16.4177 airborne=1 charge=0 score=0
+FPS=55.1711 frame_interval_ms=16.8173
+ride z=55.7679 speed=20.1241 airborne=0 charge=0 score=0
+FPS=54.3339 frame_interval_ms=15.9446
+ride z=77.685 speed=22.4244 airborne=0 charge=0 score=0
+FPS=55.2087 frame_interval_ms=16.5734
+ride z=101.444 speed=24.4635 airborne=0 charge=0 score=455
+FPS=55.3241 frame_interval_ms=31.6055
+ride z=126.685 speed=25.9992 airborne=0 charge=0 score=455
+FPS=55.1673 frame_interval_ms=16.5758
+ride z=154.553 speed=28.7195 airborne=1 charge=0 score=455
+FPS=55.337 frame_interval_ms=16.1908
+ride z=184.34 speed=30.8344 airborne=0 charge=0 score=455
+FPS=56.2202 frame_interval_ms=16.6752
+ride z=215.333 speed=29.9436 airborne=1 charge=0 score=455
+FPS=57.1035 frame_interval_ms=16.6131
+ride z=245.939 speed=34.9002 airborne=1 charge=0 score=455
+FPS=54.453 frame_interval_ms=33.5432
+ride z=279.988 speed=33.8588 airborne=0 charge=0 score=455
+FPS=55.216 frame_interval_ms=16.5766
+ride z=312.661 speed=32.8253 airborne=0 charge=0 score=455
+FPS=55.2275 frame_interval_ms=34.0857
+FPS=55.2383 frame_interval_ms=16.5352
+ride z=347.869 speed=34.2374 airborne=1 charge=0 score=2435
+FPS=51.2927 frame_interval_ms=17.1288
+ride z=385.481 speed=35.9265 airborne=1 charge=0 score=2435
+FPS=53.2763 frame_interval_ms=17.3492
+ride z=424.795 speed=39.4989 airborne=1 charge=0 score=2435
+FPS=54.159 frame_interval_ms=18.0536
+ride z=464.922 speed=38.87 airborne=0 charge=0 score=2435
+FPS=52.5057 frame_interval_ms=33.5097
+ride z=504.877 speed=37.3479 airborne=0 charge=0 score=2435
+FPS=53.2613 frame_interval_ms=16.7998
+ride z=544.882 speed=39.3485 airborne=0 charge=0 score=2435
+FPS=54.2892 frame_interval_ms=15.9843
+ride z=585.854 speed=36.1812 airborne=1 charge=0 score=2435
+FPS=53.1951 frame_interval_ms=17.4155
+ride z=623.662 speed=38.2898 airborne=1 charge=0 score=2435
+FPS=55.2556 frame_interval_ms=16.5944
+ride z=661.09 speed=44.6479 airborne=1 charge=0 score=2435
+FPS=54.2696 frame_interval_ms=16.8502
+ride z=700.326 speed=37.2748 airborne=0 charge=0 score=2435
+FPS=56.2677 frame_interval_ms=30.1976
+FPS=55.2334 frame_interval_ms=16.0572
+ride z=736.218 speed=31.7925 airborne=1 charge=0 score=2435
+FPS=52.3034 frame_interval_ms=16.0934
+ride z=772.129 speed=32.3194 airborne=1 charge=0 score=2435
+FPS=50.2203 frame_interval_ms=17.4604
+ride z=800.681 speed=8.06927 airborne=0 charge=0 score=2435
+FPS=57.2242 frame_interval_ms=16.7761
+ride z=806.586 speed=6.86158 airborne=0 charge=0 score=2435
+AUDIO driver=pulseaudio rate=48000 buffer=1024 mode=buffered vinyl=1 callbacks=1407 mean_ms=0.021674 max_ms=0.30275 over_budget=0 callback_cpu_samples=1407 callback_cpu_mean_ms=0.012745 callback_cpu_max_ms=0.040542 callback_cpu_unavailable=0 producer_blocks=1409 producer_mean_ms=12.442370 producer_max_ms=25.9726 producer_over_budget=3 producer_cpu_samples=1409 producer_cpu_mean_ms=11.073536 producer_cpu_max_ms=18.781289 producer_cpu_unavailable=0 produced=1442816 delivered=1440768 pcm_depth=2048 pcm_target=2048 pcm_capacity=8192 pcm_low=0 pcm_high=2048 starved_callbacks=0 missing_frames=0 queue_high=3 drops=0 steals=0 nonfinite=0 budget_counters_not_driver_xruns=1
+frames=1636 measured=1576 frame_p50_ms=16.5933 frame_p95_ms=32.9305 frame_p99_ms=34.0983 peak_rss_kib=109372 GL_error=0

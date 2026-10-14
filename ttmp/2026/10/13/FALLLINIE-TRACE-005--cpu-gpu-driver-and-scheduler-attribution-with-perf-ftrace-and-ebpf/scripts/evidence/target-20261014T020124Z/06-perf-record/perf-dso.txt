@@ -1,0 +1,56 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 3K of event 'cpu-clock'
+# Event count (approx.): 40131312730
+#
+# Overhead      Pid:Command          Command          Shared Object              
+# ........  .......................  ...............  ...........................
+#
+    37.10%   721824:falllinie-trace  falllinie-trace  falllinie-trace005         
+    28.06%   721804:falllinie-trace  falllinie-trace  libmali.so.1.10.0          
+     4.13%   721813:mali-cmar-backe  mali-cmar-backe  [kernel.kallsyms]          
+     3.80%   721815:PulseMainloop    PulseMainloop    [kernel.kallsyms]          
+     3.65%   721804:falllinie-trace  falllinie-trace  falllinie-trace005         
+     3.40%   721824:falllinie-trace  falllinie-trace  libm.so.6                  
+     2.87%   721813:mali-cmar-backe  mali-cmar-backe  libmali.so.1.10.0          
+     2.84%   721804:falllinie-trace  falllinie-trace  [kernel.kallsyms]          
+     2.49%   721804:falllinie-trace  falllinie-trace  libc.so.6                  
+     1.46%   721824:falllinie-trace  falllinie-trace  [kernel.kallsyms]          
+     1.43%   721813:mali-cmar-backe  mali-cmar-backe  libc.so.6                  
+     1.01%   721822:PulseHotplug     PulseHotplug     [kernel.kallsyms]          
+     0.98%   721823:SDLAudioP2       SDLAudioP2       [kernel.kallsyms]          
+     0.86%   721813:mali-cmar-backe  mali-cmar-backe  [mali_kbase]               
+     0.65%   721804:falllinie-trace  falllinie-trace  libwayland-client.so.0.26.0
+     0.65%   721815:PulseMainloop    PulseMainloop    libpulse.so.0.24.3         
+     0.63%   721814:mali-compiler    mali-compiler    libmali.so.1.10.0          
+     0.63%   721815:PulseMainloop    PulseMainloop    libpulsecommon-17.0.so     
+     0.45%   721804:falllinie-trace  falllinie-trace  libm.so.6                  
+     0.40%   721804:falllinie-trace  falllinie-trace  libstdc++.so.6.0.36        
+     0.33%   721804:falllinie-trace  falllinie-trace  libSDL2-2.0.so.0.3200.10   
+     0.30%   721815:PulseMainloop    PulseMainloop    libc.so.6                  
+     0.25%   721823:SDLAudioP2       SDLAudioP2       libc.so.6                  
+     0.23%   721824:falllinie-trace  falllinie-trace  libc.so.6                  
+     0.18%   721804:falllinie-trace  falllinie-trace  [mali_kbase]               
+     0.18%   721822:PulseHotplug     PulseHotplug     libc.so.6                  
+     0.18%   721823:SDLAudioP2       SDLAudioP2       libSDL2-2.0.so.0.3200.10   
+     0.15%   721823:SDLAudioP2       SDLAudioP2       libpulsecommon-17.0.so     
+     0.13%   721813:mali-cmar-backe  mali-cmar-backe  libwayland-client.so.0.26.0
+     0.10%   721804:falllinie-trace  falllinie-trace  libudev.so.1.7.14          
+     0.10%   721823:SDLAudioP2       SDLAudioP2       libpulse.so.0.24.3         
+     0.08%   721804:falllinie-trace  falllinie-trace  [vdso]                     
+     0.08%   721822:PulseHotplug     PulseHotplug     libSDL2-2.0.so.0.3200.10   
+     0.05%   721804:falllinie-trace  falllinie-trace  libxkbcommon.so.0.8.0      
+     0.05%   721814:mali-compiler    mali-compiler    libc.so.6                  
+     0.03%   721813:mali-cmar-backe  mali-cmar-backe  [vdso]                     
+     0.03%   721822:PulseHotplug     PulseHotplug     libpulse.so.0.24.3         
+     0.03%   721822:PulseHotplug     PulseHotplug     libpulsecommon-17.0.so     
+     0.03%   721823:SDLAudioP2       SDLAudioP2       falllinie-trace005         
+     0.03%   721824:falllinie-trace  falllinie-trace  libSDL2-2.0.so.0.3200.10   
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

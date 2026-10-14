@@ -122,7 +122,7 @@ The user authorized implementation of the report's plan with meaningful commits 
 The installed kernel has perf but explicitly disables FTRACE and KPROBES. This rules out assuming the proposed tracefs scheduler/kprobe method is available. Kernel BPF options are enabled, but the absent BTF/tooling and unverified event hooks mean that BPF support alone proves no usable attribution path. Paired clocks and supported perf sampling remain useful without changing the kernel.
 
 ### Prompt Context
-**User prompt (verbatim):** "Ok, implement. commit at appropriate intervals and keep a detailed diary as you work (using the diary format from the skill)"
+**User request (summary from compacted context):** Implement the previously discussed plan, commit at appropriate intervals, and maintain a detailed work diary using the skill format. Original authored bytes are unavailable in this context; the earlier reconstructed quotation was incorrect evidence labeling.
 **Assistant interpretation:** Implement safe optional scope timing, choose tracing facilities based on actual support, run bounded reviewed target experiments and commit at meaningful milestones.
 **Inferred user intent:** Determine whether drawing wall time is computation or waiting using reproducible evidence rather than a new theoretical plan.
 
@@ -133,9 +133,11 @@ Read design01 and current profiler contracts; loaded full investigation diary fo
 Tools and kernel hooks are independent capabilities. A running recent kernel and enabled BPF_SYSCALL do not imply scheduler trace events or attachable driver functions. Avoiding unavailable mechanisms focuses effort on measurements that can actually run.
 
 ### What worked
-Inventory returned perf7.2.7 at/usr/bin/perf,CONFIG_PERF_EVENTS=y,BPF/BPF_SYSCALL/BPF_JIT=y,SCHEDSTATS=y. Current target364832KiB available/no swap and no active Falllinie process in the bounded check. No configuration/collector/service was changed.
+Inventory returned perf7.2.7 at/usr/bin/perf,CONFIG_PERF_EVENTS=y,BPF/BPF_SYSCALL/BPF_JIT=y,SCHEDSTATS=y. Current target364832KiB available/no swap and no active Falllinie process in the bounded check. No configuration/collector/service was changed. Prior eight-run PERF004 evidence is now preserved unchanged in ae2a175; capability/authority checkpoint c9c65f9. Neither commit claims final GPU attribution.
 
 ### What didn't work
+`git diff --cached --check` returned exit2 because eight raw stdout.log GL_EXTENSIONS lines end in spaces. Preserved the raw bytes rather than modifying hashed evidence; checked with command-local `git -c core.whitespace=-blank-at-eol diff --cached --check` and committed only intended PERF004 evidence. No repository-wide whitespace configuration was changed.
+
 Not failed experiments: CONFIG_FTRACE and CONFIG_KPROBES are explicitly not set; BTFvmlinux absent; trace-cmd/bpftrace/bpftool unavailable; no readable trace root found. These are capability limits, not permission to install tools, mount tracefs, weaken policy or replace the kernel. perf_event_paranoid=2 does not establish whether this root context can use every event; bounded event tests remain required.
 
 ### What I learned
@@ -155,3 +157,75 @@ Start at04-capabilities.sh/initial.log, updateddesign01 and src/profiler.cpp/.hp
 
 ### Technical details
 Runtime base5320816; parent ticket publication5eb0135 changed docs only. Preserve noGLoffmain/noJScallback/oneworld/RNG invariants. Current fixed sampling cadence60; new paired fields must not redefine legacycpu_ms from wall to threadCPU silently. Raw traces, if any, remain private/ignored; bounded aggregates and object identities are sufficient for publication.
+
+### Subsequent user direction: prioritize real measurements
+**User prompt (verbatim):** "also don't overcautiously test and measure, we can run proper runs once all the things are built pretty quickly, no need to test every little change that won't actually bring us closer to proper measurements. this is not production software but debugging / dev tooling"
+
+The implementation packet carries that instruction explicitly: build the whole instrumentation/analyzer slice, then one focused host validation rather than per-edit checks, sanitizer matrices or polish loops. Workflowf6aa12ba-ba2b-4961-a4fc-330ae41468be owns one isolated writer followed by a focused read-only measurement review. Parent prepared05-run-target.sh and06-parent-campaign.sh for one substantive live campaign with baseline/clocks/view/passes/perf counts/perf samples and baseline brackets. These scripts are preparatory and not yet executed; the new runtime flag remains to be confirmed against the worker's implementation.
+
+A workflow-level steering attempt returned `Workflow 'f6aa12ba-ba2b-4961-a4fc-330ae41468be' has no live foreground child.` One status inspection showed the workflow still running/setup with its first child; no fallback process or duplicate worker was launched. Native completion/coordination will drive continuation. No additional device micro-probes were run.
+
+## Step 4: Integrate paired clocks and execute eight substantive live runs
+
+The complete instrumentation slice landed as209a6d0 (worker9097f8d), after one feature-boundary host build/test run and one focused source review. The parent then built one ARM candidate and ran eight30-second live cases: baseline, clocks, whole-view queries, pass queries, perf stat, perf record, clocks, baseline. No small-change hardware matrix was inserted.
+
+The measurements now separate executing CPU time from non-running render-thread time. In the first unqueried clock run the top view averaged7.645ms wall/4.522ms CPU, and the lower view7.031/2.774ms across27postwarmup samples. perf also identifies substantial executing driver code: libmali accounted for28.06% of all sampled CPU periods, or71.44% of the main thread's sampled CPU share. Neither observation proves that all non-running time is GPU waiting.
+
+### Prompt Context
+**User request:** Implementation/commits/diary summarized inStep3; exact subsequent direction there prioritizes real runs over excessive preliminary checking.
+**User prompt (verbatim):** "how are things going, are we making progress? are we overly cautious maybe?"
+**User prompt (verbatim):** "make graphs and such for the report and the diary."
+**User prompt (verbatim):** "commit at appropriate intervals and keep a detailed diary as you work (using the diary format from the skill)"
+**Assistant interpretation:** Complete real measurements promptly; preserve failures, results and uncertainty; make reproducible visual evidence usable in both report and diary.
+**Inferred user intent:** Reach actionable diagnosis instead of spending the session on procedural validation.
+**Commit (code):**209a6d0 — Add opt-in paired main-thread clocks and TRACE005 sidecar analysis.
+
+### What I did
+- Read writer/reviewer artifacts, inspected profiler/main diff and recorder implementation, cherry-picked9097f8d as209a6d0. Worker15/15tests passed6.42s; reviewer found no concrete P1/P2 issues. No parent repeat of unchanged host suite.
+- Built with07-build-arm.sh using existing offline Docker toolchain and approved targetSDL. O2/g/frame-pointers/build-id; binary SHA2562872ede7219ccd91890de4c0d47d5af8fab687f2b5b2cf9605e25ecb1dfcb1d2. Main-thread GL, audio/RNG/shaders unchanged.
+- Used05-run-target.sh/06-parent-campaign.sh under separate/storage/apps/falllinie-trace005-20261014T020124Z. Original game and launcher untouched. Every run had internal30s limit and external60s timeout+5s kill grace, bounded perf buffer, no systemwide attachment or policy changes. Preserved boot ID/config/frequency/thermal/binary/argv/exit receipts.
+- Ran eight live autoplay dual384×288/no-vsync/fps60 cases with buffered1024/audio muted but full source-vinyl DSP and overlay. 13133totalframes/12653after60warmup per run;3360pairedrecords from sixinstrumented runs, zero invalid/dropped records, exact final reconciliation.
+- Recorded perf cpu-clock at99Hz with mono timestamp clock and frame-pointer stacks;3973samples,0reported lost samples. Kept raw recording (perf reported0.467MB) in ignoredscripts/.work; retained text reports/build IDs. Recovered formatter without rerunning the captured workload, then completed cases07/08.
+- Prepared09-graphs.py with raw-input hashes, fiveSVGs and exactJSON aggregates; frame/paired plots exclude frame<60 consistently, perf whole-recording aggregates include startup explicitly.
+
+### Why
+Paired clocks answer the immediate wall-versus-execution question without unavailable ftrace hooks. perf supplies where CPU execution occurred; it does not explain blocked duration. Baseline brackets and whole-view/pass cases test whether conclusions rely on one query mode, without claiming a randomized fixed-clock experiment.
+
+### What worked
+All eight workload receipts completed withGL_error0, callbackover_budget0,starved_callbacks0,missing_frames0. Mean postwarmup intervals18.047–18.408ms; p95~32.8–33.1ms. Paired final records all complete/valid. Raw perf survived report formatting failure and rendered successfully with inline expansion disabled. Source and deployment binary hashes match. Finite audio health is not XRUN/physical latency proof.
+
+### What didn't work
+- First SSH launch lacked the credential environment expected by the external askpass helper: `Permission denied, please try again.` then `Received disconnect from 192.168.0.202 port 22:2: Too many authentication failures`; exit255 before target runs. Supplied the existing credential environment for retry; no credentials stored in receipts/scripts.
+- After successful sixth workload and perf recording, `perf report` exited141 with `cmd_addr2line_configure /storage/apps/falllinie-trace005-20261014T020124Z/falllinie-trace005: addr2line configuration failed`. Originalperf-report.txt and launch log preserved.08-finish-campaign.sh uses `--no-inline -g none`, retains symbol/DSO sample attribution and avoids broken inline expansion. Final two runs were delayed by postprocessing recovery; these are not uninterrupted brackets.
+- Final scoped evidence staging found `scripts/evidence/build/compiler.txt:5: new blank line at EOF.` from raw compiler output. Preserved raw receipts and used command-local whitespace exceptions for raw evidence only; ordinary source/docs diff-check passed. Git also warned the SSH failure log CRLF would normalize toLF whenGit next touches it; the text diagnostic is preserved, not treated as a byte-identical capture hash. No repository whitespace setting changed.
+- Four startup GPU readings across view/pass cases were about1.84467441e13ms despite API statusvalid. These are physically impossible for a30srun. Raw readings remain unchanged; common frame<60warmup exclusion removes them from postwarmup plots. All postwarmup query values are numerically smaller, but this does not validate their causal meaning.
+- Whole-view mean sum27.272ms and pass mean sum42.174ms remain inconsistent as additive costs against~18msframe intervals. Do not call them utilization or use subtraction to price a shader. Numeric API validity is not sufficient physical validity.
+
+### What I learned
+There are two distinct targets: executing driver overhead (main-thread libmali samples) and non-running time (paired residuals, concentrated in output). Source CPU optimization alone cannot be assumed to recover all rendering wall time. New data does not show a large systematic slowdown on cadence-selected query frames; the observer-effect hypothesis remains unproven rather than being used as a convenient explanation for nonadditive GPU results.
+
+### What was tricky to build
+A single render scope contains nested scene/post/output scopes; counts and bars must not add parent+children. The sidecar uses explicit same-row clock pairs, and the plot generator applies the same warmup boundary to both clocks. perf share is a different denominator (all sampled process threads, including startup), so71.44% is main-thread executing samples, not frame time orGPU utilization. Debug-symbol inline expansion failed even though collection and application succeeded.
+
+### What warrants a second pair of eyes
+GPU timer interpretation and impossible startup readings; missing blocked-versus-runnable attribution; all-thread perf percentage denominator; sequential runs with variable clocks and slightly different autoplay trajectories. Frame-pointer stacks may be incomplete in third-party driver libraries; reports currently use flat attribution, not asserted complete call chains.
+
+### What should be done in the future
+Use the measured driver-heavy execution and output-heavy residual to choose batching/state-cache/output-path experiments. If exact wait reasons become necessary, obtain supported scheduler/driver tracing capabilities through a separately approved image/tooling change—not an unrequested kernel replacement. Do not broaden this into production observability work. DeferredPERF004report should consume these finalized evidence hashes rather than the initial pass totals alone.
+
+### Code review instructions
+Readsrc/paired_clocks.cpp, main.cpp instrumentation, scripts/paired-clocks/analyze.py andscripts09-graphs.py. Reproduce plots with `python3 "$T/scripts/09-graphs.py"`; raw data is inscripts/evidence/target-20261014T020124Z, build receipts inevidence/build. Reviewer artifact is retained asplain.txt, not Markdown without docmgr metadata. Historical vault tracing report remains the research/design checkpoint, not silently rewritten.
+
+### Technical details
+GPUqueriesoff in baseline/clocks/perf runs; cadence60 in all cases. Source/runtime209a6d0; all eight binaries identical. Initial/closing clock runs each have27postwarmup samples per named scope. Mean residuals preserve clock-read/accounting skew and offCPU together. Device governorondemand, no pinning/FIFO/affinity/kernel/sysctl/mount/service changes. Separate app process owns perf capture; other existing workloads are not attached.
+
+### Visual evidence
+![Same-row thread CPU and non-running estimates](../scripts/figures/01-cpu-wall.svg)
+![Live frame interval distributions](../scripts/figures/02-frame-cdf.svg)
+![Cadence-selected versus other frames](../scripts/figures/03-query-observer.svg)
+![Sampled CPU by thread and object](../scripts/figures/04-perf-cpu.svg)
+![Nonadditive GPU elapsed values](../scripts/figures/05-gpu-elapsed.svg)
+
+The five SVGs parsed as valid XML; all ticket checks passed `docmgr doctor --ticket FALLLINIE-TRACE-005 --stale-after 30`. Updated task completion to name exactly the supported CPU/perf work, keeping unavailable blocked/runnable/driver wait attribution and unresolved GPU semantics as explicit open items. Build evidence is forced-added as text because the repository's generic build-directory ignore also matches scripts/evidence/build; no binary/rawperf is staged.
+
+These figures are generated from actual retained data, not constructed examples. Exact values/filtering/inputSHA256s live beside them infigures/provenance.json andevidence/campaign-summary.json.

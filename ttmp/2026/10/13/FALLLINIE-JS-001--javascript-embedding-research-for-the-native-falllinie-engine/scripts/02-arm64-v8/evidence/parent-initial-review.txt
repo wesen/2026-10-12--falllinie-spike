@@ -1,0 +1,44 @@
+## Review
+
+Reviewed the supplied candidate patch, embedding sources, build/package/target scripts, continued diary and retained evidence. No files modified, binaries executed, device accessed or policy changed.
+
+Paths below use:
+- **T**: `ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine`
+- **P**: `T/scripts/02-arm64-v8`
+
+### Correct
+
+- **Runtime lifetimes:** V8 persistent functions/script/context are reset before isolate disposal; allocator and platform outlive isolates (`P/v8-probe.cpp:65–69,83–89`). QuickJS releases cached/compiled/intrinsic values before context/runtime teardown (`P/quickjs-probe.cpp:45–60`).
+- **Native boundaries:** Typed-buffer validation checks exact type, detachment, bounds and width; bytes are copied into native-owned storage without executing JS while borrowed. Property-get exceptions are preserved in score validation (`P/v8-probe.cpp:14–43`; `P/quickjs-probe.cpp:12–44`). Explicit microtask handling is honestly limited to a known finite job.
+- **Fixture and workload comparison:** Frozen fixture hash enforcement and unchanged source-body extraction are explicit (`P/01-extract.cjs:5–16`). Comparator checks 85 leaves, exact labels/integers, numerical tolerance, workload checksums and complete success (`P/04-compare.py:7–44`). All three retained host runs report zero engine float delta; native delta is `2.220446049250313e-16`.
+- **Benchmark labeling:** First-wrapper calls, warmed distributions, lifecycle phases and external process wall time are distinguished. JIT/lazy compilation, unstable host conditions, unavailable QuickJS GC attribution and cooperative—not hard—RSS limits are disclosed (`P/README.md:24–53`).
+- **V8 provenance:** Actual raw V8 API embedding through pinned Debian libnode108 is clearly labeled, not portrayed as standalone/latest V8 or interpretation (`P/v8-probe.cpp:71`; `P/evidence/host-build-provenance.log:70–87`).
+- **Target safety:** Runner checks architecture, current headroom, hashes, shared lock and existing results; applies an owned-process 180-second timeout plus five-second kill grace (`P/run-target.sh:5–41`). Deployment/collection contain no service, game-process or system-library changes.
+- **Scope/history:** The supplied patch is additive and ticket-local. Useful scripts reside in the previous JS ticket. No production/history edits, binary patches or evident credentials appear in it. Generated dependencies/packages remain ignored. The full continued diary preserves the listed failures and recoveries (`T/reference/02-arm64-v8-qualification-diary.md:88–186`).
+
+### Findings
+
+- **P2 — Logging contaminates some reported durations.**  
+  At `P/probe-common.hpp:31,44,58`, `us(a)` is evaluated *after* preceding `std::cout` insertions. Thus source-read, first-call and explicit-GC timings include formatting/output work and potentially a buffer flush. This is particularly material to very short first-call measurements. Warm distributions capture their endpoint before logging and are unaffected.  
+  **Smallest fix:** Capture elapsed values immediately after the measured operation, then print them. Preserve old evidence and generate clearly identified replacement receipts.
+
+- **P2 — Finite inputs can produce an accepted nonfinite native result.**  
+  `CopyState::copy` checks each element but not the accumulated sum (`P/probe-common.hpp:23`). Two `Number.MAX_VALUE` elements pass validation, overflow the sum to infinity and commit that value; both embeddings return it (`P/quickjs-probe.cpp:27`; `P/v8-probe.cpp:23–24`). This does not affect the supplied deterministic fixtures, but leaves a gap in the new numeric boundary qualification.  
+  **Smallest fix:** Reject a nonfinite accumulated result before committing copied state; add an overflow rejection test that also verifies prior copied state remains intact.
+
+### Evidence limits
+
+Retained logs support native CPU **12/12**, comparator **7/7**, and sanitized adapter passes; I did not rerun them. Third-party libraries remain uninstrumented. Archive hashes, Git cleanliness and package bytes were not independently recomputed.
+
+**ARM64 execution remains pending.** Cross-link/readelf evidence does not establish target loader acceptance, runtime version, correctness, performance or memory behavior. Parent must execute and independently collect/compare those gates.
+
+### Merge verdict: **OK with notes**
+
+Suitable as an isolated research candidate, with the two P2 corrections above recommended. This verdict does **not** accept ARM64 qualification or production integration.
+
+<summary>
+This turn: Reviewed actual patch, sources, scripts, diary and evidence.
+Session so far: Read-only review complete; no execution or device access.
+Issues: Two P2 findings: timing includes logging and finite sums can overflow.
+Next steps: Correct bounded findings and have parent perform pending ARM64 gates.
+</summary>

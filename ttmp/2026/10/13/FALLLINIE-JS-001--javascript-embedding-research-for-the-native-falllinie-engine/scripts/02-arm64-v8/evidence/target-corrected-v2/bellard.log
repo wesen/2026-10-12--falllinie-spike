@@ -1,0 +1,36 @@
+source_read_us=451.19799999999998 source_bytes=22173
+timing_contract=operation_end_before_logging_v2
+config heap_limit_bytes=33554432 stack_limit_bytes=524288 sustained_blocks=300 heap_limit_is_not_RSS_limit=true
+lifecycle cycle=0 create_us=1328.221 compile_us=10435.314 execute_us=643.98599999999999 dispose_us=432.53199999999998 rss_kib=4104
+lifecycle cycle=1 create_us=548.61300000000006 compile_us=7987.9920000000002 execute_us=516.52999999999997 dispose_us=478.61500000000001 rss_kib=4128
+lifecycle cycle=2 create_us=550.65499999999997 compile_us=8631.3950000000004 execute_us=547.73800000000006 dispose_us=433.40699999999998 rss_kib=4148
+lifecycle cycle=3 create_us=532.27999999999997 compile_us=7868.4120000000003 execute_us=569.61300000000006 dispose_us=454.99000000000001 rss_kib=4156
+lifecycle cycle=4 create_us=551.52999999999997 compile_us=8559.9380000000001 execute_us=572.529 dispose_us=479.19799999999998 rss_kib=4164
+lifecycle cycle=5 create_us=542.779 compile_us=7653.1670000000004 execute_us=523.23900000000003 dispose_us=567.86199999999997 rss_kib=4176
+lifecycle cycle=6 create_us=564.07100000000003 compile_us=8467.7739999999994 execute_us=651.56899999999996 dispose_us=492.90600000000001 rss_kib=4196
+lifecycle cycle=7 create_us=548.02999999999997 compile_us=7826.1210000000001 execute_us=631.15200000000004 dispose_us=467.24000000000001 rss_kib=4204
+engine quickjs-bellard 2026-06-04 archive=b376e839b322978313d929fd20663b11ba58b75df5a46c126dd19ea2fa70ad2a interpreter
+cold noop first_call_us=2.9169999999999998 checksum=1
+bench noop n=120 warmup=30 p50_us=0.29199999999999998 p95_us=0.58399999999999996 p99_us=0.58399999999999996 max_us=1.458 total_us=47.829000000000043 calls_per_second=2508938.0919525786 checksum=120
+cold batch first_call_us=6713.4369999999999 checksum=30360.045279458187
+bench batch n=120 warmup=30 p50_us=6337.1949999999997 p95_us=6963.098 p99_us=6999.2640000000001 max_us=7157.0519999999997 total_us=764909.76799999981 calls_per_second=156.88124929266169 checksum=3643205.4335349803
+cold sourceRules first_call_us=14304.188 checksum=248097186646.1832
+bench sourceRules n=120 warmup=30 p50_us=14312.937 p95_us=15045.879999999999 p99_us=15250.334000000001 max_us=15450.704 total_us=1731657.7829999996 calls_per_second=69.297756853612697 checksum=29771662397542.023
+cold scalarBridge first_call_us=181.70400000000001 checksum=280126
+bench scalarBridge n=120 warmup=30 p50_us=177.91300000000001 p95_us=190.45400000000001 p99_us=267.161 max_us=489.40600000000001 total_us=21968.731000000043 calls_per_second=5462.309133832071 checksum=33615120
+cold batchedBridge first_call_us=132.12200000000001 checksum=280126
+bench batchedBridge n=120 warmup=30 p50_us=120.748 p95_us=123.956 p99_us=187.53800000000001 max_us=307.99299999999999 total_us=14884.885000000013 calls_per_second=8061.8694736304578 checksum=33615120
+cold churn first_call_us=3193.096 checksum=1
+bench churn n=120 warmup=30 p50_us=2522.5700000000002 p95_us=3167.7220000000002 p99_us=3325.5100000000002 max_us=3587.1300000000001 total_us=311173.25399999978 calls_per_second=385.63725660046634 checksum=120
+oracle {"hashes":[388445122,1852637032,2623512388,2116654401,3790136032],"random":[0.9797282677609473,0.3067522644996643,0.484205421525985,0.817934412509203,0.5094283693470061,0.34747186047025025,0.07375754183158278,0.7663964673411101,0.9968264393974096,0.8250224851071835,0.4599348735064268,0.9458441860042512],"terrain":[{"x":0,"z":4,"h":12.055505421381783,"n":[-0.01221150173264416,0.9472057558104173,0.32039371932834415],"paint":{"lip":0,"stripe":0,"rel":-0.710232298948544,"u":-23.00315141371464}},{"x":12,"z":150,"h":-36.96929557018999,"n":[-0.01976529287120197,0.9997120832087747,0.01360455379964659],"paint":{"lip":0,"stripe":0,"rel":1.727153318392796,"u":-9.819399348692851}},{"x":-25,"z":365,"h":-100.8096294677378,"n":[0.20652640188648871,0.8856252510403027,0.41595042979136493],"paint":{"lip":0,"stripe":0,"rel":10.264547121060117,"u":-61.2950595367975}},{"x":60,"z":900,"h":-258.43919932608065,"n":[-0.2606629944533109,0.9553389628374831,0.1392202191035307],"paint":{"lip":0,"stripe":0,"rel":8.425735683309256,"u":49.781527764447404}},{"x":0,"z":-10,"h":16.935691711728786,"n":[0.005341387230046657,0.9423960910150201,0.33445639061328886],"paint":{"lip":0,"stripe":0,"rel":-0.5471903648650425,"u":-19.709524417421562}}],"scores":[{"name":"FS Rodeo 360 · Indy · Helikopter","pts":10260,"ubers":1},{"name":"FS Rodeo 360 · Indy · Helikopter","pts":6155,"ubers":1}],"trees":[{"x":-8.010790018932532,"z":366.3853706466034,"y":-104.46265213387652,"h":5.977854648604989,"r":1.6426332410424949,"g":true},{"x":130.1151116989399,"z":408.36359534878284,"y":-109.39148661426374,"h":6.033417958766222,"r":2.3693085871636868,"g":true}]}
+expected_exception Error: intentional qualification exception
+protocol PASS copy/offset/type/size/nonfinite/malformed-output/exception/jobs/detach/overflow-state-preserved checks=19 copied_count=3 copied_sum=6 copied_values_preserved=true
+memory stage=retained used_bytes=357555 allocated_bytes=501008 objects=802 automatic_gc_count=unavailable gc_pause_causality=unavailable rss_kib=4928
+memory stage=sustained used_bytes=544699 allocated_bytes=739232 objects=1668 automatic_gc_count=unavailable gc_pause_causality=unavailable rss_kib=5184
+memory stage=sustained used_bytes=469531 allocated_bytes=639856 objects=1320 automatic_gc_count=unavailable gc_pause_causality=unavailable rss_kib=5228
+bench sustained_block_8row_4rules_4churn n=300 warmup=0 p50_us=122357.61900000001 p95_us=125578.425 p99_us=127302.429 max_us=135605.69899999999 total_us=36853800.427999996 calls_per_second=8.1402730930314693 checksum=297716696840719.81
+memory stage=before_explicit_gc used_bytes=292291 allocated_bytes=463584 objects=936 automatic_gc_count=unavailable gc_pause_causality=unavailable rss_kib=5228
+explicit_gc_wall_us=698.81799999999998
+memory stage=after_explicit_gc used_bytes=180315 allocated_bytes=324720 objects=418 automatic_gc_count=unavailable gc_pause_causality=unavailable rss_kib=5228
+process peak_rss_kib=4888 elapsed_ms=40602.150350000004 elapsed_definition=source_read_through_final_checks_includes_logging_excludes_final_dispose_and_platform_init
+PROBE PASS

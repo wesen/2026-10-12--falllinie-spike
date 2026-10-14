@@ -8,6 +8,6 @@
 - [ ] Approval required: optional native stateless rules adapter and lifecycle/ABI tests (not implemented) <!-- t:jtz3 -->
 - [ ] Approval required: full simulation authority, replay and render snapshot seam (not implemented) <!-- t:i5wf -->
 - [ ] Parent-only: target runtime performance, deployed trees/trails graphics/audio and device acceptance <!-- t:35n7 -->
-- [ ] Execute pinned QuickJS/QuickJS-ng fixtures and bridge/timing probes on real ARM64 target, preserving explicit backend/workload evidence <!-- t:i082 -->
-- [ ] Build and test real V8 C++ embedding on host and ARM64: source oracle, native bridge, startup, memory, sustained execution and GC <!-- t:gplk -->
-- [ ] Review resumed interpreter qualification, preserve useful tooling in ticket scripts and update detailed diary with actual results <!-- t:aaim -->
+- [x] Execute pinned QuickJS/QuickJS-ng fixtures and bridge/timing probes on real ARM64 target, preserving explicit backend/workload evidence <!-- t:i082 -->
+- [x] Build and test real V8 C++ embedding on host and ARM64: source oracle, native bridge, startup, memory, sustained execution and GC <!-- t:gplk -->
+- [x] Review resumed interpreter qualification, preserve useful tooling in ticket scripts and update detailed diary with actual results <!-- t:aaim -->

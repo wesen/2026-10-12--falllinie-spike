@@ -294,3 +294,63 @@ Start at new ticket scripts/02-arm64-v8 and previous external experiment README/
 
 ### Technical details
 Parent owns device transfer/run and final acceptance; isolated worker owns harness/build/reproducibility scripts and a focused continuation diary. Preserve historical script group rather than moving or silently rewriting its evidence. Credentials and arbitrary environment values stay outside receipts; useful scripts use explicit non-sensitive configuration and ignored .work directories.
+
+## Step 7: Correct the reviewed boundaries and execute all three engines on ARM64
+
+The worker completed direct QuickJS, QuickJS-ng and raw V8 C++ harnesses, then an independent reviewer identified two bounded P2 defects. The same writer corrected them and proved red/green behavior before a targeted reviewer accepted the final candidate. Parent verified archives/source identities, integrated the scoped scripts/diary, and actually executed all three private bundles on the handheld.
+
+All three target processes exited0 and passed85 selected oracle leaves,seven deterministic workload families and19 native protocol checks. V8 was substantially faster on the warmed workload but had higher startup/memory costs and significant first-call/tail costs. This is a finite isolated feasibility gate, not production or full-game performance acceptance.
+
+### Prompt Context
+**User prompt (verbatim):** See Step6.
+**Assistant interpretation:** Continue until actual handheld execution and independently checked receipts exist, not merely cross-built packages.
+**Inferred user intent:** Measure interpreter/V8 feasibility and native boundary correctness without rewriting the game.
+**Commit (code):** Worker5fbe46a/684c2d3, corrected6dd6f89/3535a2d; parent fast-forwarded to3535a2d before device tests.
+
+### What I did
+- Read complete worker/reviewer handoffs. Initial review found logging included in source-read/first-call/explicit-GC durations, and finite elements could overflow native sum to infinity before copied-state commit.
+- Routed both findings to the same writer; corrections captured operation endpoints before output and rejected nonfinite sum before modifying any749 copied slots/count/sum. New two-MAX_VALUE regression failed the original helper/all three original embeddings, then passed corrected code. Host3runs per engine,11comparator regressions,12native CTests and bounded sanitizer checks passed; original receipts unchanged.
+- Read targeted follow-up: both findings resolved, no new issues. Independently verified full corrected patch SHA256361d6b23dc89c7a74cbd030d6bf795354b4952048a11377ad76b1f4c246c4f08, archive hashes, every bundle SHA256SUMS and manifest hash map against current committed harness sources. No production/historical-experiment diff.
+- Integrated candidate via fast-forward. Saved original/correction review receipts as raw .txt inside ticket evidence. Added11-parent-arm64-qualification.sh and12-summarize-target.py under the requested ticket scripts directory.
+- Transferred separate private bundles to /storage/apps/falllinie-js-probes and ran Bellard,ng,V8 sequentially,300fixed blocks each, existing owned180s timeout/5s grace/headroom/hash/lock guards. Used externally supplied credentials; no library install/service/game-process/scheduling changes.
+- Collected actual preflight/runtime/log/timing receipts, independently compared locally, and retained bounded evidence under scripts/02-arm64-v8/evidence/target-corrected-v2. Updated README/script navigation to label historical PENDING manifests versus actual execution.
+
+### Why
+Numerical overflow and logging contamination were small code changes but directly affected the new boundary/measurement claims. Correcting them before device execution avoided collecting misleading first-call evidence. Private dependency closure permits real raw V8 embedding without altering system libraries or launching Node scripts.
+
+### What worked
+| Target measurement | Bellard2026-06-04 | ng0.17.0 | V8 10.2.154.26-node.37 |
+|---|---:|---:|---:|
+| Terrain row107columns p50 |6.337195ms|7.347798ms|0.985520ms|
+|128scoring pairs/256scoreAir calls p50|14.312937ms|16.077189ms|2.190660ms|
+| First terrain wrapper call |6.713437ms|8.387858ms|24.181260ms|
+| Sustained heavy block p50 |122.357619ms|138.382295ms|11.846073ms|
+| Sustained heavy block p99/max |127.302429/135.605699ms|143.319816/156.141492ms|25.541855/47.716492ms|
+| Reported getrusage peak RSS |4888KiB|5220KiB|40528KiB|
+| External integer process wall |40s|46s|5s|
+| Explicit requested GC wall |0.698818ms|0.648069ms|3.570213ms|
+
+All85leaves/7workload families passed. Engine float delta against retained host Node oracle was2.220446049250313e-16 for both QuickJS engines and0 for V8; labels/integers exact. Native reference here is retained HOST oracle, not a new ARM64 native speed benchmark. All19protocol checks and intentional exception/recovery/controlled single job/lifecycle sequences passed.
+
+Actual loader used private pinned libraries, system libc/loader,glibc2.44,aarch64/A55 features. V8 reported raw C++ API through Debian libnode108 Node18.20.4+dfsg-1~deb12u2/defaultJIT/not-standalone. Target preflight frequencies were1416000kHz,ondemand; no frequency stability control or policy change. All observed memory values remained well below192MiB guard.
+
+### What didn't work
+Original overflow helper/embeddings failed exactly with `FAIL finite input sum overflow accepted` / `FAIL Error: native sum overflow accepted`; preserved under review-corrections-v2/before-fix. Worker ticket doctor scanned six downloaded ng .work Markdown files despite attempted ignore flags, plus existing vocabulary warnings; actual diagnostics preserved rather than claiming clean doctor. An initial parent read guessed the workflow-owned correction handoff path and got ENOENT; located the resumed-child-owned output and read that actual file. No device transfer/loader/process/comparison failure occurred.
+
+### What I learned
+V8 warmed row cost was about0.986ms versus6.337/7.348ms for interpreters in this one configuration, but first wrapper execution took24.181ms and heavy-block max47.716ms. Those costs matter before introducing frame-sensitive JS. Higher~40MiB process memory is feasible for this isolated run but is not a combined game memory qualification.
+
+### What was tricky to build
+V8 comes from a pinned older libnode library, not Node execution or a new latest standalone build. First function calls follow eight lifecycle cycles and are not whole-process-cold. Scalar749calls and batched749writes+copy perform different JS work: their timings cannot isolate bridge-only speedup. Sampled VmRSS and getrusage peak are distinct observations; summary records both.
+
+### What warrants a second pair of eyes
+Module ownership, hard execution budgets, long GC/scheduler tails and combined gameplay/native memory remain future integration risks. Automatic GC pause causality is unavailable; V8 prologue counts do not attribute measured tails to GC. QuickJS automatic GC counts remain unavailable. Explicit single trusted microtask is not an arbitrary hostile-job budget.
+
+### What should be done in the future
+Use these results to choose a bounded rules-module integration separately. Keep native terrain/render/audio ownership for the first slice; do not infer60FPS or full simulation parity from isolated fixed work. Consider current standalone V8, repeated/randomized/thermal runs, real command replay, module reload and supported stronger memory/time containment before shipping a scripting runtime.
+
+### Code review instructions
+Read both raw parent review receipts and worker diary02 Step4, current harness/protocol, manifest/source hash audit and actual target logs/preflights/comparison/summary. Run12-summarize-target.py and04-compare.py on retained target data; no device rerun needed for documentation. Inspect scoped final diff for credentials/generated third-party bytes/production changes.
+
+### Technical details
+Corrected archives verified: Bellard4a00559d1299eac38310fea8aa27ed809356366c5bba9b31aa3c0e747a84514b; ngbf6416eb3933e5385ab2042d034b64a94b711c446ab1353da96426ed47713f85; V8df7d4c3b1c9ac9d8231703663c234019c518b9f9093ad4769c91e1df1aa94a87. Default sustained workload totals2400rows,307200scoreAir evaluations and600000cycles per engine; not an actual game-frame loop. V8 explicit GC reduced used heap from2514352to676552bytes; no automatic pause attribution. Heap limits are not OS RSS limits. Older cross-build manifests remain immutable PENDING snapshots; parent actual execution receipts supersede that status for the tested packages only.

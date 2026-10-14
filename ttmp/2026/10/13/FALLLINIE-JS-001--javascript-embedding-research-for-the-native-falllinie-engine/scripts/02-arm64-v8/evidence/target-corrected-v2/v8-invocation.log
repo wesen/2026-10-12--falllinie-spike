@@ -1,0 +1,35 @@
+debian-pins.json: OK
+fixture-sha256.txt: OK
+lib/libbrotlicommon.so.1: OK
+lib/libbrotlidec.so.1: OK
+lib/libbrotlienc.so.1: OK
+lib/libcares.so.2: OK
+lib/libcrypto.so.3: OK
+lib/libgcc_s.so.1: OK
+lib/libicudata.so.72: OK
+lib/libicui18n.so.72: OK
+lib/libicuuc.so.72: OK
+lib/libnghttp2.so.14: OK
+lib/libnode.so.108: OK
+lib/libssl.so.3: OK
+lib/libstdc++.so.6: OK
+lib/libuv.so.1: OK
+lib/libz.so.1: OK
+licenses/libbrotli1-copyright: OK
+licenses/libc-ares2-copyright: OK
+licenses/libicu72-copyright: OK
+licenses/libnghttp2-14-copyright: OK
+licenses/libnode-dev-copyright: OK
+licenses/libnode108-copyright: OK
+licenses/libssl3-copyright: OK
+licenses/libuv1-copyright: OK
+licenses/zlib1g-copyright: OK
+manifest.json: OK
+node-oracle.json: OK
+probe: OK
+probe.js: OK
+pure.js: OK
+run-target.sh: OK
+workload-expected.json: OK
+process_elapsed_integer_seconds=5 exit=0 includes_platform_and_teardown=true
+TARGET PROCESS PASS; independent oracle comparison remains required

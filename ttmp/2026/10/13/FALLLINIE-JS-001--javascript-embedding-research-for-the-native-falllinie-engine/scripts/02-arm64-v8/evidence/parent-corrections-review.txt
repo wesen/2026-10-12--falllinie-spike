@@ -1,0 +1,42 @@
+## Review
+
+Read-only follow-up of correction base `684c2d3` → final head `3535a2d`, using the supplied patch, actual candidate sources, tests, diary and receipts. No files modified, binaries run or device accessed.
+
+Paths below:
+- **P** = `ttmp/2026/10/13/FALLLINIE-JS-001--javascript-embedding-research-for-the-native-falllinie-engine/scripts/02-arm64-v8`
+- **E** = `P/evidence/review-corrections-v2`
+
+### Fixed in candidate
+
+- **Original timing P2 resolved.** Source-read, first-call and explicit-GC endpoints are now captured before formatting or stream insertion (`P/probe-common.hpp:30–31,45,61`). Lifecycle, warm-call and sustained-block endpoints also precede logging (`:36–41,48,59`). Overall internal elapsed is sampled before final status output and explicitly includes preceding logging/final checks (`:62–64`); it is not mislabeled as operation-only or external process wall time.
+
+- **Original overflow/state-retention P2 resolved.** `CopyState::copy` rejects a nonfinite accumulated sum before assigning values, count or sum (`P/probe-common.hpp:23`). The JS regression requires two finite `Number.MAX_VALUE` inputs to throw and preserve sum six (`P/workloads.js:27–30`). The driver independently compares all 749 native slots—including unused zeros—plus count three and sum six (`P/probe-common.hpp:52–54`). The helper additionally tests nonfinite-input preservation and acceptance of a finite maximum sum (`P/test-copy-state.cpp:5–17`).
+
+### Correct
+
+- **Ownership remains sound across these changes.** New accessors expose only const native-owned `CopyState`, not VM storage (`P/quickjs-probe.cpp:69`; `P/v8-probe.cpp:72`). The inspected correction hunks do not change borrowed-buffer lifetimes, runtime teardown or job policy. Benchmark/source/RNG routines are unchanged; the overflow regression runs after first-call and warm measurements.
+
+- **Tests and retained evidence agree.** Comparator requires the corrected timing marker and full-state-preservation protocol marker (`P/04-compare.py:22–24,35`); four new contract regressions cover acceptance and rejection (`P/test_compare.py:20–28`). Receipts report comparator **11/11**, native CPU **12/12**, direct/sanitized helper passes, and all nine corrected embedding runs plus three sanitized embeddings passing the new contract (`E/validation.log:1–10`; `E/native-tests.log:28`; corresponding embedding logs `:2,27,36`). Each host comparison and sanitized comparison reports 85 leaves, zero engine floating delta and native delta `2.220446049250313e-16`.
+
+- **Replacement evidence is clearly separated.** Red helper and three embedding failures are retained under `E/before-fix/`. The correction patch adds separately named receipts rather than altering historical receipts.
+
+- **Package identity records are consistent.** All three unpacked manifests contain identical corrected harness-source hash maps (`P/.work/packages/{bellard,ng,v8}/manifest.json:3–9`). Their packaged `probe.js` contains the overflow regression (`:49–52`), and their checksum lists agree on fixture, adapter, oracle, runner and workload files. Fresh archive hashes/sizes agree between the package-generation receipt, corrected audit and summary (`E/results-summary.json:849–865`). Build/package code reads the current corrected sources and regenerates private bundles (`P/03-build-arm64.sh:21–27`; `P/06-package.py:49–64`).
+
+### Findings
+
+No issues found.
+
+### Merge verdict: **OK with notes**
+
+The two original findings are resolved; no new correction-caused ownership, benchmark or regression issue was found.
+
+**Limits:** This was source/receipt inspection, not independent test execution or cryptographic recomputation. Git cleanliness, historical byte identity and archive-to-current-source identity were not independently recomputed. Parent should recheck fresh archive hashes, bundle checksums and manifest source hashes before deployment.
+
+**ARM64 execution remains parent-pending.** Loader/version, correctness/checksum, RSS, tail-latency and GC device gates still require actual execution and collection. This verdict is not ARM64 qualification or production acceptance. Strict doctor failure remains honestly documented: six imported Markdown errors and existing vocabulary warnings (`E/doctor-final.log:1–100`). Existing sanitizer and cooperative-RSS limitations remain unchanged.
+
+<summary>
+This turn: Verified both original fixes against actual diff, source, tests and receipts.
+Session so far: Read-only correction review complete without execution or device access.
+Issues: No new issues found; ARM64 qualification and strict doctor limitations remain.
+Next steps: Parent verifies fresh artifact identity, then performs pending device gates.
+</summary>

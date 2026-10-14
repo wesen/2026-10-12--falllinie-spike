@@ -1,6 +1,6 @@
 # ARM64 / V8 embedding qualification candidate
 
-**Research only. Host execution checked; ARM64 execution PENDING.** No production source/build/launcher changes. Parent performs transfer/execution only after fresh review. Historical `scripts/2026/10/13/falllinie-js-runtime` remains unchanged and is read for source adapters/native oracles.
+**Research only. Host and actual ARM64 execution now checked.** Parent ran corrected-v2 Bellard, ng and V8 sequentially after fresh correction review: all85 oracle leaves,seven workload families and19 protocol checks passed. Actual target logs/comparison/summary are in evidence/target-corrected-v2; parent diary01 Step7 records acceptance limits. No production source/build/launcher changes. The initial worker candidate had ARM64 execution PENDING; retained build manifests/older receipts describe that historical boundary. Historical `scripts/2026/10/13/falllinie-js-runtime` remains unchanged and is read for source adapters/native oracles.
 
 ## Reproduce from repo root
 
@@ -23,7 +23,7 @@ Prerequisites: GCC/G++, make, CMake, Node (oracle extraction only), Python3, cur
 
 ## V8 provenance (do not relabel)
 
-`v8-probe.cpp` calls actual `v8::V8`, platform, isolate, context, script and function APIs directly. It links **Debian libnode108 Node18.20.4+dfsg-1~deb12u2**, with headers from that exact architecture/version's libnode-dev package. Host reports **V8 10.2.154.26-node.37**. ARM runtime version still requires execution. No Node executable/`node::` initialization/npm/browser host is used. Default V8 JIT is enabled: this is **not interpretation**, not a latest standalone custom V8 build.
+`v8-probe.cpp` calls actual `v8::V8`, platform, isolate, context, script and function APIs directly. It links **Debian libnode108 Node18.20.4+dfsg-1~deb12u2**, with headers from that exact architecture/version's libnode-dev package. Host reports **V8 10.2.154.26-node.37**. Parent actual ARM runtime confirmed the same V8 10.2.154.26-node.37; see target-corrected-v2/v8.log. No Node executable/`node::` initialization/npm/browser host is used. Default V8 JIT is enabled: this is **not interpretation**, not a latest standalone custom V8 build.
 
 Pinned prebuilt libnode + dependency packages are the reproducible library input, not a locally reproduced V8 build. Internal upstream/Debian library compiler flags and exact compiler version are **unavailable** here (`.comment` is stripped). Harness compiler/flags and actual dynamic selections are recorded. Host GCC13.3 needs host libstdc++/libgcc; curated host dependencies exclude Debian GCC12 runtimes. ARM GCC12 uses pinned private Debian ARM libstdc++/libgcc. Installed Ubuntu `/usr/include/node`/libnode.so.109 and nvm Node24 are NOT mixed with these libraries. Node24 is only the historical/source JSON oracle producer.
 

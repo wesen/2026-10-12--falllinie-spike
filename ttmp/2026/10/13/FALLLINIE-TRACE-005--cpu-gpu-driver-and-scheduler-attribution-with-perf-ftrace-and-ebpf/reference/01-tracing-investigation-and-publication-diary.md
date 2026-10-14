@@ -113,4 +113,45 @@ Taskgcop: separately authorize read-only target capability inventory, then the m
 Read `scripts/publication-receipt.json`, `scripts/validation-results.json`, tasks.md and the vault commit. Repeat `python3 "$T/scripts/03-validate.py" "$NOTE"` while inputs remain unchanged; `docmgr doctor --ticket FALLLINIE-TRACE-005 --stale-after 30`; `git diff --check`; and `git ls-remote origin refs/heads/main` in the vault. Native git status is intentionally not fully clean because preserved parent PERF004 files are untracked; both repositories must have no staged files after commit.
 
 ### Technical details
-Vault origin is `ssh://git@github.com/go-go-golems/go-go-parc`, branch main. Publication is append-only and owns `_assets/falllinie-trace-005/`. No source changes, no shaders, no new C++ tests, no device commands, no perf/ftrace/BPF attachment, no installed tools, and no settings changes are part of this ticket's completion.
+Vault origin is `ssh://git@github.com/go-go-golems/go-go-parc`, branch main. Publication is append-only and owns `_assets/falllinie-trace-005/`. No source changes, no shaders, no new C++ tests, no device commands, no perf/ftrace/BPF attachment, no installed tools, and no settings changes are part of this ticket's publication checkpoint.
+
+## Step 3: Authorize staged implementation and inspect actual tracing facilities
+
+The user authorized implementation of the report's plan with meaningful commits and a detailed diary. We begin with optional paired render-thread clocks and capability-driven CPU profiling, not an unconditional custom BPF implementation. Parent ran a read-only inventory before choosing a kernel instrumentation path.
+
+The installed kernel has perf but explicitly disables FTRACE and KPROBES. This rules out assuming the proposed tracefs scheduler/kprobe method is available. Kernel BPF options are enabled, but the absent BTF/tooling and unverified event hooks mean that BPF support alone proves no usable attribution path. Paired clocks and supported perf sampling remain useful without changing the kernel.
+
+### Prompt Context
+**User prompt (verbatim):** "Ok, implement. commit at appropriate intervals and keep a detailed diary as you work (using the diary format from the skill)"
+**Assistant interpretation:** Implement safe optional scope timing, choose tracing facilities based on actual support, run bounded reviewed target experiments and commit at meaningful milestones.
+**Inferred user intent:** Determine whether drawing wall time is computation or waiting using reproducible evidence rather than a new theoretical plan.
+
+### What I did
+Read design01 and current profiler contracts; loaded full investigation diary format. Added ticket-local04-capabilities.sh, executed it over existing SSH via stdin (no remote file installation), and saved scripts/evidence/capabilities/initial.log. Added implementation tasks d8cq and90uh. Updated design authority prospectively without rewriting the published historical report.
+
+### Why
+Tools and kernel hooks are independent capabilities. A running recent kernel and enabled BPF_SYSCALL do not imply scheduler trace events or attachable driver functions. Avoiding unavailable mechanisms focuses effort on measurements that can actually run.
+
+### What worked
+Inventory returned perf7.2.7 at/usr/bin/perf,CONFIG_PERF_EVENTS=y,BPF/BPF_SYSCALL/BPF_JIT=y,SCHEDSTATS=y. Current target364832KiB available/no swap and no active Falllinie process in the bounded check. No configuration/collector/service was changed.
+
+### What didn't work
+Not failed experiments: CONFIG_FTRACE and CONFIG_KPROBES are explicitly not set; BTFvmlinux absent; trace-cmd/bpftrace/bpftool unavailable; no readable trace root found. These are capability limits, not permission to install tools, mount tracefs, weaken policy or replace the kernel. perf_event_paranoid=2 does not establish whether this root context can use every event; bounded event tests remain required.
+
+### What I learned
+The first attribution layer can use existing thread CPU clocks and perf samples without requiring custom BPF. Scheduler blocked/runnable reconstruction may remain unsupported on this image and must be reported as such.
+
+### What was tricky to build
+Historical design says publication-only; the new request supersedes that authority boundary for implementation but retains rollback/privacy/main-threadGL constraints. Preserve existing untracked PERF004 actual target evidence before making an isolated worker branch so its provenance is not lost.
+
+### What warrants a second pair of eyes
+Paired boundary ordering, failed CPUclock readings, wall-minusCPU interpretation, disabled overhead, versioned schema, query nesting/context lifetime and trustworthy analyzer reconciliation. No averaging of unrelated sample populations into offCPU estimates.
+
+### What should be done in the future
+Single isolated writer implements bounded opt-in clocks and tests; reviewer checks exact source. Parent builds and runs matched hardware gates plus minimal perf counts/sampling supported by the device. No source rendering optimizations until measurements justify them. Record remaining scheduler/driver attribution limits rather than claiming GPU waits.
+
+### Code review instructions
+Start at04-capabilities.sh/initial.log, updateddesign01 and src/profiler.cpp/.hpp/audio_timing.hpp. Future worker diary is reference/02-paired-clock-implementation-diary.md; parent diary01/tasks/target evidence remain parent-owned.
+
+### Technical details
+Runtime base5320816; parent ticket publication5eb0135 changed docs only. Preserve noGLoffmain/noJScallback/oneworld/RNG invariants. Current fixed sampling cadence60; new paired fields must not redefine legacycpu_ms from wall to threadCPU silently. Raw traces, if any, remain private/ignored; bounded aggregates and object identities are sufficient for publication.

@@ -1,0 +1,23 @@
+inventory_utc=2026-10-14T01:41:37Z
+Linux 7.2.7 aarch64
+tool_perf=/usr/bin/perf
+tool_trace-cmd=tool_bpftrace=tool_bpftool=tool_timeout=/usr/bin/timeout
+perf version 7.2.7
+/proc/sys/kernel/perf_event_paranoid=2
+/proc/sys/kernel/kptr_restrict=0
+/proc/sys/kernel/unprivileged_bpf_disabled=0
+unavailable=/sys/kernel/security/lockdown
+MemTotal:         998480 kB
+MemAvailable:     364832 kB
+SwapTotal:             0 kB
+BTF_vmlinux_absent
+CONFIG_BPF=y
+CONFIG_BPF_SYSCALL=y
+CONFIG_BPF_JIT=y
+CONFIG_PERF_EVENTS=y
+# CONFIG_KPROBES is not set
+CONFIG_SCHEDSTATS=y
+# CONFIG_FTRACE is not set
+GPU_modules:
+mali_kbase 757760 6 - Live 0xffffffe92a16f000 (O)
+active_falllinie:

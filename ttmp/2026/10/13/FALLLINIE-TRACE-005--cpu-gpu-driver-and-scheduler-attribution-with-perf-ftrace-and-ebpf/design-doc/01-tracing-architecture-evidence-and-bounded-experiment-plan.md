@@ -27,7 +27,13 @@ WhatFor: Prevent ambiguous renderer wall measurements from becoming unsupported 
 WhenToUse: Before authorizing target profiling or selecting CPU, driver, presentation or GPU optimizations.
 ---
 
-# Purpose and authority
+# Implementation authorization update
+
+The user subsequently authorized implementation: “Ok, implement. commit at appropriate intervals and keep a detailed diary as you work (using the diary format from the skill)”. The historical publication-only scope below describes the earlier checkpoint; it no longer prohibits scoped instrumentation and bounded target experiments under the same safety constraints. Parent owns device execution, independent review and acceptance. No system installs, policy weakening, kernel changes or takeover of existing tracing collectors is authorized implicitly.
+
+Initial read-only inventory (scripts/evidence/capabilities/initial.log): perf7.2.7 exists; CONFIG_PERF_EVENTS=y and BPF/BPF_SYSCALL/BPF_JIT=y; CONFIG_FTRACE and CONFIG_KPROBES explicitly disabled; /sys/kernel/btf/vmlinux absent; no trace-cmd,bpftrace,bpftool in PATH. No readable trace root was found. These observations constrain the plan to thread clocks and supported perf events initially, not an invented ftrace/kprobe execution success. BPF configuration alone does not prove required hook/helper availability.
+
+# Purpose and authority (historical publication checkpoint)
 
 This ticket fulfills the user request for a new docmgr ticket and a detailed textbook-style Obsidian project report, without analogies, followed by scoped vault commit/push. It is a documentation/research/design publication. It does not authorize device commands, kernel tracing, source instrumentation, profiling policy changes, tool installation, or rendering workers. PERF-004 remains a separate measurement/report task with its original worker; its files are read-only inputs here.
 

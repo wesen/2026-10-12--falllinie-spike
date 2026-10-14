@@ -1,0 +1,9 @@
+01-baseline status=0
+02-post-copy status=0
+03-scene-flat status=0
+04-both status=0
+05-both status=0
+06-scene-flat status=0
+07-post-copy status=0
+08-baseline status=0
+/home/manuel/code/wesen/2026-10-12--falllinie-spike/ttmp/2026/10/14/FALLLINIE-GPU-007--replay-controlled-scene-and-post-shader-sensitivity/scripts/evidence/target-20261014T191037Z

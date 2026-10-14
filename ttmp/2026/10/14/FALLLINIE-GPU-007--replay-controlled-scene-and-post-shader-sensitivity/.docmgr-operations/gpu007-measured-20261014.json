@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "digest": "088251a8fadf3b6779167570259e039a37b3cc2bab12491250d398e1da86913e",
+  "request": {
+    "ticket": "FALLLINIE-GPU-007",
+    "status": "complete",
+    "intent": "",
+    "entry": "Balanced device matrix completed: cheap post and flat scene improve changed-workload timing; combined reaches presentation-limited mean with lower activity. All substitutions remain non-parity diagnostic assets."
+  },
+  "receipt": {
+    "sequence": 1,
+    "operation_id": "gpu007-measured-20261014",
+    "state": "committed",
+    "created_at": "2026-10-14T19:21:05.855305901Z",
+    "changed_paths": [
+      "changelog.md",
+      "index.md"
+    ],
+    "before": {
+      "changelog.md": "96e5a77568a7d9019f51644a175d5b41c97179b0fd292c390a62bc816b0654e2",
+      "index.md": "4d9e6a736dc7489de671f5c85d99d4a96005844722d77fa6bca98d8f1f579a00"
+    },
+    "after": {
+      "changelog.md": "af3c7d68ac06ee5cc40384f8568cb7840688bd4f8f91e0471b7f7f65870b309f",
+      "index.md": "4ff153881dc0eeb40a2493cf985513caff97026e9d541857217be803e3d2d301"
+    }
+  },
+  "changes": [
+    {
+      "path": "changelog.md",
+      "before": "96e5a77568a7d9019f51644a175d5b41c97179b0fd292c390a62bc816b0654e2",
+      "after": "IyBDaGFuZ2Vsb2cKCiMjIDIwMjYtMTAtMTQKCi0gSW5pdGlhbCB3b3Jrc3BhY2UgY3JlYXRlZAoKIyMgMjAyNi0xMC0xNAoKQmFsYW5jZWQgZGV2aWNlIG1hdHJpeCBjb21wbGV0ZWQ6IGNoZWFwIHBvc3QgYW5kIGZsYXQgc2NlbmUgaW1wcm92ZSBjaGFuZ2VkLXdvcmtsb2FkIHRpbWluZzsgY29tYmluZWQgcmVhY2hlcyBwcmVzZW50YXRpb24tbGltaXRlZCBtZWFuIHdpdGggbG93ZXIgYWN0aXZpdHkuIEFsbCBzdWJzdGl0dXRpb25zIHJlbWFpbiBub24tcGFyaXR5IGRpYWdub3N0aWMgYXNzZXRzLgo="
+    },
+    {
+      "path": "index.md",
+      "before": "4d9e6a736dc7489de671f5c85d99d4a96005844722d77fa6bca98d8f1f579a00",
+      "after": "LS0tClRpdGxlOiBSZXBsYXktY29udHJvbGxlZCBzY2VuZSBhbmQgcG9zdCBzaGFkZXIgc2Vuc2l0aXZpdHkKVGlja2V0OiBGQUxMTElOSUUtR1BVLTAwNwpTdGF0dXM6IGNvbXBsZXRlClRvcGljczoKICAgIC0gcGVyZm9ybWFuY2UKRG9jVHlwZTogaW5kZXgKSW50ZW50OiBsb25nLXRlcm0KT3duZXJzOiBbXQpSZWxhdGVkRmlsZXM6IFtdCkV4dGVybmFsU291cmNlczogW10KU3VtbWFyeTogIiIKTGFzdFVwZGF0ZWQ6IDIwMjYtMTAtMTRUMTU6MjE6MDUuODU1MjI2OTY0LTA0OjAwCldoYXRGb3I6ICIiCldoZW5Ub1VzZTogIiIKLS0tCgojIFJlcGxheS1jb250cm9sbGVkIHNjZW5lIGFuZCBwb3N0IHNoYWRlciBzZW5zaXRpdml0eQoKQ29tcGxldGVkIGEgcmVwbGF5LWNvbnRyb2xsZWQsIGV4cGxpY2l0bHkgbm9uLXBhcml0eSBzY2VuZS9wb3N0IHNlbnNpdGl2aXR5IGV4cGVyaW1lbnQuIENhbm9uaWNhbCBhc3NldHMgYW5kIHJ1bnRpbWUgZGVmYXVsdHMgcmVtYWluIHVuY2hhbmdlZC4KCi0gW0V4cGVyaW1lbnRhbCBjb250cmFjdF0oZGVzaWduLWRvYy8wMS1zY2VuZS1hbmQtcG9zdC1zaGFkZXItc2Vuc2l0aXZpdHktY29udHJhY3QubWQpCi0gW01lYXN1cmVkIHJlc3VsdHMgYW5kIGxpbWl0YXRpb25zXShhbmFseXNpcy8wMS1tZWFzdXJlZC1ub24tcGFyaXR5LXNjZW5lLWFuZC1wb3N0LXNlbnNpdGl2aXR5Lm1kKQotIFtEZXRhaWxlZCBjaHJvbm9sb2dpY2FsIGRpYXJ5XShyZWZlcmVuY2UvMDEtc2hhZGVyLXNlbnNpdGl2aXR5LWludmVzdGlnYXRpb24tZGlhcnkubWQpCgpSZXByb2R1Y3Rpb246IHNjcmlwdHMvMDEtcHJlcGFyZS5weSBjcmVhdGVzIHRoZSBkaWFnbm9zdGljIHBhY2thZ2VzOzAyLWhvc3QtY2hlY2sucHkgY2hlY2tzIGxpbmtpbmcvY29uc2lzdGVuY3k7MDQtY2FtcGFpZ24uc2ggcnVucyB0aGUgYm91bmRlZCBrZXktYXV0aGVudGljYXRlZCBtYXRyaXg7MDUtYW5hbHl6ZS5weSBhY2NlcHRzIGEgY2FtcGFpZ24gZGlyZWN0b3J5OzA2LWZpZ3VyZXMucHkgcmVnZW5lcmF0ZXMgdGhlIHB1Ymxpc2hlZCBjaGVja3BvaW50J3MgZmlndXJlcy4gQWN0dWFsIGV2aWRlbmNlIGlzIHNjcmlwdHMvZXZpZGVuY2UvdGFyZ2V0LTIwMjYxMDE0VDE5MTAzN1ouIFRoZXNlIHRvb2xzIHJlbW92ZSByZW5kZXJpbmcgd29yayBhbmQgY2hhbmdlIGltYWdlczsgZG8gbm90IGluc3RhbGwgdGhlIGRpYWdub3N0aWMgYXNzZXRzIGFzIHByb2R1Y3Rpb24gcmVwbGFjZW1lbnRzLgo="
+    }
+  ]
+}

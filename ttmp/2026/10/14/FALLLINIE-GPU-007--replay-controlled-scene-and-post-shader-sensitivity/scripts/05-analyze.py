@@ -78,6 +78,10 @@ def analyze(root):
         assert len(names)==2
         assert images[names[0]]==images[names[1]],f'Repeated endpoint mismatch: {mode}'
         values=pooled[mode];result['groups'][mode]={'runs':names,'frames':len(values),'mean_ms':statistics.mean(values),'p95_ms':q(values,.95),'p99_ms':q(values,.99),'non_parity':mode!='baseline'}
+    for mode,names in groups.items():
+        cases=[result['cases'][name] for name in names];seconds=sum(c['counter_host_seconds'] for c in cases)
+        result['groups'][mode]['rates_per_second']={k:sum(c['rates_per_second'][k]*c['counter_host_seconds'] for c in cases)/seconds if all(c['rates_per_second'][k] is not None for c in cases) else None for k in cases[0]['rates_per_second']}
+        result['groups'][mode]['sequential_view_cpu_ms']=statistics.mean(sum(c['scopes'][f'render/{i}/view']['cpu_ms'] for i in [0,1]) for c in cases)
     first={mode:images[names[0]] for mode,names in groups.items()}
     assert first['baseline']['scene']==first['post-copy']['scene']
     assert first['scene-flat']['scene']==first['both']['scene']

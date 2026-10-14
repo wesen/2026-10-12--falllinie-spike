@@ -90,3 +90,44 @@ Read01-prepare.py and inputs/manifest.json, compare actual host submittedsources
 
 ### Technical details
 Four hostcases ×60frames; all share one partialtrajectorysignature. Targetplan remains512×384dual,600frames/case,45scountercaptures. No runtime rebuild or broadCPUtest suite is repeated because runtimebytes are unchanged.
+
+## Step 3: Measure the symmetric device matrix and retain the non-parity boundary
+
+All eight cases completed successfully on the handheld. Pooled mean intervals are23.575117ms baseline,19.304850ms cheap post,16.732658ms flat scene and16.620701ms both. The repetitions agree closely in mean; the baseline bracket drifts only about0.26%. Scene-related work/content is the stronger sensitivity here, but neither diagnostic is acceptable source-faithful rendering.
+
+The combined case reduces fragment activity to roughly528Mcycles/s from flat scene's793–794Mcycles/s without much further mean-time improvement. Its p95 is actually higher than flat scene's, while its p99 is lower. This supports investigating the presentation/output limit rather than treating every removed operation as an additive frame-time saving.
+
+### Prompt Context
+**User prompts:** SeeStep1.
+**Commit (diagnostic implementation):**074588b — Prepare explicit non-parity scene and post replay sensitivity experiment.
+**Assistant interpretation:** Complete the real target experiment, preserve reproducibility and explain actual results without promoting changed images.
+
+### What I did
+Executed04-campaign.sh using the installed SSH key and unchanged GPU006 binary. Verified18assets before and after target-20261014T191037Z. Ran05-analyze.py against allcases, generated grouped frame percentiles and host-window-weighted counterrates, and added06-figures.py plus analysis/01. No canonical renderer/source, displaypolicy or productionlauncher changed.
+
+### Why
+A symmetric two-factor experiment distinguishes coarse scene and post sensitivity while exposing nonadditivity. Holding the inputtrajectory fixed prevents faster variants from rendering different game positions as an accidental side effect.
+
+### What worked
+Eight successfulgame/probe statuses;4,800frames/4,320postwarmup intervals;1,600reconciled pairedrecords with zeroinvalid/dropped/active;46,800counterrows with zeroerrors/nonfinite;728contained hostintervals. Every case matches signature6081555844518115723. Repeatedsame-mode images match, all depthdiagnostics match, post-only changes preserve scene buffers, and every diagnosticprint differs frombaseline.
+
+### What didn't work
+No target or analyzer failure. Tails are not monotonically improved: flat-scene p95 is18.289938ms versus combined20.222285ms, despite combinedloweractivity; p99 moves the opposite way. This is a measured limitation, not a failedrun to discard. No exact scheduler/fence explanation was obtained. Final staging flagged the raw doctor receipt (`doctor.txt:6: new blank line at EOF`); retained its bytes and applied a command-local whitespace exception to raw evidence, while checking authored code/docs normally. Ticket doctor itself passed.
+
+### What I learned
+Cheap post changesmean by4.2703ms, flat scene by6.8425ms, and both by6.9544ms—not the11.1127ms sum. The intervention changes content and may change linkedvaryings/activeuniforms/driverwork. SelectedviewCPU sums also fall (6.286baseline to5.282both), so keeping the binary constant does not hold everyCPUoperation constant.
+
+### What was tricky to build
+Correctly pool raw framevalues for groupedpercentiles rather than averagingpercentiles. Weight counterrates by their hostinterval duration, keep those windows separate from whole-frame throughput, and preserve bounded depthdiagnostic/endpoint assertions instead of calling them fullframebufferparity. The shader substitution is deliberate workremoval, not an isolatedGPUpass timer.
+
+### What warrants a second pair of eyes
+Only two runs per mode and one shortseededtrajectory; uncontrolledclock/scheduling behavior remains. Backend/host offset now1.724–1.735seconds, GPUfrequency snapshots800MHz, temperatures51.25–53.75°C; none gives calibratedutilization or fixedclocks. Shader linking/content effects remain confounders. Audio-enabled acceptance remains separate.
+
+### What should be done in the future
+Investigate a narrower scene subcomponent, particularly the three analytic rider-shadow segment evaluations, or presentationbehavior. A shadow-only diagnostic is proposed, not executed. Keep all newshaders diagnostic-only and require separate source-faithful acceptance for any eventual productioncandidate.
+
+### Code review instructions
+Read analysis/01 and design-doc/01, then inspect inputs/manifest.json, before/afterassetverification and05-analyze.py. Reproduce summaries/figures from the retainedtargetdirectory. Inspect the imagepanel to see exactly why these are non-parity substitutions.
+
+### Technical details
+Eight600frame cases, dual512×384,fps0,noaudio,ordinarydraws,pairedcadence60. Runtime32b8bfd/binary90f124a7 unchanged. Early/late baseline means23.5443/23.6059ms. Nativework remainsunpushed; no speculative source-faithfuloptimization is claimed.

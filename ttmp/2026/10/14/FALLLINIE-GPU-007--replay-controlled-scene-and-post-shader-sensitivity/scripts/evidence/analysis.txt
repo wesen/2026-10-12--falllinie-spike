@@ -1,0 +1,94 @@
+01-baseline mean/p95 23.5443 33.5388 fragment Mcy/s 802.07
+02-post-copy mean/p95 19.3106 29.5951 fragment Mcy/s 802.43
+03-scene-flat mean/p95 16.7326 17.8274 fragment Mcy/s 792.61
+04-both mean/p95 16.6194 20.3259 fragment Mcy/s 529.0
+05-both mean/p95 16.622 19.947 fragment Mcy/s 527.57
+06-scene-flat mean/p95 16.7327 18.6648 fragment Mcy/s 794.45
+07-post-copy mean/p95 19.2991 29.6618 fragment Mcy/s 802.14
+08-baseline mean/p95 23.6059 33.588 fragment Mcy/s 801.54
+groups {
+  "baseline": {
+    "runs": [
+      "01-baseline",
+      "08-baseline"
+    ],
+    "frames": 1080,
+    "mean_ms": 23.575116571296295,
+    "p95_ms": 33.55723615,
+    "p99_ms": 34.16032218,
+    "non_parity": false,
+    "rates_per_second": {
+      "MaliCoreActiveCy": 732226064.0285724,
+      "MaliNonFragActiveCy": 339695284.7521031,
+      "MaliTilerActiveCy": 339464367.3809135,
+      "MaliExtBusRdBy": 1156093427.5861304,
+      "MaliGPUActiveCy": 804604913.7566239,
+      "MaliFragActiveCy": 801804486.0802782,
+      "MaliExtBusWrBy": 651420814.6940475
+    },
+    "sequential_view_cpu_ms": 6.286065333333333
+  },
+  "post-copy": {
+    "runs": [
+      "02-post-copy",
+      "07-post-copy"
+    ],
+    "frames": 1080,
+    "mean_ms": 19.304850449074074,
+    "p95_ms": 29.6341629,
+    "p99_ms": 30.796855420000004,
+    "non_parity": true,
+    "rates_per_second": {
+      "MaliCoreActiveCy": 724750114.3711429,
+      "MaliNonFragActiveCy": 344593295.85961497,
+      "MaliTilerActiveCy": 344343296.15501463,
+      "MaliExtBusRdBy": 1420457979.3606713,
+      "MaliGPUActiveCy": 804590884.4938862,
+      "MaliFragActiveCy": 802286304.32367,
+      "MaliExtBusWrBy": 554932378.6183432
+    },
+    "sequential_view_cpu_ms": 6.213993222222222
+  },
+  "scene-flat": {
+    "runs": [
+      "03-scene-flat",
+      "06-scene-flat"
+    ],
+    "frames": 1080,
+    "mean_ms": 16.732658347222223,
+    "p95_ms": 18.2899382,
+    "p99_ms": 23.44127829,
+    "non_parity": true,
+    "rates_per_second": {
+      "MaliCoreActiveCy": 671766206.98887,
+      "MaliNonFragActiveCy": 395010373.0919156,
+      "MaliTilerActiveCy": 394276213.8995518,
+      "MaliExtBusRdBy": 1526091100.6770606,
+      "MaliGPUActiveCy": 802723019.3868405,
+      "MaliFragActiveCy": 793531934.9001322,
+      "MaliExtBusWrBy": 719419004.0716764
+    },
+    "sequential_view_cpu_ms": 5.790232333333334
+  },
+  "both": {
+    "runs": [
+      "04-both",
+      "05-both"
+    ],
+    "frames": 1080,
+    "mean_ms": 16.620700853703703,
+    "p95_ms": 20.22228515,
+    "p99_ms": 21.951731790000004,
+    "non_parity": true,
+    "rates_per_second": {
+      "MaliCoreActiveCy": 485303154.59000945,
+      "MaliNonFragActiveCy": 317588628.4955042,
+      "MaliTilerActiveCy": 316822454.7604991,
+      "MaliExtBusRdBy": 1419525539.4745886,
+      "MaliGPUActiveCy": 667195647.1368746,
+      "MaliFragActiveCy": 528283970.08659196,
+      "MaliExtBusWrBy": 336490310.89017695
+    },
+    "sequential_view_cpu_ms": 5.281548388888888
+  }
+}

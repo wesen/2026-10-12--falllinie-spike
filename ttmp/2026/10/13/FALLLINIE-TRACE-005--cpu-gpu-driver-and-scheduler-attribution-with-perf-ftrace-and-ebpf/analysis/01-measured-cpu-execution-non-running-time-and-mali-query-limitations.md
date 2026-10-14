@@ -7,12 +7,16 @@ Topics:
 DocType: analysis
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://src/paired_clocks.cpp
+      Note: Measurement boundary and buffering contract
+    - Path: repo://ttmp/2026/10/13/FALLLINIE-TRACE-005--cpu-gpu-driver-and-scheduler-attribution-with-perf-ftrace-and-ebpf/scripts/09-graphs.py
+      Note: Reproducible measurement analysis and five figures
 ExternalSources: []
-Summary: "Eight live hardware runs separate render-thread execution from non-running time and identify driver CPU work; GPU elapsed attribution remains unresolved."
+Summary: Eight live hardware runs separate render-thread execution from non-running time and identify driver CPU work; GPU elapsed attribution remains unresolved.
 LastUpdated: 2026-10-13T22:10:53.928480998-04:00
 WhatFor: ""
-WhenToUse: "Choosing the next rendering optimization or interpreting paired clocks and perf on RG DS Plus."
+WhenToUse: Choosing the next rendering optimization or interpreting paired clocks and perf on RG DS Plus.
 ---
 
 # What we can now measure

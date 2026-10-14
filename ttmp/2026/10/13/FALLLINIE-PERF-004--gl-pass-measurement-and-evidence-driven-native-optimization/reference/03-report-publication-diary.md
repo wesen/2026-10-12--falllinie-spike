@@ -2,7 +2,7 @@
 Title: Measured rendering report publication diary
 Ticket: FALLLINIE-PERF-004
 Status: active
-Topics: [performance, documentation]
+Topics: [performance]
 DocType: reference
 Intent: long-term
 Summary: Same-worker textbook report combining PERF004 measurement integrity with actual TRACE005 CPU/perf results, editorial approval and scoped vault publication.
@@ -120,3 +120,43 @@ Committed only the ten intended vault files and pushed `origin main` without for
 ### Technical details
 - Vault branch: `main`; remote: `ssh://git@github.com/go-go-golems/go-go-parc`; no force flag used.
 - Note and every asset hash are in `validation.json` and `publication-receipt.json`; native helper SHA256 is recorded there as well. Final native helper commit hash is supplied in the output handoff after committing this diary.
+
+## Step 3: Parent verifies publication and integrates receipts
+
+Parent independently verified local and remote vault main as `c7b1535f1d2eb951d03001cc6ee8273904f56359`, with a clean vault. Integrated worker publication commit5456d4e as5df50aa; no runtime source or native push occurred. The final report has5758prose words, five actual measured figures and two Mermaid diagrams.
+
+### Prompt Context
+**User prompt:** SeeStep1. Subsequent direction makes Mali-specific GPU profiling the next investigation and requests direct work instead of further delegation absent useful parallelism.
+**Assistant interpretation:** Close publication bookkeeping and preserve unresolved measurement questions explicitly.
+**Inferred user intent:** A durable, pushed report followed by useful GPU research, not more publication machinery.
+**Commit:**5df50aa — Publish measured Falllinie rendering report with evidence receipts.
+
+### What I did
+Compared `git rev-parse HEAD` with `git ls-remote origin refs/heads/main`; checked all four completed PERF004 tasks against committed tooling, actual runs, conditional candidate ranking and publication. Added1kxj for unresolved Mali timer semantics/counter support. Preserved TRACE005 analysis relations/changelog alongside this checkpoint.
+
+### Why
+Publication completion and scientific completeness differ: the report is delivered, but GPU pass costs and exact wait causes remain unresolved.
+
+### What worked
+Exact local/remote identity and clean vault; helper-only integration succeeded. No new runtime test matrix or target rerun was needed.
+
+### What didn't work
+`docmgr doctor --ticket FALLLINIE-PERF-004 --stale-after 30` reported new `scripts/02-vault-report/README.md` missing frontmatter and unknown topic`documentation`. Added frontmatter to this new helper README and limited this new diary to existing topic`performance`. Two older findings remain in `scripts/README.md` and `scripts/evidence/review-corrections.md`; preserved historical content rather than broadening the publication patch. Those findings do not affect the already published vault report.
+
+### What I learned
+A scoped report validator does not imply ticket-wide metadata cleanliness. Keep those claims separate.
+
+### What was tricky to build
+The main checkout had parent-owned TRACE005 doc relation/changelog edits during publication. The helper-only cherry-pick did not overlap or discard them.
+
+### What warrants a second pair of eyes
+Next GPU research must verify actual driver/counter compatibility before suggesting installed or working Mali tools.
+
+### What should be done in the future
+Direct parent research of exact GPU/driver, counter interfaces and Streamline/gatord; preserve useful documentation in the ticket sources folder. No further delegation planned.
+
+### Code review instructions
+Inspect vaultc7b1535, native5df50aa and publication receipt; no re-execution of guarded asset preparation against the published directory.
+
+### Technical details
+All original measurement inputs stay atf400ffa/runtime209a6d0. This integration changes docs/tasks only and does not supersede raw evidence hashes.

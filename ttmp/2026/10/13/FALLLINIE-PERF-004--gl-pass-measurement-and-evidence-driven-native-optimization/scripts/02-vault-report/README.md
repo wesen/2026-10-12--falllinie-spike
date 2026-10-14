@@ -1,3 +1,13 @@
+---
+Title: Rendering measurements vault publication helpers
+Ticket: FALLLINIE-PERF-004
+Status: active
+Topics: [performance]
+DocType: reference
+Intent: long-term
+Summary: Publication-only commands and receipts for the measured rendering report.
+---
+
 # Rendering measurements vault publication
 
 Publication-only tooling; no native runtime source changes, target execution, web research, installs or native push.

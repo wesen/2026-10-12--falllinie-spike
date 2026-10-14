@@ -26,7 +26,7 @@ volatile std::sig_atomic_t termination_requested=0;
 void request_termination(int){termination_requested=1;}
 struct Config {
  bool paired_clocks=false,freeze_scene=false,post_bypass=false;fl::GpuMode gpu_mode=fl::GpuMode::Off;unsigned profile_cadence=60;
- bool place=false,resize_check=false,source_sampler_precision=false,play=false,autoplay=false,dual=false,source_sky_hash=false,no_vsync=false,absolute_coordinates=false,muted=false,dev_overlay=false;double seconds=0,fps_cap=0;int frames=0,width=512,height=384,cell=0,cells=3,debug=0,palette=0,audio_buffer=512;uint32_t seed=42;
+ bool place=false,resize_check=false,source_sampler_precision=false,play=false,autoplay=false,dual=false,source_sky_hash=false,no_vsync=false,absolute_coordinates=false,muted=false,no_audio=false,dev_overlay=false;double seconds=0,fps_cap=0;int frames=0,width=512,height=384,cell=0,cells=3,debug=0,palette=0,audio_buffer=512;uint32_t seed=42;
  fl::AudioRenderMode audio_mode=fl::AudioRenderMode::BufferedWorker;bool source_vinyl=true;
  std::string assets="assets/shaders",capture,receipt,profile;
 };
@@ -44,11 +44,12 @@ Config parse(int argc,char** argv){
   else if(a=="--no-vinyl")c.source_vinyl=false;
   else if(a=="--source-vinyl")c.source_vinyl=true;
   else if(a=="--muted")c.muted=true;
+  else if(a=="--no-audio")c.no_audio=true;
   else if(a=="--dev-overlay"){c.dev_overlay=true;c.play=true;}
   else if(a=="--absolute-render-coordinates")c.absolute_coordinates=true;
   else if(a=="--no-vsync")c.no_vsync=true;else if(a=="--gpu-profile")c.gpu_mode=fl::GpuMode::View;else if(a=="--gpu-profile-mode"){auto mode=value();if(mode=="off")c.gpu_mode=fl::GpuMode::Off;else if(mode=="view")c.gpu_mode=fl::GpuMode::View;else if(mode=="passes")c.gpu_mode=fl::GpuMode::Passes;else throw std::runtime_error("GPU profile mode must be off, view or passes");}else if(a=="--profile-cadence"){auto text=value();size_t consumed=0;int n=std::stoi(text,&consumed);if(consumed!=text.size()||n<1||n>3600)throw std::runtime_error("profile cadence must be 1..3600");c.profile_cadence=unsigned(n);}else if(a=="--freeze-scene")c.freeze_scene=true;else if(a=="--post-bypass")c.post_bypass=true;else if(a=="--profile")c.profile=value();else if(a=="--assets")c.assets=value();else if(a=="--capture-dir")c.capture=value();else if(a=="--receipt")c.receipt=value();
   else if(a=="--render-size"){auto size=value();auto x=size.find('x');if(x==std::string::npos)throw std::runtime_error("expected WIDTHxHEIGHT");c.width=std::stoi(size.substr(0,x));c.height=std::stoi(size.substr(x+1));}
-  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..5] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash] [--absolute-render-coordinates] [--muted] [--audio-buffer 256..4096 power-of-two] [--audio-mode buffered|direct] [--no-vinyl|--source-vinyl] [--dev-overlay] [--profile CSV] [--paired-clocks (requires --profile)] [--gpu-profile (view)] [--gpu-profile-mode off|view|passes] [--profile-cadence 1..3600] [--freeze-scene (static terrain; dual uses same camera; overrides dual implicit play)] [--post-bypass (non-parity)] [--no-vsync] [--fps N]\nF3 cycles debug; C cycles six palettes; A/START or ENTER/SPACE starts; START/P/ESC pauses; SELECT/F2 toggles developer overlay; SELECT+Y/R new run; M mutes; F10 or SELECT+START quits. --dev-overlay starts gameplay title with overlay. SELECT-first chords restore pre-press visibility; F2 is independent.\n";std::exit(0);}
+  else if(a=="--help"){std::cout<<"falllinie-spike [--place] [--seconds N|--frames N] [--seed N] [--cell N] [--cells 1..7]\n [--render-size WxH] [--debug-view 0..5] [--palette 0..5] [--capture-dir PATH] [--receipt PATH] [--resize-check] [--source-sampler-precision] [--play|--autoplay] [--dual-screen] [--source-sky-hash] [--absolute-render-coordinates] [--muted] [--no-audio (diagnostic: no device or DSP worker)] [--audio-buffer 256..4096 power-of-two] [--audio-mode buffered|direct] [--no-vinyl|--source-vinyl] [--dev-overlay] [--profile CSV] [--paired-clocks (requires --profile)] [--gpu-profile (view)] [--gpu-profile-mode off|view|passes] [--profile-cadence 1..3600] [--freeze-scene (static terrain; dual uses same camera; overrides dual implicit play)] [--post-bypass (non-parity)] [--no-vsync] [--fps N]\nF3 cycles debug; C cycles six palettes; A/START or ENTER/SPACE starts; START/P/ESC pauses; SELECT/F2 toggles developer overlay; SELECT+Y/R new run; M mutes; F10 or SELECT+START quits. --dev-overlay starts gameplay title with overlay. SELECT-first chords restore pre-press visibility; F2 is independent.\n";std::exit(0);}
   else throw std::runtime_error("unknown argument "+a);
  }
  if(!std::isfinite(c.fps_cap)||c.fps_cap<0||c.fps_cap>240||c.width<128||c.height<96||c.width>2048||c.height>1536||c.cell< -1||c.cell>4096||c.cells<1||c.cells>7||c.frames<0||c.seconds<0||!std::isfinite(c.seconds)||c.debug<0||c.debug>5||c.palette<0||c.palette>5||c.audio_buffer<256||c.audio_buffer>4096||(c.audio_buffer&(c.audio_buffer-1)))throw std::runtime_error("configuration outside bounded spike limits");
@@ -104,6 +105,7 @@ int main(int argc,char** argv){
   fl::Game game(c.seed);fl::NativeFrameClock frame_clock;fl::NativeInputMapper input_mapper;fl::TitleAutopilot autopilot(c.seed);
   const fl::AudioOpenOptions audio_options{c.audio_buffer,c.audio_mode,c.source_vinyl};
   fl::AudioEngine audio;bool audio_started=false,muted=c.muted;std::string last_persistence_error;
+  std::cout<<"AUDIO_POLICY disabled="<<c.no_audio<<" muted="<<muted<<" (disabled omits device/producer/callback DSP; muted does not)\n";
   fl::Rng run_seeds{c.seed^0x97f4a71bu};
   bool dev_overlay=c.dev_overlay,select_overlay_saved=dev_overlay;
   fl::DeveloperOverlayCache overlay_cache;fl::DeveloperFrameWindow overlay_window;
@@ -113,7 +115,7 @@ int main(int argc,char** argv){
    char* preference=SDL_GetPrefPath("Falllinie","Falllinie");
    if(!preference)throw std::runtime_error(std::string("app best path: ")+SDL_GetError());
    std::string best_path=std::string(preference)+"best-score";SDL_free(preference);game.set_best_path(best_path);
-   if(c.autoplay){game.start();audio_started=audio.open(audio_options);if(!audio_started)std::cerr<<"audio unavailable (no render-mode fallback): "<<SDL_GetError()<<'\n';else audio.set_muted(muted);}
+   if(c.autoplay){game.start();if(!c.no_audio){audio_started=audio.open(audio_options);if(!audio_started)std::cerr<<"audio unavailable (no render-mode fallback): "<<SDL_GetError()<<'\n';else audio.set_muted(muted);}}
    else game.enter_title();
    std::cout<<"SOURCE: A jump / B-X boost / L1-R1-L2-R2 grabs / START pause / SELECT dev / SELECT+Y new seed / SELECT+START quit; keyboard WASD/arrows, SPACE, SHIFT/B, J/K/U/I, P/ESC, R new seed, F2 dev, M, C, F3, F10\nseed="<<game.seed()<<" best_path="<<best_path<<'\n';
   }
@@ -149,7 +151,7 @@ int main(int argc,char** argv){
    if(actions.debug)c.debug=(c.debug+1)%6;
    if(actions.palette)c.palette=(c.palette+1)%6;
    if(c.play&&!quit){
-    if(actions.start){game.start();frame_clock.accumulator=0;if(!audio_started){audio_started=audio.open(audio_options);if(!audio_started)std::cerr<<"audio unavailable (no render-mode fallback): "<<SDL_GetError()<<'\n';else audio.set_muted(muted);}}
+    if(actions.start){game.start();frame_clock.accumulator=0;if(!audio_started&&!c.no_audio){audio_started=audio.open(audio_options);if(!audio_started)std::cerr<<"audio unavailable (no render-mode fallback): "<<SDL_GetError()<<'\n';else audio.set_muted(muted);}}
     else if(actions.new_run){uint32_t seed=uint32_t(run_seeds.next()*2147483648.);if(seed==game.seed())seed=(seed+1)&0x7fffffffU;game.restart(seed);c.seed=seed;frame_clock.accumulator=0;audio.pause(false);std::cout<<"new_run seed="<<seed<<" (--seed "<<seed<<") generation="<<game.generation()<<std::endl;}
     else if(actions.pause){game.set_paused(physical.focus_lost?true:!game.paused());audio.pause(game.paused());}
     if(actions.mute){muted=!muted;audio.set_muted(muted);}
@@ -238,7 +240,7 @@ int main(int argc,char** argv){
   std::cout<<"frames="<<frames<<" measured="<<times.size()<<" frame_p50_ms="<<percentile(times,.5)<<" frame_p95_ms="<<p95<<" frame_p99_ms="<<percentile(times,.99)<<" peak_rss_kib="<<peak_rss<<" GL_error="<<glGetError()<<std::endl;
   if(!c.receipt.empty()){
    std::ofstream out(c.receipt);if(!out)throw std::runtime_error("cannot write receipt");
-   out<<"{\n\"measurement\":{\"fixture\":"<<std::quoted(c.freeze_scene?"static-terrain":"live-or-default")<<",\"second_view\":"<<std::quoted(c.freeze_scene?"same-camera":"first-person")<<",\"post_bypass\":"<<(c.post_bypass?"true":"false")<<",\"gpu_mode\":"<<std::quoted(c.gpu_mode==fl::GpuMode::Off?"off":c.gpu_mode==fl::GpuMode::View?"view":"passes")<<",\"cadence\":"<<c.profile_cadence<<",\"static_exclusions\":"<<std::quoted(c.freeze_scene?"rider,particles,trails,HUD,streaming,audio-DSP":"none")<<"},\n";
+   out<<"{\n\"audio_disabled\":"<<(c.no_audio?"true":"false")<<",\n\"measurement\":{\"fixture\":"<<std::quoted(c.freeze_scene?"static-terrain":"live-or-default")<<",\"second_view\":"<<std::quoted(c.freeze_scene?"same-camera":"first-person")<<",\"post_bypass\":"<<(c.post_bypass?"true":"false")<<",\"gpu_mode\":"<<std::quoted(c.gpu_mode==fl::GpuMode::Off?"off":c.gpu_mode==fl::GpuMode::View?"view":"passes")<<",\"cadence\":"<<c.profile_cadence<<",\"static_exclusions\":"<<std::quoted(c.freeze_scene?"rider,particles,trails,HUD,streaming,audio-DSP":"none")<<"},\n";
    out<<std::setprecision(10)<<"\"source_sha256\":\"cb9b4befd0252859d9c45246f94fbd7dd1662c6d034c6ccb95fbe16947e8b556\",\n\"seed\":"<<c.seed<<",\"cell\":"<<c.cell<<",\"cells\":"<<c.cells<<",\n\"context\":{\"version\":"<<std::quoted(version)<<",\"vendor\":"<<std::quoted(vendor)<<",\"renderer\":"<<std::quoted(gpu)<<"},\n\"render_size\":["<<renderer.width()<<','<<renderer.height()<<"],\"drawable_size\":["<<drawable_w<<','<<drawable_h<<"],\"placement_ok\":"<<(placed?"true":"false")<<",\n\"debug_view\":"<<c.debug<<",\"palette\":"<<c.palette<<",\"dual_screen\":"<<(c.dual?"true":"false")<<",\"stable_sky\":"<<(!c.source_sky_hash?"true":"false")<<",\"depth_sampler_highp\":"<<(!c.source_sampler_precision?"true":"false")<<",\"resize_check\":"<<(c.resize_check?"true":"false")<<",\n\"camera_eye\":["<<camera.eye.x<<','<<camera.eye.y<<','<<camera.eye.z<<"],\"camera_look\":["<<camera.look.x<<','<<camera.look.y<<','<<camera.look.z<<"],\n\"vertices\":"<<renderer.vertex_count()<<",\"indices\":"<<renderer.index_count()<<",\"terrain_build_ms\":"<<renderer.build_ms()<<",\n\"frames\":"<<frames<<",\"warmup_frames\":60,\"measured_frames\":"<<times.size()<<",\n\"frame_ms\":{\"p50\":"<<percentile(times,.5)<<",\"p95\":"<<p95<<",\"p99\":"<<percentile(times,.99)<<"},\n\"swap_p95_ms\":"<<percentile(swaps,.95)<<",\"rss_kib\":{\"start\":"<<start_rss<<",\"peak\":"<<peak_rss<<",\"end\":"<<rss_kib()<<"},\n\"timing_scope\":\"CPU submission plus swap; not GPU timer\",\"timing_target_met\":"<<(!times.empty() && p95<=33.3?"true":"false")<<",\n\"rss_samples\":[";
    // Keep periodic RSS separate from post-readback allocation in the receipt.
    for(size_t i=0;i<rss_samples.size();++i){if(i)out<<',';out<<'['<<rss_samples[i].first<<','<<rss_samples[i].second<<']';}

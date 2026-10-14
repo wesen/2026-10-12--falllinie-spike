@@ -32,3 +32,7 @@ Published living CPU PMU technical report:3815prosewords,3actual-data figures,2d
 ## 2026-10-14
 
 Completed9895-sample event attribution and7336-sample same-binary range-draw ABBA. Verified min/max helper mapping/caller; no candidate samples in helper, top sceneCPU1.42–1.59ms vs2.44–2.91ms baseline. Fixed scene/depth/print identical; no convincing frame improvement and higher candidateRSS observed. Keep --draw-ranges opt-in; shader/indexdata/default launcher unchanged.
+
+## 2026-10-14
+
+Updated living CPU PMU report to5403prosewords with actual event profiles, verified min/max caller, indexed-range CPU benefit and unresolved frame/RSS limits. Vaultd16dc38ce09b79b4b55e95f16cf772a1f2a98afd pushed/remoteverified;12scopedfiles. Candidate remains opt-in, production unchanged; native evidence44c0c72.

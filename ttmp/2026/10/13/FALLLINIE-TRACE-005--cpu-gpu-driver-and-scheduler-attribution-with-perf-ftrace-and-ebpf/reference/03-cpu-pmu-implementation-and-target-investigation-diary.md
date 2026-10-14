@@ -273,3 +273,45 @@ Read analysis/03,13-index-ranges/evidence/summary.json and the full-symbol repor
 
 ### Technical details
 Target/storage/apps/falllinie-ranges-20261014T154415Z;6808postwarmupframes,3417baseline/3391candidate;7336samples. No backgroundcapture remains. Source candidate and production deployment are distinct; productionlauncher/default unchanged.
+
+## Step 7: Update the living report with the CPU-only benefit
+
+Updated the existing CPU PMU report as the user requested, retaining all baseline tables and assets. New sections12–14 explain event-location profiles, verified address/caller mapping, the min/max algorithm, legal range bounds and the mixed experiment outcome. The report now distinguishes completed attribution from the earlier baseline's pending questions instead of leaving stale future-tense claims in its summary.
+
+The updated report has5403prosewords, five totalSVGfigures and twoMermaid diagrams, with new self-contained follow-up evidence and fixtureimages. Scoped publication of12files (report,MOC,10newassets) was committed/pushed asd16dc38ce09b79b4b55e95f16cf772a1f2a98afd; independent remote verification matched localHEAD and vaultstatus was clean.
+
+### Prompt Context
+**User prompt:** SeeStep5 and Step3's explicit living-report update request.
+**Assistant interpretation:** Publish the completed continuation without turning a CPU saving into a frame-rate claim.
+**Inferred user intent:** Keep the shared report current as actual experiments advance.
+**Commit (evidence):**44c0c72 — Measure indexed-range CPU benefit and unresolved frame-time limits.
+
+### What I did
+Added update_assets.py and validate_followup.py under12-cpu-vault-report. Generated two figures from actual summaries, copied follow-up summaries/provenance/buildqualification and two losslessimages. Updated the MOC's CPU-report description and readingroute. Validated links, asset hashes, fileformats, exact numerical table values, sampletotals and helper sampleabsence before scoped commit/push.
+
+### Why
+This outcome is useful but conditional: a sampledCPUscan and sceneCPUcost change; frame timing does not clearly improve. Keep oldbaseline evidence intact and add an explicitly identified follow-up checkpoint.
+
+### What worked
+All publication checks passed. Vaultcommitd16dc38 is independently remote-verified; noteSHA256af5580d7ecad4d5ebb3bc9e172a2c382233d99e53599251232583e5c92e6bf3c. The report states no candidate samples in the helper, not a proven zero callcount; cache-skid/coverage and audio-disabled limits remain explicit.
+
+### What didn't work
+No publication failure. The unresolvedframe result and highercandidateRSS are retained as findings rather than removed from the narrative.
+
+### What I learned
+The report must update its current summary when an investigation moves from plans to measurements, while preserving the historical scope of prior sections and hashes.
+
+### What was tricky to build
+Avoid rewriting baselineassetprovenance. New assets live in a separate range-draw subdirectory and have their own provenance. Baseline chapter11 is explicitly historical; later sections own current conclusions.
+
+### What warrants a second pair of eyes
+No precise privateGLfunction name, exactcachelatency, universalvisualparity or integrated60FPSsuccess is claimed. The candidate remainsopt-in and the productionlauncher is untouched.
+
+### What should be done in the future
+Investigate tighterrider bounds or outputdependencies as separate controlled work, then audio-enabled acceptance. No further experiment was started as part of publication.
+
+### Code review instructions
+Read updatedreportsections12–14, nativeanalysis/03 and followup-validation.json. Publication receipts are under12-cpu-vault-report/followup-*; nativecode/evidence commits remain unpushed.
+
+### Technical details
+5403prosewords,2newSVGs/5total,2Mermaids,2newfixturePNGs,12scopedvaultfiles. Originalreportassets unchanged; reportandMOC updated intentionally under the living-report request. No backgroundprofile remains running.

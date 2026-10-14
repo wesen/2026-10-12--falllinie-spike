@@ -1,0 +1,23 @@
+{
+  "native_evidence": "44c0c72",
+  "note_sha256": "af5580d7ecad4d5ebb3bc9e172a2c382233d99e53599251232583e5c92e6bf3c",
+  "prose_words": 5403,
+  "new_svg_figures": 2,
+  "fixture_pngs": 2,
+  "mermaid_diagrams": 2,
+  "files": [
+    "Projects/2026/10/14/PROJECT REPORT - Falllinie CPU PMU - Cache Events, Driver Cycles and an Audio-Disabled Baseline.md",
+    "Projects/2026/10/13/MOC - Optimization and Performance Engineering.md",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/04-event-attribution.svg",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/05-range-cpu-frame.svg",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/attribution-provenance.json",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/attribution-summary.json",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/build-qualification.json",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/fixture-baseline.png",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/fixture-ranges.png",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/provenance.json",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/range-provenance.json",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/range-summary.json"
+  ],
+  "checks": "links, figures/JSON/images, asset hashes, exact table values, sample totals and observed helper absence; interpretation manually reviewed"
+}

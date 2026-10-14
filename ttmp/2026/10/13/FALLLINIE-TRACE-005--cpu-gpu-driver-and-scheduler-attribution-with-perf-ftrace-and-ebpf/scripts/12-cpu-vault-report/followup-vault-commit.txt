@@ -1,0 +1,12 @@
+[main d16dc38] Extend CPU PMU report with driver scan attribution and indexed-range results
+ 12 files changed, 989 insertions(+), 6 deletions(-)
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/04-event-attribution.svg
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/05-range-cpu-frame.svg
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/attribution-provenance.json
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/attribution-summary.json
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/build-qualification.json
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/fixture-baseline.png
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/fixture-ranges.png
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/provenance.json
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/range-provenance.json
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/range-draw/range-summary.json

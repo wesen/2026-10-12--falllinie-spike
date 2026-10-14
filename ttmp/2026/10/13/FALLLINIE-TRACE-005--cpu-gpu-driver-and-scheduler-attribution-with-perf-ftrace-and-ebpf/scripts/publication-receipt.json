@@ -1,0 +1,21 @@
+{
+  "vault": "/home/manuel/code/wesen/go-go-golems/go-go-parc",
+  "branch": "main",
+  "origin": "ssh://git@github.com/go-go-golems/go-go-parc",
+  "base_commit": "3d20222c1340f28f48c32907ce77a0fb2da29b0d",
+  "publication_commit": "e57938fa89a7f7210dab9bc1b684959c0381f7f8",
+  "verified_remote_main": "e57938fa89a7f7210dab9bc1b684959c0381f7f8",
+  "push_command": "git push origin main",
+  "verification_command": "git ls-remote origin refs/heads/main",
+  "report": "Projects/2026/10/13/PROJECT REPORT - Falllinie Tracing - CPU Execution, Driver Waits and GPU Attribution.md",
+  "assets": "Projects/2026/10/13/_assets/falllinie-trace-005/",
+  "changed_files": 7,
+  "body_words": 5888,
+  "svg_figures": 5,
+  "report_sha256": "bda2f359e2abcd56acad5e7653e261cd1b6d8bf2bd1fb90355fb91a62faa0614",
+  "parent_editorial_gate": "Approved after complete draft review; requested numeric-prefix hygiene fix completed before final validation.",
+  "vault_clean_after_push": true,
+  "vault_no_staged_files": true,
+  "native_push": "not run",
+  "target_tracing": "not run; gcop remains open"
+}

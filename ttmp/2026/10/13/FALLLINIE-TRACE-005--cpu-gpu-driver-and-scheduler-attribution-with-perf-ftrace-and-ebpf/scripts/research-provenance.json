@@ -1,0 +1,80 @@
+[
+  {
+    "name": "ftrace",
+    "url": "https://docs.kernel.org/trace/ftrace.html",
+    "retrieved_utc": "2026-10-14T01:13:50.032535+00:00",
+    "bytes": 183569,
+    "sha256": "56cd257ab1c4c7c3c5e71a2acf5ce4fdb77cb3c50dbdd274d346469f20c563ce",
+    "status": "retrieved"
+  },
+  {
+    "name": "events",
+    "url": "https://docs.kernel.org/trace/events.html",
+    "retrieved_utc": "2026-10-14T01:13:50.276287+00:00",
+    "bytes": 74085,
+    "sha256": "9c0e8dffc9beb3459c2a40718916f51e1ce9b79412fca35df84425c2543d50d6",
+    "status": "retrieved"
+  },
+  {
+    "name": "perf-security",
+    "url": "https://docs.kernel.org/admin-guide/perf-security.html",
+    "retrieved_utc": "2026-10-14T01:13:50.656851+00:00",
+    "bytes": 37201,
+    "sha256": "e036d616a82cbc04849c5cf03ee73120a8316f51a5fc9314f4b305e9d4df48b4",
+    "status": "retrieved"
+  },
+  {
+    "name": "bpf-verifier",
+    "url": "https://docs.kernel.org/bpf/verifier.html",
+    "retrieved_utc": "2026-10-14T01:13:50.740552+00:00",
+    "bytes": 39088,
+    "sha256": "07ec1c363aa457ad0155a31480430fbda189160727930ce8749a37c5a6ea5576",
+    "status": "retrieved"
+  },
+  {
+    "name": "libbpf",
+    "url": "https://docs.kernel.org/bpf/libbpf/libbpf_overview.html",
+    "retrieved_utc": "2026-10-14T01:13:50.932873+00:00",
+    "bytes": 28680,
+    "sha256": "215900931b121ab6af9a3b5a6f6f79b12ea29485c31ba4ae446a87c7fafb14ae",
+    "status": "retrieved"
+  },
+  {
+    "name": "bpf-license",
+    "url": "https://docs.kernel.org/bpf/bpf_licensing.html",
+    "retrieved_utc": "2026-10-14T01:13:51.101498+00:00",
+    "bytes": 16008,
+    "sha256": "5ba402a83ce0a596cff35878dc8b3db2d3bd00355582fed421415a71cd6d631f",
+    "status": "retrieved"
+  },
+  {
+    "name": "perf-record-failed",
+    "url": "https://raw.githubusercontent.com/torvalds/linux/master/tools/perf/Documentation/perf-record.adoc",
+    "retrieved_utc": "2026-10-14T01:13:51.295976+00:00",
+    "status": "failed",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "name": "perf-record",
+    "url": "https://raw.githubusercontent.com/torvalds/linux/master/tools/perf/Documentation/perf-record.txt",
+    "retrieved_utc": "2026-10-14T01:13:51.369791+00:00",
+    "bytes": 34536,
+    "sha256": "40028cc61600d2bc7d2d4950b68473ee9a9c1053dc96195af4c5e9fcfd209ed2",
+    "status": "retrieved"
+  },
+  {
+    "name": "gpu-query-failed",
+    "url": "https://registry.khronos.org/OpenGL/extensions/EXT/EXT_disjoint_timer_query.txt",
+    "retrieved_utc": "2026-10-14T01:13:51.528836+00:00",
+    "status": "failed",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "name": "gpu-query",
+    "url": "https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/main/extensions/EXT/EXT_disjoint_timer_query.txt",
+    "retrieved_utc": "2026-10-14T01:13:51.608940+00:00",
+    "bytes": 34949,
+    "sha256": "0f9629d3d6e623084cadfe095f72d4070b09836343b635930f22f1f49b2c8004",
+    "status": "retrieved"
+  }
+]

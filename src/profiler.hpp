@@ -16,7 +16,7 @@ struct QueryApi {
  explicit operator bool()const{return gen&&del&&begin&&end&&get&&get64&&integer;}
 };
 enum class GpuMode {Off,View,Passes};
-enum class RenderPass {View,Scene,Post,Output,DynamicPrep,DynamicUpload};
+enum class RenderPass {View,Scene,Post,Output,DynamicPrep,DynamicUpload,Acquire};
 class Profiler {
 public:
  explicit Profiler(const std::string& path,GpuMode mode=GpuMode::Off,unsigned cadence=60,const QueryApi* test_api=nullptr,bool paired_clocks=false,const PairedClocks::ClockApi* test_clocks=nullptr);

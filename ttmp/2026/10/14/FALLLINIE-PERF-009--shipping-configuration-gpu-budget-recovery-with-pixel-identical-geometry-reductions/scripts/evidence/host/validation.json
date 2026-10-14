@@ -1,0 +1,291 @@
+{
+  "frames": 240,
+  "signature": "8964042839430826299",
+  "draw_stats": {
+    "original": {
+      "views": 480,
+      "terrain_drawn": 3100,
+      "terrain_culled": 0,
+      "terrain_fog_constant": 0,
+      "object_drawn": 3100,
+      "object_culled": 0,
+      "object_fog_constant": 0,
+      "short_index_draws": 0,
+      "triangles_submitted": 93606600,
+      "triangles_culled": 0
+    },
+    "fog": {
+      "views": 480,
+      "terrain_drawn": 3100,
+      "terrain_culled": 0,
+      "terrain_fog_constant": 748,
+      "object_drawn": 3100,
+      "object_culled": 0,
+      "object_fog_constant": 802,
+      "short_index_draws": 0,
+      "triangles_submitted": 93606600,
+      "triangles_culled": 0
+    },
+    "cull": {
+      "views": 480,
+      "terrain_drawn": 3079,
+      "terrain_culled": 21,
+      "terrain_fog_constant": 0,
+      "object_drawn": 2750,
+      "object_culled": 350,
+      "object_fog_constant": 0,
+      "short_index_draws": 0,
+      "triangles_submitted": 92673024,
+      "triangles_culled": 933576
+    },
+    "short": {
+      "views": 480,
+      "terrain_drawn": 3100,
+      "terrain_culled": 0,
+      "terrain_fog_constant": 0,
+      "object_drawn": 3100,
+      "object_culled": 0,
+      "object_fog_constant": 0,
+      "short_index_draws": 6200,
+      "triangles_submitted": 93606600,
+      "triangles_culled": 0
+    },
+    "clear": {
+      "views": 480,
+      "terrain_drawn": 3100,
+      "terrain_culled": 0,
+      "terrain_fog_constant": 0,
+      "object_drawn": 3100,
+      "object_culled": 0,
+      "object_fog_constant": 0,
+      "short_index_draws": 0,
+      "triangles_submitted": 93606600,
+      "triangles_culled": 0
+    },
+    "combined": {
+      "views": 480,
+      "terrain_drawn": 3079,
+      "terrain_culled": 21,
+      "terrain_fog_constant": 748,
+      "object_drawn": 2750,
+      "object_culled": 350,
+      "object_fog_constant": 802,
+      "short_index_draws": 5829,
+      "triangles_submitted": 92673024,
+      "triangles_culled": 933576
+    }
+  },
+  "comparisons": {
+    "fog": {
+      "depth.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "lower/depth.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "lower/output.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "lower/scene.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "output.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 786432
+      },
+      "print.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "scene.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      }
+    },
+    "cull": {
+      "depth.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "lower/depth.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "lower/output.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "lower/scene.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "output.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 786432
+      },
+      "print.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "scene.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      }
+    },
+    "short": {
+      "depth.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "lower/depth.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "lower/output.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "lower/scene.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "output.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 786432
+      },
+      "print.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "scene.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      }
+    },
+    "clear": {
+      "depth.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "lower/depth.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "lower/output.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "lower/scene.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "output.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 786432
+      },
+      "print.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "scene.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      }
+    },
+    "combined": {
+      "depth.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "lower/depth.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "lower/output.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 786432
+      },
+      "lower/print.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "lower/scene.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "output.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 786432
+      },
+      "print.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      },
+      "scene.png": {
+        "different_pixels": 0,
+        "max_channel_delta": 0,
+        "pixels": 110592
+      }
+    }
+  },
+  "scope": "Host GL wiring and pixel identity; not Mali timing or device qualification"
+}

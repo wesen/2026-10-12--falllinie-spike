@@ -4,7 +4,7 @@
 #include <iomanip>
 namespace fl {
 static constexpr GLenum elapsed=0x88BF,available=0x8867,result=0x8866,disjoint=0x8FBB;
-static const char* name(RenderPass p){switch(p){case RenderPass::View:return "view";case RenderPass::Scene:return "scene";case RenderPass::Post:return "post";case RenderPass::Output:return "output";case RenderPass::DynamicPrep:return "dynamic_prep";case RenderPass::DynamicUpload:return "dynamic_upload";}return "invalid";}
+static const char* name(RenderPass p){switch(p){case RenderPass::View:return "view";case RenderPass::Scene:return "scene";case RenderPass::Post:return "post";case RenderPass::Output:return "output";case RenderPass::DynamicPrep:return "dynamic_prep";case RenderPass::DynamicUpload:return "dynamic_upload";case RenderPass::Acquire:return "acquire";}return "invalid";}
 Profiler::Profiler(const std::string& path,GpuMode mode,unsigned cadence,const QueryApi* test_api,bool paired_clocks,const PairedClocks::ClockApi* test_clocks):paired_(paired_clocks&&!path.empty()?path+".paired.jsonl":"",cadence,test_clocks),paired_enabled_(paired_clocks),mode_(mode),cadence_(cadence){
  if(paired_clocks&&path.empty())throw std::runtime_error("paired clocks require --profile CSV");
  if(cadence<1||cadence>3600)throw std::runtime_error("profile cadence must be 1..3600");
@@ -32,7 +32,7 @@ Profiler::Profiler(const std::string& path,GpuMode mode,unsigned cadence,const Q
  std::cout<<"PROFILE mode="<<(mode==GpuMode::Off?"off":mode==GpuMode::View?"view":"passes")<<" cadence="<<cadence<<" supported="<<bool(api_)<<" pool=32 CPU_passes=sparse,nested,nonadditive\n";
 }
 void Profiler::row(const Query& q,const char* status,double ms){gpu_<<q.frame<<','<<q.view<<','<<name(q.pass)<<','<<status<<',';if(ms>=0)gpu_<<ms;gpu_<<'\n';}
-void Profiler::flush_cpu(){for(size_t i=0;i<sample_count_;++i){const auto& s=samples_[i];passes_<<s.frame<<','<<s.view<<','<<name(s.pass)<<','<<(s.pass==RenderPass::View?"none":s.pass==RenderPass::DynamicPrep||s.pass==RenderPass::DynamicUpload?"scene":"view")<<','<<s.ms<<'\n';++cpu_samples_;}sample_count_=0;}
+void Profiler::flush_cpu(){for(size_t i=0;i<sample_count_;++i){const auto& s=samples_[i];passes_<<s.frame<<','<<s.view<<','<<name(s.pass)<<','<<(s.pass==RenderPass::View?"none":s.pass==RenderPass::DynamicPrep||s.pass==RenderPass::DynamicUpload?"scene":s.pass==RenderPass::Acquire?"output":"view")<<','<<s.ms<<'\n';++cpu_samples_;}sample_count_=0;}
 void Profiler::poll(){
  paired_.flush();flush_cpu();if(!api_)return;
  GLint changed=0;api_.integer(disjoint,&changed);

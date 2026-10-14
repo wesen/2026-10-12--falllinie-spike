@@ -1,5 +1,6 @@
 #include "renderer.hpp"
 #include "gl_api.hpp"
+#include <array>
 #include <chrono>
 #include <cstring>
 #include <cstdlib>
@@ -33,6 +34,9 @@ static GLuint program(const std::string& vs,const std::string& fs,const std::str
  }catch(...){if(v)glDeleteShader(v);if(f)glDeleteShader(f);if(p)glDeleteProgram(p);throw;}
 }
 static GLint loc(GLuint p,const char* name){return glGetUniformLocation(p,name);}
+// Scene fog reaches full strength here; shared by the uniform upload and the CPU fog test.
+static constexpr float scene_fog_near=150,scene_fog_far=400;
+
 static void scalar(GLuint p,const char* name,float value){glUniform1f(loc(p,name),value);}
 static void integer(GLuint p,const char* name,int value){glUniform1i(loc(p,name),value);}
 static void vec3(GLuint p,const char* name,Vec3 v){glUniform3f(loc(p,name),float(v.x),float(v.y),float(v.z));}
@@ -51,7 +55,10 @@ void Renderer::initialize(uint32_t seed,int first_cell,int count,int w,int h,con
  if(projection_at==std::string::npos)throw std::runtime_error("original scene projection expression missing");
  scene_source.replace(projection_at,projection.size(),"gl_Position=uVP*vec4(w.xyz-uRenderOrigin,1.);");
  scene_source.insert(scene_source.find("void main(){"),"uniform highp vec3 uRenderOrigin;\n");
- scene_=program(scene_source,adapt_shadow_shader(read_file(assets+"/scene_fs.glsl"),shadow_mode_),"scene with explicit shadow policy");
+ std::string scene_fragment=adapt_shadow_shader(read_file(assets+"/scene_fs.glsl"),shadow_mode_);
+ if(fog_constant_)scene_fragment=adapt_fog_constant_shader(scene_fragment);
+ scene_=program(scene_source,scene_fragment,"scene with explicit shadow policy");
+ std::cout<<"FOG_CELLS mode="<<(fog_constant_?"constant (uniform early-out for CPU-proven full-fog meshes)":"original")<<" VIEW_CULLING="<<(view_culling_?"on":"off")<<" SHORT_INDICES="<<(short_indices_?"on":"off")<<" OUTPUT_CLEAR="<<(output_clear_?"on":"off")<<'\n';
  std::cout<<"SHADOW mode="<<shadow_mode_name(shadow_mode_)<<" non_parity="<<(shadow_mode_==ShadowMode::Off)<<'\n';
  std::cout<<"projection coordinates="<<(relative_coordinates_?"camera-relative":"source absolute (diagnostic)")<<'\n';
  std::string print_source=read_file(assets+"/post_fs.glsl");
@@ -110,7 +117,7 @@ void main(){vUV=aUV;gl_Position=vec4(aPosition/uOutputRes*2.-1.,0.,1.);})";
  for(int cell=first_cell;cell<first_cell+count;++cell){auto part=build_terrain(terrain,cell);vertices_+=part.vertices.size();indices_+=part.indices.size();if(play_mode){cell_meshes_.emplace(cell,upload_cell(part));object_meshes_.emplace(cell,upload_cell(world.objects(cell)));}else{uint32_t offset=uint32_t(mesh.vertices.size());mesh.vertices.insert(mesh.vertices.end(),part.vertices.begin(),part.vertices.end());for(uint32_t i:part.indices)mesh.indices.push_back(offset+i);}}
  build_ms_=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-started).count();
  const int sizes[]={3,3,1,2,2},offsets[]={0,12,24,28,36};
- if(!play_mode){auto static_mesh=upload_cell(mesh);vao_=static_mesh.vao;vbo_=static_mesh.vbo;ibo_=static_mesh.ibo;}
+ if(!play_mode){auto static_mesh=upload_cell(mesh,false);vao_=static_mesh.vao;vbo_=static_mesh.vbo;ibo_=static_mesh.ibo;}
  glGenVertexArrays(1,&fullscreen_vao_);
  glGenVertexArrays(1,&rider_vao_);glBindVertexArray(rider_vao_);glGenBuffers(1,&rider_vbo_);glBindBuffer(GL_ARRAY_BUFFER,rider_vbo_);glGenBuffers(1,&rider_ibo_);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,rider_ibo_);
  for(int i=0;i<5;++i){glEnableVertexAttribArray(i);glVertexAttribPointer(i,sizes[i],GL_FLOAT,GL_FALSE,sizeof(Vertex),reinterpret_cast<void*>(intptr_t(offsets[i])));}
@@ -140,11 +147,15 @@ void Renderer::make_targets(){
  glGenFramebuffers(1,&print_fbo_);glBindFramebuffer(GL_FRAMEBUFFER,print_fbo_);glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D,printed_,0);glDrawBuffers(1,&draw);framebuffer_check("print");glBindFramebuffer(GL_FRAMEBUFFER,0);
  camera_.vp=multiply(perspective(62*3.141592653589793/180,double(width_)/height_,0.1,900),look_at(camera_.eye,camera_.look,{0,1,0}));camera_.inverse_vp=inverse(camera_.vp);
 }
-void Renderer::draw_indexed(GLsizei count,size_t vertices,const void* offset){
+void Renderer::draw_indexed(GLsizei count,size_t vertices,const void* offset,GLenum type){
  // Broad legal bounds cover subgroups too; index data/order and shaders stay unchanged.
  if(draw_ranges_&&count>0&&vertices>0)
-  glDrawRangeElements(GL_TRIANGLES,0,GLuint(vertices-1),count,GL_UNSIGNED_INT,offset);
- else glDrawElements(GL_TRIANGLES,count,GL_UNSIGNED_INT,offset);
+  glDrawRangeElements(GL_TRIANGLES,0,GLuint(vertices-1),count,type,offset);
+ else glDrawElements(GL_TRIANGLES,count,type,offset);
+}
+std::string Renderer::draw_stats_json()const{
+ const auto& d=draw_stats_;
+ return "{\"views\":"+std::to_string(d.views)+",\"terrain_drawn\":"+std::to_string(d.terrain_drawn)+",\"terrain_culled\":"+std::to_string(d.terrain_culled)+",\"terrain_fog_constant\":"+std::to_string(d.terrain_fog_constant)+",\"object_drawn\":"+std::to_string(d.object_drawn)+",\"object_culled\":"+std::to_string(d.object_culled)+",\"object_fog_constant\":"+std::to_string(d.object_fog_constant)+",\"short_index_draws\":"+std::to_string(d.short_index_draws)+",\"triangles_submitted\":"+std::to_string(d.triangles_submitted)+",\"triangles_culled\":"+std::to_string(d.triangles_culled)+"}";
 }
 void Renderer::upload_shadow_segments(const float* segments){
  glUniform4fv(loc(scene_,"uSeg"),6,segments);
@@ -165,13 +176,27 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
  { Profiler::Scope scene(profiler_,profile_frame_,profile_view_,RenderPass::Scene);
  glBindFramebuffer(GL_FRAMEBUFFER,scene_fbo_);glViewport(0,0,width_,height_);glEnable(GL_DEPTH_TEST);glDisable(GL_BLEND);glDisable(GL_CULL_FACE);glDepthMask(GL_TRUE);glClearColor(1,0,0,0);glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);glUseProgram(scene_);
  matrix(scene_,"uVP",frame.vp);vec3(scene_,"uRenderOrigin",frame.origin);matrix(scene_,"uM",identity());const float identity3[]={1,0,0,0,1,0,0,0,1};glUniformMatrix3fv(loc(scene_,"uN"),1,GL_FALSE,identity3);
- vec3(scene_,"uCam",eye);vec3(scene_,"uL",norm({0.45,0.78,-0.5}));glUniform2f(loc(scene_,"uFog"),150,400);
+ vec3(scene_,"uCam",eye);vec3(scene_,"uL",norm({0.45,0.78,-0.5}));glUniform2f(loc(scene_,"uFog"),scene_fog_near,scene_fog_far);
  // Static spike has no rider; play uses the original live rig shadow segments.
  const float shadows[]={1000000,1000000,1000000,.26f,1000000,1000001,1000000,0,1000002,1000000,1000000,.17f,1000002,1000001,1000000,0,1000004,1000000,1000000,.2f,1000004,1000001,1000000,0};
  if(rig_valid_){Vec3 bx=qrot(rig_.board_orientation,{1,0,0}),nose=rig_.board_position+bx*.75,tail=rig_.board_position-bx*.75,ankle=(rig_.ankle[0]+rig_.ankle[1])*.5;const float seg[]={float(rig_.pelvis.x),float(rig_.pelvis.y),float(rig_.pelvis.z),.26f,float(rig_.head.x),float(rig_.head.y),float(rig_.head.z),0,float(nose.x),float(nose.y),float(nose.z),.17f,float(tail.x),float(tail.y),float(tail.z),0,float(rig_.pelvis.x),float(rig_.pelvis.y),float(rig_.pelvis.z),.2f,float(ankle.x),float(ankle.y),float(ankle.z),0};upload_shadow_segments(seg);}else upload_shadow_segments(shadows);integer(scene_,"uKind",0);scalar(scene_,"uMat",1);scalar(scene_,"uAlbO",-1);scalar(scene_,"uXray",(palette%6+6)%6==5?1:0);
- glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,glyph_);integer(scene_,"uGlyph",0);if(cell_meshes_.empty()){glBindVertexArray(vao_);draw_indexed(GLsizei(indices_),vertices_);}else for(int cell=patch_first_;cell<patch_first_+patch_count_;++cell){auto found=cell_meshes_.find(cell);if(found!=cell_meshes_.end()){glBindVertexArray(found->second.vao);draw_indexed(found->second.indices,found->second.vertices);}}
+ glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,glyph_);integer(scene_,"uGlyph",0);++draw_stats_.views;
+ // PERF-009 per-mesh policies: skip meshes outside this view's clip volume and
+ // shade CPU-proven full-fog meshes with the equivalent constant. Both opt-in.
+ const GLint fog_constant_at=fog_constant_?loc(scene_,"uFogConstant"):-1;int fog_constant_value=0;
+ if(fog_constant_at>=0)glUniform1i(fog_constant_at,0);
+ const std::array<float,3> shading_eye{{float(eye.x),float(eye.y),float(eye.z)}};
+ auto draw_static=[&](const CellMesh& mesh,bool terrain){
+  if(view_culling_&&clip_rejects(mesh.bounds,frame.vp,frame.origin)){(terrain?draw_stats_.terrain_culled:draw_stats_.object_culled)++;draw_stats_.triangles_culled+=uint64_t(mesh.indices/3);return;}
+  if(fog_constant_at>=0){const int wanted=fully_fogged(mesh.bounds,shading_eye,scene_fog_far)?1:0;if(wanted!=fog_constant_value){glUniform1i(fog_constant_at,wanted);fog_constant_value=wanted;}if(wanted)(terrain?draw_stats_.terrain_fog_constant:draw_stats_.object_fog_constant)++;}
+  (terrain?draw_stats_.terrain_drawn:draw_stats_.object_drawn)++;draw_stats_.triangles_submitted+=uint64_t(mesh.indices/3);if(mesh.index_type==GL_UNSIGNED_SHORT)++draw_stats_.short_index_draws;
+  glBindVertexArray(mesh.vao);draw_indexed(mesh.indices,mesh.vertices,nullptr,mesh.index_type);
+ };
+ if(cell_meshes_.empty()){glBindVertexArray(vao_);draw_indexed(GLsizei(indices_),vertices_);}else for(int cell=patch_first_;cell<patch_first_+patch_count_;++cell){auto found=cell_meshes_.find(cell);if(found!=cell_meshes_.end())draw_static(found->second,true);}
  integer(scene_,"uKind",1);scalar(scene_,"uMat",2);
- for(int cell=patch_first_;cell<patch_first_+patch_count_;++cell){auto found=object_meshes_.find(cell);if(found!=object_meshes_.end()){glBindVertexArray(found->second.vao);draw_indexed(found->second.indices,found->second.vertices);}}
+ for(int cell=patch_first_;cell<patch_first_+patch_count_;++cell){auto found=object_meshes_.find(cell);if(found!=object_meshes_.end())draw_static(found->second,false);}
+ // Dynamic trail, rider and particles always use the original shading path.
+ if(fog_constant_at>=0&&fog_constant_value!=0){glUniform1i(fog_constant_at,0);fog_constant_value=0;}
  if(rig_valid_){
   Vec3 view=norm(camera_.eye-camera_.look),right=source_norm(cross(first_person_up_,view),{1,0,0}),up=cross(view,right);
   if(following_){right=source_norm(cross({0,1,0},view),{1,0,0});up=cross(view,right);}
@@ -201,7 +226,14 @@ void Renderer::render(int drawable_w,int drawable_h,int debug,int palette){
  scalar(post_,"uSunR",height_*.085);glBindVertexArray(fullscreen_vao_);glDrawArrays(GL_TRIANGLES,0,3);
  } // bypass omits the print draw and all post uniforms, not just its presentation
  {Profiler::Scope output(profiler_,profile_frame_,profile_view_,RenderPass::Output);
- glBindFramebuffer(GL_FRAMEBUFFER,0);glViewport(0,0,drawable_w,drawable_h);if(post_bypass_){glDisable(GL_DEPTH_TEST);glBindVertexArray(fullscreen_vao_);}glUseProgram(copy_);
+ glBindFramebuffer(GL_FRAMEBUFFER,0);glViewport(0,0,drawable_w,drawable_h);
+ if(output_clear_){
+  // PERF-009: the copy overwrites every pixel, so this clear cannot change the image.
+  // It is the first default-framebuffer operation, isolating window-buffer acquisition.
+  Profiler::Scope acquire(profiler_,profile_frame_,profile_view_,RenderPass::Acquire);
+  glClearColor(0,0,0,1);glClear(GL_COLOR_BUFFER_BIT);
+ }
+ if(post_bypass_){glDisable(GL_DEPTH_TEST);glBindVertexArray(fullscreen_vao_);}glUseProgram(copy_);
  glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,(debug||post_bypass_)?color_:printed_);integer(copy_,"uC",0);glActiveTexture(GL_TEXTURE1);glBindTexture(GL_TEXTURE_2D,depth_);integer(copy_,"uD",1);integer(copy_,"uMode",debug);glUniform2f(loc(copy_,"uOutputRes"),drawable_w,drawable_h);glDrawArrays(GL_TRIANGLES,0,3);
  if(following_){
   glUseProgram(hud_program_);glUniform2f(loc(hud_program_,"uOutputRes"),drawable_w,drawable_h);glEnable(GL_BLEND);glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,hud_font_);integer(hud_program_,"uFont",0);vec3(hud_program_,"uInk",inks[palette]);vec3(hud_program_,"uPaper",papers[palette]);
@@ -262,12 +294,18 @@ void Renderer::capture(const std::string& path){
  integer(copy_,"uMode",5);glUniform2f(loc(copy_,"uOutputRes"),width_,height_);glBindVertexArray(fullscreen_vao_);glDrawArrays(GL_TRIANGLES,0,3);gl_check("depth diagnostic");
  save(print_fbo_,parent+"/depth.bmp");
 }
-Renderer::CellMesh Renderer::upload_cell(const CpuMesh& mesh){
- CellMesh cell;cell.indices=GLsizei(mesh.indices.size());cell.vertices=mesh.vertices.size();glGenVertexArrays(1,&cell.vao);glBindVertexArray(cell.vao);glGenBuffers(1,&cell.vbo);glBindBuffer(GL_ARRAY_BUFFER,cell.vbo);glBufferData(GL_ARRAY_BUFFER,mesh.vertices.size()*sizeof(Vertex),mesh.vertices.data(),GL_STATIC_DRAW);glGenBuffers(1,&cell.ibo);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,cell.ibo);glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh.indices.size()*sizeof(uint32_t),mesh.indices.data(),GL_STATIC_DRAW);
+Renderer::CellMesh Renderer::upload_cell(const CpuMesh& mesh,bool allow_short){
+ CellMesh cell;cell.indices=GLsizei(mesh.indices.size());cell.vertices=mesh.vertices.size();for(const auto& v:mesh.vertices)cell.bounds.add(v.px,v.py,v.pz);
+ glGenVertexArrays(1,&cell.vao);glBindVertexArray(cell.vao);glGenBuffers(1,&cell.vbo);glBindBuffer(GL_ARRAY_BUFFER,cell.vbo);glBufferData(GL_ARRAY_BUFFER,mesh.vertices.size()*sizeof(Vertex),mesh.vertices.data(),GL_STATIC_DRAW);glGenBuffers(1,&cell.ibo);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,cell.ibo);
+ if(allow_short&&short_indices_&&fits_short_indices(mesh.vertices.size(),mesh.indices)){
+  // Same index values and order; only the storage width changes.
+  std::vector<uint16_t> narrow(mesh.indices.begin(),mesh.indices.end());cell.index_type=GL_UNSIGNED_SHORT;
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER,narrow.size()*sizeof(uint16_t),narrow.data(),GL_STATIC_DRAW);
+ }else glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh.indices.size()*sizeof(uint32_t),mesh.indices.data(),GL_STATIC_DRAW);
  const int sizes[]={3,3,1,2,2},offsets[]={0,12,24,28,36};for(int i=0;i<5;++i){glEnableVertexAttribArray(i);glVertexAttribPointer(i,sizes[i],GL_FLOAT,GL_FALSE,sizeof(Vertex),reinterpret_cast<void*>(intptr_t(offsets[i])));}return cell;
 }
 void Renderer::update_dynamic(CellMesh& cell,const CpuMesh& mesh){
- if(!cell.vao){cell=upload_cell(mesh);return;}
+ if(!cell.vao){cell=upload_cell(mesh,false);return;}
  cell.indices=GLsizei(mesh.indices.size());cell.vertices=mesh.vertices.size();glBindVertexArray(cell.vao);glBindBuffer(GL_ARRAY_BUFFER,cell.vbo);glBufferData(GL_ARRAY_BUFFER,mesh.vertices.size()*sizeof(Vertex),mesh.vertices.data(),GL_STREAM_DRAW);glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,cell.ibo);glBufferData(GL_ELEMENT_ARRAY_BUFFER,mesh.indices.size()*sizeof(uint32_t),mesh.indices.data(),GL_STREAM_DRAW);
 }
 void Renderer::delete_cell(CellMesh& cell){glDeleteVertexArrays(1,&cell.vao);glDeleteBuffers(1,&cell.vbo);glDeleteBuffers(1,&cell.ibo);cell={};}

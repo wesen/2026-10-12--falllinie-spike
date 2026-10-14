@@ -1,0 +1,1 @@
+{"top": {"source_crop": [516, 426, 566, 480], "scale": 3, "resampling": "nearest; full difference bounding rectangle plus12px margin"}, "lower": {"source_crop": [570, 748, 656, 768], "scale": 3, "resampling": "nearest; full difference bounding rectangle plus12px margin"}}

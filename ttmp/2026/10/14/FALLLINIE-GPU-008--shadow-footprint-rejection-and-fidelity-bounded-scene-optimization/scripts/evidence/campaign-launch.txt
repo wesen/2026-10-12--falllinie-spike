@@ -1,0 +1,22 @@
+visual-f0120-s42-p0-original status 0
+visual-f0120-s42-p0-bounds status 0
+f0120-s42-p0 different pixels 0
+visual-f0600-s42-p0-original status 0
+visual-f0600-s42-p0-bounds status 0
+f0600-s42-p0 different pixels 0
+visual-f1200-s42-p0-original status 0
+visual-f1200-s42-p0-bounds status 0
+f1200-s42-p0 different pixels 0
+visual-f0600-s7-p0-original status 0
+visual-f0600-s7-p0-bounds status 0
+f0600-s7-p0 different pixels 0
+visual-f0600-s42-p5-original status 0
+visual-f0600-s42-p5-bounds status 0
+f0600-s42-p5 different pixels 0
+01-original status 0
+02-off status 0
+03-bounds status 0
+04-bounds status 0
+05-off status 0
+06-original status 0
+/home/manuel/code/wesen/2026-10-12--falllinie-spike/ttmp/2026/10/14/FALLLINIE-GPU-008--shadow-footprint-rejection-and-fidelity-bounded-scene-optimization/scripts/evidence/target-20261014T194947Z

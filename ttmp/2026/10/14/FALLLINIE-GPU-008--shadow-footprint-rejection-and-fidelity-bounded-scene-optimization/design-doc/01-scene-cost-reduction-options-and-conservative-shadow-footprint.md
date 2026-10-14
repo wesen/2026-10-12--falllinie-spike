@@ -2,10 +2,23 @@
 Title: Scene cost reduction options and conservative shadow footprint
 Ticket: FALLLINIE-GPU-008
 Status: active
-Topics: [performance]
+Topics:
+    - performance
 DocType: design-doc
 Intent: long-term
+Owners: []
+RelatedFiles:
+    - Path: repo://src/renderer.cpp
+      Note: Uniform uploads and full-window capture
+    - Path: repo://src/shadow_bounds.hpp
+      Note: Conservative projection, finite domain and explicit shader adaptation
+    - Path: repo://tests/test_shadow_bounds.cpp
+      Note: Float-reference rejection qualification
+ExternalSources: []
 Summary: Design all proposed scene reductions; implement and measure a shadow diagnostic and conservative footprint candidate first.
+LastUpdated: 0001-01-01T00:00:00Z
+WhatFor: ""
+WhenToUse: ""
 ---
 
 # Scene shading reduction without flattening the image

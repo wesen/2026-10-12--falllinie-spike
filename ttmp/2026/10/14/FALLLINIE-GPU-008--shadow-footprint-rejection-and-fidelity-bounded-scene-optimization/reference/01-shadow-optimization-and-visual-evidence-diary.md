@@ -89,3 +89,50 @@ Start with shadow_bounds.hpp, then its test, renderer upload/adaptation/capture 
 
 ### Technical details
 New --shadow-mode defaults original; off requires replay. Screenshot dimensions follow actual drawables. Build precedes implementation commit; source-hashes.txt records the compiled source bytes for later commit qualification. Snapshot runs are separate from measured cases; all mode-specific assets remain canonical.
+
+## Step 3: Measure the candidate and inspect actual handheld screenshots
+
+All ten visual runs and six timed runs completed successfully. The bounds candidate reduced pooled mean interval from23.574617 to20.636466ms, about12.46%, with p95 moving from33.527307 to29.381448ms. Shadow omission reached20.024081ms but visibly removes shading; bounds keeps the source loop where it can contribute.
+
+All40 multi-endpoint original/bounds image pairs match every pixel, including top HUD output and lower first-person output. The timed repetitions also match endpoint images, and the new baseline retains GPU007's original top scene/depth/print pixels. This is a useful fidelity-preserving candidate within tested evidence, not proof of every possible frame or integrated60FPS.
+
+### Prompt Context
+**User prompt:** See Step1.
+**Assistant interpretation:** Run actual hardware measurements and use screenshots to verify what is retained, not just claim equivalent mathematics.
+**Commit (implementation):**e970ec5 — Add opt-in conservative shadow bounds and dual-view capture qualification.
+
+### What I did
+Ran05-campaign.py into target-20261014T194947Z. Collected five original/bounds visual pairs (120/600/1200frames, another seed, x-ray palette), then original/off/bounds/bounds/off/original timing cases. Ran06-analyze.py and07-figures.py, checked baseline continuity and source-build qualification, and wrote analysis/01. Inspected actual full-window output, the later509m checkpoint and the enlarged shadow crop.
+
+### Why
+The narrow omission control identifies actual shadow-related sensitivity; the bounded candidate tries to preserve it. Multiple endpoints and both cameras provide stronger evidence than one internal print image. A symmetric matrix helps expose drift without pretending it is randomized statistical inference.
+
+### What worked
+All16 target executions succeeded. Timing:3600frames,3240postwarmup intervals,1200reconciled paired records,35100counterrows,614contained host intervals. All timed signatures6081555844518115723. Assets match before/after; all40 visual comparisons are pixel-equal. Original means23.5747/23.5746ms and bounds20.6217/20.6512ms. Build source hashes match e970ec5.
+
+### What didn't work
+No target/analysis failure. The optimization does not meet60FPS: mean is20.636ms and p99 remains32.626ms. CPU scopes do not show a qualified CPU improvement. The exact floating-point rejection guarantee outside the tested domain remains unproven; the original-loop fallback is intentional.
+
+### What I learned
+Bounds recovers about83% of the mean-interval difference between original and omission, but that is not a count of avoided shadow instructions. Fragment activity remains near801Mcycles/s as frames finish faster. Keeping full visual output preserves the source's local pink shadow region that the omission control removes.
+
+### What was tricky to build
+Readbacks happen after measurement detachment; full output must be saved before diagnostic depth rendering overwrites the internal print target. Compare all RGBA channels, not only an alpha-based difference bounding box. For the illustrative crop, convert to RGB before finding the shadow-off difference region; retain the entire difference rectangle plus margin.
+
+### What warrants a second pair of eyes
+Only five visual checkpoints, two timing runs per mode and audio disabled. Float test sampling is not formal proof; GPU compiler transformations still need broader scene/motion qualification. Opening temperature was about57.8°C after captures versus about55°C before the closing baseline, despite stable frame means. Counter clocks remain offset1.778–1.789s and device-wide.
+
+### What should be done in the future
+Keep bounds opt-in. Broaden motion/seed qualification and run a matched integrated/audio-enabled check before default adoption. Precomputation, lossy distant shadows and contour/glyph changes remain designed but unimplemented; do not conflate them with the measured candidate.
+
+### Code review instructions
+Read analysis/01, source helper/test and the exact submitted shaders. Inspect the following actual screenshots and the40-pair visual-comparisons.json. Run06-analyze.py to recompute comparisons from retained pixels, not merely trust that JSON.
+
+![Original and bounds, both full-window views](../scripts/evidence/target-20261014T194947Z/figures/full-window-comparison.png)
+
+![Original shadow retained, versus non-parity omission](../scripts/evidence/target-20261014T194947Z/figures/top-shadow-detail.png)
+
+The comparison panel preserves native1024×768 outputs. The detail uses a3×nearest-neighbor crop; full source rectangle[516,426,566,480] and conversion hashes are retained. These are rendered-window captures, not physical scanout photographs.
+
+### Technical details
+Binary f9b7de52377501090392052039c0a13ad18cc258661aa6cb98614165ef9138c3. Implementation e970ec5, source-qualified after build. Default remains original (bounds disabled); all shader inputs are canonical. Raw compressed images and counter evidence total about31MB before final bookkeeping; no binaries/libraries/secrets staged.

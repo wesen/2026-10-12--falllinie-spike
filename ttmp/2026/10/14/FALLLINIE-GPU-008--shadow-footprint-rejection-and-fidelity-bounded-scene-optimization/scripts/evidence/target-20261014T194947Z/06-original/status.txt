@@ -1,0 +1,2 @@
+game_status=0
+probe_status=0

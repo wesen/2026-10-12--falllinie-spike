@@ -1,0 +1,71 @@
+01-original mean/p95 23.5747 33.5364 fragment Mcy/s 800.47
+02-off mean/p95 20.0352 29.4133 fragment Mcy/s 800.5
+03-bounds mean/p95 20.6217 29.3838 fragment Mcy/s 801.07
+04-bounds mean/p95 20.6512 29.3545 fragment Mcy/s 801.23
+05-off mean/p95 20.013 29.48 fragment Mcy/s 801.06
+06-original mean/p95 23.5746 33.4879 fragment Mcy/s 801.35
+groups {
+  "original": {
+    "runs": [
+      "01-original",
+      "06-original"
+    ],
+    "frames": 1080,
+    "mean_ms": 23.574616766666665,
+    "p95_ms": 33.5273067,
+    "p99_ms": 34.09712958,
+    "non_parity": false,
+    "rates_per_second": {
+      "MaliExtBusRdBy": 1155060700.0939124,
+      "MaliTilerActiveCy": 339457695.85934466,
+      "MaliNonFragActiveCy": 339685015.92202276,
+      "MaliGPUActiveCy": 803601126.1651193,
+      "MaliExtBusWrBy": 651329292.896773,
+      "MaliCoreActiveCy": 731159521.2912068,
+      "MaliFragActiveCy": 800909267.2418416
+    },
+    "sequential_view_cpu_ms": 6.485488
+  },
+  "off": {
+    "runs": [
+      "02-off",
+      "05-off"
+    ],
+    "frames": 1080,
+    "mean_ms": 20.02408098888889,
+    "p95_ms": 29.44759875,
+    "p99_ms": 30.30883597,
+    "non_parity": true,
+    "rates_per_second": {
+      "MaliExtBusRdBy": 1383588484.596138,
+      "MaliTilerActiveCy": 392237285.3509163,
+      "MaliNonFragActiveCy": 392384143.23153335,
+      "MaliGPUActiveCy": 803669508.169294,
+      "MaliExtBusWrBy": 766042557.7179638,
+      "MaliCoreActiveCy": 700755396.0629243,
+      "MaliFragActiveCy": 800779739.0000031
+    },
+    "sequential_view_cpu_ms": 6.733827888888889
+  },
+  "bounds": {
+    "runs": [
+      "03-bounds",
+      "04-bounds"
+    ],
+    "frames": 1080,
+    "mean_ms": 20.636466087962962,
+    "p95_ms": 29.38144835,
+    "p99_ms": 32.62604798,
+    "non_parity": false,
+    "rates_per_second": {
+      "MaliExtBusRdBy": 1340114387.4469726,
+      "MaliTilerActiveCy": 380960902.01431197,
+      "MaliNonFragActiveCy": 381133180.9230127,
+      "MaliGPUActiveCy": 803823791.6429088,
+      "MaliExtBusWrBy": 744552067.5624797,
+      "MaliCoreActiveCy": 707758108.1523553,
+      "MaliFragActiveCy": 801148863.2687867
+    },
+    "sequential_view_cpu_ms": 6.4043862222222225
+  }
+}

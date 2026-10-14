@@ -1,0 +1,15 @@
+ ...C - Optimization and Performance Engineering.md |   10 +-
+ ...ader Compilation and a Rejected Optimization.md |  239 ++++-
+ .../replay-scaling/analysis-provenance.json        |  118 +++
+ .../replay-scaling/build-qualification.json        |    5 +
+ .../replay-scaling/figure-provenance.json          |    4 +
+ .../replay-scaling/publication-provenance.json     |   47 +
+ .../replay-scaling/receipt-256x192.json            |   21 +
+ .../replay-scaling/receipt-384x288.json            |   21 +
+ .../replay-scaling/receipt-512x384.json            |   21 +
+ .../replay-scaling/replay-256x192.png              |  Bin 0 -> 61832 bytes
+ .../replay-scaling/replay-384x288.png              |  Bin 0 -> 135892 bytes
+ .../replay-scaling/replay-512x384.png              |  Bin 0 -> 238682 bytes
+ .../replay-scaling/scaling.svg                     |   68 ++
+ .../replay-scaling/summary.json                    | 1032 ++++++++++++++++++++
+ 14 files changed, 1582 insertions(+), 4 deletions(-)

@@ -191,3 +191,49 @@ Read analysis/01 and scripts/README.md, then inspect scripts/04-analyze.py and t
 
 ### Technical details
 Executable SHA25690f124a7745a37f76175130bd79ef748b741852bccfe58305548f7946c0d82ed. Counterprobe SHA2561f346e0801c99672e1b22edf26cca5a840f97c5cafd6f041de23d052697c65e1. All sixresolution/view combinations plus repeated384×288dual and its pacedreference,600frames/case,45secondcountercaptures. Framewarmup60; counterhostwindow from sampled postwarmup pairedextent. Production resolution/shaders/drawpolicy unchanged; nativecommits remainunpushed.
+
+## Step 5: Synthesize the complete GPU investigation into the living vault report
+
+Read this ticket's entire design, diary and measured analysis, plus both original PERF004 designs, the counter/compiler diaries, the original GPU report and the later CPU report's attribution/range-draw chapters. Updated the existing GPU report with a clearly dated follow-up rather than replacing its earlier experiment. Sections 1–9 and all 12 historical assets remain byte-preserved; Sections 10–16 explain why repeatability was needed, its implementation, actual results, failures and remaining proposals.
+
+Published the report and MOC update with 12 new self-contained assets. Vault commit f22cbbb2bda3cece1502e7d329697bd0d859b1a8 was pushed and independently verified against remote main; the vault is clean. This was evidence synthesis, not a new hardware experiment or production optimization.
+
+### Prompt Context
+**User prompt (verbatim):** "continue. Update the report with all your found so far (read diary and design doc and all)"
+**Assistant interpretation:** Bring the living GPU profiling report up to date using the full design/diary/evidence chain, preserving historical conclusions and distinguishing future experiments.
+**Inferred user intent:** A durable technical account that explains the implementation and reasoning, not just a short table of recent measurements.
+**Commit (measured native evidence):**6c5b231 — Measure repeatable GPU resolution and view scaling on RG DS Plus.
+
+### What I did
+- Read the full GPU006 design/diary/analysis, both PERF004 designs and counter/compiler diaries; reviewed CPU report Sections12–14, current runtime/terrain/capture source and actual campaign summaries.
+- Added a CPU-to-GPU reasoning bridge, fixed-input/work-unit design, signature coverage, actual eight-case tables, counter interpretation, scope timing, operational failures and a measured-versus-proposed hypothesis map.
+- Copied summary/provenance, build qualification, three receipts, three lossless endpoint PNGs, scaling SVG and figure/publication provenance under the GPU report's replay-scaling asset subdirectory.
+- Updated MOC navigation and the report's dated introduction while preserving historical body/asset bytes. Added publication helpers under scripts/07-vault-update.
+- Committed and pushed exactly the report, MOC and 12 new assets; retained publication and remote-verification receipts locally.
+
+### Why
+The source cost map includes unimplemented ideas such as trail reuse, uniform caching, per-view targets and workers. They must remain proposals. A CPU-side saving, a rejected shader rewrite and resolution sensitivity are different outcomes, not interchangeable proof of one bottleneck.
+
+### What worked
+Publication validation confirms eight cases,4,320postwarmup frames,674selected counterintervals, exact copied assets, matching decoded PNG/BMP pixels, preserved historical body and12original assets,21relative links and67wikilinks. The updated report has approximately8,046words excluding code/tables and threeMermaid diagrams. Local and remote vault main match f22cbbb2bda3cece1502e7d329697bd0d859b1a8.
+
+### What didn't work
+The first publication validator raised `AssertionError: CHATGPT TRANSCRIPT - JavaScript Interpreter Instrumentation — Goja eBPF`. The link exists; ordinary `git ls-files` quoted the Unicode filename, so the validator compared against an escaped name. Switched to NUL-delimited `git ls-files -z`, preserving Unicode bytes without changing the linked historical transcript. The narrow validator then passed. No publication push or hardware failure occurred. Final native staging reported `scripts/07-vault-update/report-addendum.txt:209: new blank line at EOF.` The generated insertion fragment intentionally ends with a separator and its exact bytes are already hashed in the published provenance. Preserved those bytes and used a command-local blank-at-EOF exception for that fragment only; other staged paths retain the normal whitespace check.
+
+### What I learned
+The newer counter backend-minus-host values span about1.639–1.652seconds, rather than the earlier1.262–1.268seconds. Reusing an old fixed offset would be particularly misleading. Source review also sharpened two qualifications:600updates mean ten seconds of raw frame-clock input while original game time scaling remains, and captured print/scene/depth diagnostics exclude final full-size HUD/compositor output.
+
+### What was tricky to build
+Keep old runtime/evidence metadata historical and add latest_* fields. Preserve the original narrative, including its stopping point, behind an explicit historical reading boundary. Generate tables from actual summary data, not manually transcribed approximations. Explain post-loop uninstrumented endpoint redraws without implying continuous visual parity or scanout capture.
+
+### What warrants a second pair of eyes
+The report connects CPU and GPU evidence without treating separate workload campaigns as one controlled before/after comparison. Neither near800Mcycles/s nor near60loopFPS is calibrated utilization or physical presentation proof. Proposed post/scene substitutions have not been run; current replay parsing rejects the old post-bypass flag. Publication validation checks artifacts/links, not counter semantics.
+
+### What should be done in the future
+A later explicit experiment can isolate post/scene sensitivity or presentation behavior using the replay. Keep the original shader, resolution and indexed-draw defaults unchanged until stronger evidence supports promotion. No additional hardware run is scheduled by this publication.
+
+### Code review instructions
+Read GPU report Sections10–16 and the MOC's current route. Native scripts/07-vault-update/validation.json records publication checks; remote-verification.txt records matching remote/local vault hashes. Input hashes describe the publication inputs before this diary entry was appended. The original reMarkable guide remains the previously delivered design edition, not a newly uploaded report.
+
+### Technical details
+Vault note SHA256a66ef0e1a4b1512e5cddc3848075213b2e72999eaff8816784224de3e466c81f.14scoped vault files:two notes plus12assets. Historical evidence/runtime unchanged; native analysis received only the raw-time/capture-scope clarifications. No runtime source changes, native push, new deployment or compositor-policy change.

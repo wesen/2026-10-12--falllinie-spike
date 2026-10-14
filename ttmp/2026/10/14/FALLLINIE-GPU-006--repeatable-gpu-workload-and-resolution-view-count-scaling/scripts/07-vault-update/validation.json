@@ -1,0 +1,16 @@
+{
+  "note": "Projects/2026/10/13/PROJECT REPORT - Falllinie GPU Profiling - Hardware Counters, Shader Compilation and a Rejected Optimization.md",
+  "note_sha256": "a66ef0e1a4b1512e5cddc3848075213b2e72999eaff8816784224de3e466c81f",
+  "historical_body_unchanged": true,
+  "historical_assets_unchanged": 12,
+  "new_assets": 12,
+  "relative_links_valid": 21,
+  "wikilinks_valid": 67,
+  "mermaid_diagrams": 3,
+  "approx_words_excluding_code_tables": 8046,
+  "measurement_cases": 8,
+  "postwarmup_frames": 4320,
+  "counter_intervals": 674,
+  "new_hardware_experiment": false,
+  "scope": "Publication validation; measurement limitations remain in prose."
+}

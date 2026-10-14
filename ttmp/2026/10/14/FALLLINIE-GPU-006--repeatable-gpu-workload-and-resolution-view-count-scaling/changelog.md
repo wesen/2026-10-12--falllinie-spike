@@ -15,3 +15,7 @@ Completed key-authenticated eight-case GPU replay matrix: matching signatures/im
 ## 2026-10-14
 
 Design delivered, deterministic replay implemented, and eight-case device scaling campaign analyzed. Future GPU sensitivity experiments are separate work; no production optimization promoted.
+
+## 2026-10-14
+
+Updated and published living GPU report after full design/diary review; preserved historical evidence, added replay implementation/scaling synthesis and clarified raw-clock/capture scope. Vault f22cbbb remotely verified; no new hardware experiment.

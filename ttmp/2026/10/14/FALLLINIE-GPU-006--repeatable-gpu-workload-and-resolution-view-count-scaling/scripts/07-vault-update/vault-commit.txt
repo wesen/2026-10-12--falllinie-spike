@@ -1,0 +1,14 @@
+[main f22cbbb] Extend Falllinie GPU report with deterministic replay and measured scaling
+ 14 files changed, 1582 insertions(+), 4 deletions(-)
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/replay-scaling/analysis-provenance.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/replay-scaling/build-qualification.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/replay-scaling/figure-provenance.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/replay-scaling/publication-provenance.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/replay-scaling/receipt-256x192.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/replay-scaling/receipt-384x288.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/replay-scaling/receipt-512x384.json
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/replay-scaling/replay-256x192.png
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/replay-scaling/replay-384x288.png
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/replay-scaling/replay-512x384.png
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/replay-scaling/scaling.svg
+ create mode 100644 Projects/2026/10/13/_assets/falllinie-gpu-shader-investigation/replay-scaling/summary.json

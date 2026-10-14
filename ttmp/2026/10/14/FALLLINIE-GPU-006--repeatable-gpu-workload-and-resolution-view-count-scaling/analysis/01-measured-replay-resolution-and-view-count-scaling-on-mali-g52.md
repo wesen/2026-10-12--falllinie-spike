@@ -56,7 +56,7 @@ The earlier failed attempt at17:46:58 is preserved separately. It ran no device 
 
 All eight receipts contain selected-state signature **6081555844518115723**. The rolling signature covers ordered game position/velocity/time/score, seed/generation, top-camera eye/look and terrain vertex/index counts. It deliberately excludes real clocks and resolution. It is a consistency check over selected fields, not proof that every game field or GPU operation is identical.
 
-The analyzer also compares final scene, depth and print BMP bytes among cases of the same resolution. All comparisons pass, including the single/dual-view and paced/unpaced 384×288 cases. Images at different resolutions are not expected to match. These are endpoint checks, not every-frame visual equivalence or complete source parity.
+The analyzer also compares final scene, depth and print BMP bytes among cases of the same resolution. All comparisons pass, including the single/dual-view and paced/unpaced 384×288 cases. Images at different resolutions are not expected to match. These are endpoint checks, not every-frame visual equivalence or complete source parity. The post-loop top-camera redraw is uninstrumented; captures read internal scene/print targets and a depth diagnostic, not the final full-size HUD/compositor surface.
 
 There are 4,800 completed frames, 4,320 postwarmup frame intervals and 1,330 paired records. Every paired final record reconciles attempted/written counts; active/dropped/invalid counts are zero. All game/probe statuses are zero, all receipts report GL_error=0, and placement succeeded.
 
@@ -124,7 +124,7 @@ Selected GPU frequency snapshots are 800 MHz in all cases. Temperature snapshots
 
 Counter backend timestamps retain their previously observed mismatch with host time. The analyzer records offsets rather than silently fitting an alignment. Whole-device counters can include background/compositor work; lower display hardware is not powered off merely because only one game window is rendered.
 
-The replay differs from production in deliberate ways: fixed simulation progress per rendered frame, fixed streaming work units, no audio, no physical gameplay input and no persistent score access. It covers ten seconds of simulation for one seed. A longer route or a different game mode may expose other bottlenecks.
+The replay differs from production in deliberate ways: fixed simulation progress per rendered frame, fixed streaming work units, no audio, no physical gameplay input and no persistent score access. It supplies 600 raw frame-clock updates of 1/60 second for one seed. The original game time-scale and 120 Hz physics accumulator remain active; ten seconds of raw input does not promise exactly ten unscaled physics seconds. A longer route or a different game mode may expose other bottlenecks.
 
 Observer overhead is not separately qualified in this matrix. All cases use the same paired-clock/counter setup, but that does not make its cost zero. The successful analysis is structural and consistency evidence; it cannot repair limitations in the underlying counter definitions or presentation timing.
 

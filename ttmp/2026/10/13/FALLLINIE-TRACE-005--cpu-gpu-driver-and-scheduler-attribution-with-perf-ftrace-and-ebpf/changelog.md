@@ -24,3 +24,7 @@ Integrated paired clocks in209a6d0; committed eight actual live runs, five repro
 ## 2026-10-14
 
 Implemented --no-audio diagnostic and qualified actual Cortex-A55 main-thread PMU collection. Five grouped pairs each20intervals/100%running coverage;1873cycles-profile samples/0reportedlost. IPC0.14537, driver cycleweight71.81%; cache/TLB/branch ratios documented without causal overclaim. Eight bounded target cases succeed,15CPUtests pass; source/binary identity and detailed diary retained.
+
+## 2026-10-14
+
+Published living CPU PMU technical report:3815prosewords,3actual-data figures,2diagrams,worked counter interval and build provenance; MOC updated. Vault commit e649de9b0c6d9ae878944ddd6a08576d4f1e5089 pushed and remote verified. Follow-up driver copy/hash/disassembly remains preliminary; no new event-location profile run.

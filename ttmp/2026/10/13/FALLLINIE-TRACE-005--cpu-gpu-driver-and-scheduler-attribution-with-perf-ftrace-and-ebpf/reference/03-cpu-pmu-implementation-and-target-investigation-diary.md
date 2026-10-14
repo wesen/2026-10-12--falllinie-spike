@@ -102,3 +102,50 @@ Start with analysis/02 and scripts/10-cpu-pmu/evidence/summary.json; inspectrawC
 
 ### Technical details
 Counter and record workload is immutable across cases except event selection. GPUelapsedqueriesoff;nogovernor/affinitypolicychange. PMUtype9,explicitarmv8_cortex_a55aliases. No system installs or production launcher replacement. Rawperf.data stays in the private device deployment, with committed SHA256 and decodedreports. All campaign subprocesses completed; no background capture is left running.
+
+## Step 3: Prioritize the CPU PMU report before further attribution
+
+Started the requested continuation with a read-only inspection of the prominent driver offset: copied the target libmali into ignored local storage, verified its known SHA256, and generated a bounded disassembly excerpt. The user then explicitly prioritized a detailed vault report. Paused attribution before any new counter/profile run and wrote the completed PMU investigation as a living technical article.
+
+The report contains3815prose words, three data-driven SVGs, two Mermaid diagrams, the actual worked interval, summary/provenance and build qualification. It was committed/pushed as e649de9b0c6d9ae878944ddd6a08576d4f1e5089, with independently verified remote/local equality. The optimization MOC now includes the ninth Falllinie report. No cache-refill or branch-event location profile is claimed to have occurred.
+
+### Prompt Context
+**User prompt (verbatim):** "Continue, commit at appropriate intervals and keep a detailed diary as you work (using the diary format from the skill)"
+**User prompt (verbatim, JSON-escaped):** "Actually, first  write a detailed project report for the obsidian vault as a deep dive technical analysis blog post using a textbook writing style (no analogies, see skill).      \n Commit and push the bsidian vault when done (go-go-parc vault).    and we'll update it as we go along."
+**Assistant interpretation:** Prioritize publication of the completed baseline, retain updateable structure, then resume further attribution only as subsequent investigation work.
+**Inferred user intent:** Establish a detailed shared technical account before more experiments accumulate.
+**Commit (measured baseline):**f8f6632 — Qualify audio-disabled CPU PMU baseline and preserve target counter evidence.
+
+### What I did
+- Read-only target identity confirmed `/usr/lib/libmali.so.1.10.0`, SHA256605e3a5caf1be62bb48d97b1168434257355d56db5e3be9b515cfa742c173118. No existing game/perf workload matched the process check. Copied the library to scripts/11-cpu-attribution/.work and generated objdump excerpt for requested virtual-address range0x42d650–0x42d780. Identity and excerpt are retained; semantic/address interpretation remains pending.
+- Authored `Projects/2026/10/14/PROJECT REPORT - Falllinie CPU PMU - Cache Events, Driver Cycles and an Audio-Disabled Baseline.md` in go-go-parc.
+- Explained PMU counting versus sampling/register dumps, no-audio ownership, explicit event-source selection, group scheduling, event running time, real ratios, weighted driver attribution and the pending investigation.
+- Added scripts/12-cpu-vault-report/prepare.py and validate.py. Copied actual evidence and generated three figures from summary.json; verified the worked interval against rawCSV.
+- Updated the general optimization MOC's catalogue and current-evidence route without revising older measurement claims. Scoped publication to10files: new note,eightassets and MOC update.
+
+### Why
+The user requested a report first, so no further hardware measurement was needed. A living report should clearly separate completed results from pending event-location profiles, and should not describe lowIPC or cache ratios as proof of a specific bottleneck.
+
+### What worked
+Relative links and wikilinks resolve; SVG/XML and JSON parse; asset hashes match; every published frame mean and counter total matches its summary; the worked interval matches originalCSV. The report uses precise explanations and real data, without analogies. Scoped gitdiff-check passed, commit/push succeeded, remoteHEAD matched e649de9b0c6d9ae878944ddd6a08576d4f1e5089, and vaultstatus was clean.
+
+### What didn't work
+The initial publication validator failed at validate.py line28 with `AssertionError`: it required the exact prose string `not a continuous dump`, while the article correctly said `Neither is a continuous dump`. Removed this brittle phrasing assertion rather than changing correct prose to satisfy it. Retained structural/numeric validation and manually reviewed interpretation boundaries. The subsequent validation passed. No experiment or report data changed as a result.
+
+### What I learned
+Documentation validation should check actual invariants—links, source numbers and provenance—rather than pretend exact sentence matching proves an interpretation. The distinction between reported100%PMUcoverage and roughly half-wall-time thread execution merits a worked numerical example.
+
+### What was tricky to build
+Keep the same-run ratio groups separate from cross-run comparisons; keep whole-run frame statistics separate from20sPMUcounts. The new report explains the precommit build receipt and subsequent source-hash verification instead of silently replacing the older recorded revision. The MOC no longer claims its original eight-report cross-link set contains every later report directly; it provides the updated catalogue and route.
+
+### What warrants a second pair of eyes
+No driver function name or cache-causality claim is inferred from0x42d6dc. The disassembly excerpt has not yet been semantically interpreted or independently correlated with ELF/perf address mapping. The report's completed measurement checkpoint remains f8f6632, and current publication does not claim new hardware results.
+
+### What should be done in the future
+Continue with bounded event-location attribution and driver-offset interpretation, then update this living report with distinct evidence checkpoints. New results must not retroactively change the baseline's scope. Audio-enabled integrated acceptance remains later work.
+
+### Code review instructions
+Read the new vault report and scripts/12-cpu-vault-report/validation.json. NoteSHA2565a44f6bc2ec4f907cff66c0f628a1c701e8f78918d5213fbdc54476449159da1; exact committed file list and publication logs are alongside the validator. Read scripts/11-cpu-attribution/evidence only as preliminary read-only artifacts, not a completed attribution result.
+
+### Technical details
+Publication:3815prosewords,3SVGs,2Mermaid diagrams,8relativeassetlinks,8assetfiles,10scopedfiles including MOC. Target captures were not repeated. Native tooling/evidence remains unpushed; vault main was pushed and independently verified. No background collection is running.

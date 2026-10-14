@@ -1,0 +1,11 @@
+[main e649de9] Document Falllinie CPU PMU baseline, cache events and driver-cycle attribution
+ 10 files changed, 1642 insertions(+), 2 deletions(-)
+ create mode 100644 Projects/2026/10/14/PROJECT REPORT - Falllinie CPU PMU - Cache Events, Driver Cycles and an Audio-Disabled Baseline.md
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/01-counter-ratios.svg
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/02-cycle-attribution.svg
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/03-frame-context.svg
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/actual-interval.json
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/analysis-provenance.json
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/build-qualification.json
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/report-provenance.json
+ create mode 100644 Projects/2026/10/14/_assets/falllinie-cpu-pmu/summary.json

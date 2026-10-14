@@ -1,0 +1,21 @@
+{
+  "note": "Projects/2026/10/14/PROJECT REPORT - Falllinie CPU PMU - Cache Events, Driver Cycles and an Audio-Disabled Baseline.md",
+  "note_sha256": "5a44f6bc2ec4f907cff66c0f628a1c701e8f78918d5213fbdc54476449159da1",
+  "prose_words": 3815,
+  "svg_figures": 3,
+  "mermaid_diagrams": 2,
+  "relative_links": 8,
+  "files": [
+    "Projects/2026/10/14/PROJECT REPORT - Falllinie CPU PMU - Cache Events, Driver Cycles and an Audio-Disabled Baseline.md",
+    "Projects/2026/10/13/MOC - Optimization and Performance Engineering.md",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/01-counter-ratios.svg",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/02-cycle-attribution.svg",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/03-frame-context.svg",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/actual-interval.json",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/analysis-provenance.json",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/build-qualification.json",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/report-provenance.json",
+    "Projects/2026/10/14/_assets/falllinie-cpu-pmu/summary.json"
+  ],
+  "checks": "wikilinks, local assets, SVG/JSON parsing, hashes, exact frame means and counter totals, actual worked CSV interval; interpretation boundaries manually reviewed"
+}

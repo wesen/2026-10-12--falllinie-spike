@@ -1,0 +1,8 @@
+Internal ctest changing into directory: /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-2db35646-2b31-46cb-b6eb-9fb2eeb20044-s0-0/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/.work/build
+Test project /home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-2db35646-2b31-46cb-b6eb-9fb2eeb20044-s0-0/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/.work/build
+    Start 13: profiler
+1/1 Test #13: profiler .........................   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.01 sec

@@ -31,7 +31,7 @@ Profiler::Profiler(const std::string& path,GpuMode mode,unsigned cadence,const Q
  std::cout<<"PROFILE mode="<<(mode==GpuMode::Off?"off":mode==GpuMode::View?"view":"passes")<<" cadence="<<cadence<<" supported="<<bool(api_)<<" pool=32 CPU_passes=sparse,nested,nonadditive\n";
 }
 void Profiler::row(const Query& q,const char* status,double ms){gpu_<<q.frame<<','<<q.view<<','<<name(q.pass)<<','<<status<<',';if(ms>=0)gpu_<<ms;gpu_<<'\n';}
-void Profiler::flush_cpu(){for(size_t i=0;i<sample_count_;++i){const auto& s=samples_[i];passes_<<s.frame<<','<<s.view<<','<<name(s.pass)<<','<<(s.pass==RenderPass::View?"none":s.pass==RenderPass::DynamicPrep||s.pass==RenderPass::DynamicUpload?"scene":"view")<<','<<s.ms<<'\n';}sample_count_=0;}
+void Profiler::flush_cpu(){for(size_t i=0;i<sample_count_;++i){const auto& s=samples_[i];passes_<<s.frame<<','<<s.view<<','<<name(s.pass)<<','<<(s.pass==RenderPass::View?"none":s.pass==RenderPass::DynamicPrep||s.pass==RenderPass::DynamicUpload?"scene":"view")<<','<<s.ms<<'\n';++cpu_samples_;}sample_count_=0;}
 void Profiler::poll(){
  flush_cpu();if(!api_)return;
  GLint changed=0;api_.integer(disjoint,&changed);
@@ -60,6 +60,6 @@ Profiler::~Profiler(){
  if(!enabled())return;
  if(active_>=0){api_.end(elapsed);queries_[size_t(active_)].pending=true;queries_[size_t(active_)].invalid=true;active_=-1;++misuse_;}
  poll();size_t pending=0;if(api_)for(auto& q:queries_){if(q.pending){++pending;row(q,q.invalid?"pending_disjoint":"pending");}api_.del(1,&q.id);}
- stats_<<"mode,cadence,supported,issued,valid,disjoint,unavailable_polls,skipped_pool,unsupported_scopes,misuse,disjoint_polls,pending,cpu_dropped\n"<<(mode_==GpuMode::Off?"off":mode_==GpuMode::View?"view":"passes")<<','<<cadence_<<','<<bool(api_)<<','<<issued_<<','<<valid_<<','<<invalid_<<','<<unavailable_<<','<<skipped_<<','<<unsupported_<<','<<misuse_<<','<<disjoint_polls_<<','<<pending<<','<<cpu_dropped_<<'\n';
+ stats_<<"mode,cadence,supported,issued,valid,disjoint,unavailable_polls,skipped_pool,unsupported_scopes,misuse,disjoint_polls,pending,cpu_dropped,schema_version,cpu_samples\n"<<(mode_==GpuMode::Off?"off":mode_==GpuMode::View?"view":"passes")<<','<<cadence_<<','<<bool(api_)<<','<<issued_<<','<<valid_<<','<<invalid_<<','<<unavailable_<<','<<skipped_<<','<<unsupported_<<','<<misuse_<<','<<disjoint_polls_<<','<<pending<<','<<cpu_dropped_<<",2,"<<cpu_samples_<<'\n';
 }
 }

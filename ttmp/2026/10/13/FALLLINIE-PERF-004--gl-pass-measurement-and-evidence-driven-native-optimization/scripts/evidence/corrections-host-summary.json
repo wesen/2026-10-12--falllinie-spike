@@ -1,0 +1,33 @@
+{
+  "purpose": "Schema2 serialization/integrity smoke ONLY; no image capture or Mali performance measurement",
+  "arguments": "--frames 8 --no-vsync --render-size 384x288 --freeze-scene --dual-screen --profile-cadence 1 --gpu-profile-mode passes --profile frames.csv --receipt receipt.json",
+  "status_lines": [
+    "GL_VERSION=OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2",
+    "GL_RENDERER=llvmpipe (LLVM 20.1.2, 256 bits)",
+    "frames=8 measured=0 frame_p50_ms=0 frame_p95_ms=0 frame_p99_ms=0 peak_rss_kib=140432 GL_error=0"
+  ],
+  "stats": {
+    "mode": "passes",
+    "cadence": "1",
+    "supported": "1",
+    "issued": "48",
+    "valid": "48",
+    "disjoint": "0",
+    "unavailable_polls": "0",
+    "skipped_pool": "0",
+    "unsupported_scopes": "0",
+    "misuse": "0",
+    "disjoint_polls": "0",
+    "pending": "0",
+    "cpu_dropped": "0",
+    "schema_version": "2",
+    "cpu_samples": "64"
+  },
+  "cpu_scope_integrity": {
+    "schema_version": 2,
+    "records": 64,
+    "count_reconciled": true,
+    "parent_closure": true,
+    "gpu_counterparts": true
+  }
+}

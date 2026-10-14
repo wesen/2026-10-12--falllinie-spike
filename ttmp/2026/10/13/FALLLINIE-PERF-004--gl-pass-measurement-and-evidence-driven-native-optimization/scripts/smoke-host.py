@@ -50,7 +50,9 @@ for name, flags in cases.items():
         assert '0/dynamic_prep (parent=scene)' in summary['cpu_scopes_nested_not_additive']
         assert '1/dynamic_upload (parent=scene)' in summary['cpu_scopes_nested_not_additive']
     results.append({'case': name, 'result': 'passed', 'renderer': next(x for x in text.splitlines() if x.startswith('GL_RENDERER=')), 'stats': summary['whole_run_query_stats']})
-# Frozen output repeatability and no query-caused rendering difference (same top view).
+# POST-RUN UNINSTRUMENTED FIXTURE REPEATABILITY only (same top view).
+# main detaches measurement, then renders a fresh frame for capture. These
+# assertions do NOT establish query-active image equivalence; that gate is deferred.
 assert (OUT/'off-single/capture/print.bmp').read_bytes() == (OUT/'passes-dual/capture/print.bmp').read_bytes()
 assert (OUT/'off-single/capture/print.bmp').read_bytes() == (OUT/'view-dual/capture/print.bmp').read_bytes()
 assert (OUT/'off-single/capture/print.bmp').read_bytes() == (OUT/'off-dual/capture/print.bmp').read_bytes()

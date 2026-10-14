@@ -1,0 +1,50 @@
+[
+  {
+    "case": "bypass-dual",
+    "schema": 1,
+    "result": "explicit legacy-version rejection",
+    "diagnostic": "legacy schema 1 lacks CPU completeness count; retain raw receipts and regenerate with schema 2",
+    "receipt_sha256": "e8c2159da8218197e382e34890ce9b33a0b48fdcee91e0a397cab5d4a0f61df1",
+    "receipt_unchanged": true
+  },
+  {
+    "case": "live-dual",
+    "schema": 1,
+    "result": "explicit legacy-version rejection",
+    "diagnostic": "legacy schema 1 lacks CPU completeness count; retain raw receipts and regenerate with schema 2",
+    "receipt_sha256": "799389b8190268378d794f29c1a901bb8a5f07e99dd63bbeaddd49e773c89931",
+    "receipt_unchanged": true
+  },
+  {
+    "case": "off-dual",
+    "schema": 1,
+    "result": "explicit legacy-version rejection",
+    "diagnostic": "legacy schema 1 lacks CPU completeness count; retain raw receipts and regenerate with schema 2",
+    "receipt_sha256": "858844bfebd7df195859f5dcf04abfc3e9b1d916545399f56df9c509f323c67b",
+    "receipt_unchanged": true
+  },
+  {
+    "case": "off-single",
+    "schema": 1,
+    "result": "explicit legacy-version rejection",
+    "diagnostic": "legacy schema 1 lacks CPU completeness count; retain raw receipts and regenerate with schema 2",
+    "receipt_sha256": "a575dd00522cfa60b87d3b0c71fda74314a6246a49534617eeb7d25586ae9a42",
+    "receipt_unchanged": true
+  },
+  {
+    "case": "passes-dual",
+    "schema": 1,
+    "result": "explicit legacy-version rejection",
+    "diagnostic": "legacy schema 1 lacks CPU completeness count; retain raw receipts and regenerate with schema 2",
+    "receipt_sha256": "2402585e8071794ae72dc74660e0fd92629a3e1de0fe5c47676fdbb9ba1db646",
+    "receipt_unchanged": true
+  },
+  {
+    "case": "view-dual",
+    "schema": 1,
+    "result": "explicit legacy-version rejection",
+    "diagnostic": "legacy schema 1 lacks CPU completeness count; retain raw receipts and regenerate with schema 2",
+    "receipt_sha256": "511ab65592aac77e7f6cb072979cb4f8b8451dc484252f9b8aa1685a97595652",
+    "receipt_unchanged": true
+  }
+]

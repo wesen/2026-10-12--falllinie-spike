@@ -1,0 +1,129 @@
+..FFFFF.F..F...FF.F.FE.
+======================================================================
+ERROR: test_unsupported_gpu_with_complete_cpu_accepted (__main__.AnalyzeTests.test_unsupported_gpu_with_complete_cpu_accepted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-2db35646-2b31-46cb-b6eb-9fb2eeb20044-s0-0/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/test_analyze.py", line 100, in test_unsupported_gpu_with_complete_cpu_accepted
+    self.assertEqual(analyze(self.p)['cpu_scope_integrity']['records'], 5)
+                     ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'cpu_scope_integrity'
+
+======================================================================
+FAIL: test_every_gpu_status_requires_cpu_counterpart (__main__.AnalyzeTests.test_every_gpu_status_requires_cpu_counterpart) (status='valid')
+----------------------------------------------------------------------
+ValueError: issued GPU count differs from terminal records
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-2db35646-2b31-46cb-b6eb-9fb2eeb20044-s0-0/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/test_analyze.py", line 93, in test_every_gpu_status_requires_cpu_counterpart
+    with self.assertRaisesRegex(ValueError, 'CPU counterpart'): analyze(self.p)
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "CPU counterpart" does not match "issued GPU count differs from terminal records"
+
+======================================================================
+FAIL: test_every_gpu_status_requires_cpu_counterpart (__main__.AnalyzeTests.test_every_gpu_status_requires_cpu_counterpart) (status='disjoint')
+----------------------------------------------------------------------
+ValueError: issued GPU count differs from terminal records
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-2db35646-2b31-46cb-b6eb-9fb2eeb20044-s0-0/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/test_analyze.py", line 93, in test_every_gpu_status_requires_cpu_counterpart
+    with self.assertRaisesRegex(ValueError, 'CPU counterpart'): analyze(self.p)
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "CPU counterpart" does not match "issued GPU count differs from terminal records"
+
+======================================================================
+FAIL: test_every_gpu_status_requires_cpu_counterpart (__main__.AnalyzeTests.test_every_gpu_status_requires_cpu_counterpart) (status='pending')
+----------------------------------------------------------------------
+ValueError: issued GPU count differs from terminal records
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-2db35646-2b31-46cb-b6eb-9fb2eeb20044-s0-0/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/test_analyze.py", line 93, in test_every_gpu_status_requires_cpu_counterpart
+    with self.assertRaisesRegex(ValueError, 'CPU counterpart'): analyze(self.p)
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "CPU counterpart" does not match "issued GPU count differs from terminal records"
+
+======================================================================
+FAIL: test_every_gpu_status_requires_cpu_counterpart (__main__.AnalyzeTests.test_every_gpu_status_requires_cpu_counterpart) (status='pending_disjoint')
+----------------------------------------------------------------------
+ValueError: issued GPU count differs from terminal records
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-2db35646-2b31-46cb-b6eb-9fb2eeb20044-s0-0/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/test_analyze.py", line 93, in test_every_gpu_status_requires_cpu_counterpart
+    with self.assertRaisesRegex(ValueError, 'CPU counterpart'): analyze(self.p)
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "CPU counterpart" does not match "issued GPU count differs from terminal records"
+
+======================================================================
+FAIL: test_false_zero_count_rejected (__main__.AnalyzeTests.test_false_zero_count_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-2db35646-2b31-46cb-b6eb-9fb2eeb20044-s0-0/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/test_analyze.py", line 129, in test_false_zero_count_rejected
+    with self.assertRaisesRegex(ValueError, 'CPU'): analyze(self.p)
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_header_only_scopes_rejected (__main__.AnalyzeTests.test_header_only_scopes_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-2db35646-2b31-46cb-b6eb-9fb2eeb20044-s0-0/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/test_analyze.py", line 69, in test_header_only_scopes_rejected
+    with self.assertRaisesRegex(ValueError, 'CPU'): analyze(self.p)
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_legacy_stats_explicitly_versioned_not_silently_accepted (__main__.AnalyzeTests.test_legacy_stats_explicitly_versioned_not_silently_accepted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-2db35646-2b31-46cb-b6eb-9fb2eeb20044-s0-0/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/test_analyze.py", line 115, in test_legacy_stats_explicitly_versioned_not_silently_accepted
+    with self.assertRaisesRegex(ValueError, 'legacy schema 1'): analyze(self.p)
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_orphan_cpu_parent_rejected_even_with_reconciled_count (__main__.AnalyzeTests.test_orphan_cpu_parent_rejected_even_with_reconciled_count) (scope='view')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-2db35646-2b31-46cb-b6eb-9fb2eeb20044-s0-0/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/test_analyze.py", line 82, in test_orphan_cpu_parent_rejected_even_with_reconciled_count
+    with self.assertRaisesRegex(ValueError, 'parent'): analyze(self.p)
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_orphan_cpu_parent_rejected_even_with_reconciled_count (__main__.AnalyzeTests.test_orphan_cpu_parent_rejected_even_with_reconciled_count) (scope='scene')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-2db35646-2b31-46cb-b6eb-9fb2eeb20044-s0-0/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/test_analyze.py", line 82, in test_orphan_cpu_parent_rejected_even_with_reconciled_count
+    with self.assertRaisesRegex(ValueError, 'parent'): analyze(self.p)
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_queries_off_missing_cpu_rejected (__main__.AnalyzeTests.test_queries_off_missing_cpu_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-2db35646-2b31-46cb-b6eb-9fb2eeb20044-s0-0/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/test_analyze.py", line 110, in test_queries_off_missing_cpu_rejected
+    with self.assertRaisesRegex(ValueError, 'CPU'): analyze(self.p)
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_truncated_cpu_leaf_rejected (__main__.AnalyzeTests.test_truncated_cpu_leaf_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/manuel/code/wesen/worktrees/2026-10-12--falllinie-spike/pi-worktree-2db35646-2b31-46cb-b6eb-9fb2eeb20044-s0-0/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/test_analyze.py", line 73, in test_truncated_cpu_leaf_rejected
+    with self.assertRaisesRegex(ValueError, 'CPU'): analyze(self.p)
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.019s
+
+FAILED (failures=11, errors=1)

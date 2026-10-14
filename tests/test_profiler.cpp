@@ -36,7 +36,7 @@ int main(int argc,char** argv){
  assert(gpu.find("9,1,scene,valid,0.123")!=std::string::npos);
  assert(gpu.find("10,0,scene,pending,")!=std::string::npos);
  assert(stats.find("passes,1,1,34,1,32,")!=std::string::npos);
- assert(stats.find(",4,0,2,1,1,0\n")!=std::string::npos); // skipped, unsupported, misuse, disjoint polls, pending, dropped
+ assert(stats.find(",4,0,2,1,1,0,2,63\n")!=std::string::npos); // skipped, unsupported, misuse, disjoint polls, pending, dropped, schema, CPU rows
  unsigned before=begins;ready=true;
  {fl::Profiler p(path+"view",fl::GpuMode::View,2,&api);{S whole(&p,0,0,P::View);S scene(&p,0,0,P::Scene);} {S unsampled(&p,1,0,P::View);}p.poll();}
  assert(begins==before+1);
@@ -47,6 +47,10 @@ int main(int argc,char** argv){
  assert(begins==before+1);
  {fl::Profiler p(path+"active-disjoint",fl::GpuMode::Passes,1,&api);{S s(&p,0,0,P::Scene);disjoint=true;p.poll();}}
  assert(contents(path+"active-disjoint.gpu.csv").find("0,0,scene,disjoint,\n")!=std::string::npos);
+ assert(contents(path+"view.stats.csv").find(",0,2,2\n")!=std::string::npos);
+ assert(contents(path+"unsupported.stats.csv").find(",0,2,1\n")!=std::string::npos);
+ {fl::Profiler p(path+"overflow",fl::GpuMode::Off,1,&api);for(int i=0;i<40;++i){S s(&p,0,0,P::View);}}
+ assert(contents(path+"overflow.stats.csv").find(",8,2,32\n")!=std::string::npos);
  bool rejected=false;try{fl::Profiler p(path,fl::GpuMode::Off,0,&api);}catch(const std::runtime_error&){rejected=true;}assert(rejected);
  std::cout<<"query lifecycle, bounded pool, availability, disjoint, pending, cadence, nonnesting, misuse, unwind, unsupported/off passed\n";
 }

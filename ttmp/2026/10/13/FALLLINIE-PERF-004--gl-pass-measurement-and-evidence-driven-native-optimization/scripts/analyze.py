@@ -34,6 +34,17 @@ def analyze(path, warmup=60):
     if len(stats_rows) != 1:
         raise ValueError("missing/ambiguous final stats (run incomplete?)")
     stats = stats_rows[0]
+    # Schema 1 did not attest CPU record completeness. Fail closed rather than
+    # certifying old/missing records; retain raw receipts and rerun with schema 2.
+    schema = stats.get("schema_version", "1")
+    if schema == "1":
+        raise ValueError("legacy schema 1 lacks CPU completeness count; retain raw receipts and regenerate with schema 2")
+    if schema != "2":
+        raise ValueError("unsupported profile stats schema")
+    cpu_samples = int(stats["cpu_samples"])
+    cadence = int(stats["cadence"])
+    if cpu_samples < 0 or not 1 <= cadence <= 3600:
+        raise ValueError("invalid CPU sample count or cadence")
     mode = stats["mode"]
     if mode not in ("off", "view", "passes"):
         raise ValueError("unknown GPU mode")
@@ -51,19 +62,30 @@ def analyze(path, warmup=60):
                 value = number(text)
                 if frame >= warmup:
                     cpu[key].append(value)
+    if not cpu_seen:
+        raise ValueError("missing completed CPU frames")
     passes = collections.defaultdict(list)
-    seen = set()
+    cpu_scopes = set()
     parents = {"view": "none", "scene": "view", "post": "view", "output": "view",
                "dynamic_prep": "scene", "dynamic_upload": "scene"}
     for row in rows(Path(str(path)+".passes.csv")):
         frame, view, scope = int(row["frame"]), int(row["view"]), row["pass"]
         key = (frame, view, scope)
-        if frame not in cpu_seen or key in seen or view not in (0, 1) or parents.get(scope) != row["parent"]:
+        if frame not in cpu_seen or frame % cadence or key in cpu_scopes or view not in (0, 1) or parents.get(scope) != row["parent"]:
             raise ValueError("invalid/duplicate CPU scope or parent")
-        seen.add(key)
+        cpu_scopes.add(key)
         value = number(row["cpu_ms"])
         if frame >= warmup:
             passes[f"{view}/{scope} (parent={row['parent']})"].append(value)
+    if len(cpu_scopes) != cpu_samples:
+        raise ValueError("CPU sample count differs from scope records")
+    for frame, view, scope in cpu_scopes:
+        parent = parents[scope]
+        if parent != "none" and (frame, view, parent) not in cpu_scopes:
+            raise ValueError("CPU scope is missing its parent record")
+    for frame in cpu_seen:
+        if frame % cadence == 0 and (frame, 0, "view") not in cpu_scopes:
+            raise ValueError("sampled CPU frame lacks top view record")
     gpu = collections.defaultdict(list)
     status_counts = collections.Counter()
     all_status_counts = collections.Counter()
@@ -74,6 +96,8 @@ def analyze(path, warmup=60):
         key = (frame, view, scope)
         if frame not in cpu_seen or scope not in allowed or view not in (0, 1) or key in seen:
             raise ValueError("invalid, duplicate or nested GPU scope")
+        if key not in cpu_scopes:
+            raise ValueError("issued GPU scope lacks CPU counterpart")
         seen.add(key)
         status = row["status"]
         if status not in ("valid", "disjoint", "pending", "pending_disjoint"):
@@ -98,6 +122,9 @@ def analyze(path, warmup=60):
         raise ValueError("receipt/profile GPU modes differ")
     return {"profile": str(path), "warmup_frames": warmup, "gpu_mode": mode,
             "measurement_receipt": measurement,
+            "cpu_scope_integrity": {"schema_version": 2, "records": len(cpu_scopes),
+                                    "count_reconciled": True, "parent_closure": True,
+                                    "gpu_counterparts": True},
             "cpu_intervals_independent_not_additive": {k: distribution(v) for k, v in cpu.items()},
             "cpu_scopes_nested_not_additive": {k: distribution(v) for k, v in passes.items()},
             "gpu_scopes_no_cross_mode_sum": {k: distribution(v) for k, v in gpu.items()},

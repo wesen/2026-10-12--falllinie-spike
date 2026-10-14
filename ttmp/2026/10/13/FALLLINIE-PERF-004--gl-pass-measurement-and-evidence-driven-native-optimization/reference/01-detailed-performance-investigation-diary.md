@@ -45,4 +45,43 @@ Isolated worker builds tooling and source map, fresh reviewer inspects exact can
 Read design-doc/01, src/profiler.cpp/.hpp, src/main.cpp, src/renderer.cpp and src/game_renderer.cpp. Check historical AUDIO-003 CPU CSV rather than interpreting the empty GPU CSV as zero cost.
 
 ### Technical details
-Baseline dual384x288 mean interval19.7839ms;60FPSperiod16.6667ms;topGLwall9.5481,bottomGLwall8.1037,physics.1557,player.6613 includingstream.0866ms. Separate audio producer is not serial frame cost. No governor/affinity/driver change, JS integration, vault publication or reMarkable delivery in scope.
+Baseline dual384x288 mean interval19.7839ms;60FPSperiod16.6667ms;topGLwall9.5481,bottomGLwall8.1037,physics.1557,player.6613 includingstream.0866ms. Separate audio producer is not serial frame cost. No governor/affinity/driver change, JS integration, vault publication or reMarkable delivery in scope at this checkpoint.
+
+## Step 2: Preserve the same worker's context for the requested vault report
+
+The user explicitly requested that the agent implementing and testing the measurement tooling also author the final technical report. Publication is now authorized as a follow-up, after corrected tooling and actual parent-owned target results are available. This preserves implementation knowledge without publishing a report that mistakes host tests for Mali measurements.
+
+### Prompt Context
+**User prompt (verbatim, JSON-escaped to preserve whitespace):** `"ask theagent running the tests to  write a detailed project report for the obsidian vault as a deep dive technical analysis blog post using a textbook writing style (no analogies, see skill).      \n Commit and push the bsidian vault when done (go-go-parc vault).    when they are done so we don't lose the context window information"`
+**Assistant interpretation:** Route deferred report/publication to the same retained worker session and record a durable continuation task.
+**Inferred user intent:** Preserve detailed reasoning, test failures and experimental context in a readable permanent technical article.
+
+### What I did
+Delivered acknowledged steering to current resumed worker bca0a52e-f8da-4813-ba76-8f19864ee53a, original implementation child2db35646, requesta2f2b5bd-0022-4c41-af2b-91e45fa17813. Added taskwvpl for same-worker report, validation and scoped vault commit/push. Requested report-ready outline in worker diary/handoff before current correction completion.
+
+### Why
+Actual GPU hardware measurements remain pending. The worker should finish schema2 CPU-scope accounting and evidence wording now, then receive parent device receipts before writing final measured conclusions.
+
+### What worked
+Steering delivery was acknowledged with automatic recovery disabled; no new writer was started. Deferred report scope is explicit and durable.
+
+### What didn't work
+No delivery failure. Initial `git diff --cached --check` rejected trailing whitespace in the verbatim multiline request; encoded that quote as a JSON string to preserve whitespace without a trailing-whitespace line. Current evidence still lacks actual new Mali pass measurements; report publication must not imply they already exist.
+
+### What I learned
+The report should preserve instrumentation semantics and experiment limitations alongside optimization proposals, not just collect favorable timing numbers.
+
+### What was tricky to build
+Same-worker knowledge continuity and future vault push authority are separate from current no-device/no-native-push boundaries. Parent retains device acceptance and will pass exact final revision/receipts before publication.
+
+### What warrants a second pair of eyes
+Report must distinguish CPU wall/GPU elapsed, static fixture/live gameplay, missing/invalid samples, uninstrumented capture repeatability and deferred query-active visual equivalence. Proposed parallel work must retain main-thread GL and one authoritative simulation.
+
+### What should be done in the future
+Resume this worker session after correction review/integration and target qualification; load vault-writing/textbook skills, create new append-only dated report with self-contained assets, validate, stage only intended files, commit/push go-go-parc without force and independently verify remote success.
+
+### Code review instructions
+Use taskwvpl and worker's forthcoming report-ready handoff. Preserve historical JS/audio reports and unrelated vault state. New useful figure/report scripts belong under PERF004/scripts.
+
+### Technical details
+Vault /home/manuel/code/wesen/go-go-golems/go-go-parc. No analogies. No native push or reMarkable request. Do not mark report task complete until actual publication and verification.

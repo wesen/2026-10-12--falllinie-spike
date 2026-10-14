@@ -382,3 +382,21 @@ The acceptance campaign compared the old behaviour with the new defaults in two 
 
 ### Technical details
 - Defaults now: `--shadow-mode bounds --view-culling on --short-indices on`; opt-in diagnostics: `--fog-cells constant` (rejected), `--output-clear on`, `--window-depth 0`, `--replay-audio`.
+
+## Step 7: Publish to the vault (milestone)
+
+Published the ticket's results as a new vault project report and linked it from the review and the optimization MOC. The vault keeps copies of every campaign summary, the Phase C comparison results and the live-acceptance figure produced by `scripts/09-figures.py`.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1.
+**Commit (code):** 3620684 (evidence); vault commit 97d182d in go-go-parc.
+
+### What I did
+- `python3 -I scripts/09-figures.py scripts/evidence/acceptance-20261014T225930Z .../_assets/falllinie-perf009/01-live-acceptance.svg`.
+- Vault: `Projects/2026/10/14/PROJECT REPORT - Falllinie GPU Budget Recovery - Shadow Bounds at the Shipping Size, Geometry Counters and Presentation Acquisition.md`; follow-up section appended to the performance review; reading-route sentence and catalogue row added to the MOC. Committed and pushed (`d6d8226..97d182d`).
+
+### What didn't work
+- No failures.
+
+### What should be done in the future
+- Owner decisions: deploy the new binary to the launcher; prepare side-by-side images for distance level of detail.

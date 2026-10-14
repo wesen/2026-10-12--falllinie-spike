@@ -9,4 +9,4 @@
 - [x] Phase D: acquire scope with output clear, window depth 0 <!-- t:bp2u -->
 - [x] Visual qualification at 384x288 for all candidates (five checkpoints) <!-- t:afwj -->
 - [x] Promote pixel-identical candidates that pass the rule <!-- t:bby0 -->
-- [ ] Publish results to vault review/report <!-- t:7mv3 -->
+- [x] Publish results to vault review/report <!-- t:7mv3 -->

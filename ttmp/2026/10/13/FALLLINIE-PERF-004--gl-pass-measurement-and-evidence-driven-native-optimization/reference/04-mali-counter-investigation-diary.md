@@ -53,3 +53,61 @@ Start at scripts/03-mali-counters/probe.cpp, source receipts and device-inventor
 
 ### Technical details
 Core clock source is CLOCK_MONOTONIC; backend timestamps are retained without asserting they equal the request boundary. Selected counters include GPU/core/fragment/nonfragment/tiler active cycles, external read/write bytes, activity/unit ratios and bus stalls. Success/error/unsupported states remain separate. Sampling is whole-device, not a per-frame pass measurement. No BPF, FTRACE or KPROBE attachment is involved.
+
+## Step 2: Actual counters work; live post bypass changes the frame distribution
+
+Ran the complete prepared capture sequence instead of repeated micro-probes. The driver database advertised240counters, all13requested metrics configured, and the idle/live/bypass captures completed with zero sampling errors. Four30-second game runs (no-counter baseline, counted live, counted bypass, closing baseline) completed with GL and audio-health checks clear.
+
+The results add GPU-side evidence independent of the questionable GL elapsed queries. In the counted normal run mean frame interval was18.171ms/p99 34.095ms; non-parity post bypass changed this to16.666ms/p99 17.392ms. Fragment-active cycles and external writes also decreased. This makes source-preserving post-path experiments useful, but bypass is not a parity-preserving optimization or an isolated shader-time measurement.
+
+### Prompt Context
+**User prompt:** SeeStep1.
+**Assistant interpretation:** Complete a substantive hardware capture and explain actual counter semantics, preserving failures and uncertainty.
+**Inferred user intent:** Get real GPU evidence and actionable next experiments, with graphs and an evidence-backed diary rather than another tools list.
+**Commit (probe/research):**7b22f7d — Identify Mali counter interfaces and build isolated ARM counter probe.
+
+### What I did
+- Implemented04-target-case.sh/05-campaign.sh; deployed only standalone probe, unchanged TRACE005 binary and helper to/storage/apps/falllinie-mali-20261014T024712Z. Inspected for active game/collector before starting. No existing process was stopped.
+- Executed idle30s, baseline30s, live30s with45s counter capture, bypass30s with45s capture and closing baseline30s. Internal/external bounds and owned-child cleanup were explicit. All five cases returned0.
+- Preserved15600raw counter rows, actual enumeration, config, application sidecars/receipts, binary hashes, status, stderr and launch logs. Graph analyzer reconciles final counts,13counter identities per sample and contiguous sequence IDs; no data loss hidden behind successful exit.
+- Collected paired CLOCK_MONOTONIC timestamps for game phase boundaries. Restricted live aggregates to adjacent host counter polls fully inside frame>=60's paired extent. Central windows have283/279intervals and zero nonfinite values.
+- Added06-analyze.py, summary/provenance JSON and twoSVGs; reportanalysis01 explains measured counter access/tool state, actual formulas, results and next experiments. Saved pinned sampler/timestamp/formula/G52 mapping source andMITlicense in sources/.
+
+### Why
+A working GPU counter interface can answer hardware-activity questions that CPU perf cannot. Whole-device event counts still need explicit scope, interval and denominator definitions. Post bypass is an existing actual-work omission, useful for checking a rendering hypothesis without implementing a speculative optimization first.
+
+### What worked
+All13requested metrics configured; three collectors reported errors0/stopok. Four game runs reported GL_error0, callbackover_budget0, starvation0 and missingframes0. Initial/closing no-counter means18.034/18.295ms bracket the counted normal18.171ms mean. No large broad slowdown is apparent in that sequence; no zero-overhead claim follows. Idle/core activity and full live activity distinguish actual counter access from mere device enumeration.
+
+Live central rates:GPU-active803.27Mcycles/s,fragment798.42Mcycles/s,external reads1431.82MB/s,writes747.53MB/s. Bypass:788.42M,704.93M,1528.29MB/s,570.46MB/s. Fragment/GPU-active ratio99.40%→89.41%; per-sample arithmetic ratio70.66%→64.62%; texture13.12%→7.89%. All selected frequency snapshots800MHz; all these ratios/rates retain their documented denominators and whole-device scope.
+
+### What didn't work
+- Derived ratios produced591nonfinite rows in idle/startup/tail intervals (299idle,145live,147bypass). Probe preserves statusnonfinite and leaves value empty. No selected central live/bypass row was nonfinite. Treating idle0/0 as a measured0%would fabricate information.
+- Backend sample-begin timestamps are1.262–1.268seconds ahead of hostmonotonic completion. No direct clock join or fixed-offset correction is used. Backend clock identity is not inferred solely from one helper usingMONOTONIC_RAW.
+- Observed GPU-active rate803.27M/s slightly exceeds800MHz snapshots. Do not normalize/clamp it into100%utilization; interval/frequency/counter calibration remains bounded evidence, not an exact busy-time meter.
+- `defuddle parse https://developer.arm.com/tools-and-software/mali-offline-compiler --md -o ...` emitted `Defuddle: Error parsing schema.org data: SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)` and returned0 with a zero-byte extraction. Fetch log and empty file preserved; not described as successfully archived documentation. Official URL/search discovery alone does not qualify the compiler.
+- An exploratory rg of `hwcpipe/src/hwcpipe/counter_database.cpp` found no file; the actual generated map is underdetail/counter_map/bifrost.cpp. Correct G52 formulas were inspected rather than guessed from a generic GPU.
+
+### What I learned
+G52GPUActive counts cycles with pending queues, even while stalled, rather than successful computation. Fragment/core/tiler activity can overlap. Higher read bytes/s with bypass does not refute removed post reads because frame throughput, scene trajectory and access pattern also changed. Near-zero selected external-bus stall counters are narrow observations, not proof the memory subsystem cannot constrain execution.
+
+### What was tricky to build
+Keep clock domains separate while correlating the game's active window. The high-level sampler exposes backend begin but not end in counter_sample; rates therefore use approximate host poll intervals, excluding the first poll and startup/tail. This loses precise hardware interval attribution but avoids a demonstrably wrong nanosecond join. The whole-device sampler includes the compositor; no PID-only GPU claim is made.
+
+### What warrants a second pair of eyes
+Counter-domain calibration and driver-specific semantics; pending-work versus productive cycles; activity/traffic differences under non-parity bypass and different live trajectories. No extrapolated standalone-post GPU milliseconds or promised shader speedup is justified.
+
+### What should be done in the future
+Add documented fragment/nonfragment queue dependency, descriptor-read and cache-flush wait counters for a focused follow-up. Investigate shader arithmetic with a verified Offline Compiler or specific instruction counters before making source-preserving changes. Streamline may offer richer timelines, but its full target setup remains unqualified and is not necessary merely to repeat this successful counter capture.
+
+### Code review instructions
+Readanalysis/01-mali-g52-counter-access-and-measured-post-processing-experiment.md,06-analyze.py andsources/mali-g52-counter-reference.html. Reproduce JSON/figures with06-analyze.py; inspect original counters.log/counters.csv alongside final counts. Actual normal/bypass comparisons are not frozen-scene replays or randomized repetitions. No application source test matrix is repeated because game binary/source are unchanged.
+
+### Technical details
+Game runtime209a6d0, unchanged binary2872ede7219ccd91890de4c0d47d5af8fab687f2b5b2cf9605e25ecb1dfcb1d2. Library378c7b59e2dae87cbbffb0ac9cf96ed13c939823. Whole-device capture,10Hz,13metrics, threeboundedcollections. GPU elapsed queriesoff; pairedCPUcadence60. No installs, policy/driver/governor changes or further delegation.
+
+### Visual evidence
+![Actual whole-device counter comparison](../scripts/03-mali-counters/evidence/counter-comparison.svg)
+![Actual live frame distributions](../scripts/03-mali-counters/evidence/frame-comparison.svg)
+
+Input SHA256s and aggregation boundaries are inevidence/analysis-provenance.json. The figures are generated from retained actual samples; no synthetic performance series is used.

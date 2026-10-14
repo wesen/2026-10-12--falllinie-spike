@@ -1,0 +1,22 @@
+Defuddle: Error parsing schema.org data: SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at /home/manuel/.nvm/versions/node/v24.18.0/lib/node_modules/defuddle-cli/node_modules/defuddle/dist/index.js:1:56554
+    at Proxy.forEach (<anonymous>)
+    at e.Defuddle._extractSchemaOrgData (/home/manuel/.nvm/versions/node/v24.18.0/lib/node_modules/defuddle-cli/node_modules/defuddle/dist/index.js:1:56340)
+    at e.Defuddle.parseInternal (/home/manuel/.nvm/versions/node/v24.18.0/lib/node_modules/defuddle-cli/node_modules/defuddle/dist/index.js:1:47468)
+    at e.Defuddle.parse (/home/manuel/.nvm/versions/node/v24.18.0/lib/node_modules/defuddle-cli/node_modules/defuddle/dist/index.js:1:47065)
+    at Defuddle (/home/manuel/.nvm/versions/node/v24.18.0/lib/node_modules/defuddle-cli/node_modules/defuddle/dist/node.js:42:29)
+    at Command.<anonymous> (file:///home/manuel/.nvm/versions/node/v24.18.0/lib/node_modules/defuddle-cli/dist/index.js:44:38)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+Defuddle: Error parsing schema.org data: SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at /home/manuel/.nvm/versions/node/v24.18.0/lib/node_modules/defuddle-cli/node_modules/defuddle/dist/index.js:1:56554
+    at Proxy.forEach (<anonymous>)
+    at e.Defuddle._extractSchemaOrgData (/home/manuel/.nvm/versions/node/v24.18.0/lib/node_modules/defuddle-cli/node_modules/defuddle/dist/index.js:1:56340)
+    at e.Defuddle.parseInternal (/home/manuel/.nvm/versions/node/v24.18.0/lib/node_modules/defuddle-cli/node_modules/defuddle/dist/index.js:1:47468)
+    at e.Defuddle.parse (/home/manuel/.nvm/versions/node/v24.18.0/lib/node_modules/defuddle-cli/node_modules/defuddle/dist/index.js:1:47184)
+    at Defuddle (/home/manuel/.nvm/versions/node/v24.18.0/lib/node_modules/defuddle-cli/node_modules/defuddle/dist/node.js:42:29)
+    at Command.<anonymous> (file:///home/manuel/.nvm/versions/node/v24.18.0/lib/node_modules/defuddle-cli/dist/index.js:44:38)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+Output written to /home/manuel/code/wesen/2026-10-12--falllinie-spike/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/sources/mali-offline-compiler-page.txt
+fetch_exit=0

@@ -1,0 +1,2 @@
+probe_status=not-run
+game_status=0

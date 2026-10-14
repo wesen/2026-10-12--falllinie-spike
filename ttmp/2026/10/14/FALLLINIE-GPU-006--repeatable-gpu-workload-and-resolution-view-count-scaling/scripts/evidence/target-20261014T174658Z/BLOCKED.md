@@ -1,3 +1,13 @@
+---
+Title: Historical GPU006 authentication failure before deployment
+Ticket: FALLLINIE-GPU-006
+Status: active
+Topics: [performance]
+DocType: reference
+Intent: long-term
+Summary: Preserved failed preflight; superseded by the later key-authenticated campaign.
+---
+
 # Device campaign not started
 
 Attempt: 2026-10-14T17:46:58Z.

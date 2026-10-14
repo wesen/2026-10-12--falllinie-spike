@@ -1,0 +1,7 @@
+## Doctor Report (2 findings)
+
+### FALLLINIE-GPU-006
+
+- [WARNING] missing_numeric_prefix — file without numeric prefix (path=/home/manuel/code/wesen/2026-10-12--falllinie-spike/ttmp/2026/10/14/FALLLINIE-GPU-006--repeatable-gpu-workload-and-resolution-view-count-scaling/scripts/README.md)
+- [WARNING] missing_numeric_prefix — file without numeric prefix (path=/home/manuel/code/wesen/2026-10-12--falllinie-spike/ttmp/2026/10/14/FALLLINIE-GPU-006--repeatable-gpu-workload-and-resolution-view-count-scaling/scripts/evidence/target-20261014T174658Z/BLOCKED.md)
+

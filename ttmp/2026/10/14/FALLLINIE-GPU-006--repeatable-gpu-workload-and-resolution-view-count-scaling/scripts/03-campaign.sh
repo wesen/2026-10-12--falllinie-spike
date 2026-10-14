@@ -4,9 +4,9 @@ P=$(cd -- "$(dirname -- "$0")" && pwd); R=$(git -C "$P" rev-parse --show-topleve
 C=$R/ttmp/2026/10/13/FALLLINIE-PERF-004--gl-pass-measurement-and-evidence-driven-native-optimization/scripts/03-mali-counters
 STAMP=$(date -u +%Y%m%dT%H%M%SZ); REMOTE=/storage/apps/falllinie-gpu006-$STAMP; OUT=$P/evidence/target-$STAMP
 mkdir -p "$OUT"
-: "${SSH_ASKPASS:?external helper required}"
-export SSH_ASKPASS_REQUIRE=force DISPLAY=${DISPLAY:-:0}
-SSH=(setsid -w ssh -n -o IdentitiesOnly=yes root@192.168.0.202);SCP=(setsid -w scp -o IdentitiesOnly=yes)
+KEY=${SSH_IDENTITY_FILE:-$HOME/.ssh/id_ed25519}
+SSH=(ssh -n -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -i "$KEY" root@192.168.0.202)
+SCP=(scp -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -i "$KEY")
 "${SSH[@]}" "set -e; if pgrep -af '[f]alllinie-(spike|trace005|pmu|ranges|gpu006)( |$)|[m]ali-counters( |$)|[p]erf (record|stat)'; then exit 2; fi; mkdir '$REMOTE'; mkdir '$REMOTE/evidence'"
 "${SCP[@]}" "$R/build-device/falllinie-gpu006" "$C/.work/build-arm/mali-counters" "$P/02-target-case.sh" "root@192.168.0.202:$REMOTE/"
 "${SSH[@]}" "chmod +x '$REMOTE/falllinie-gpu006' '$REMOTE/mali-counters'; sha256sum '$REMOTE/falllinie-gpu006' '$REMOTE/mali-counters'" > "$OUT/deployed.sha256"

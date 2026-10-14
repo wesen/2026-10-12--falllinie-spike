@@ -233,3 +233,11 @@ Paced measurements answer whether frame tails meet the target. Uncapped measurem
 - [glDrawRangeElements](https://registry.khronos.org/OpenGL-Refpages/es3.0/html/glDrawRangeElements.xhtml): the existing optional CPU-side candidate; not another variable in the first matrix.
 
 API links explain contracts, not measured device behavior. Local source and retained target evidence determine what this implementation actually does. Read the current implementation diary alongside this guide when resuming: proposed design becomes implemented behavior only when a checkpoint supplies concrete evidence.
+
+## 11. Implemented and measured checkpoint — 2026-10-14
+
+The replay contract is implemented in `32b8bfd`. Host/ARM builds and 15 CPU tests passed. The eight-case device campaign `target-20261014T180649Z` completed with matching selected-state signatures and same-resolution endpoint images; see [measured results](../analysis/01-measured-replay-resolution-and-view-count-scaling-on-mali-g52.md).
+
+Dual-view mean intervals were 16.62 ms at 256×192, about 17.40 ms at 384×288, and 23.57 ms at 512×384. Single-view cases stayed near 60 completed frames/s despite increasing hardware activity, so application pacing off is not proof of unrestricted presentation throughput. These results qualify the benchmark and motivate further GPU investigation; they do not promote a shader or resolution change into production.
+
+The runner now uses the user's installed Ed25519 key with noninteractive SSH. The previously delivered reMarkable guide is the pre-implementation design edition; this local checkpoint records the later measurement outcome.

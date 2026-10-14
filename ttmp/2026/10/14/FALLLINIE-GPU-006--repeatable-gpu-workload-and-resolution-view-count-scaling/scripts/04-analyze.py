@@ -123,16 +123,16 @@ def analyze(root):
     assert all(len(set(v)) == 1 for v in images.values()), 'Same-resolution endpoint image mismatch'
     result['same_resolution_endpoint_images_match'] = True
     result['signature'] = signatures.pop()
-    (root/'summary.json').write_text(json.dumps(result, indent=2)+'\n')
+    (root/'summary.json').write_text(json.dumps(result, indent=2, sort_keys=True)+'\n')
     (root/'analysis-provenance.json').write_text(json.dumps({
         'script_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), 'inputs': hashes,
         'limits': ['Partial selected-state signature, not every game field',
                    'Frames >=60; counter window is the smaller sampled paired-clock extent',
                    'No exact backend-clock join, app-only attribution, pass GPU timing or calibrated utilization',
-                   'No full observer-overhead qualification; single matrix with reference bracket']}, indent=2)+'\n')
+                   'No full observer-overhead qualification; single matrix with reference bracket']}, indent=2, sort_keys=True)+'\n')
     for name, value in result['cases'].items():
         print(name, 'mean_ms', round(value['mean_ms'], 4), 'p95_ms', round(value['p95_ms'], 4),
-              'loop_fps', round(value['loop_frames_per_second'], 2), 'rates/s', value['rates_per_second'])
+              'loop_fps', round(value['loop_frames_per_second'], 2), 'rates/s', dict(sorted(value['rates_per_second'].items())))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)

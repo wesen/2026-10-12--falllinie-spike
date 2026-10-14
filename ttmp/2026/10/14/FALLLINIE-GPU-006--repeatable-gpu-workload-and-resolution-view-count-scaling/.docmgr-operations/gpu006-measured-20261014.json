@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "digest": "064635716eb9e418c4091a2e99127b2d6fea8770ff28a58834c36d2bc2254cb9",
+  "request": {
+    "ticket": "FALLLINIE-GPU-006",
+    "status": "complete",
+    "intent": "",
+    "entry": "Design delivered, deterministic replay implemented, and eight-case device scaling campaign analyzed. Future GPU sensitivity experiments are separate work; no production optimization promoted."
+  },
+  "receipt": {
+    "sequence": 1,
+    "operation_id": "gpu006-measured-20261014",
+    "state": "committed",
+    "created_at": "2026-10-14T18:20:19.263319392Z",
+    "changed_paths": [
+      "changelog.md",
+      "index.md"
+    ],
+    "before": {
+      "changelog.md": "1a52f7e89957683bed76944a44c6565276b9f70b2783381d309091cddfd790c7",
+      "index.md": "2f0dc22073f68e56a6ac28d7b18d79fe927c622ce05f2fed6a000f307f108481"
+    },
+    "after": {
+      "changelog.md": "329edf0c6e435d93eb4a0ed1456fe5604240203944c8ebbf3a2e307cabbbe4bd",
+      "index.md": "2c7ec8e03e0823e3b87645db99c52bd8263d4c50d148a9dc7f6e3a405d9d91df"
+    }
+  },
+  "changes": [
+    {
+      "path": "changelog.md",
+      "before": "1a52f7e89957683bed76944a44c6565276b9f70b2783381d309091cddfd790c7",
+      "after": "IyBDaGFuZ2Vsb2cKCiMjIDIwMjYtMTAtMTQKCi0gSW5pdGlhbCB3b3Jrc3BhY2UgY3JlYXRlZAoKIyMgMjAyNi0xMC0xNAoKR3VpZGUgdXBsb2FkZWQ7IGRldGVybWluaXN0aWMgcmVwbGF5IGltcGxlbWVudGVkIGFuZCBob3N0L0FSTSBib3VuZGFyeSB2YWxpZGF0ZWQgKDMyYjhiZmQpLiBEZXZpY2UgbWF0cml4IGJsb2NrZWQgYmVmb3JlIGRlcGxveW1lbnQgYnkgbWlzc2luZyBleHRlcm5hbCBjcmVkZW50aWFsIGVudmlyb25tZW50OyBhbmFseXNpcyB0b29saW5nIHByZXBhcmVkLCBubyB0YXJnZXQgc2NhbGluZyBjbGFpbXMuCgojIyAyMDI2LTEwLTE0CgpDb21wbGV0ZWQga2V5LWF1dGhlbnRpY2F0ZWQgZWlnaHQtY2FzZSBHUFUgcmVwbGF5IG1hdHJpeDogbWF0Y2hpbmcgc2lnbmF0dXJlcy9pbWFnZXMsIGhlYWx0aHkgY291bnRlcnMgYW5kIHBhaXJlZCByZWNvcmRzLiBEb2N1bWVudGVkIGR1YWwtdmlldyByZXNvbHV0aW9uIHNlbnNpdGl2aXR5IGFuZCBhcHBhcmVudCBzaW5nbGUtdmlldyBwcmVzZW50YXRpb24gY2VpbGluZzsgcHJvZHVjdGlvbiBkZWZhdWx0cyB1bmNoYW5nZWQuCgojIyAyMDI2LTEwLTE0CgpEZXNpZ24gZGVsaXZlcmVkLCBkZXRlcm1pbmlzdGljIHJlcGxheSBpbXBsZW1lbnRlZCwgYW5kIGVpZ2h0LWNhc2UgZGV2aWNlIHNjYWxpbmcgY2FtcGFpZ24gYW5hbHl6ZWQuIEZ1dHVyZSBHUFUgc2Vuc2l0aXZpdHkgZXhwZXJpbWVudHMgYXJlIHNlcGFyYXRlIHdvcms7IG5vIHByb2R1Y3Rpb24gb3B0aW1pemF0aW9uIHByb21vdGVkLgo="
+    },
+    {
+      "path": "index.md",
+      "before": "2f0dc22073f68e56a6ac28d7b18d79fe927c622ce05f2fed6a000f307f108481",
+      "after": "LS0tClRpdGxlOiBSZXBlYXRhYmxlIEdQVSB3b3JrbG9hZCBhbmQgcmVzb2x1dGlvbiB2aWV3LWNvdW50IHNjYWxpbmcKVGlja2V0OiBGQUxMTElOSUUtR1BVLTAwNgpTdGF0dXM6IGNvbXBsZXRlClRvcGljczoKICAgIC0gcGVyZm9ybWFuY2UKRG9jVHlwZTogaW5kZXgKSW50ZW50OiBsb25nLXRlcm0KT3duZXJzOiBbXQpSZWxhdGVkRmlsZXM6IFtdCkV4dGVybmFsU291cmNlczogW10KU3VtbWFyeTogIiIKTGFzdFVwZGF0ZWQ6IDIwMjYtMTAtMTRUMTQ6MjA6MTkuMjYzMjY4MS0wNDowMApXaGF0Rm9yOiAiIgpXaGVuVG9Vc2U6ICIiCi0tLQoKIyBSZXBlYXRhYmxlIEdQVSB3b3JrbG9hZCBhbmQgcmVzb2x1dGlvbiB2aWV3LWNvdW50IHNjYWxpbmcKClRoaXMgdGlja2V0IGNvbnRhaW5zIHRoZSBkZWxpdmVyZWQgaW50ZXJuIGd1aWRlLCBvcHQtaW4gZGV0ZXJtaW5pc3RpYyBsaXZlIHJlcGxheSwgYW5kIHRoZSBhY3R1YWwgcmVzb2x1dGlvbi92aWV3LWNvdW50IHNjYWxpbmcgZXhwZXJpbWVudC4gUHJvZHVjdGlvbiByZW5kZXJpbmcgZGVmYXVsdHMgcmVtYWluIHVuY2hhbmdlZC4KCi0gW0ludGVybiBndWlkZSBhbmQgaW1wbGVtZW50YXRpb24gY29udHJhY3RdKGRlc2lnbi1kb2MvMDEtaW50ZXJuLWd1aWRlLXRvLXJlcGVhdGFibGUtZ3B1LWJlbmNobWFya2luZy1hcmNoaXRlY3R1cmUtYW5kLWltcGxlbWVudGF0aW9uLm1kKQotIFtNZWFzdXJlZCBkZXZpY2UgcmVzdWx0cyBhbmQgaW50ZXJwcmV0YXRpb25dKGFuYWx5c2lzLzAxLW1lYXN1cmVkLXJlcGxheS1yZXNvbHV0aW9uLWFuZC12aWV3LWNvdW50LXNjYWxpbmctb24tbWFsaS1nNTIubWQpCi0gW0RldGFpbGVkIGltcGxlbWVudGF0aW9uIGFuZCBpbnZlc3RpZ2F0aW9uIGRpYXJ5XShyZWZlcmVuY2UvMDEtZ3B1LWJlbmNobWFyay1pbXBsZW1lbnRhdGlvbi1kaWFyeS5tZCkKLSBbUmVwcm9kdWN0aW9uIGNvbW1hbmRzIGFuZCB0b29saW5nXShzY3JpcHRzL1JFQURNRS5tZCkKLSBbVGFzayBjaGVja2xpc3RdKHRhc2tzLm1kKQoKVGhlIHByZS1pbXBsZW1lbnRhdGlvbiBndWlkZSB3YXMgZGVsaXZlcmVkIHRvIHJlTWFya2FibGUgYXQgYC9haS8yMDI2LzEwLzE0L0ZBTExMSU5JRS1HUFUtMDA2YC4gVGhlIG1lYXN1cmVkLXJlc3VsdHMgZG9jdW1lbnQgaXMgdGhlIGF1dGhvcml0YXRpdmUgY3VycmVudCByZXN1bHQ7IG9yaWdpbmFsIGZhaWx1cmUgZXZpZGVuY2UgaXMgcmV0YWluZWQgaW4gdGhlIGRpYXJ5IGFuZCBldmlkZW5jZSBkaXJlY3RvcnkuCg=="
+    }
+  ]
+}

@@ -1,0 +1,289 @@
+[111767.831815] (falllinie-perf0) Successfully parsed 1 environment variable(s) from ./mali_debug.config.
+Could not open module param file '/sys/module/bifrost_kbase/parameters/large_page_conf'
+[111767.833704] (falllinie-perf0) Successfully parsed 1 environment variable(s) from ./mali_debug.config.
+arm_release_ver: g29p1-12eac0, rk_so_ver: 5
+GL_VERSION=OpenGL ES 3.2 v1.g29p1-12eac0.d6e9c0f8499d70cc285f3f0ca2ede780
+GL_RENDERER=Mali-G52
+GL_VENDOR=ARM
+GLSL=OpenGL ES GLSL ES 3.20
+GL_EXTENSIONS=GL_ARM_rgba8 GL_ARM_mali_shader_binary GL_ARM_debug_assert GL_OES_depth24 GL_OES_depth_texture GL_OES_depth_texture_cube_map GL_OES_packed_depth_stencil GL_OES_rgb8_rgba8 GL_EXT_read_format_bgra GL_OES_compressed_paletted_texture GL_OES_compressed_ETC1_RGB8_texture GL_OES_standard_derivatives GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_EGL_image_external_essl3 GL_OES_EGL_sync GL_OES_texture_npot GL_OES_vertex_half_float GL_OES_required_internalformat GL_OES_vertex_array_object GL_OES_mapbuffer GL_EXT_texture_format_BGRA8888 GL_EXT_texture_rg GL_EXT_texture_type_2_10_10_10_REV GL_OES_fbo_render_mipmap GL_OES_element_index_uint GL_EXT_shadow_samplers GL_OES_texture_compression_astc GL_KHR_texture_compression_astc_ldr GL_KHR_texture_compression_astc_hdr GL_KHR_texture_compression_astc_sliced_3d GL_EXT_texture_compression_astc_decode_mode GL_EXT_texture_compression_astc_decode_mode_rgb9e5 GL_KHR_debug GL_EXT_occlusion_query_boolean GL_EXT_disjoint_timer_query GL_EXT_blend_minmax GL_EXT_discard_framebuffer GL_OES_get_program_binary GL_OES_texture_3D GL_EXT_texture_storage GL_EXT_multisampled_render_to_texture GL_EXT_multisampled_render_to_texture2 GL_OES_surfaceless_context GL_OES_texture_stencil8 GL_EXT_shader_pixel_local_storage GL_ARM_shader_framebuffer_fetch GL_ARM_shader_framebuffer_fetch_depth_stencil GL_ARM_mali_program_binary GL_EXT_sRGB GL_EXT_sRGB_write_control GL_EXT_texture_sRGB_decode GL_EXT_texture_sRGB_R8 GL_EXT_texture_sRGB_RG8 GL_KHR_blend_equation_advanced GL_KHR_blend_equation_advanced_coherent GL_OES_texture_storage_multisample_2d_array GL_OES_shader_image_atomic GL_EXT_robustness GL_EXT_draw_buffers_indexed GL_OES_draw_buffers_indexed GL_EXT_texture_border_clamp GL_OES_texture_border_clamp GL_EXT_texture_cube_map_array GL_OES_texture_cube_map_array GL_OES_sample_variables GL_OES_sample_shading GL_OES_shader_multisample_interpolation GL_EXT_shader_io_blocks GL_OES_shader_io_blocks GL_EXT_tessellation_shader GL_OES_tessellation_shader GL_EXT_primitive_bounding_box GL_OES_primitive_bounding_box GL_EXT_geometry_shader GL_OES_geometry_shader GL_ANDROID_extension_pack_es31a GL_EXT_gpu_shader5 GL_OES_gpu_shader5 GL_EXT_texture_buffer GL_OES_texture_buffer GL_EXT_copy_image GL_OES_copy_image GL_EXT_shader_non_constant_global_initializers GL_EXT_color_buffer_half_float GL_EXT_unpack_subimage GL_EXT_color_buffer_float GL_EXT_YUV_target GL_OVR_multiview GL_OVR_multiview2 GL_OVR_multiview_multisampled_render_to_texture GL_KHR_robustness GL_KHR_robust_buffer_access_behavior GL_EXT_draw_elements_base_vertex GL_OES_draw_elements_base_vertex GL_EXT_protected_textures GL_EXT_buffer_storage GL_EXT_clear_texture GL_ARM_shader_core_properties GL_EXT_texture_filter_anisotropic GL_ARM_texture_unnormalized_coordinates GL_EXT_shader_framebuffer_fetch GL_EXT_polygon_offset_clamp GL_EXT_EGL_image_storage 
+GL_CAPS max_texture=16383 max_renderbuffer=16383
+joystick=retrogame_joypad
+program scene with explicit shadow policy linked
+FOG_CELLS mode=original VIEW_CULLING=on SHORT_INDICES=on OUTPUT_CLEAR=off
+SHADOW mode=bounds non_parity=0
+projection coordinates=camera-relative
+sky hash=stable wrapped integer lattice
+depth sampler=explicit highp portability override
+program original print linked
+program presentation diagnostic linked
+program batched native HUD using source font linked
+glyph atlas loaded
+terrain vertices=59492 indices=351072 build_ms=105.018 targets=512x384 FBOs complete
+PROFILE mode=off cadence=60 supported=0 pool=32 CPU_passes=sparse,nested,nonadditive
+INDEX_DRAW mode=ordinary
+GEOMETRY fog_cells=original view_culling=on short_indices=on output_clear=off window_depth=24 replay_audio=off terrain_lod=60.000000 m (pixel-changing)
+DIAGNOSTIC fixture=live-or-default second_view=first-person post_bypass=0 non_parity=0 seed=1234 cell=0 cells=3 internal=512x384 dual=1
+AUDIO_POLICY disabled=0 muted=1 (disabled omits device/producer/callback DSP; muted does not)
+SOURCE: A jump / B-X boost / L1-R1-L2-R2 grabs / START pause / SELECT dev / SELECT+Y new seed / SELECT+START quit; keyboard WASD/arrows, SPACE, SHIFT/B, J/K/U/I, P/ESC, R new seed, F2 dev, M, C, F3, F10
+seed=1234 best_path=/storage/.local/share/Falllinie/Falllinie/best-score
+ride z=4 speed=6 airborne=0 charge=0 score=0
+placement=[
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  },
+  {
+    "success": true
+  }
+]
+
+FPS=54.8878 frame_interval_ms=16.795
+ride z=11.5291 speed=9.5636 airborne=0 charge=0 score=0
+FPS=60.1851 frame_interval_ms=16.151
+ride z=21.6321 speed=12.8252 airborne=0 charge=0 score=0
+FPS=60.136 frame_interval_ms=16.5958
+ride z=34.7365 speed=17.4025 airborne=1 charge=0 score=0
+FPS=59.9984 frame_interval_ms=16.6279
+ride z=51.4838 speed=20.4411 airborne=1 charge=0 score=0
+FPS=60.0006 frame_interval_ms=16.613
+ride z=70.8215 speed=22.1625 airborne=0 charge=0 score=0
+FPS=60 frame_interval_ms=16.5993
+ride z=92.5013 speed=23.8476 airborne=0 charge=0 score=0
+FPS=60 frame_interval_ms=16.6127
+ride z=115.535 speed=25.3789 airborne=0 charge=0 score=0
+FPS=59.994 frame_interval_ms=16.7092
+ride z=139.668 speed=26.5014 airborne=0 charge=0.703704 score=0
+ride z=165.29 speed=21.5736 airborne=1 charge=0 score=0
+FPS=60.0065 frame_interval_ms=16.3097
+ride z=186.06 speed=25.0269 airborne=1 charge=0 score=0
+FPS=59.9996 frame_interval_ms=16.3904
+ride z=201.688 speed=16.59 airborne=1 charge=0 score=0
+FPS=59.9988 frame_interval_ms=16.6375
+ride z=216.699 speed=23.737 airborne=1 charge=0 score=0
+FPS=60.0011 frame_interval_ms=16.5911
+ride z=231.228 speed=21.1304 airborne=0 charge=0 score=0
+FPS=60.0001 frame_interval_ms=16.6136
+ride z=225.67 speed=13.8155 airborne=1 charge=0 score=0
+FPS=59.9985 frame_interval_ms=16.6281
+ride z=220.073 speed=10.2429 airborne=0 charge=0 score=5370
+FPS=60.0007 frame_interval_ms=16.5476
+ride z=217.216 speed=7.47138 airborne=0 charge=0 score=5370
+FPS=60.0013 frame_interval_ms=16.6071
+ride z=221.549 speed=9.37743 airborne=1 charge=0 score=5370
+FPS=59.9996 frame_interval_ms=16.6162
+ride z=230.004 speed=12.3176 airborne=1 charge=0 score=5370
+FPS=59.9953 frame_interval_ms=16.6906
+ride z=239.671 speed=12.696 airborne=0 charge=0 score=5370
+FPS=60.0029 frame_interval_ms=16.6071
+ride z=237.651 speed=5.88232 airborne=0 charge=0 score=5370
+FPS=59.9978 frame_interval_ms=16.2939
+ride z=236.37 speed=2.86223 airborne=0 charge=0 score=6000
+FPS=60.0039 frame_interval_ms=16.6051
+ride z=239.731 speed=11.6962 airborne=1 charge=0 score=6000
+FPS=59.9993 frame_interval_ms=16.6246
+ride z=246.334 speed=13.4577 airborne=0 charge=0 score=6000
+FPS=59.9995 frame_interval_ms=16.6109
+ride z=256.046 speed=14.9827 airborne=0 charge=0 score=6000
+FPS=60 frame_interval_ms=16.6264
+ride z=267.858 speed=12.6522 airborne=1 charge=0 score=6000
+FPS=60.0012 frame_interval_ms=16.5614
+ride z=278.44 speed=16.443 airborne=1 charge=0 score=6000
+FPS=59.9999 frame_interval_ms=16.6118
+ride z=291.883 speed=17.6328 airborne=0 charge=0.111111 score=6000
+FPS=59.999 frame_interval_ms=16.6153
+ride z=308.963 speed=18.7459 airborne=1 charge=1 score=6000
+FPS=59.9952 frame_interval_ms=16.706
+ride z=327.27 speed=21.5303 airborne=0 charge=1 score=6000
+FPS=60.0047 frame_interval_ms=16.23
+ride z=348.466 speed=23.3651 airborne=0 charge=1 score=6895
+FPS=60.0012 frame_interval_ms=16.6013
+ride z=371.112 speed=25.0918 airborne=0 charge=1 score=6895
+FPS=59.9993 frame_interval_ms=16.5958
+ride z=395.311 speed=26.4875 airborne=0 charge=1 score=6895
+FPS=59.9995 frame_interval_ms=16.6226
+ride z=421.062 speed=27.8674 airborne=1 charge=1 score=6895
+FPS=60 frame_interval_ms=16.62
+ride z=447.93 speed=30.1632 airborne=0 charge=1 score=6895
+FPS=59.9999 frame_interval_ms=16.5981
+ride z=478.062 speed=34.1943 airborne=1 charge=0 score=6895
+FPS=60.0013 frame_interval_ms=16.6165
+ride z=509.881 speed=34.8866 airborne=0 charge=0 score=6895
+FPS=59.9464 frame_interval_ms=17.5428
+ride z=543.566 speed=35.4838 airborne=1 charge=0 score=6895
+FPS=60.051 frame_interval_ms=16.6363
+ride z=576.899 speed=38.4228 airborne=0 charge=0 score=6895
+FPS=59.966 frame_interval_ms=17.1205
+ride z=606.545 speed=33.877 airborne=0 charge=0 score=6895
+FPS=60.0354 frame_interval_ms=16.5838
+ride z=617.617 speed=24.437 airborne=1 charge=0 score=6895
+FPS=59.9995 frame_interval_ms=16.6004
+ride z=628.215 speed=20.8713 airborne=1 charge=0 score=6895
+FPS=59.9981 frame_interval_ms=16.6427
+ride z=638.977 speed=7.81056 airborne=0 charge=0 score=6895
+FPS=59.9991 frame_interval_ms=16.6491
+ride z=645.139 speed=9.55121 airborne=0 charge=0 score=7545
+FPS=60.0025 frame_interval_ms=16.6095
+ride z=653.093 speed=11.088 airborne=0 charge=1 score=7545
+FPS=59.9993 frame_interval_ms=16.6319
+ride z=664.051 speed=14.457 airborne=1 charge=0 score=7545
+FPS=60.0016 frame_interval_ms=16.592
+ride z=671.138 speed=13.8411 airborne=0 charge=0 score=7545
+FPS=59.9999 frame_interval_ms=16.5751
+ride z=662.662 speed=9.72071 airborne=0 charge=0 score=7545
+FPS=59.999 frame_interval_ms=16.5354
+ride z=656.68 speed=5.55797 airborne=0 charge=0.814815 score=8175
+FPS=59.9999 frame_interval_ms=16.6308
+ride z=655.392 speed=3.20974 airborne=1 charge=0 score=8175
+FPS=59.9992 frame_interval_ms=16.6349
+ride z=656.311 speed=4.86752 airborne=0 charge=0 score=8175
+FPS=59.9985 frame_interval_ms=16.6585
+ride z=660.551 speed=7.71617 airborne=0 charge=0 score=8175
+FPS=60.0035 frame_interval_ms=16.6013
+ride z=666.841 speed=9.54863 airborne=0 charge=0.333333 score=9320
+FPS=59.9994 frame_interval_ms=16.4616
+ride z=676.273 speed=12.213 airborne=1 charge=0 score=9320
+FPS=59.999 frame_interval_ms=16.6322
+ride z=685.801 speed=13.7569 airborne=0 charge=0 score=9320
+FPS=59.9999 frame_interval_ms=16.6168
+ride z=680.095 speed=10.5001 airborne=0 charge=0 score=9320
+FPS=60.0012 frame_interval_ms=16.6433
+ride z=672.54 speed=6.87043 airborne=0 charge=0 score=9685
+FPS=59.9997 frame_interval_ms=16.6133
+ride z=668.855 speed=4.76706 airborne=1 charge=0 score=9685
+FPS=59.9985 frame_interval_ms=16.5465
+ride z=667.08 speed=2.56954 airborne=0 charge=0 score=9685
+FPS=59.995 frame_interval_ms=16.7156
+ride z=666.409 speed=0.47365 airborne=0 charge=0 score=9685
+FPS=60.007 frame_interval_ms=16.5424
+ride z=667.473 speed=2.35501 airborne=0 charge=0 score=9685
+FPS=59.9998 frame_interval_ms=16.5905
+ride z=669.901 speed=4.1726 airborne=0 charge=0 score=10940
+FPS=59.9998 frame_interval_ms=16.501
+ride z=673.547 speed=5.79971 airborne=0 charge=0 score=10940
+FPS=59.9975 frame_interval_ms=16.6214
+ride z=679.123 speed=8.22707 airborne=1 charge=0 score=10940
+FPS=60.0019 frame_interval_ms=16.6121
+ride z=686.282 speed=10.1632 airborne=0 charge=0 score=10940
+FPS=60.0003 frame_interval_ms=16.606
+ride z=695.354 speed=11.7052 airborne=0 charge=0 score=10940
+FPS=60 frame_interval_ms=16.6115
+ride z=706.806 speed=13.3269 airborne=0 charge=0 score=10940
+FPS=59.9998 frame_interval_ms=16.6083
+ride z=720.415 speed=14.9161 airborne=0 charge=0 score=11435
+FPS=60 frame_interval_ms=16.5937
+ride z=735.964 speed=17.4044 airborne=1 charge=0 score=11435
+FPS=59.9955 frame_interval_ms=16.627
+ride z=753.157 speed=19.0162 airborne=0 charge=0 score=11435
+FPS=59.9985 frame_interval_ms=16.6801
+ride z=766.429 speed=18.1332 airborne=0 charge=0 score=11435
+FPS=60.0066 frame_interval_ms=16.6083
+ride z=760.995 speed=13.4978 airborne=0 charge=0 score=11435
+FPS=59.9999 frame_interval_ms=16.6106
+ride z=757.619 speed=4.26435 airborne=0 charge=0 score=13075
+FPS=59.9997 frame_interval_ms=16.601
+ride z=756.605 speed=2.97107 airborne=0 charge=0 score=13075
+FPS=59.9988 frame_interval_ms=16.6366
+ride z=756.459 speed=5.38324 airborne=1 charge=0 score=13075
+FPS=59.9999 frame_interval_ms=16.6375
+ride z=757.552 speed=2.88711 airborne=0 charge=0 score=13075
+FPS=60.0007 frame_interval_ms=16.5576
+ride z=759.777 speed=3.29834 airborne=0 charge=0 score=13075
+FPS=60.0004 frame_interval_ms=16.601
+ride z=761.736 speed=4.69619 airborne=0 charge=0 score=13075
+FPS=59.9996 frame_interval_ms=16.6179
+ride z=763.531 speed=7.40607 airborne=1 charge=0 score=13750
+FPS=59.9989 frame_interval_ms=16.5736
+ride z=766.506 speed=9.50394 airborne=1 charge=0 score=13750
+FPS=60.0017 frame_interval_ms=16.5905
+ride z=770.186 speed=14.3506 airborne=0 charge=0 score=13750
+FPS=59.999 frame_interval_ms=16.6369
+ride z=775.531 speed=14.4654 airborne=0 charge=0 score=13750
+FPS=59.9989 frame_interval_ms=16.6349
+ride z=782.58 speed=14.278 airborne=0 charge=0 score=14575
+FPS=60.0018 frame_interval_ms=16.6185
+ride z=792.76 speed=14.7569 airborne=0 charge=0 score=14575
+FPS=60.0009 frame_interval_ms=16.5923
+ride z=805.561 speed=16.1414 airborne=1 charge=0 score=14575
+FPS=59.9992 frame_interval_ms=16.6083
+ride z=819.453 speed=17.7688 airborne=0 charge=0 score=14575
+FPS=60.0008 frame_interval_ms=16.5987
+ride z=819.71 speed=14.3541 airborne=0 charge=0 score=14575
+FPS=59.9999 frame_interval_ms=16.6098
+ride z=817.845 speed=12.9392 airborne=1 charge=0 score=14575
+FPS=59.9961 frame_interval_ms=16.6757
+ride z=816.33 speed=5.46682 airborne=0 charge=0 score=14575
+FPS=60.0002 frame_interval_ms=16.6436
+ride z=816.423 speed=3.40892 airborne=0 charge=0 score=14575
+FPS=60.0037 frame_interval_ms=16.6031
+ride z=818.515 speed=9.41721 airborne=0 charge=0 score=16245
+FPS=59.9998 frame_interval_ms=16.6118
+ride z=823.435 speed=12.8403 airborne=1 charge=0 score=16245
+FPS=59.9988 frame_interval_ms=16.5651
+ride z=830.81 speed=13.706 airborne=1 charge=0 score=16245
+FPS=59.9997 frame_interval_ms=16.6302
+ride z=841.067 speed=13.2359 airborne=0 charge=0 score=16245
+FPS=60 frame_interval_ms=16.6276
+ride z=851.555 speed=12.1865 airborne=1 charge=0 score=16245
+FPS=59.9997 frame_interval_ms=16.6276
+ride z=861.837 speed=12.923 airborne=0 charge=0 score=16245
+FPS=59.9978 frame_interval_ms=16.669
+ride z=873.394 speed=14.2316 airborne=0 charge=0.333333 score=17430
+FPS=60.0037 frame_interval_ms=16.6264
+ride z=887.094 speed=16.3497 airborne=1 charge=0 score=17430
+FPS=59.9982 frame_interval_ms=16.6316
+ride z=900.495 speed=17.5606 airborne=0 charge=0 score=17430
+FPS=60.0015 frame_interval_ms=16.5701
+ride z=897.565 speed=8.66232 airborne=0 charge=0 score=17430
+FPS=59.9973 frame_interval_ms=16.6378
+ride z=890.311 speed=7.4597 airborne=0 charge=0 score=18020
+FPS=60.0033 frame_interval_ms=16.606
+ride z=884.065 speed=6.21985 airborne=0 charge=0 score=18020
+FPS=59.9998 frame_interval_ms=16.6071
+ride z=879.357 speed=4.30884 airborne=0 charge=0.481481 score=18020
+FPS=59.999 frame_interval_ms=16.6238
+ride z=877.165 speed=7.62367 airborne=1 charge=0 score=18020
+FPS=59.9921 frame_interval_ms=16.6684
+ride z=877.204 speed=2.28018 airborne=0 charge=0 score=18020
+FPS=60.0093 frame_interval_ms=16.5751
+ride z=878.625 speed=1.62631 airborne=0 charge=0 score=18020
+FPS=59.9994 frame_interval_ms=16.6095
+ride z=884.882 speed=10.0176 airborne=1 charge=0 score=18020
+FPS=60 frame_interval_ms=16.6156
+ride z=893.977 speed=12.8052 airborne=1 charge=0 score=18020
+FPS=59.9988 frame_interval_ms=16.6226
+ride z=905.449 speed=13.0137 airborne=0 charge=0 score=18020
+FPS=59.9997 frame_interval_ms=16.6279
+ride z=918.789 speed=14.739 airborne=0 charge=0 score=18020
+FPS=60 frame_interval_ms=16.6381
+AUDIO driver=pulseaudio rate=48000 buffer=1024 mode=buffered vinyl=0 callbacks=5157 mean_ms=0.019544 max_ms=1.18738 over_budget=0 callback_cpu_samples=5157 callback_cpu_mean_ms=0.011027 callback_cpu_max_ms=0.077584 callback_cpu_unavailable=0 producer_blocks=5159 producer_mean_ms=10.651758 producer_max_ms=21.0601 producer_over_budget=0 producer_cpu_samples=5159 producer_cpu_mean_ms=9.679224 producer_cpu_max_ms=14.708458 producer_cpu_unavailable=0 produced=5282816 delivered=5280768 pcm_depth=2048 pcm_target=2048 pcm_capacity=8192 pcm_low=0 pcm_high=2048 starved_callbacks=0 missing_frames=0 queue_high=3 drops=0 steals=0 nonfinite=0 budget_counters_not_driver_xruns=1
+frames=6596 measured=6536 frame_p50_ms=16.6039 frame_p95_ms=16.6739 frame_p99_ms=16.8256 peak_rss_kib=100116 GL_error=0

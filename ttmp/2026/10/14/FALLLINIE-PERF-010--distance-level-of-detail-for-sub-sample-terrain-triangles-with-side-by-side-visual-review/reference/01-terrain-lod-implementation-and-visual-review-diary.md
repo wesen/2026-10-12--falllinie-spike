@@ -204,3 +204,36 @@ The owner asked for a side-by-side capture of the two internal sizes after the e
 
 ### Code review instructions
 - `scripts/09-resolution-assets.py`, `scripts/resolution-template.html`, `scripts/capture_tools.py` (`size_mismatch`).
+
+## Step 5: Owner chose 512×384; long live sessions; report updated
+
+The owner chose 512×384 ("crisp is much better"). The launcher now passes `--render-size 512x384`; the binary default was already 512×384. Three 110-second live autoplay sessions with launcher settings and muted full audio, seeds 42, 7 and 1234, produced 19,605 post-warmup frames with none at or above 25 ms, the longest 21.74 ms, p99 16.92–16.94 ms and the GPU 89.5–90.6% busy. The vault report gained a latest-checkpoint summary and Section 10, and the MOC row was updated.
+
+### Prompt Context
+**User prompt (verbatim):** "crisp is much better , 512x384 baby" — then "Update the report."
+**Assistant interpretation:** Switch the launch configuration to 512×384, check the narrower margin over longer play, and record the decision and results in the vault report.
+**Inferred user intent:** Ship the sharper look, provided it still holds 60 FPS.
+**Commit (code):** 58e90a5 — "Launch at 512x384 internal resolution (owner decision); add long live-session plan"
+
+### What I did
+- `scripts/falllinie-spike.sh`: `--render-size 384x288` → `512x384`.
+- `scripts/10-long-live-case.sh` and plan `long512` (110 s per session, counter capture over the whole run, ssh timeout 160 s).
+- `python3 06-campaign.py long512` → `evidence/long512-20261015T000047Z`; `07-analyze.py`.
+- Vault: report latest-checkpoint callout and Section 10; MOC catalogue row; pushed `35f1aa1..e1f147f`.
+
+### What worked
+- Per seed (mean / p95 / p99 / longest / GPU busy): 42: 16.667 / 16.735 / 16.939 / 21.45 ms / 90.6%; 7: 16.667 / 16.738 / 16.942 / 21.74 ms / 90.3%; 1234: 16.666 / 16.745 / 16.917 / 19.75 ms / 89.5%. Zero frames ≥ 25 ms; 9–13 frames per run above 18.33 ms.
+- `GL_error=0`, `starved_callbacks=0`, peak RSS 99–102 MiB, thermal zone 0 at 68.1–71.7 °C after each run.
+
+### What didn't work
+- No failures.
+
+### What I learned
+- At 512×384 with 60 m terrain detail the GPU keeps about 10% idle time, stable across three seeds and 110-second sessions.
+
+### What should be done in the future
+- Deploy to the handheld's production install when the owner approves (`scripts/deploy-device.sh` copies the binary, assets and launcher).
+- Audio: the rare one-block underrun seen in earlier 30-second runs (independent of rendering) did not recur in these sessions but remains open.
+
+### Code review instructions
+- `scripts/falllinie-spike.sh`; `python3 -I scripts/07-analyze.py scripts/evidence/long512-20261015T000047Z`.

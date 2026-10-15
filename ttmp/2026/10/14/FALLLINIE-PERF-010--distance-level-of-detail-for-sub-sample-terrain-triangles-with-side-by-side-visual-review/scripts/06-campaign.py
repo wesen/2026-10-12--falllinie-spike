@@ -37,6 +37,8 @@ PLANS={
  'res512':{'baseline':DEFAULTS,'visual':{'r512':['--render-size','512x384']},'timed':
   [(n,sz,'base',60,AUDIO) for n,sz in [('01-r384-audio','384x288'),('02-r512-audio','512x384'),('03-r512-audio','512x384'),('04-r384-audio','384x288')]]+
   [(n,'live','base',60,f) for n,f in [('05-r384-live',[]),('06-r512-live',['--render-size','512x384']),('07-r512-live',['--render-size','512x384']),('08-r384-live',[])]]},
+ # Owner chose 512x384: long live autoplay sessions (110 s each, audio on), two seeds.
+ 'long512':{'baseline':DEFAULTS,'visual':{},'timed':[(n,'long','base',60,f) for n,f in [('01-r512-s42',['--seed','42']),('02-r512-s7',['--seed','7']),('03-r512-s1234',['--seed','1234'])]]},
 }
 plan_name=sys.argv[1];plan=PLANS[plan_name]
 stamp=datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ');remote='/storage/apps/falllinie-perf010-'+stamp;out=P/('evidence/'+plan_name+'-'+stamp);out.mkdir(parents=True)
@@ -46,7 +48,7 @@ def scp(*args):subprocess.run(['scp','-q',*opts,*map(str,args)],check=True,timeo
 GOV='/sys/devices/system/cpu/cpufreq/policy0/scaling_governor'
 ssh(f"set -e; if pgrep -af '[f]alllinie-(spike|trace005|pmu|ranges|gpu00[678]|perf010)( |$)|[m]ali-counters( |$)|[p]erf (record|stat)'; then exit 2; fi; mkdir '{remote}'; mkdir '{remote}/evidence'")
 binary=R/'build-device/falllinie-perf010';probe=next(R.glob('ttmp/2026/10/14/FALLLINIE-PERF-009*/scripts/03-counters/.work/build-arm/mali-counters'))
-scp('-r',binary,probe,P/'04-target-case.sh',P/'05-capture-case.sh',P/'08-live-case.sh',R/'assets',host+':'+remote+'/')
+scp('-r',binary,probe,P/'04-target-case.sh',P/'05-capture-case.sh',P/'08-live-case.sh',P/'10-long-live-case.sh',R/'assets',host+':'+remote+'/')
 deployed=ssh(f"chmod +x '{remote}/falllinie-perf010' '{remote}/mali-counters'; sha256sum '{remote}/falllinie-perf010' '{remote}/mali-counters'");(out/'deployed.sha256').write_text(deployed)
 assert deployed.split()[0]==hashlib.sha256(binary.read_bytes()).hexdigest()
 assets={str(p.relative_to(R)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((R/'assets').rglob('*')) if p.is_file()}
@@ -73,8 +75,10 @@ try:
   (out/'visual-comparisons.json').write_text(json.dumps(visual,indent=2)+'\n')
  for name,size,counter_set,cadence,flags in plan['timed']:
   path=remote+'/evidence/'+name;status=0
-  command=f"timeout --kill-after=5s 60s sh '{remote}/08-live-case.sh' '{remote}' '{path}' " if size=='live' else f"timeout --kill-after=5s 60s sh '{remote}/04-target-case.sh' '{remote}' '{path}' {size} {counter_set} {cadence} "
-  try:ssh(command+' '.join(flags),timeout=80)
+  if size=='long':command=f"timeout --kill-after=5s 140s sh '{remote}/10-long-live-case.sh' '{remote}' '{path}' 512x384 110 "
+  elif size=='live':command=f"timeout --kill-after=5s 60s sh '{remote}/08-live-case.sh' '{remote}' '{path}' "
+  else:command=f"timeout --kill-after=5s 60s sh '{remote}/04-target-case.sh' '{remote}' '{path}' {size} {counter_set} {cadence} "
+  try:ssh(command+' '.join(flags),timeout=160)
   except subprocess.CalledProcessError as e:status=e.returncode
   scp('-r',host+':'+path,out);print(name,'status',status,flush=True);assert status==0
  (out/'assets-after.txt').write_text(ssh(f"cd '{remote}' && sha256sum -c assets.sha256"));meta['complete']=True

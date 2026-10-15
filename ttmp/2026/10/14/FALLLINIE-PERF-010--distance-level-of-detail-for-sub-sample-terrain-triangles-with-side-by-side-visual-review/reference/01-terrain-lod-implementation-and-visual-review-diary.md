@@ -237,3 +237,39 @@ The owner chose 512×384 ("crisp is much better"). The launcher now passes `--re
 
 ### Code review instructions
 - `scripts/falllinie-spike.sh`; `python3 -I scripts/07-analyze.py scripts/evidence/long512-20261015T000047Z`.
+
+## Step 6: Deploy, register in ROCKNIX Ports, publish the deep dive
+
+The release was deployed to the handheld's production install and registered in EmulationStation's Ports menu with a name, description and screenshot. A heat soak was started and stopped at the owner's request. The full deep-dive report was published to the vault.
+
+### Prompt Context
+**User prompt (verbatim):** "yeah go ahead. do it. Then  write a detailed project report for the obsidian vault as a deep dive technical analysis blog post using a textbook writing style (no analogies, see skill).      \n Commit and push the bsidian vault when done (go-go-parc vault)." Follow-ups during the work: "the commit and push" and "no need for soak".
+**Assistant interpretation:** Build and deploy the production binary, add a proper Ports entry and restart EmulationStation, then write and push a vault deep dive; commit and push both repositories; skip the heat soak.
+**Inferred user intent:** Have the improved game installed and launchable from the handheld menu, with a durable write-up.
+**Commit (code):** 0bf9969 — "Register Falllinie in the ROCKNIX Ports gamelist on deploy; keep previous binary for rollback; add heat soak"
+
+### What I did
+- `bash scripts/build-device.sh` (production flags) → `build-device/falllinie-spike` SHA-256 `7f86667cc49c1aa15e725ee636f8db8f58445f1c79cf7fc6988c980f16363398`.
+- `scripts/ports/merge-gamelist.py` (replaces only the `./falllinie-spike.sh` entry, keeps others) and `scripts/ports/falllinie-spike.png` (512×384 device capture, top window, frame 600).
+- `scripts/deploy-device.sh`: backs up the previous binary as `falllinie-spike.previous` and the gamelist as `gamelist.xml.bak`, merges the entry, copies the image, restarts `essway` when `RESTART_ES=1`, prints installed hashes.
+- `RESTART_ES=1 bash scripts/deploy-device.sh`; verified binary hash, launcher `--render-size 512x384`, gamelist content, image, `essway` active, and a `grim -o DSI-2` capture of EmulationStation.
+- Started `scripts/11-heat-soak.sh` (1,200 s); stopped it after about 2.5 minutes at the owner's request; partial data not used.
+- Vault: `PROJECT REPORT - Falllinie at 60 FPS - Geometry, Presentation and a Crisp 512x384 Release on a Single-Core Mali-G52.md` with two figures, linked from the MOC; pushed `e1f147f..85fcee7`.
+
+### What worked
+- EmulationStation restarted cleanly; its log shows no "has no games" warning for Ports and one unrelated `HttpReq::onError` network error.
+- Gamelist merge test on host: an input with a DS demo entry and a stale Falllinie entry produced two games, the stale one replaced.
+
+### What didn't work
+- `scripts/build-device.sh` is not executable in the repository: `permission denied: scripts/build-device.sh`; ran it with `bash`.
+- Stopping the soak: my first remote kill loop matched its own `sh -c` command line (`pgrep -f "falllinie-spike --place --autoplay"`), killed the ssh session (exit 255) and left the game process running; killed it by PID 1246649 and confirmed nothing remained.
+
+### What I learned
+- ROCKNIX Ports is defined in `/storage/.config/emulationstation/es_systems.cfg` (path `/storage/roms/ports`, extensions `.sh .appimage`), and the gamelist lives beside the scripts as `gamelist.xml`.
+
+### What should be done in the future
+- Human playtest from the Ports menu; audio underrun fix; long-session thermal check if wanted.
+
+### Code review instructions
+- `scripts/deploy-device.sh`, `scripts/ports/merge-gamelist.py`.
+- Rollback on the device: `cd /storage/apps/falllinie-spike && mv falllinie-spike.previous falllinie-spike` and restore `gamelist.xml.bak`.
